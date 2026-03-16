@@ -1,40 +1,30 @@
+import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Textarea } from '@/components/ui/textarea'
+import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { ThumbsUp, ArrowRight } from 'lucide-react'
 import { toast } from 'sonner'
 import { sendTransactionalEmail } from '@/lib/email'
+import useAppStore from '@/stores/main'
 
 export default function SuggestionsPage() {
-  const suggestions = [
-    {
-      id: 1,
-      title: 'Filtro por Condomínio',
-      desc: 'Seria ótimo poder filtrar demandas pelo nome do condomínio.',
-      status: 'Planejado',
-      votes: 12,
-    },
-    {
-      id: 2,
-      title: 'Integração CRM',
-      desc: 'Conectar com RD Station para puxar os leads automaticamente.',
-      status: 'Pendente',
-      votes: 8,
-    },
-    {
-      id: 3,
-      title: 'Chat Interno',
-      desc: 'Comunicação direta sem precisar ir pro WhatsApp.',
-      status: 'Implementado',
-      votes: 45,
-    },
-  ]
+  const { suggestions, addSuggestion, voteSuggestion } = useAppStore()
+  const [newTitle, setNewTitle] = useState('')
+  const [newDesc, setNewDesc] = useState('')
 
-  const handleVote = () => toast.success('Voto computado!')
+  const handleVote = (id: string) => {
+    voteSuggestion(id)
+    toast.success('Voto computado!')
+  }
 
   const handleSubmit = async () => {
+    if (!newTitle || !newDesc) return toast.error('Preencha título e descrição.')
     await sendTransactionalEmail('new_suggestion', { subject: 'Nova Ideia Submetida' })
+    addSuggestion(newTitle, newDesc)
+    setNewTitle('')
+    setNewDesc('')
     toast.success('Sugestão enviada para análise.')
   }
 
@@ -49,7 +39,7 @@ export default function SuggestionsPage() {
       <div>
         <h2 className="text-3xl font-bold text-white mb-2">Comunidade e Sugestões</h2>
         <p className="text-muted-foreground text-base">
-          Ajudou a implementar? Ganhe 1 mês de crédito no Prime Circle.
+          Ajudou a implementar? Ganhe 1 mês de crédito extra na sua assinatura do Prime Circle.
         </p>
       </div>
 
@@ -58,9 +48,17 @@ export default function SuggestionsPage() {
           <CardTitle className="text-lg text-white">Sugerir Funcionalidade</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
+          <Input
+            placeholder="Título da sugestão"
+            className="bg-background border-border text-white mb-2"
+            value={newTitle}
+            onChange={(e) => setNewTitle(e.target.value)}
+          />
           <Textarea
             placeholder="Descreva sua ideia em detalhes..."
             className="bg-background border-border text-white min-h-[100px]"
+            value={newDesc}
+            onChange={(e) => setNewDesc(e.target.value)}
           />
           <Button onClick={handleSubmit} className="gold-gradient text-black font-semibold">
             Enviar para Votação
@@ -76,7 +74,7 @@ export default function SuggestionsPage() {
                 <Button
                   variant="ghost"
                   size="icon"
-                  onClick={handleVote}
+                  onClick={() => handleVote(sug.id)}
                   className="h-8 w-8 text-muted-foreground hover:text-primary"
                 >
                   <ThumbsUp className="w-5 h-5" />

@@ -1,16 +1,23 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
-import { Check, X, Send, Activity, ShieldAlert, AlertTriangle } from 'lucide-react'
+import { Check, X } from 'lucide-react'
 import { toast } from 'sonner'
 import useAppStore from '@/stores/main'
 import { sendTransactionalEmail, simulateBiWeeklyReview } from '@/lib/email'
 
 export default function AdminPage() {
-  const { logs, candidates, approveCandidate, rejectCandidate, brokerMonitoring, statusLogs } =
-    useAppStore()
+  const {
+    candidates,
+    suggestions,
+    statusLogs,
+    approveCandidate,
+    rejectCandidate,
+    updateSuggestionStatus,
+    enforceInactivity,
+  } = useAppStore()
   const pendingRequests = candidates.filter((c) => c.status === 'pending')
 
   const handleAction = async (
@@ -34,7 +41,7 @@ export default function AdminPage() {
       <div>
         <h2 className="text-2xl font-bold text-white">Governança & Admin</h2>
         <p className="text-muted-foreground text-sm">
-          Review manual, logs de status e monitoramento.
+          Review manual, logs de status, sugestões e monitoramento.
         </p>
       </div>
 
@@ -42,6 +49,9 @@ export default function AdminPage() {
         <TabsList className="bg-card border border-border flex-wrap justify-start h-auto p-1 gap-1">
           <TabsTrigger value="requests" className="data-[state=active]:bg-secondary">
             Manual Review ({pendingRequests.length})
+          </TabsTrigger>
+          <TabsTrigger value="suggestions" className="data-[state=active]:bg-secondary">
+            Sugestões
           </TabsTrigger>
           <TabsTrigger value="monitoring" className="data-[state=active]:bg-secondary">
             Monitoramento
@@ -115,6 +125,34 @@ export default function AdminPage() {
           )}
         </TabsContent>
 
+        <TabsContent value="suggestions" className="mt-6 space-y-4">
+          {suggestions.map((sug) => (
+            <Card key={sug.id} className="bg-secondary border-border">
+              <CardContent className="p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                <div>
+                  <h3 className="font-semibold text-white">{sug.title}</h3>
+                  <p className="text-sm text-muted-foreground">{sug.desc}</p>
+                  <Badge variant="outline" className="mt-2 border-primary text-primary">
+                    {sug.status}
+                  </Badge>
+                </div>
+                {sug.status !== 'Implementado' && (
+                  <Button
+                    size="sm"
+                    className="bg-green-500/20 text-green-500 hover:bg-green-500/30 border border-green-500/50"
+                    onClick={() => {
+                      updateSuggestionStatus(sug.id, 'Implementado')
+                      toast.success('Sugestão implementada! Autor recompensado com 1 mês extra.')
+                    }}
+                  >
+                    <Check className="w-4 h-4 mr-2" /> Marcar Implementado
+                  </Button>
+                )}
+              </CardContent>
+            </Card>
+          ))}
+        </TabsContent>
+
         <TabsContent value="logs" className="mt-6 space-y-4">
           <Card className="bg-card border-border">
             <CardHeader>
@@ -152,10 +190,21 @@ export default function AdminPage() {
         </TabsContent>
 
         <TabsContent value="monitoring" className="mt-6 space-y-4">
-          {/* Monitoramento UI preservado */}
-          <div className="p-4 bg-card rounded-lg border border-border text-muted-foreground text-sm mb-4">
-            Monitoramento automático ativado. Inatividade &gt; 30 dias notifica, &gt; 60 dias
-            suspende benefícios Ambassador.
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center p-4 bg-card rounded-lg border border-border text-muted-foreground text-sm gap-4">
+            <p>
+              Monitoramento automático ativado. Inatividade &gt; 30 dias notifica, &gt; 60 dias
+              suspende benefícios Ambassador.
+            </p>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                enforceInactivity()
+                toast.success('Regras de inatividade aplicadas (Simulação de 60 dias).')
+              }}
+            >
+              Forçar Suspensão (Teste)
+            </Button>
           </div>
         </TabsContent>
       </Tabs>

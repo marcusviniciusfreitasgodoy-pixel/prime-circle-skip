@@ -3,6 +3,7 @@ import { createContext, createElement, useContext, useState, ReactNode } from 'r
 export type UserStatus = 'pending' | 'approved' | 'admin' | null
 export type Tier = 'None' | 'Ambassador' | 'Silver' | 'Gold' | 'Elite' | 'Elite+'
 export type Plan = 'Free' | 'Founder' | 'Standard'
+
 export type User = {
   id: string
   name: string
@@ -16,6 +17,9 @@ export type User = {
   lastLogin?: string
   lastContributionAt?: string
   referrals: number
+  planStartedAt: string
+  referralMonthsCredited: number
+  suggestionMonthsCredited: number
 }
 
 export type Candidate = {
@@ -44,6 +48,7 @@ export type Listing = {
   image: string
   ownerId: string
 }
+
 export type Need = {
   id: string
   title: string
@@ -54,6 +59,7 @@ export type Need = {
   urgency: 'Alta' | 'Média' | 'Baixa'
   ownerId: string
 }
+
 export type Match = {
   id: string
   needId: string
@@ -62,6 +68,7 @@ export type Match = {
   finalValue?: string
   bilateralConfirmed?: boolean
 }
+
 export type BrokerMonitor = {
   id: string
   name: string
@@ -71,6 +78,23 @@ export type BrokerMonitor = {
   status: 'Ativo' | 'Risco de Exclusão'
 }
 
+export type Suggestion = {
+  id: string
+  title: string
+  desc: string
+  status: 'Planejado' | 'Pendente' | 'Implementado'
+  votes: number
+  authorId: string
+}
+
+export type ExpirationInfo = {
+  expirationDate: Date
+  daysLeft: number
+  baseMonths: number
+  totalCredits: number
+  isExpired: boolean
+}
+
 interface AppState {
   user: User | null
   listings: Listing[]
@@ -78,6 +102,7 @@ interface AppState {
   matches: Match[]
   brokerMonitoring: BrokerMonitor[]
   candidates: Candidate[]
+  suggestions: Suggestion[]
   pageViews: { path: string; timestamp: string }[]
   logs: { action: string; details: string; timestamp: string }[]
   statusLogs: {
@@ -103,6 +128,11 @@ interface AppState {
   trackPageView: (path: string) => void
   logEvent: (action: string, details: string) => void
   checkPlanLimits: (type: 'listings' | 'needs' | 'matches' | 'closing') => boolean
+  getExpirationInfo: () => ExpirationInfo | null
+  addSuggestion: (title: string, desc: string) => void
+  voteSuggestion: (id: string) => void
+  updateSuggestionStatus: (id: string, status: Suggestion['status']) => void
+  enforceInactivity: () => void
 }
 
 const initialListings: Listing[] = [
@@ -137,6 +167,33 @@ const initialNeeds: Need[] = [
 
 const initialMatches: Match[] = [{ id: '1', needId: '1', listingId: '1', status: 'Proposta' }]
 
+const initialSuggestions: Suggestion[] = [
+  {
+    id: '1',
+    title: 'Filtro por Condomínio',
+    desc: 'Seria ótimo poder filtrar demandas pelo nome do condomínio.',
+    status: 'Planejado',
+    votes: 12,
+    authorId: 'other',
+  },
+  {
+    id: '2',
+    title: 'Integração CRM',
+    desc: 'Conectar com RD Station para puxar os leads automaticamente.',
+    status: 'Pendente',
+    votes: 8,
+    authorId: 'user1',
+  },
+  {
+    id: '3',
+    title: 'Chat Interno',
+    desc: 'Comunicação direta sem precisar ir pro WhatsApp.',
+    status: 'Implementado',
+    votes: 45,
+    authorId: 'other',
+  },
+]
+
 const AppContext = createContext<AppState | null>(null)
 
 export function AppProvider({ children }: { children: ReactNode }) {
@@ -144,6 +201,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [listings, setListings] = useState<Listing[]>(initialListings)
   const [needs, setNeeds] = useState<Need[]>(initialNeeds)
   const [matches, setMatches] = useState<Match[]>(initialMatches)
+  const [suggestions, setSuggestions] = useState<Suggestion[]>(initialSuggestions)
   const [brokerMonitoring] = useState<BrokerMonitor[]>([])
   const [candidates, setCandidates] = useState<Candidate[]>([
     {
@@ -165,23 +223,28 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [planLimitModalOpen, setPlanLimitModalOpen] = useState(false)
 
   const login = (email: string, method: 'magic_link' | 'password', forcedStatus?: UserStatus) => {
-    // Mock session creation with appropriate permissions
     const status = forcedStatus || (email.includes('admin') ? 'admin' : 'approved')
     const isAdmin = status === 'admin'
+
+    const userStart = new Date()
+    userStart.setMonth(userStart.getMonth() - 11) // Simulating 11 months passed for Founder trial test
 
     setUser({
       id: isAdmin ? 'admin-1' : 'user1',
       name: isAdmin ? 'Admin Root' : 'João Corretor',
       email,
       status,
-      tier: 'Ambassador',
-      plan: isAdmin ? 'Founder' : 'Free',
+      tier: isAdmin ? 'Ambassador' : 'Elite', // Elite to test 20% discount
+      plan: isAdmin ? 'Founder' : 'Founder',
       chapter: 'Barra da Tijuca',
       avatar: `https://img.usecurling.com/ppl/thumbnail?gender=${isAdmin ? 'female' : 'male'}&seed=1`,
       onboarded: isAdmin,
       lastLogin: new Date().toISOString(),
       lastContributionAt: new Date().toISOString(),
-      referrals: 2,
+      referrals: isAdmin ? 2 : 16,
+      planStartedAt: userStart.toISOString(),
+      referralMonthsCredited: 0,
+      suggestionMonthsCredited: 0,
     })
     logEvent('Login', `User logged in via ${method}`)
   }
@@ -201,9 +264,34 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setPageViews((prev) => [...prev, { path, timestamp: new Date().toISOString() }])
   }
 
+  const getExpirationInfo = (): ExpirationInfo | null => {
+    if (!user || user.plan === 'Free') return null
+    const start = new Date(user.planStartedAt || new Date())
+    const baseMonths = user.plan === 'Founder' ? 12 : 1
+    const totalCredits = (user.referralMonthsCredited || 0) + (user.suggestionMonthsCredited || 0)
+
+    start.setMonth(start.getMonth() + baseMonths + totalCredits)
+
+    const now = new Date()
+    const diffTime = start.getTime() - now.getTime()
+    const daysLeft = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+
+    return {
+      expirationDate: start,
+      daysLeft,
+      baseMonths,
+      totalCredits,
+      isExpired: daysLeft <= 0,
+    }
+  }
+
   const checkPlanLimits = (type: 'listings' | 'needs' | 'matches' | 'closing') => {
     if (!user) return false
-    if (user.plan === 'Founder' || user.plan === 'Standard') return true
+
+    const expInfo = getExpirationInfo()
+    const effectivePlan = expInfo?.isExpired ? 'Free' : user.plan
+
+    if (effectivePlan === 'Founder' || effectivePlan === 'Standard') return true
 
     if (type === 'listings') {
       const myListings = listings.filter(
@@ -220,7 +308,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       if (myMatches >= 3) return false
     }
     if (type === 'closing') {
-      return false // Free plan cannot register closings directly
+      return false
     }
 
     return true
@@ -343,6 +431,54 @@ export function AppProvider({ children }: { children: ReactNode }) {
     logEvent('Admin Action', `Candidato ${id} rejeitado`)
   }
 
+  const addSuggestion = (title: string, desc: string) => {
+    const id = Date.now().toString()
+    setSuggestions((prev) => [
+      ...prev,
+      { id, title, desc, status: 'Pendente', votes: 1, authorId: user?.id || 'unknown' },
+    ])
+    logEvent('Sugestão Adicionada', `Título: ${title}`)
+  }
+
+  const voteSuggestion = (id: string) => {
+    setSuggestions((prev) => prev.map((s) => (s.id === id ? { ...s, votes: s.votes + 1 } : s)))
+  }
+
+  const updateSuggestionStatus = (id: string, status: Suggestion['status']) => {
+    setSuggestions((prev) => {
+      const suggestion = prev.find((s) => s.id === id)
+      if (suggestion && status === 'Implementado' && suggestion.status !== 'Implementado') {
+        if (user && user.id === suggestion.authorId) {
+          setUser((u) =>
+            u ? { ...u, suggestionMonthsCredited: u.suggestionMonthsCredited + 1 } : u,
+          )
+        }
+      }
+      return prev.map((s) => (s.id === id ? { ...s, status } : s))
+    })
+    logEvent('Sugestão Atualizada', `ID: ${id}, Novo Status: ${status}`)
+  }
+
+  const enforceInactivity = () => {
+    // Mocking 60-89 days inactivity enforcement for Ambassador
+    setUser((prev) => {
+      if (!prev) return prev
+      const newReferrals = Math.max(0, prev.referrals - 1)
+      let newTier: Tier = 'None'
+      if (newReferrals >= 99) newTier = 'Elite+'
+      else if (newReferrals >= 15) newTier = 'Elite'
+      else if (newReferrals >= 10) newTier = 'Gold'
+      else if (newReferrals >= 7) newTier = 'Silver'
+      else if (newReferrals >= 5) newTier = 'Ambassador'
+
+      logEvent(
+        'System Enforcement',
+        `Inatividade detectada. Indicações ativas: ${newReferrals}. Novo Tier: ${newTier}.`,
+      )
+      return { ...prev, referrals: newReferrals, tier: newTier }
+    })
+  }
+
   return createElement(
     AppContext.Provider,
     {
@@ -353,6 +489,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
         matches,
         brokerMonitoring,
         candidates,
+        suggestions,
         pageViews,
         logs,
         statusLogs,
@@ -372,6 +509,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
         trackPageView,
         logEvent,
         checkPlanLimits,
+        getExpirationInfo,
+        addSuggestion,
+        voteSuggestion,
+        updateSuggestionStatus,
+        enforceInactivity,
       },
     },
     children,

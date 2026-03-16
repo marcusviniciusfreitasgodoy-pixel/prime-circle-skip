@@ -1198,6 +1198,9 @@ video {
 .min-w-\[12rem\] {
   min-width: 12rem;
 }
+.min-w-\[140px\] {
+  min-width: 140px;
+}
 .min-w-\[70px\] {
   min-width: 70px;
 }
@@ -1654,6 +1657,9 @@ video {
 }
 .border-green-500\/20 {
   border-color: rgb(34 197 94 / 0.2);
+}
+.border-green-500\/50 {
+  border-color: rgb(34 197 94 / 0.5);
 }
 .border-input {
   border-color: hsl(var(--input));

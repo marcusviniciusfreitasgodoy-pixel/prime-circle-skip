@@ -19274,6 +19274,52 @@ var ArrowRight = createLucideIcon("arrow-right", [["path", {
 	d: "m12 5 7 7-7 7",
 	key: "xquz4c"
 }]]);
+var CalendarDays = createLucideIcon("calendar-days", [
+	["path", {
+		d: "M8 2v4",
+		key: "1cmpym"
+	}],
+	["path", {
+		d: "M16 2v4",
+		key: "4m81vk"
+	}],
+	["rect", {
+		width: "18",
+		height: "18",
+		x: "3",
+		y: "4",
+		rx: "2",
+		key: "1hopcy"
+	}],
+	["path", {
+		d: "M3 10h18",
+		key: "8toen8"
+	}],
+	["path", {
+		d: "M8 14h.01",
+		key: "6423bh"
+	}],
+	["path", {
+		d: "M12 14h.01",
+		key: "1etili"
+	}],
+	["path", {
+		d: "M16 14h.01",
+		key: "1gbofw"
+	}],
+	["path", {
+		d: "M8 18h.01",
+		key: "lrp35t"
+	}],
+	["path", {
+		d: "M12 18h.01",
+		key: "mhygvu"
+	}],
+	["path", {
+		d: "M16 18h.01",
+		key: "kzsmim"
+	}]
+]);
 var Check = createLucideIcon("check", [["path", {
 	d: "M20 6 9 17l-5-5",
 	key: "1gmf2c"
@@ -19348,6 +19394,28 @@ var EyeOff = createLucideIcon("eye-off", [
 	["path", {
 		d: "m2 2 20 20",
 		key: "1ooewy"
+	}]
+]);
+var Gift = createLucideIcon("gift", [
+	["path", {
+		d: "M12 7v14",
+		key: "1akyts"
+	}],
+	["path", {
+		d: "M20 11v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-8",
+		key: "1sqzm4"
+	}],
+	["path", {
+		d: "M7.5 7a1 1 0 0 1 0-5A4.8 8 0 0 1 12 7a4.8 8 0 0 1 4.5-5 1 1 0 0 1 0 5",
+		key: "kc0143"
+	}],
+	["rect", {
+		x: "3",
+		y: "7",
+		width: "18",
+		height: "4",
+		rx: "1",
+		key: "1hberx"
 	}]
 ]);
 var GitMerge = createLucideIcon("git-merge", [
@@ -20326,12 +20394,39 @@ var initialMatches = [{
 	listingId: "1",
 	status: "Proposta"
 }];
+var initialSuggestions = [
+	{
+		id: "1",
+		title: "Filtro por Condomínio",
+		desc: "Seria ótimo poder filtrar demandas pelo nome do condomínio.",
+		status: "Planejado",
+		votes: 12,
+		authorId: "other"
+	},
+	{
+		id: "2",
+		title: "Integração CRM",
+		desc: "Conectar com RD Station para puxar os leads automaticamente.",
+		status: "Pendente",
+		votes: 8,
+		authorId: "user1"
+	},
+	{
+		id: "3",
+		title: "Chat Interno",
+		desc: "Comunicação direta sem precisar ir pro WhatsApp.",
+		status: "Implementado",
+		votes: 45,
+		authorId: "other"
+	}
+];
 var AppContext = (0, import_react.createContext)(null);
 function AppProvider({ children }) {
 	const [user, setUser] = (0, import_react.useState)(null);
 	const [listings, setListings] = (0, import_react.useState)(initialListings);
 	const [needs, setNeeds] = (0, import_react.useState)(initialNeeds);
 	const [matches, setMatches] = (0, import_react.useState)(initialMatches);
+	const [suggestions, setSuggestions] = (0, import_react.useState)(initialSuggestions);
 	const [brokerMonitoring] = (0, import_react.useState)([]);
 	const [candidates, setCandidates] = (0, import_react.useState)([{
 		id: "c1",
@@ -20350,19 +20445,24 @@ function AppProvider({ children }) {
 	const login = (email, method, forcedStatus) => {
 		const status = forcedStatus || (email.includes("admin") ? "admin" : "approved");
 		const isAdmin = status === "admin";
+		const userStart = /* @__PURE__ */ new Date();
+		userStart.setMonth(userStart.getMonth() - 11);
 		setUser({
 			id: isAdmin ? "admin-1" : "user1",
 			name: isAdmin ? "Admin Root" : "João Corretor",
 			email,
 			status,
-			tier: "Ambassador",
-			plan: isAdmin ? "Founder" : "Free",
+			tier: isAdmin ? "Ambassador" : "Elite",
+			plan: isAdmin ? "Founder" : "Founder",
 			chapter: "Barra da Tijuca",
 			avatar: `https://img.usecurling.com/ppl/thumbnail?gender=${isAdmin ? "female" : "male"}&seed=1`,
 			onboarded: isAdmin,
 			lastLogin: (/* @__PURE__ */ new Date()).toISOString(),
 			lastContributionAt: (/* @__PURE__ */ new Date()).toISOString(),
-			referrals: 2
+			referrals: isAdmin ? 2 : 16,
+			planStartedAt: userStart.toISOString(),
+			referralMonthsCredited: 0,
+			suggestionMonthsCredited: 0
 		});
 		logEvent("Login", `User logged in via ${method}`);
 	};
@@ -20387,9 +20487,27 @@ function AppProvider({ children }) {
 			timestamp: (/* @__PURE__ */ new Date()).toISOString()
 		}]);
 	};
+	const getExpirationInfo = () => {
+		if (!user || user.plan === "Free") return null;
+		const start = new Date(user.planStartedAt || /* @__PURE__ */ new Date());
+		const baseMonths = user.plan === "Founder" ? 12 : 1;
+		const totalCredits = (user.referralMonthsCredited || 0) + (user.suggestionMonthsCredited || 0);
+		start.setMonth(start.getMonth() + baseMonths + totalCredits);
+		const now = /* @__PURE__ */ new Date();
+		const diffTime = start.getTime() - now.getTime();
+		const daysLeft = Math.ceil(diffTime / (1e3 * 60 * 60 * 24));
+		return {
+			expirationDate: start,
+			daysLeft,
+			baseMonths,
+			totalCredits,
+			isExpired: daysLeft <= 0
+		};
+	};
 	const checkPlanLimits = (type) => {
 		if (!user) return false;
-		if (user.plan === "Founder" || user.plan === "Standard") return true;
+		const effectivePlan = getExpirationInfo()?.isExpired ? "Free" : user.plan;
+		if (effectivePlan === "Founder" || effectivePlan === "Standard") return true;
 		if (type === "listings") {
 			if (listings.filter((l) => l.ownerId === user.id && l.status === "Disponível").length >= 1) return false;
 		}
@@ -20509,6 +20627,58 @@ function AppProvider({ children }) {
 		setCandidates((prev) => prev.filter((c) => c.id !== id));
 		logEvent("Admin Action", `Candidato ${id} rejeitado`);
 	};
+	const addSuggestion = (title, desc) => {
+		const id = Date.now().toString();
+		setSuggestions((prev) => [...prev, {
+			id,
+			title,
+			desc,
+			status: "Pendente",
+			votes: 1,
+			authorId: user?.id || "unknown"
+		}]);
+		logEvent("Sugestão Adicionada", `Título: ${title}`);
+	};
+	const voteSuggestion = (id) => {
+		setSuggestions((prev) => prev.map((s) => s.id === id ? {
+			...s,
+			votes: s.votes + 1
+		} : s));
+	};
+	const updateSuggestionStatus = (id, status) => {
+		setSuggestions((prev) => {
+			const suggestion = prev.find((s) => s.id === id);
+			if (suggestion && status === "Implementado" && suggestion.status !== "Implementado") {
+				if (user && user.id === suggestion.authorId) setUser((u) => u ? {
+					...u,
+					suggestionMonthsCredited: u.suggestionMonthsCredited + 1
+				} : u);
+			}
+			return prev.map((s) => s.id === id ? {
+				...s,
+				status
+			} : s);
+		});
+		logEvent("Sugestão Atualizada", `ID: ${id}, Novo Status: ${status}`);
+	};
+	const enforceInactivity = () => {
+		setUser((prev) => {
+			if (!prev) return prev;
+			const newReferrals = Math.max(0, prev.referrals - 1);
+			let newTier = "None";
+			if (newReferrals >= 99) newTier = "Elite+";
+			else if (newReferrals >= 15) newTier = "Elite";
+			else if (newReferrals >= 10) newTier = "Gold";
+			else if (newReferrals >= 7) newTier = "Silver";
+			else if (newReferrals >= 5) newTier = "Ambassador";
+			logEvent("System Enforcement", `Inatividade detectada. Indicações ativas: ${newReferrals}. Novo Tier: ${newTier}.`);
+			return {
+				...prev,
+				referrals: newReferrals,
+				tier: newTier
+			};
+		});
+	};
 	return (0, import_react.createElement)(AppContext.Provider, { value: {
 		user,
 		listings,
@@ -20516,6 +20686,7 @@ function AppProvider({ children }) {
 		matches,
 		brokerMonitoring,
 		candidates,
+		suggestions,
 		pageViews,
 		logs,
 		statusLogs,
@@ -20534,7 +20705,12 @@ function AppProvider({ children }) {
 		rejectCandidate,
 		trackPageView,
 		logEvent,
-		checkPlanLimits
+		checkPlanLimits,
+		getExpirationInfo,
+		addSuggestion,
+		voteSuggestion,
+		updateSuggestionStatus,
+		enforceInactivity
 	} }, children);
 }
 function useAppStore() {
@@ -29293,7 +29469,7 @@ AvatarFallback.displayName = Fallback.displayName;
 //#endregion
 //#region src/pages/AdminPage.tsx
 function AdminPage() {
-	const { logs, candidates, approveCandidate, rejectCandidate, brokerMonitoring, statusLogs } = useAppStore();
+	const { candidates, suggestions, statusLogs, approveCandidate, rejectCandidate, updateSuggestionStatus, enforceInactivity } = useAppStore();
 	const pendingRequests = candidates.filter((c) => c.status === "pending");
 	const handleAction = async (id, email, name, action) => {
 		if (action === "approved") {
@@ -29309,36 +29485,36 @@ function AdminPage() {
 		}
 	};
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-		"data-uid": "src/pages/AdminPage.tsx:33:5",
+		"data-uid": "src/pages/AdminPage.tsx:40:5",
 		"data-prohibitions": "[editContent]",
 		className: "space-y-6 animate-fade-in-up pb-8",
 		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-			"data-uid": "src/pages/AdminPage.tsx:34:7",
+			"data-uid": "src/pages/AdminPage.tsx:41:7",
 			"data-prohibitions": "[]",
 			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
-				"data-uid": "src/pages/AdminPage.tsx:35:9",
+				"data-uid": "src/pages/AdminPage.tsx:42:9",
 				"data-prohibitions": "[]",
 				className: "text-2xl font-bold text-white",
 				children: "Governança & Admin"
 			}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-				"data-uid": "src/pages/AdminPage.tsx:36:9",
+				"data-uid": "src/pages/AdminPage.tsx:43:9",
 				"data-prohibitions": "[]",
 				className: "text-muted-foreground text-sm",
-				children: "Review manual, logs de status e monitoramento."
+				children: "Review manual, logs de status, sugestões e monitoramento."
 			})]
 		}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Tabs, {
-			"data-uid": "src/pages/AdminPage.tsx:41:7",
+			"data-uid": "src/pages/AdminPage.tsx:48:7",
 			"data-prohibitions": "[editContent]",
 			defaultValue: "requests",
 			className: "w-full",
 			children: [
 				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(TabsList, {
-					"data-uid": "src/pages/AdminPage.tsx:42:9",
+					"data-uid": "src/pages/AdminPage.tsx:49:9",
 					"data-prohibitions": "[editContent]",
 					className: "bg-card border border-border flex-wrap justify-start h-auto p-1 gap-1",
 					children: [
 						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(TabsTrigger, {
-							"data-uid": "src/pages/AdminPage.tsx:43:11",
+							"data-uid": "src/pages/AdminPage.tsx:50:11",
 							"data-prohibitions": "[editContent]",
 							value: "requests",
 							className: "data-[state=active]:bg-secondary",
@@ -29349,14 +29525,21 @@ function AdminPage() {
 							]
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TabsTrigger, {
-							"data-uid": "src/pages/AdminPage.tsx:46:11",
+							"data-uid": "src/pages/AdminPage.tsx:53:11",
+							"data-prohibitions": "[]",
+							value: "suggestions",
+							className: "data-[state=active]:bg-secondary",
+							children: "Sugestões"
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TabsTrigger, {
+							"data-uid": "src/pages/AdminPage.tsx:56:11",
 							"data-prohibitions": "[]",
 							value: "monitoring",
 							className: "data-[state=active]:bg-secondary",
 							children: "Monitoramento"
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TabsTrigger, {
-							"data-uid": "src/pages/AdminPage.tsx:49:11",
+							"data-uid": "src/pages/AdminPage.tsx:59:11",
 							"data-prohibitions": "[]",
 							value: "logs",
 							className: "data-[state=active]:bg-secondary",
@@ -29365,22 +29548,22 @@ function AdminPage() {
 					]
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(TabsContent, {
-					"data-uid": "src/pages/AdminPage.tsx:54:9",
+					"data-uid": "src/pages/AdminPage.tsx:64:9",
 					"data-prohibitions": "[editContent]",
 					value: "requests",
 					className: "mt-6 space-y-4",
 					children: [
 						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-							"data-uid": "src/pages/AdminPage.tsx:55:11",
+							"data-uid": "src/pages/AdminPage.tsx:65:11",
 							"data-prohibitions": "[]",
 							className: "flex justify-between items-center p-4 bg-card rounded-lg border border-border mb-4",
 							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-								"data-uid": "src/pages/AdminPage.tsx:56:13",
+								"data-uid": "src/pages/AdminPage.tsx:66:13",
 								"data-prohibitions": "[]",
 								className: "text-muted-foreground text-sm",
 								children: "Validação automática quinzenal ativada (20 dias pendentes)."
 							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-								"data-uid": "src/pages/AdminPage.tsx:59:13",
+								"data-uid": "src/pages/AdminPage.tsx:69:13",
 								"data-prohibitions": "[]",
 								variant: "outline",
 								size: "sm",
@@ -29392,37 +29575,37 @@ function AdminPage() {
 							})]
 						}),
 						pendingRequests.map((req) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Card, {
-							"data-uid": "src/pages/AdminPage.tsx:71:13",
+							"data-uid": "src/pages/AdminPage.tsx:81:13",
 							"data-prohibitions": "[editContent]",
 							className: "bg-secondary border-border border-l-4 border-l-yellow-500/50",
 							children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardContent, {
-								"data-uid": "src/pages/AdminPage.tsx:75:15",
+								"data-uid": "src/pages/AdminPage.tsx:85:15",
 								"data-prohibitions": "[editContent]",
 								className: "p-4 flex flex-col md:flex-row items-center justify-between gap-4",
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-									"data-uid": "src/pages/AdminPage.tsx:76:17",
+									"data-uid": "src/pages/AdminPage.tsx:86:17",
 									"data-prohibitions": "[editContent]",
 									className: "flex items-center gap-4 w-full",
 									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Avatar, {
-										"data-uid": "src/pages/AdminPage.tsx:77:19",
+										"data-uid": "src/pages/AdminPage.tsx:87:19",
 										"data-prohibitions": "[editContent]",
 										children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(AvatarFallback, {
-											"data-uid": "src/pages/AdminPage.tsx:78:21",
+											"data-uid": "src/pages/AdminPage.tsx:88:21",
 											"data-prohibitions": "[editContent]",
 											children: req.name[0]
 										})
 									}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-										"data-uid": "src/pages/AdminPage.tsx:80:19",
+										"data-uid": "src/pages/AdminPage.tsx:90:19",
 										"data-prohibitions": "[editContent]",
 										children: [
 											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
-												"data-uid": "src/pages/AdminPage.tsx:81:21",
+												"data-uid": "src/pages/AdminPage.tsx:91:21",
 												"data-prohibitions": "[editContent]",
 												className: "font-semibold text-white",
 												children: req.name
 											}),
 											/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
-												"data-uid": "src/pages/AdminPage.tsx:82:21",
+												"data-uid": "src/pages/AdminPage.tsx:92:21",
 												"data-prohibitions": "[editContent]",
 												className: "text-sm text-muted-foreground",
 												children: [
@@ -29432,17 +29615,17 @@ function AdminPage() {
 												]
 											}),
 											/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-												"data-uid": "src/pages/AdminPage.tsx:85:21",
+												"data-uid": "src/pages/AdminPage.tsx:95:21",
 												"data-prohibitions": "[editContent]",
 												className: "flex gap-2 mt-2",
 												children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Badge, {
-													"data-uid": "src/pages/AdminPage.tsx:86:23",
+													"data-uid": "src/pages/AdminPage.tsx:96:23",
 													"data-prohibitions": "[editContent]",
 													variant: "outline",
 													className: "border-border",
 													children: ["CRECI: ", req.creci]
 												}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Badge, {
-													"data-uid": "src/pages/AdminPage.tsx:89:23",
+													"data-uid": "src/pages/AdminPage.tsx:99:23",
 													"data-prohibitions": "[editContent]",
 													variant: "outline",
 													className: "border-border",
@@ -29452,27 +29635,27 @@ function AdminPage() {
 										]
 									})]
 								}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-									"data-uid": "src/pages/AdminPage.tsx:95:17",
+									"data-uid": "src/pages/AdminPage.tsx:105:17",
 									"data-prohibitions": "[]",
 									className: "flex gap-2 w-full md:w-auto",
 									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-										"data-uid": "src/pages/AdminPage.tsx:96:19",
+										"data-uid": "src/pages/AdminPage.tsx:106:19",
 										"data-prohibitions": "[]",
 										variant: "outline",
 										className: "flex-1 border-red-500/20 text-red-500 hover:bg-red-500/10",
 										onClick: () => handleAction(req.id, req.email, req.name, "rejected"),
 										children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(X, {
-											"data-uid": "src/pages/AdminPage.tsx:101:21",
+											"data-uid": "src/pages/AdminPage.tsx:111:21",
 											"data-prohibitions": "[editContent]",
 											className: "w-4 h-4"
 										})
 									}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
-										"data-uid": "src/pages/AdminPage.tsx:103:19",
+										"data-uid": "src/pages/AdminPage.tsx:113:19",
 										"data-prohibitions": "[]",
 										className: "flex-1 bg-green-500/20 text-green-500 hover:bg-green-500/30",
 										onClick: () => handleAction(req.id, req.email, req.name, "approved"),
 										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Check, {
-											"data-uid": "src/pages/AdminPage.tsx:107:21",
+											"data-uid": "src/pages/AdminPage.tsx:117:21",
 											"data-prohibitions": "[editContent]",
 											className: "w-4 h-4 mr-2"
 										}), " Aprovar"]
@@ -29481,7 +29664,7 @@ function AdminPage() {
 							})
 						}, req.id)),
 						pendingRequests.length === 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-							"data-uid": "src/pages/AdminPage.tsx:114:13",
+							"data-uid": "src/pages/AdminPage.tsx:124:13",
 							"data-prohibitions": "[]",
 							className: "text-muted-foreground",
 							children: "Nenhuma solicitação pendente de revisão."
@@ -29489,56 +29672,111 @@ function AdminPage() {
 					]
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TabsContent, {
-					"data-uid": "src/pages/AdminPage.tsx:118:9",
+					"data-uid": "src/pages/AdminPage.tsx:128:9",
+					"data-prohibitions": "[editContent]",
+					value: "suggestions",
+					className: "mt-6 space-y-4",
+					children: suggestions.map((sug) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Card, {
+						"data-uid": "src/pages/AdminPage.tsx:130:13",
+						"data-prohibitions": "[editContent]",
+						className: "bg-secondary border-border",
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardContent, {
+							"data-uid": "src/pages/AdminPage.tsx:131:15",
+							"data-prohibitions": "[editContent]",
+							className: "p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								"data-uid": "src/pages/AdminPage.tsx:132:17",
+								"data-prohibitions": "[editContent]",
+								children: [
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
+										"data-uid": "src/pages/AdminPage.tsx:133:19",
+										"data-prohibitions": "[editContent]",
+										className: "font-semibold text-white",
+										children: sug.title
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+										"data-uid": "src/pages/AdminPage.tsx:134:19",
+										"data-prohibitions": "[editContent]",
+										className: "text-sm text-muted-foreground",
+										children: sug.desc
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Badge, {
+										"data-uid": "src/pages/AdminPage.tsx:135:19",
+										"data-prohibitions": "[editContent]",
+										variant: "outline",
+										className: "mt-2 border-primary text-primary",
+										children: sug.status
+									})
+								]
+							}), sug.status !== "Implementado" && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
+								"data-uid": "src/pages/AdminPage.tsx:140:19",
+								"data-prohibitions": "[]",
+								size: "sm",
+								className: "bg-green-500/20 text-green-500 hover:bg-green-500/30 border border-green-500/50",
+								onClick: () => {
+									updateSuggestionStatus(sug.id, "Implementado");
+									toast$1.success("Sugestão implementada! Autor recompensado com 1 mês extra.");
+								},
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Check, {
+									"data-uid": "src/pages/AdminPage.tsx:148:21",
+									"data-prohibitions": "[editContent]",
+									className: "w-4 h-4 mr-2"
+								}), " Marcar Implementado"]
+							})]
+						})
+					}, sug.id))
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TabsContent, {
+					"data-uid": "src/pages/AdminPage.tsx:156:9",
 					"data-prohibitions": "[editContent]",
 					value: "logs",
 					className: "mt-6 space-y-4",
 					children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
-						"data-uid": "src/pages/AdminPage.tsx:119:11",
+						"data-uid": "src/pages/AdminPage.tsx:157:11",
 						"data-prohibitions": "[editContent]",
 						className: "bg-card border-border",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardHeader, {
-							"data-uid": "src/pages/AdminPage.tsx:120:13",
+							"data-uid": "src/pages/AdminPage.tsx:158:13",
 							"data-prohibitions": "[]",
 							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardTitle, {
-								"data-uid": "src/pages/AdminPage.tsx:121:15",
+								"data-uid": "src/pages/AdminPage.tsx:159:15",
 								"data-prohibitions": "[]",
 								className: "text-lg text-white",
 								children: "Status Logs (Traceability)"
 							})
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardContent, {
-							"data-uid": "src/pages/AdminPage.tsx:123:13",
+							"data-uid": "src/pages/AdminPage.tsx:161:13",
 							"data-prohibitions": "[editContent]",
 							className: "space-y-2",
 							children: [...statusLogs].reverse().slice(0, 20).map((log, i) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-								"data-uid": "src/pages/AdminPage.tsx:128:19",
+								"data-uid": "src/pages/AdminPage.tsx:166:19",
 								"data-prohibitions": "[editContent]",
 								className: "flex justify-between items-center p-3 rounded bg-background border border-border text-sm",
 								children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-									"data-uid": "src/pages/AdminPage.tsx:132:21",
+									"data-uid": "src/pages/AdminPage.tsx:170:21",
 									"data-prohibitions": "[editContent]",
 									children: [
 										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-											"data-uid": "src/pages/AdminPage.tsx:133:23",
+											"data-uid": "src/pages/AdminPage.tsx:171:23",
 											"data-prohibitions": "[editContent]",
 											className: "font-mono text-xs text-muted-foreground mr-3",
 											children: new Date(log.timestamp).toLocaleTimeString()
 										}),
 										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", {
-											"data-uid": "src/pages/AdminPage.tsx:136:23",
+											"data-uid": "src/pages/AdminPage.tsx:174:23",
 											"data-prohibitions": "[editContent]",
 											className: "text-white uppercase mr-2",
 											children: log.entity
 										}),
 										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
-											"data-uid": "src/pages/AdminPage.tsx:137:23",
+											"data-uid": "src/pages/AdminPage.tsx:175:23",
 											"data-prohibitions": "[editContent]",
 											className: "text-muted-foreground",
 											children: [
 												"mudou de",
 												" ",
 												/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Badge, {
-													"data-uid": "src/pages/AdminPage.tsx:139:25",
+													"data-uid": "src/pages/AdminPage.tsx:177:25",
 													"data-prohibitions": "[editContent]",
 													variant: "outline",
 													className: "text-[10px]",
@@ -29548,7 +29786,7 @@ function AdminPage() {
 												"para",
 												" ",
 												/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Badge, {
-													"data-uid": "src/pages/AdminPage.tsx:143:25",
+													"data-uid": "src/pages/AdminPage.tsx:181:25",
 													"data-prohibitions": "[editContent]",
 													className: "text-[10px] bg-primary/20 text-primary hover:bg-primary/20",
 													children: log.newStatus
@@ -29562,15 +29800,29 @@ function AdminPage() {
 					})
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TabsContent, {
-					"data-uid": "src/pages/AdminPage.tsx:154:9",
-					"data-prohibitions": "[editContent]",
+					"data-uid": "src/pages/AdminPage.tsx:192:9",
+					"data-prohibitions": "[]",
 					value: "monitoring",
 					className: "mt-6 space-y-4",
-					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-						"data-uid": "src/pages/AdminPage.tsx:156:11",
+					children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						"data-uid": "src/pages/AdminPage.tsx:193:11",
 						"data-prohibitions": "[]",
-						className: "p-4 bg-card rounded-lg border border-border text-muted-foreground text-sm mb-4",
-						children: "Monitoramento automático ativado. Inatividade > 30 dias notifica, > 60 dias suspende benefícios Ambassador."
+						className: "flex flex-col md:flex-row justify-between items-start md:items-center p-4 bg-card rounded-lg border border-border text-muted-foreground text-sm gap-4",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+							"data-uid": "src/pages/AdminPage.tsx:194:13",
+							"data-prohibitions": "[]",
+							children: "Monitoramento automático ativado. Inatividade > 30 dias notifica, > 60 dias suspende benefícios Ambassador."
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+							"data-uid": "src/pages/AdminPage.tsx:198:13",
+							"data-prohibitions": "[]",
+							variant: "outline",
+							size: "sm",
+							onClick: () => {
+								enforceInactivity();
+								toast$1.success("Regras de inatividade aplicadas (Simulação de 60 dias).");
+							},
+							children: "Forçar Suspensão (Teste)"
+						})]
 					})
 				})
 			]
@@ -30223,32 +30475,19 @@ Textarea.displayName = "Textarea";
 //#endregion
 //#region src/pages/SuggestionsPage.tsx
 function SuggestionsPage() {
-	const suggestions = [
-		{
-			id: 1,
-			title: "Filtro por Condomínio",
-			desc: "Seria ótimo poder filtrar demandas pelo nome do condomínio.",
-			status: "Planejado",
-			votes: 12
-		},
-		{
-			id: 2,
-			title: "Integração CRM",
-			desc: "Conectar com RD Station para puxar os leads automaticamente.",
-			status: "Pendente",
-			votes: 8
-		},
-		{
-			id: 3,
-			title: "Chat Interno",
-			desc: "Comunicação direta sem precisar ir pro WhatsApp.",
-			status: "Implementado",
-			votes: 45
-		}
-	];
-	const handleVote = () => toast$1.success("Voto computado!");
+	const { suggestions, addSuggestion, voteSuggestion } = useAppStore();
+	const [newTitle, setNewTitle] = (0, import_react.useState)("");
+	const [newDesc, setNewDesc] = (0, import_react.useState)("");
+	const handleVote = (id) => {
+		voteSuggestion(id);
+		toast$1.success("Voto computado!");
+	};
 	const handleSubmit = async () => {
+		if (!newTitle || !newDesc) return toast$1.error("Preencha título e descrição.");
 		await sendTransactionalEmail("new_suggestion", { subject: "Nova Ideia Submetida" });
+		addSuggestion(newTitle, newDesc);
+		setNewTitle("");
+		setNewDesc("");
 		toast$1.success("Sugestão enviada para análise.");
 	};
 	const getStatusColor = (status) => {
@@ -30257,106 +30496,119 @@ function SuggestionsPage() {
 		return "bg-secondary text-muted-foreground border-border";
 	};
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-		"data-uid": "src/pages/SuggestionsPage.tsx:48:5",
+		"data-uid": "src/pages/SuggestionsPage.tsx:38:5",
 		"data-prohibitions": "[editContent]",
 		className: "max-w-3xl mx-auto space-y-8 animate-fade-in-up",
 		children: [
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				"data-uid": "src/pages/SuggestionsPage.tsx:49:7",
+				"data-uid": "src/pages/SuggestionsPage.tsx:39:7",
 				"data-prohibitions": "[]",
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
-					"data-uid": "src/pages/SuggestionsPage.tsx:50:9",
+					"data-uid": "src/pages/SuggestionsPage.tsx:40:9",
 					"data-prohibitions": "[]",
 					className: "text-3xl font-bold text-white mb-2",
 					children: "Comunidade e Sugestões"
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-					"data-uid": "src/pages/SuggestionsPage.tsx:51:9",
+					"data-uid": "src/pages/SuggestionsPage.tsx:41:9",
 					"data-prohibitions": "[]",
 					className: "text-muted-foreground text-base",
-					children: "Ajudou a implementar? Ganhe 1 mês de crédito no Prime Circle."
+					children: "Ajudou a implementar? Ganhe 1 mês de crédito extra na sua assinatura do Prime Circle."
 				})]
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
-				"data-uid": "src/pages/SuggestionsPage.tsx:56:7",
+				"data-uid": "src/pages/SuggestionsPage.tsx:46:7",
 				"data-prohibitions": "[]",
 				className: "bg-card border-primary/20 shadow-[0_0_15px_rgba(201,168,76,0.05)]",
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardHeader, {
-					"data-uid": "src/pages/SuggestionsPage.tsx:57:9",
+					"data-uid": "src/pages/SuggestionsPage.tsx:47:9",
 					"data-prohibitions": "[]",
 					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardTitle, {
-						"data-uid": "src/pages/SuggestionsPage.tsx:58:11",
+						"data-uid": "src/pages/SuggestionsPage.tsx:48:11",
 						"data-prohibitions": "[]",
 						className: "text-lg text-white",
 						children: "Sugerir Funcionalidade"
 					})
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardContent, {
-					"data-uid": "src/pages/SuggestionsPage.tsx:60:9",
+					"data-uid": "src/pages/SuggestionsPage.tsx:50:9",
 					"data-prohibitions": "[]",
 					className: "space-y-4",
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Textarea, {
-						"data-uid": "src/pages/SuggestionsPage.tsx:61:11",
-						"data-prohibitions": "[editContent]",
-						placeholder: "Descreva sua ideia em detalhes...",
-						className: "bg-background border-border text-white min-h-[100px]"
-					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-						"data-uid": "src/pages/SuggestionsPage.tsx:65:11",
-						"data-prohibitions": "[]",
-						onClick: handleSubmit,
-						className: "gold-gradient text-black font-semibold",
-						children: "Enviar para Votação"
-					})]
+					children: [
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
+							"data-uid": "src/pages/SuggestionsPage.tsx:51:11",
+							"data-prohibitions": "[editContent]",
+							placeholder: "Título da sugestão",
+							className: "bg-background border-border text-white mb-2",
+							value: newTitle,
+							onChange: (e) => setNewTitle(e.target.value)
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Textarea, {
+							"data-uid": "src/pages/SuggestionsPage.tsx:57:11",
+							"data-prohibitions": "[editContent]",
+							placeholder: "Descreva sua ideia em detalhes...",
+							className: "bg-background border-border text-white min-h-[100px]",
+							value: newDesc,
+							onChange: (e) => setNewDesc(e.target.value)
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+							"data-uid": "src/pages/SuggestionsPage.tsx:63:11",
+							"data-prohibitions": "[]",
+							onClick: handleSubmit,
+							className: "gold-gradient text-black font-semibold",
+							children: "Enviar para Votação"
+						})
+					]
 				})]
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-				"data-uid": "src/pages/SuggestionsPage.tsx:71:7",
+				"data-uid": "src/pages/SuggestionsPage.tsx:69:7",
 				"data-prohibitions": "[editContent]",
 				className: "space-y-4",
 				children: suggestions.map((sug) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Card, {
-					"data-uid": "src/pages/SuggestionsPage.tsx:73:11",
+					"data-uid": "src/pages/SuggestionsPage.tsx:71:11",
 					"data-prohibitions": "[editContent]",
 					className: "bg-secondary border-border overflow-hidden",
 					children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardContent, {
-						"data-uid": "src/pages/SuggestionsPage.tsx:74:13",
+						"data-uid": "src/pages/SuggestionsPage.tsx:72:13",
 						"data-prohibitions": "[editContent]",
 						className: "p-0 flex",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-							"data-uid": "src/pages/SuggestionsPage.tsx:75:15",
+							"data-uid": "src/pages/SuggestionsPage.tsx:73:15",
 							"data-prohibitions": "[editContent]",
 							className: "flex flex-col items-center justify-start p-4 bg-background/50 border-r border-border min-w-[70px]",
 							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-								"data-uid": "src/pages/SuggestionsPage.tsx:76:17",
+								"data-uid": "src/pages/SuggestionsPage.tsx:74:17",
 								"data-prohibitions": "[]",
 								variant: "ghost",
 								size: "icon",
-								onClick: handleVote,
+								onClick: () => handleVote(sug.id),
 								className: "h-8 w-8 text-muted-foreground hover:text-primary",
 								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ThumbsUp, {
-									"data-uid": "src/pages/SuggestionsPage.tsx:82:19",
+									"data-uid": "src/pages/SuggestionsPage.tsx:80:19",
 									"data-prohibitions": "[editContent]",
 									className: "w-5 h-5"
 								})
 							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-								"data-uid": "src/pages/SuggestionsPage.tsx:84:17",
+								"data-uid": "src/pages/SuggestionsPage.tsx:82:17",
 								"data-prohibitions": "[editContent]",
 								className: "font-bold text-white mt-1",
 								children: sug.votes
 							})]
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-							"data-uid": "src/pages/SuggestionsPage.tsx:86:15",
+							"data-uid": "src/pages/SuggestionsPage.tsx:84:15",
 							"data-prohibitions": "[editContent]",
 							className: "flex-1 p-4 space-y-3",
 							children: [
 								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-									"data-uid": "src/pages/SuggestionsPage.tsx:87:17",
+									"data-uid": "src/pages/SuggestionsPage.tsx:85:17",
 									"data-prohibitions": "[editContent]",
 									className: "flex justify-between items-start gap-4",
 									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
-										"data-uid": "src/pages/SuggestionsPage.tsx:88:19",
+										"data-uid": "src/pages/SuggestionsPage.tsx:86:19",
 										"data-prohibitions": "[editContent]",
 										className: "font-semibold text-white text-lg",
 										children: sug.title
 									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Badge, {
-										"data-uid": "src/pages/SuggestionsPage.tsx:89:19",
+										"data-uid": "src/pages/SuggestionsPage.tsx:87:19",
 										"data-prohibitions": "[editContent]",
 										variant: "outline",
 										className: `whitespace-nowrap ${getStatusColor(sug.status)}`,
@@ -30364,17 +30616,17 @@ function SuggestionsPage() {
 									})]
 								}),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-									"data-uid": "src/pages/SuggestionsPage.tsx:96:17",
+									"data-uid": "src/pages/SuggestionsPage.tsx:94:17",
 									"data-prohibitions": "[editContent]",
 									className: "text-sm text-muted-foreground leading-relaxed",
 									children: sug.desc
 								}),
 								sug.status === "Implementado" && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-									"data-uid": "src/pages/SuggestionsPage.tsx:98:19",
+									"data-uid": "src/pages/SuggestionsPage.tsx:96:19",
 									"data-prohibitions": "[]",
 									className: "text-xs text-primary font-medium flex items-center mt-2",
 									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ArrowRight, {
-										"data-uid": "src/pages/SuggestionsPage.tsx:99:21",
+										"data-uid": "src/pages/SuggestionsPage.tsx:97:21",
 										"data-prohibitions": "[editContent]",
 										className: "w-3 h-3 mr-1"
 									}), " Autor recompensado com 1 mês de acesso"]
@@ -30390,10 +30642,20 @@ function SuggestionsPage() {
 //#endregion
 //#region src/pages/PlansPage.tsx
 function PlansPage() {
+	const { user, getExpirationInfo } = useAppStore();
+	const expInfo = getExpirationInfo();
+	const discountPct = user?.tier === "Elite+" ? 30 : user?.tier === "Elite" ? 20 : 0;
+	const handleCheckout = (planName, amount) => {
+		toast$1.loading(`Iniciando checkout seguro para ${planName}...`);
+		setTimeout(() => {
+			toast$1.dismiss();
+			toast$1.success(`Checkout concluído (Simulação)! R$ ${amount.toFixed(2)} processado.`);
+		}, 2e3);
+	};
 	const plans = [
 		{
 			name: "Free",
-			price: "R$ 0",
+			basePrice: 0,
 			desc: "Limitado, para experimentação.",
 			features: [
 				"1 Demanda Ativa",
@@ -30402,12 +30664,13 @@ function PlansPage() {
 				"Acesso ao Mural"
 			],
 			missing: ["Registrar Fechamentos", "Destaque no Radar"],
-			active: true,
-			btn: "Plano Atual"
+			active: user?.plan === "Free" || expInfo?.isExpired,
+			btn: user?.plan === "Free" ? "Plano Atual" : "Rebaixado (Expirado)",
+			canBuy: false
 		},
 		{
 			name: "Standard",
-			price: "R$ 297/mês",
+			basePrice: 197,
 			desc: "Para corretores de alta performance.",
 			features: [
 				"Imóveis Ilimitados",
@@ -30417,13 +30680,14 @@ function PlansPage() {
 				"Suporte Prioritário"
 			],
 			missing: [],
-			active: false,
-			btn: "Fazer Upgrade"
+			active: user?.plan === "Standard" && !expInfo?.isExpired,
+			btn: user?.plan === "Standard" && !expInfo?.isExpired ? "Plano Atual" : "Fazer Upgrade",
+			canBuy: true
 		},
 		{
 			name: "Founder",
-			price: "Exclusivo",
-			desc: "Apenas para sócios fundadores.",
+			basePrice: 97,
+			desc: "Acesso completo com condições de fundador.",
 			features: [
 				"Acesso Vitalício",
 				"Limites Ilimitados",
@@ -30431,121 +30695,243 @@ function PlansPage() {
 				"Eventos Presenciais"
 			],
 			missing: [],
-			active: false,
-			btn: "Esgotado"
+			active: user?.plan === "Founder" && !expInfo?.isExpired,
+			btn: user?.plan === "Founder" ? expInfo?.isExpired ? "Renovar Assinatura" : "Plano Atual" : "Esgotado",
+			canBuy: user?.plan === "Founder"
 		}
 	];
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-		"data-uid": "src/pages/PlansPage.tsx:50:5",
+		"data-uid": "src/pages/PlansPage.tsx:74:5",
 		"data-prohibitions": "[editContent]",
 		className: "max-w-5xl mx-auto space-y-8 animate-fade-in-up",
-		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-			"data-uid": "src/pages/PlansPage.tsx:51:7",
-			"data-prohibitions": "[]",
-			className: "text-center space-y-2 mb-12",
-			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
-				"data-uid": "src/pages/PlansPage.tsx:52:9",
+		children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				"data-uid": "src/pages/PlansPage.tsx:75:7",
 				"data-prohibitions": "[]",
-				className: "text-3xl font-bold text-white",
-				children: "Invista na sua Infraestrutura"
-			}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-				"data-uid": "src/pages/PlansPage.tsx:53:9",
-				"data-prohibitions": "[]",
-				className: "text-muted-foreground",
-				children: "Evolua seu plano e destrave os limites operacionais."
-			})]
-		}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-			"data-uid": "src/pages/PlansPage.tsx:57:7",
-			"data-prohibitions": "[editContent]",
-			className: "grid md:grid-cols-3 gap-6",
-			children: plans.map((plan, i) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
-				"data-uid": "src/pages/PlansPage.tsx:59:11",
+				className: "text-center space-y-2 mb-8",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
+					"data-uid": "src/pages/PlansPage.tsx:76:9",
+					"data-prohibitions": "[]",
+					className: "text-3xl font-bold text-white",
+					children: "Invista na sua Infraestrutura"
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+					"data-uid": "src/pages/PlansPage.tsx:77:9",
+					"data-prohibitions": "[]",
+					className: "text-muted-foreground",
+					children: "Evolua seu plano e destrave os limites operacionais."
+				})]
+			}),
+			user && user.plan !== "Free" && expInfo && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
+				"data-uid": "src/pages/PlansPage.tsx:83:9",
 				"data-prohibitions": "[editContent]",
-				className: `bg-card border-border flex flex-col ${plan.name === "Standard" ? "border-primary shadow-[0_0_30px_rgba(201,168,76,0.1)] relative" : ""}`,
-				children: [
-					plan.name === "Standard" && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-						"data-uid": "src/pages/PlansPage.tsx:64:15",
-						"data-prohibitions": "[]",
-						className: "absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-primary text-black text-xs font-bold px-3 py-1 rounded-full",
-						children: "RECOMENDADO"
-					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardHeader, {
-						"data-uid": "src/pages/PlansPage.tsx:68:13",
+				className: "bg-primary/10 border-primary/30 mb-8 shadow-elevation relative overflow-hidden",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+					"data-uid": "src/pages/PlansPage.tsx:84:11",
+					"data-prohibitions": "[]",
+					className: "absolute top-0 right-0 p-8 opacity-10 pointer-events-none",
+					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Zap, {
+						"data-uid": "src/pages/PlansPage.tsx:85:13",
 						"data-prohibitions": "[editContent]",
-						className: "text-center pb-2",
+						className: "w-32 h-32 text-primary"
+					})
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardContent, {
+					"data-uid": "src/pages/PlansPage.tsx:87:11",
+					"data-prohibitions": "[editContent]",
+					className: "p-6 flex flex-col md:flex-row items-center justify-between gap-6 relative z-10",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						"data-uid": "src/pages/PlansPage.tsx:88:13",
+						"data-prohibitions": "[editContent]",
 						children: [
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardTitle, {
-								"data-uid": "src/pages/PlansPage.tsx:69:15",
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h3", {
+								"data-uid": "src/pages/PlansPage.tsx:89:15",
 								"data-prohibitions": "[editContent]",
-								className: "text-xl text-white",
-								children: plan.name
+								className: "text-xl font-bold text-white mb-1",
+								children: ["Status da Assinatura: ", user.plan]
 							}),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardDescription, {
-								"data-uid": "src/pages/PlansPage.tsx:70:15",
-								"data-prohibitions": "[editContent]",
-								className: "text-muted-foreground min-h-[40px]",
-								children: plan.desc
+							user.plan === "Founder" && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+								"data-uid": "src/pages/PlansPage.tsx:93:17",
+								"data-prohibitions": "[]",
+								className: "text-primary font-medium mb-3",
+								children: "Pagamentos ativados após os 12 meses de acesso gratuito para fundadores."
 							}),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-								"data-uid": "src/pages/PlansPage.tsx:73:15",
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								"data-uid": "src/pages/PlansPage.tsx:97:15",
 								"data-prohibitions": "[editContent]",
-								className: "text-3xl font-bold text-white mt-4",
-								children: plan.price
+								className: "flex flex-wrap gap-4 mt-2",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+									"data-uid": "src/pages/PlansPage.tsx:98:17",
+									"data-prohibitions": "[editContent]",
+									className: "bg-background rounded-md px-4 py-2 border border-border flex items-center gap-3",
+									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CalendarDays, {
+										"data-uid": "src/pages/PlansPage.tsx:99:19",
+										"data-prohibitions": "[editContent]",
+										className: "w-5 h-5 text-muted-foreground"
+									}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+										"data-uid": "src/pages/PlansPage.tsx:100:19",
+										"data-prohibitions": "[editContent]",
+										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+											"data-uid": "src/pages/PlansPage.tsx:101:21",
+											"data-prohibitions": "[]",
+											className: "text-xs text-muted-foreground block",
+											children: "Vencimento (Trial)"
+										}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
+											"data-uid": "src/pages/PlansPage.tsx:102:21",
+											"data-prohibitions": "[editContent]",
+											className: `text-sm font-semibold ${expInfo.isExpired ? "text-destructive" : "text-white"}`,
+											children: [
+												expInfo.expirationDate.toLocaleDateString(),
+												" ",
+												!expInfo.isExpired && `(${expInfo.daysLeft} dias restantes)`
+											]
+										})]
+									})]
+								}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+									"data-uid": "src/pages/PlansPage.tsx:110:17",
+									"data-prohibitions": "[editContent]",
+									className: "bg-background rounded-md px-4 py-2 border border-border flex items-center gap-3",
+									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Gift, {
+										"data-uid": "src/pages/PlansPage.tsx:111:19",
+										"data-prohibitions": "[editContent]",
+										className: "w-5 h-5 text-primary"
+									}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+										"data-uid": "src/pages/PlansPage.tsx:112:19",
+										"data-prohibitions": "[editContent]",
+										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+											"data-uid": "src/pages/PlansPage.tsx:113:21",
+											"data-prohibitions": "[]",
+											className: "text-xs text-muted-foreground block",
+											children: "Créditos Acumulados"
+										}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
+											"data-uid": "src/pages/PlansPage.tsx:114:21",
+											"data-prohibitions": "[editContent]",
+											className: "text-sm font-semibold text-white",
+											children: [expInfo.totalCredits, " meses extras"]
+										})]
+									})]
+								})]
 							})
 						]
-					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardContent, {
-						"data-uid": "src/pages/PlansPage.tsx:75:13",
+					}), discountPct > 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						"data-uid": "src/pages/PlansPage.tsx:122:15",
 						"data-prohibitions": "[editContent]",
-						className: "flex-1 mt-6",
-						children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("ul", {
-							"data-uid": "src/pages/PlansPage.tsx:76:15",
+						className: "text-center bg-background border border-primary/50 p-4 rounded-lg min-w-[140px]",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+							"data-uid": "src/pages/PlansPage.tsx:123:17",
+							"data-prohibitions": "[]",
+							className: "text-xs text-muted-foreground block uppercase tracking-wider mb-1",
+							children: "Desconto Nível"
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
+							"data-uid": "src/pages/PlansPage.tsx:126:17",
 							"data-prohibitions": "[editContent]",
-							className: "space-y-3",
-							children: [plan.features.map((feat, j) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("li", {
-								"data-uid": "src/pages/PlansPage.tsx:78:19",
-								"data-prohibitions": "[editContent]",
-								className: "flex items-center gap-2 text-sm text-muted-foreground",
-								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Check, {
-									"data-uid": "src/pages/PlansPage.tsx:79:21",
-									"data-prohibitions": "[editContent]",
-									className: "w-4 h-4 text-primary shrink-0"
-								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-									"data-uid": "src/pages/PlansPage.tsx:80:21",
-									"data-prohibitions": "[editContent]",
-									children: feat
-								})]
-							}, j)), plan.missing.map((feat, j) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("li", {
-								"data-uid": "src/pages/PlansPage.tsx:84:19",
-								"data-prohibitions": "[editContent]",
-								className: "flex items-center gap-2 text-sm text-muted-foreground/50 line-through",
-								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(X, {
-									"data-uid": "src/pages/PlansPage.tsx:88:21",
-									"data-prohibitions": "[editContent]",
-									className: "w-4 h-4 shrink-0"
-								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-									"data-uid": "src/pages/PlansPage.tsx:89:21",
-									"data-prohibitions": "[editContent]",
-									children: feat
-								})]
-							}, j))]
-						})
-					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardFooter, {
-						"data-uid": "src/pages/PlansPage.tsx:94:13",
+							className: "text-3xl font-bold text-primary",
+							children: [discountPct, "% OFF"]
+						})]
+					})]
+				})]
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+				"data-uid": "src/pages/PlansPage.tsx:133:7",
+				"data-prohibitions": "[editContent]",
+				className: "grid md:grid-cols-3 gap-6",
+				children: plans.map((plan, i) => {
+					const finalPrice = plan.basePrice * (1 - discountPct / 100);
+					const displayPrice = plan.basePrice === 0 ? "R$ 0" : `R$ ${finalPrice.toFixed(0)}/mês`;
+					return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
+						"data-uid": "src/pages/PlansPage.tsx:139:13",
 						"data-prohibitions": "[editContent]",
-						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-							"data-uid": "src/pages/PlansPage.tsx:95:15",
-							"data-prohibitions": "[editContent]",
-							variant: plan.active ? "outline" : "default",
-							disabled: plan.name === "Founder",
-							className: `w-full ${plan.name === "Standard" ? "gold-gradient text-black font-semibold" : plan.active ? "border-border text-muted-foreground" : "bg-secondary text-white"}`,
-							children: plan.btn
-						})
-					})
-				]
-			}, i))
-		})]
+						className: `bg-card border-border flex flex-col ${plan.name === "Standard" ? "border-primary shadow-[0_0_30px_rgba(201,168,76,0.1)] relative" : ""}`,
+						children: [
+							plan.name === "Standard" && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+								"data-uid": "src/pages/PlansPage.tsx:144:17",
+								"data-prohibitions": "[]",
+								className: "absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-primary text-black text-xs font-bold px-3 py-1 rounded-full",
+								children: "RECOMENDADO"
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardHeader, {
+								"data-uid": "src/pages/PlansPage.tsx:148:15",
+								"data-prohibitions": "[editContent]",
+								className: "text-center pb-2",
+								children: [
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardTitle, {
+										"data-uid": "src/pages/PlansPage.tsx:149:17",
+										"data-prohibitions": "[editContent]",
+										className: "text-xl text-white",
+										children: plan.name
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardDescription, {
+										"data-uid": "src/pages/PlansPage.tsx:150:17",
+										"data-prohibitions": "[editContent]",
+										className: "text-muted-foreground min-h-[40px]",
+										children: plan.desc
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+										"data-uid": "src/pages/PlansPage.tsx:153:17",
+										"data-prohibitions": "[editContent]",
+										className: "text-3xl font-bold text-white mt-4 flex items-center justify-center gap-2",
+										children: [plan.basePrice > 0 && discountPct > 0 && plan.canBuy && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
+											"data-uid": "src/pages/PlansPage.tsx:155:21",
+											"data-prohibitions": "[editContent]",
+											className: "text-lg text-muted-foreground line-through",
+											children: ["R$ ", plan.basePrice]
+										}), plan.basePrice > 0 && !plan.canBuy && plan.name === "Founder" ? "Exclusivo" : displayPrice]
+									})
+								]
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardContent, {
+								"data-uid": "src/pages/PlansPage.tsx:164:15",
+								"data-prohibitions": "[editContent]",
+								className: "flex-1 mt-6",
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("ul", {
+									"data-uid": "src/pages/PlansPage.tsx:165:17",
+									"data-prohibitions": "[editContent]",
+									className: "space-y-3",
+									children: [plan.features.map((feat, j) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("li", {
+										"data-uid": "src/pages/PlansPage.tsx:167:21",
+										"data-prohibitions": "[editContent]",
+										className: "flex items-center gap-2 text-sm text-muted-foreground",
+										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Check, {
+											"data-uid": "src/pages/PlansPage.tsx:168:23",
+											"data-prohibitions": "[editContent]",
+											className: "w-4 h-4 text-primary shrink-0"
+										}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+											"data-uid": "src/pages/PlansPage.tsx:169:23",
+											"data-prohibitions": "[editContent]",
+											children: feat
+										})]
+									}, j)), plan.missing.map((feat, j) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("li", {
+										"data-uid": "src/pages/PlansPage.tsx:173:21",
+										"data-prohibitions": "[editContent]",
+										className: "flex items-center gap-2 text-sm text-muted-foreground/50 line-through",
+										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(X, {
+											"data-uid": "src/pages/PlansPage.tsx:177:23",
+											"data-prohibitions": "[editContent]",
+											className: "w-4 h-4 shrink-0"
+										}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+											"data-uid": "src/pages/PlansPage.tsx:178:23",
+											"data-prohibitions": "[editContent]",
+											children: feat
+										})]
+									}, j))]
+								})
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardFooter, {
+								"data-uid": "src/pages/PlansPage.tsx:183:15",
+								"data-prohibitions": "[editContent]",
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+									"data-uid": "src/pages/PlansPage.tsx:184:17",
+									"data-prohibitions": "[editContent]",
+									variant: plan.active ? "outline" : "default",
+									disabled: !plan.canBuy || plan.active,
+									onClick: () => plan.canBuy && !plan.active ? handleCheckout(plan.name, finalPrice) : void 0,
+									className: `w-full ${plan.name === "Standard" && !plan.active ? "gold-gradient text-black font-semibold" : plan.active ? "border-border text-muted-foreground" : "bg-secondary text-white"}`,
+									children: plan.btn
+								})
+							})
+						]
+					}, i);
+				})
+			})
+		]
 	});
 }
 //#endregion
@@ -34124,4 +34510,4 @@ function App() {
 }));
 //#endregion
 
-//# sourceMappingURL=index-BmOuCAed.js.map
+//# sourceMappingURL=index-T6wmNMB8.js.map
