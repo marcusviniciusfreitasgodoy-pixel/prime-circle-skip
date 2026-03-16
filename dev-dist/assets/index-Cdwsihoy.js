@@ -19274,6 +19274,56 @@ var ArrowRight = createLucideIcon("arrow-right", [["path", {
 	d: "m12 5 7 7-7 7",
 	key: "xquz4c"
 }]]);
+var Building = createLucideIcon("building", [
+	["path", {
+		d: "M12 10h.01",
+		key: "1nrarc"
+	}],
+	["path", {
+		d: "M12 14h.01",
+		key: "1etili"
+	}],
+	["path", {
+		d: "M12 6h.01",
+		key: "1vi96p"
+	}],
+	["path", {
+		d: "M16 10h.01",
+		key: "1m94wz"
+	}],
+	["path", {
+		d: "M16 14h.01",
+		key: "1gbofw"
+	}],
+	["path", {
+		d: "M16 6h.01",
+		key: "1x0f13"
+	}],
+	["path", {
+		d: "M8 10h.01",
+		key: "19clt8"
+	}],
+	["path", {
+		d: "M8 14h.01",
+		key: "6423bh"
+	}],
+	["path", {
+		d: "M8 6h.01",
+		key: "1dz90k"
+	}],
+	["path", {
+		d: "M9 22v-3a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3",
+		key: "cabbwy"
+	}],
+	["rect", {
+		x: "4",
+		y: "2",
+		width: "16",
+		height: "20",
+		rx: "2",
+		key: "1uxh74"
+	}]
+]);
 var CalendarDays = createLucideIcon("calendar-days", [
 	["path", {
 		d: "M8 2v4",
@@ -19723,114 +19773,101 @@ var Zap = createLucideIcon("zap", [["path", {
 	key: "1xq2db"
 }]]);
 //#endregion
-//#region src/assets/gemini_generated_image_c06t14c06t14c06t-7beec.png
-var gemini_generated_image_c06t14c06t14c06t_7beec_default = "/assets/gemini_generated_image_c06t14c06t14c06t-7beec-Ps7X2Sju.png";
+//#region src/assets/acesso-fundador-aace0.png
+var acesso_fundador_aace0_default = "/assets/acesso-fundador-aace0-BojBwTtD.png";
 //#endregion
 //#region src/components/home/HeroSection.tsx
 function HeroSection() {
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
-		"data-uid": "src/components/home/HeroSection.tsx:8:5",
-		"data-prohibitions": "[]",
-		className: "relative min-h-[90vh] flex items-center overflow-hidden pt-20",
-		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-			"data-uid": "src/components/home/HeroSection.tsx:9:7",
-			"data-prohibitions": "[]",
-			className: "absolute inset-0 z-0",
-			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-				"data-uid": "src/components/home/HeroSection.tsx:10:9",
+		"data-uid": "src/components/home/HeroSection.tsx:7:5",
+		"data-prohibitions": "[editContent]",
+		className: "relative flex items-center justify-center min-h-[90vh] overflow-hidden w-full",
+		children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+				"data-uid": "src/components/home/HeroSection.tsx:9:7",
 				"data-prohibitions": "[editContent]",
-				className: "absolute inset-0 bg-gradient-to-r from-background via-background/90 to-background/40 z-10"
-			}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
-				"data-uid": "src/components/home/HeroSection.tsx:11:9",
+				className: "absolute inset-0 z-0 bg-cover bg-center bg-no-repeat",
+				style: { backgroundImage: `url(${acesso_fundador_aace0_default})` },
+				"aria-hidden": "true"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+				"data-uid": "src/components/home/HeroSection.tsx:16:7",
 				"data-prohibitions": "[editContent]",
-				src: gemini_generated_image_c06t14c06t14c06t_7beec_default,
-				alt: "High-end real estate lifestyle",
-				className: "w-full h-full object-cover object-right opacity-40 mix-blend-overlay"
-			})]
-		}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-			"data-uid": "src/components/home/HeroSection.tsx:17:7",
-			"data-prohibitions": "[]",
-			className: "container relative z-20 mx-auto px-4 sm:px-6 lg:px-8",
-			children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				"data-uid": "src/components/home/HeroSection.tsx:18:9",
+				className: "absolute inset-0 z-10 bg-black/60 sm:bg-black/50 transition-colors duration-500"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				"data-uid": "src/components/home/HeroSection.tsx:19:7",
 				"data-prohibitions": "[]",
-				className: "max-w-3xl",
+				className: "container relative z-20 px-4 md:px-6 py-24 sm:py-32 flex flex-col items-center text-center",
 				children: [
-					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h1", {
-						"data-uid": "src/components/home/HeroSection.tsx:19:11",
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						"data-uid": "src/components/home/HeroSection.tsx:20:9",
 						"data-prohibitions": "[]",
-						className: "text-4xl md:text-6xl font-bold tracking-tight mb-6 leading-tight",
+						className: "inline-flex items-center rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-sm font-medium text-white mb-8 backdrop-blur-md animate-fade-in-up",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Building, {
+							"data-uid": "src/components/home/HeroSection.tsx:21:11",
+							"data-prohibitions": "[editContent]",
+							className: "mr-2 h-4 w-4 text-primary"
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+							"data-uid": "src/components/home/HeroSection.tsx:22:11",
+							"data-prohibitions": "[]",
+							children: "Acesso Exclusivo para Corretores de Elite"
+						})]
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h1", {
+						"data-uid": "src/components/home/HeroSection.tsx:25:9",
+						"data-prohibitions": "[]",
+						className: "text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-white max-w-5xl mx-auto animate-fade-in-up drop-shadow-md",
+						style: { animationDelay: "100ms" },
 						children: [
-							"Aqui, o outro lado do seu negócio já",
-							" ",
+							"A Infraestrutura Privada de ",
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("br", {
+								"data-uid": "src/components/home/HeroSection.tsx:29:39",
+								"data-prohibitions": "[editContent]",
+								className: "hidden lg:block"
+							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-								"data-uid": "src/components/home/HeroSection.tsx:21:13",
+								"data-uid": "src/components/home/HeroSection.tsx:30:11",
 								"data-prohibitions": "[]",
-								className: "text-primary",
-								children: "está esperando."
+								className: "text-primary drop-shadow-sm",
+								children: "Liquidez Imobiliária"
 							})
 						]
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-						"data-uid": "src/components/home/HeroSection.tsx:23:11",
+						"data-uid": "src/components/home/HeroSection.tsx:33:9",
 						"data-prohibitions": "[]",
-						className: "text-lg md:text-xl text-muted-foreground mb-4 leading-relaxed",
-						children: "Uma rede privada para corretores selecionados da Barra — onde demandas reais circulam antes de qualquer portal ver."
-					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-						"data-uid": "src/components/home/HeroSection.tsx:27:11",
-						"data-prohibitions": "[]",
-						className: "text-base md:text-lg text-foreground/90 font-medium mb-8",
-						children: "Acesso por indicação e aprovação. Demandas e imóveis que não aparecem em nenhum outro lugar."
+						className: "mt-6 text-lg sm:text-xl md:text-2xl text-gray-200 max-w-3xl mx-auto animate-fade-in-up drop-shadow",
+						style: { animationDelay: "200ms" },
+						children: "Uma plataforma exclusiva desenhada para corretores de alto padrão acelerarem fechamentos, acessarem oportunidades off-market e maximizarem seus resultados."
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-						"data-uid": "src/components/home/HeroSection.tsx:31:11",
+						"data-uid": "src/components/home/HeroSection.tsx:41:9",
 						"data-prohibitions": "[]",
-						className: "flex flex-col sm:flex-row gap-4",
-						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-							"data-uid": "src/components/home/HeroSection.tsx:32:13",
+						className: "mt-10 flex flex-col sm:flex-row gap-4 sm:gap-6 w-full sm:w-auto animate-fade-in-up",
+						style: { animationDelay: "300ms" },
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
+							"data-uid": "src/components/home/HeroSection.tsx:45:11",
 							"data-prohibitions": "[]",
 							size: "lg",
-							asChild: true,
-							className: "font-semibold text-lg h-14 px-8 gold-gradient text-black",
-							children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Link, {
-								"data-uid": "src/components/home/HeroSection.tsx:37:15",
-								"data-prohibitions": "[]",
-								to: "/apply",
-								children: ["Aplique para o Prime Circle ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ChevronRight, {
-									"data-uid": "src/components/home/HeroSection.tsx:38:45",
-									"data-prohibitions": "[editContent]",
-									className: "ml-2 w-5 h-5"
-								})]
-							})
+							className: "h-14 px-8 text-base w-full sm:w-auto shadow-lg shadow-primary/25 hover:scale-105 transition-transform duration-300",
+							children: ["Solicitar Acesso", /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ArrowRight, {
+								"data-uid": "src/components/home/HeroSection.tsx:50:13",
+								"data-prohibitions": "[editContent]",
+								className: "ml-2 h-5 w-5"
+							})]
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-							"data-uid": "src/components/home/HeroSection.tsx:41:13",
+							"data-uid": "src/components/home/HeroSection.tsx:52:11",
 							"data-prohibitions": "[]",
 							size: "lg",
 							variant: "outline",
-							asChild: true,
-							className: "border-primary text-primary hover:bg-primary/10 h-14 px-8",
-							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("a", {
-								"data-uid": "src/components/home/HeroSection.tsx:47:15",
-								"data-prohibitions": "[]",
-								href: "#how-it-works",
-								children: "Saiba mais"
-							})
+							className: "h-14 px-8 text-base w-full sm:w-auto bg-black/20 border-white/40 text-white hover:bg-white/20 hover:text-white backdrop-blur-sm transition-all duration-300",
+							children: "Entenda como Funciona"
 						})]
-					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
-						"data-uid": "src/components/home/HeroSection.tsx:50:11",
-						"data-prohibitions": "[]",
-						className: "mt-8 text-sm text-muted-foreground font-medium flex items-center gap-2",
-						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-							"data-uid": "src/components/home/HeroSection.tsx:51:13",
-							"data-prohibitions": "[editContent]",
-							className: "w-2 h-2 rounded-full bg-primary animate-pulse shrink-0"
-						}), "Acesso inicial restrito a corretores convidados por membros do núcleo."]
 					})
 				]
 			})
-		})]
+		]
 	});
 }
 //#endregion
@@ -35599,4 +35636,4 @@ function App() {
 }));
 //#endregion
 
-//# sourceMappingURL=index-D7Jxh6nV.js.map
+//# sourceMappingURL=index-Cdwsihoy.js.map
