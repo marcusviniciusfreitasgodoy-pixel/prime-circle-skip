@@ -21669,7 +21669,200 @@ function FAQSection() {
 }
 //#endregion
 //#region src/stores/main.ts
+var initialListings = [{
+	id: "1",
+	title: "Cobertura Lúcio Costa",
+	type: "Cobertura",
+	price: "R$ 8.500.000",
+	priceValue: 85e5,
+	area: "450m²",
+	beds: 4,
+	neighborhood: "Lúcio Costa",
+	status: "Disponível",
+	image: "https://img.usecurling.com/p/600/400?q=luxury%20penthouse",
+	ownerId: "user1"
+}];
+var initialNeeds = [{
+	id: "1",
+	title: "Cliente Família 4 Pessoas",
+	type: "Casa",
+	priceRange: "Até R$ 7M",
+	neighborhood: "Santa Mônica",
+	urgency: "Alta",
+	ownerId: "other"
+}];
+var initialMatches = [{
+	id: "1",
+	needId: "1",
+	listingId: "1",
+	status: "Contato"
+}];
+var initialBrokerMonitoring = [
+	{
+		id: "1",
+		name: "João Corretor",
+		commitmentLevel: "Alto",
+		toolAdoption: "Alta",
+		lastActive: "Hoje",
+		status: "Ativo"
+	},
+	{
+		id: "2",
+		name: "Maria Santos",
+		commitmentLevel: "Médio",
+		toolAdoption: "Média",
+		lastActive: "Há 3 dias",
+		status: "Ativo"
+	},
+	{
+		id: "3",
+		name: "Pedro Almeida",
+		commitmentLevel: "Baixo",
+		toolAdoption: "Baixa",
+		lastActive: "Há 25 dias",
+		status: "Risco de Exclusão"
+	}
+];
 var AppContext = (0, import_react.createContext)(null);
+function AppProvider({ children }) {
+	const [user, setUser] = (0, import_react.useState)(null);
+	const [listings, setListings] = (0, import_react.useState)(initialListings);
+	const [needs, setNeeds] = (0, import_react.useState)(initialNeeds);
+	const [matches, setMatches] = (0, import_react.useState)(initialMatches);
+	const [brokerMonitoring] = (0, import_react.useState)(initialBrokerMonitoring);
+	const [candidates, setCandidates] = (0, import_react.useState)([]);
+	const [pageViews, setPageViews] = (0, import_react.useState)([]);
+	const [logs, setLogs] = (0, import_react.useState)([]);
+	const [planLimitModalOpen, setPlanLimitModalOpen] = (0, import_react.useState)(false);
+	const login = (status) => setUser({
+		id: "user1",
+		name: "João Corretor",
+		status,
+		tier: "Elite",
+		avatar: "https://img.usecurling.com/ppl/thumbnail?gender=male&seed=1",
+		onboarded: status === "admin" ? true : false,
+		lastLogin: (/* @__PURE__ */ new Date()).toISOString()
+	});
+	const logout = () => setUser(null);
+	const completeOnboarding = () => {
+		setUser((prev) => prev ? {
+			...prev,
+			onboarded: true
+		} : prev);
+	};
+	const logEvent = (action, details) => {
+		setLogs((prev) => [...prev, {
+			action,
+			details,
+			timestamp: (/* @__PURE__ */ new Date()).toISOString()
+		}]);
+	};
+	const trackPageView = (path) => {
+		setPageViews((prev) => [...prev, {
+			path,
+			timestamp: (/* @__PURE__ */ new Date()).toISOString()
+		}]);
+	};
+	const checkPlanLimits = (type) => {
+		if (!user || user.tier !== "None") return true;
+		if (type === "listings") {
+			if (listings.filter((l) => l.ownerId === user.id).length >= 1) return false;
+		}
+		if (type === "needs") {
+			if (needs.filter((n) => n.ownerId === user.id).length >= 1) return false;
+		}
+		if (type === "matches") {
+			if (matches.length >= 3) return false;
+		}
+		return true;
+	};
+	const addListing = (listing) => {
+		if (!checkPlanLimits("listings")) {
+			setPlanLimitModalOpen(true);
+			return false;
+		}
+		setListings((prev) => [...prev, {
+			...listing,
+			id: Date.now().toString(),
+			ownerId: user?.id || "unknown",
+			status: "Disponível"
+		}]);
+		logEvent("Imóvel Cadastrado", `Imóvel adicionado: ${listing.title}`);
+		return true;
+	};
+	const addNeed = (need) => {
+		if (!checkPlanLimits("needs")) {
+			setPlanLimitModalOpen(true);
+			return false;
+		}
+		setNeeds((prev) => [...prev, {
+			...need,
+			id: Date.now().toString(),
+			ownerId: user?.id || "unknown"
+		}]);
+		logEvent("Demanda Cadastrada", `Demanda adicionada: ${need.title}`);
+		return true;
+	};
+	const addMatch = (needId, listingId) => {
+		if (!checkPlanLimits("matches")) {
+			setPlanLimitModalOpen(true);
+			return false;
+		}
+		setMatches((prev) => [...prev, {
+			id: Date.now().toString(),
+			needId,
+			listingId,
+			status: "Novo"
+		}]);
+		logEvent("Match Criado", `Need: ${needId}, Listing: ${listingId}`);
+		return true;
+	};
+	const updateMatchStatus = (id, status) => {
+		setMatches((prev) => prev.map((m) => m.id === id ? {
+			...m,
+			status
+		} : m));
+		logEvent("Status do Match Atualizado", `Match: ${id}, Novo Status: ${status}`);
+	};
+	const closeMatch = (matchId, finalValue) => {
+		setMatches((prev) => prev.map((m) => m.id === matchId ? {
+			...m,
+			status: "Fechado",
+			finalValue
+		} : m));
+		logEvent("Negócio Fechado", `Match: ${matchId}, Valor Final: ${finalValue}`);
+	};
+	const addCandidate = (candidate) => {
+		setCandidates((prev) => [...prev, {
+			...candidate,
+			id: Date.now().toString()
+		}]);
+		logEvent("Nova Aplicação", `Candidato: ${candidate.name}, Status: ${candidate.status}`);
+	};
+	return (0, import_react.createElement)(AppContext.Provider, { value: {
+		user,
+		listings,
+		needs,
+		matches,
+		brokerMonitoring,
+		candidates,
+		pageViews,
+		logs,
+		planLimitModalOpen,
+		setPlanLimitModalOpen,
+		login,
+		logout,
+		completeOnboarding,
+		addListing,
+		addNeed,
+		addMatch,
+		updateMatchStatus,
+		closeMatch,
+		addCandidate,
+		trackPageView,
+		logEvent
+	} }, children);
+}
 function useAppStore() {
 	const context = (0, import_react.useContext)(AppContext);
 	if (!context) throw new Error("useAppStore must be used within AppProvider");
@@ -26168,75 +26361,79 @@ function DashboardLayout() {
 	});
 }
 function App() {
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(TooltipProvider, {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(AppProvider, {
 		"data-uid": "src/App.tsx:31:5",
 		"data-prohibitions": "[]",
-		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Toaster, {
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(TooltipProvider, {
 			"data-uid": "src/App.tsx:32:7",
-			"data-prohibitions": "[editContent]"
-		}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(BrowserRouter, {
-			"data-uid": "src/App.tsx:33:7",
 			"data-prohibitions": "[]",
-			children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Routes, {
+			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Toaster, {
+				"data-uid": "src/App.tsx:33:9",
+				"data-prohibitions": "[editContent]"
+			}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(BrowserRouter, {
 				"data-uid": "src/App.tsx:34:9",
 				"data-prohibitions": "[]",
-				children: [
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-						"data-uid": "src/App.tsx:35:11",
-						"data-prohibitions": "[editContent]",
-						path: "/",
-						element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Index, {
-							"data-uid": "src/App.tsx:35:36",
-							"data-prohibitions": "[editContent]"
-						})
-					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-						"data-uid": "src/App.tsx:36:11",
-						"data-prohibitions": "[editContent]",
-						path: "/apply",
-						element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Apply, {
-							"data-uid": "src/App.tsx:36:41",
-							"data-prohibitions": "[editContent]"
-						})
-					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-						"data-uid": "src/App.tsx:37:11",
-						"data-prohibitions": "[editContent]",
-						path: "/waitlist",
-						element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(WaitlistPage, {
-							"data-uid": "src/App.tsx:37:44",
-							"data-prohibitions": "[editContent]"
-						})
-					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-						"data-uid": "src/App.tsx:38:11",
-						"data-prohibitions": "[]",
-						element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(DashboardLayout, {
-							"data-uid": "src/App.tsx:38:27",
-							"data-prohibitions": "[editContent]"
-						}),
-						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-							"data-uid": "src/App.tsx:39:13",
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Routes, {
+					"data-uid": "src/App.tsx:35:11",
+					"data-prohibitions": "[]",
+					children: [
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
+							"data-uid": "src/App.tsx:36:13",
 							"data-prohibitions": "[editContent]",
-							path: "/dashboard",
-							element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(DashboardPage, {
-								"data-uid": "src/App.tsx:39:47",
+							path: "/",
+							element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Index, {
+								"data-uid": "src/App.tsx:36:38",
+								"data-prohibitions": "[editContent]"
+							})
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
+							"data-uid": "src/App.tsx:37:13",
+							"data-prohibitions": "[editContent]",
+							path: "/apply",
+							element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Apply, {
+								"data-uid": "src/App.tsx:37:43",
+								"data-prohibitions": "[editContent]"
+							})
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
+							"data-uid": "src/App.tsx:38:13",
+							"data-prohibitions": "[editContent]",
+							path: "/waitlist",
+							element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(WaitlistPage, {
+								"data-uid": "src/App.tsx:38:46",
+								"data-prohibitions": "[editContent]"
+							})
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
+							"data-uid": "src/App.tsx:39:13",
+							"data-prohibitions": "[]",
+							element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(DashboardLayout, {
+								"data-uid": "src/App.tsx:39:29",
+								"data-prohibitions": "[editContent]"
+							}),
+							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
+								"data-uid": "src/App.tsx:40:15",
+								"data-prohibitions": "[editContent]",
+								path: "/dashboard",
+								element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(DashboardPage, {
+									"data-uid": "src/App.tsx:40:49",
+									"data-prohibitions": "[editContent]"
+								})
+							})
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
+							"data-uid": "src/App.tsx:42:13",
+							"data-prohibitions": "[editContent]",
+							path: "*",
+							element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(NotFound, {
+								"data-uid": "src/App.tsx:42:38",
 								"data-prohibitions": "[editContent]"
 							})
 						})
-					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-						"data-uid": "src/App.tsx:41:11",
-						"data-prohibitions": "[editContent]",
-						path: "*",
-						element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(NotFound, {
-							"data-uid": "src/App.tsx:41:36",
-							"data-prohibitions": "[editContent]"
-						})
-					})
-				]
-			})
-		})]
+					]
+				})
+			})]
+		})
 	});
 }
 //#endregion
@@ -26247,4 +26444,4 @@ function App() {
 }));
 //#endregion
 
-//# sourceMappingURL=index-W02pdkZN.js.map
+//# sourceMappingURL=index-t7P4AegC.js.map

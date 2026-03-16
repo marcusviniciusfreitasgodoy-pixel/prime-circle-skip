@@ -7,7 +7,7 @@ import NotFound from './pages/NotFound'
 import { Toaster } from '@/components/ui/toaster'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import { Navbar } from '@/components/layout/Navbar'
-import useAppStore from '@/stores/main'
+import useAppStore, { AppProvider } from '@/stores/main'
 
 function DashboardLayout() {
   const { user } = useAppStore()
@@ -28,20 +28,22 @@ function DashboardLayout() {
 
 function App() {
   return (
-    <TooltipProvider>
-      <Toaster />
-      <Router>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/apply" element={<Apply />} />
-          <Route path="/waitlist" element={<WaitlistPage />} />
-          <Route element={<DashboardLayout />}>
-            <Route path="/dashboard" element={<DashboardPage />} />
-          </Route>
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </Router>
-    </TooltipProvider>
+    <AppProvider>
+      <TooltipProvider>
+        <Toaster />
+        <Router>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/apply" element={<Apply />} />
+            <Route path="/waitlist" element={<WaitlistPage />} />
+            <Route element={<DashboardLayout />}>
+              <Route path="/dashboard" element={<DashboardPage />} />
+            </Route>
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Router>
+      </TooltipProvider>
+    </AppProvider>
   )
 }
 
