@@ -1,5 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Activity, GitMerge, Home, Search } from 'lucide-react'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { Activity, GitMerge, Home, Search, AlertCircle } from 'lucide-react'
 import useAppStore from '@/stores/main'
 
 export default function DashboardPage() {
@@ -28,6 +29,22 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-8 animate-fade-in-up">
+      <Alert className="bg-card border-primary/20 text-foreground shadow-[0_0_15px_rgba(201,168,76,0.1)]">
+        <AlertCircle className="h-5 w-5 text-primary" />
+        <AlertTitle className="text-primary font-semibold ml-2">
+          Política de Engajamento e Exclusão
+        </AlertTitle>
+        <AlertDescription className="text-muted-foreground mt-2 ml-2 leading-relaxed">
+          O acesso contínuo à plataforma depende da sua adoção ativa das ferramentas e alto nível de
+          comprometimento. A inatividade prolongada ou conduta fora dos padrões resultará em
+          exclusão da rede para proteger os membros ativos.
+          <strong className="text-foreground block mt-2 font-medium">
+            Essa é uma das condições de acesso, para que se evite surpresas com negociações 2/2/1
+            não mencionadas antes.
+          </strong>
+        </AlertDescription>
+      </Alert>
+
       <div>
         <h2 className="text-3xl font-bold tracking-tight text-white">
           Bem-vindo, {user?.name?.split(' ')[0]}

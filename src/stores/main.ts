@@ -41,12 +41,21 @@ export type Match = {
   status: 'Novo' | 'Contato' | 'Visita' | 'Proposta' | 'Fechado'
   finalValue?: string
 }
+export type BrokerMonitor = {
+  id: string
+  name: string
+  commitmentLevel: 'Alto' | 'Médio' | 'Baixo'
+  toolAdoption: 'Alta' | 'Média' | 'Baixa'
+  lastActive: string
+  status: 'Ativo' | 'Risco de Exclusão'
+}
 
 interface AppState {
   user: User | null
   listings: Listing[]
   needs: Need[]
   matches: Match[]
+  brokerMonitoring: BrokerMonitor[]
   pageViews: { path: string; timestamp: string }[]
   logs: { action: string; details: string; timestamp: string }[]
   planLimitModalOpen: boolean
@@ -93,6 +102,33 @@ const initialNeeds: Need[] = [
 
 const initialMatches: Match[] = [{ id: '1', needId: '1', listingId: '1', status: 'Contato' }]
 
+const initialBrokerMonitoring: BrokerMonitor[] = [
+  {
+    id: '1',
+    name: 'João Corretor',
+    commitmentLevel: 'Alto',
+    toolAdoption: 'Alta',
+    lastActive: 'Hoje',
+    status: 'Ativo',
+  },
+  {
+    id: '2',
+    name: 'Maria Santos',
+    commitmentLevel: 'Médio',
+    toolAdoption: 'Média',
+    lastActive: 'Há 3 dias',
+    status: 'Ativo',
+  },
+  {
+    id: '3',
+    name: 'Pedro Almeida',
+    commitmentLevel: 'Baixo',
+    toolAdoption: 'Baixa',
+    lastActive: 'Há 25 dias',
+    status: 'Risco de Exclusão',
+  },
+]
+
 const AppContext = createContext<AppState | null>(null)
 
 export function AppProvider({ children }: { children: ReactNode }) {
@@ -100,6 +136,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [listings, setListings] = useState<Listing[]>(initialListings)
   const [needs, setNeeds] = useState<Need[]>(initialNeeds)
   const [matches, setMatches] = useState<Match[]>(initialMatches)
+  const [brokerMonitoring] = useState<BrokerMonitor[]>(initialBrokerMonitoring)
   const [pageViews, setPageViews] = useState<{ path: string; timestamp: string }[]>([])
   const [logs, setLogs] = useState<{ action: string; details: string; timestamp: string }[]>([])
   const [planLimitModalOpen, setPlanLimitModalOpen] = useState(false)
@@ -109,7 +146,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       id: 'user1',
       name: 'João Corretor',
       status,
-      tier: 'None', // Simulating free tier by default to test limits
+      tier: 'None',
       avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=1',
       onboarded: status === 'admin' ? true : false,
       lastLogin: new Date().toISOString(),
@@ -130,7 +167,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }
 
   const checkPlanLimits = (type: 'listings' | 'needs' | 'matches') => {
-    if (!user || user.tier !== 'None') return true // Ambassadors and paid plans have unlimited
+    if (!user || user.tier !== 'None') return true
 
     if (type === 'listings') {
       const myListings = listings.filter((l) => l.ownerId === user.id).length
@@ -212,6 +249,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
         listings,
         needs,
         matches,
+        brokerMonitoring,
         pageViews,
         logs,
         planLimitModalOpen,

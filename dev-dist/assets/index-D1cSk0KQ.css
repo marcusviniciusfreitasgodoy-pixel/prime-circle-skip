@@ -1489,6 +1489,9 @@ video {
   margin-top: calc(2rem * calc(1 - var(--tw-space-y-reverse)));
   margin-bottom: calc(2rem * var(--tw-space-y-reverse));
 }
+.self-start {
+  align-self: flex-start;
+}
 .overflow-auto {
   overflow: auto;
 }
@@ -1603,6 +1606,9 @@ video {
 }
 .border-destructive {
   border-color: hsl(var(--destructive));
+}
+.border-destructive\/40 {
+  border-color: hsl(var(--destructive) / 0.4);
 }
 .border-destructive\/50 {
   border-color: hsl(var(--destructive) / 0.5);
@@ -2198,6 +2204,11 @@ video {
   --tw-shadow-colored: 0 0 0 1px var(--tw-shadow-color);
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
+.shadow-\[0_0_15px_rgba\(201\2c 168\2c 76\2c 0\.1\)\] {
+  --tw-shadow: 0 0 15px rgba(201,168,76,0.1);
+  --tw-shadow-colored: 0 0 15px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
 .shadow-\[0_0_15px_rgba\(201\2c 168\2c 76\2c 0\.15\)\] {
   --tw-shadow: 0 0 15px rgba(201,168,76,0.15);
   --tw-shadow-colored: 0 0 15px var(--tw-shadow-color);
@@ -2205,6 +2216,11 @@ video {
 }
 .shadow-\[0_0_15px_rgba\(201\2c 168\2c 76\2c 0\.3\)\] {
   --tw-shadow: 0 0 15px rgba(201,168,76,0.3);
+  --tw-shadow-colored: 0 0 15px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+.shadow-\[0_0_15px_rgba\(255\2c 0\2c 0\2c 0\.1\)\] {
+  --tw-shadow: 0 0 15px rgba(255,0,0,0.1);
   --tw-shadow-colored: 0 0 15px var(--tw-shadow-color);
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
@@ -2563,6 +2579,9 @@ video {
 }
 .hover\:bg-background\/80:hover {
   background-color: hsl(var(--background) / 0.8);
+}
+.hover\:bg-destructive\/10:hover {
+  background-color: hsl(var(--destructive) / 0.1);
 }
 .hover\:bg-destructive\/80:hover {
   background-color: hsl(var(--destructive) / 0.8);
@@ -3412,10 +3431,18 @@ video {
     gap: 0.625rem;
   }
 
+  .sm\:gap-8 {
+    gap: 2rem;
+  }
+
   .sm\:space-x-2 > :not([hidden]) ~ :not([hidden]) {
     --tw-space-x-reverse: 0;
     margin-right: calc(0.5rem * var(--tw-space-x-reverse));
     margin-left: calc(0.5rem * calc(1 - var(--tw-space-x-reverse)));
+  }
+
+  .sm\:self-center {
+    align-self: center;
   }
 
   .sm\:rounded-lg {

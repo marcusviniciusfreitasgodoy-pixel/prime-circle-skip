@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
-import { Check, X, Send, Activity, Zap, Mail, Trophy } from 'lucide-react'
+import { Check, X, Send, Activity, Mail, Trophy, ShieldAlert, AlertTriangle } from 'lucide-react'
 import { toast } from 'sonner'
 import useAppStore from '@/stores/main'
 import {
@@ -13,7 +13,7 @@ import {
 } from '@/lib/email'
 
 export default function AdminPage() {
-  const { logs, logEvent } = useAppStore()
+  const { logs, logEvent, brokerMonitoring } = useAppStore()
 
   const requests = [
     {
@@ -62,9 +62,9 @@ export default function AdminPage() {
 
   const handleAction = async (name: string, email: string, action: 'approved' | 'rejected') => {
     if (action === 'approved') {
-      toast.success(`Solicitação de ${name} aprovada. Enviando e-mails...`)
+      toast.success(`Solicitação de ${name} aprovada. Enviando e-mails e liberando acesso...`)
       await sendTransactionalEmail('Welcome Email', { to: email, name })
-      logEvent('Aprovação de Usuário', `O candidato ${name} foi aprovado.`)
+      logEvent('Aprovação de Usuário', `O candidato ${name} foi aprovado com acesso imediato.`)
     } else {
       toast.error(`Solicitação de ${name} rejeitada.`)
       logEvent('Rejeição de Usuário', `O candidato ${name} foi rejeitado.`)
@@ -79,6 +79,11 @@ export default function AdminPage() {
   const handleReward = (member: string) => {
     toast.success(`Recompensa (1 mês grátis) creditada para ${member}!`)
     logEvent('Admin Action', `Recompensa de sugestão concedida a ${member}.`)
+  }
+
+  const handleWarnBroker = (id: string) => {
+    toast.success('Notificação de inatividade e risco de exclusão enviada com sucesso.')
+    logEvent('Admin Action', `Aviso de exclusão enviado para o corretor ID: ${id}`)
   }
 
   return (
@@ -105,6 +110,12 @@ export default function AdminPage() {
             Lista de Espera
           </TabsTrigger>
           <TabsTrigger
+            value="monitoring"
+            className="data-[state=active]:bg-secondary data-[state=active]:text-primary"
+          >
+            Monitoramento
+          </TabsTrigger>
+          <TabsTrigger
             value="suggestions"
             className="data-[state=active]:bg-secondary data-[state=active]:text-primary"
           >
@@ -114,7 +125,7 @@ export default function AdminPage() {
             value="reviews"
             className="data-[state=active]:bg-secondary data-[state=active]:text-primary"
           >
-            Review Quinzenal
+            Review
           </TabsTrigger>
           <TabsTrigger
             value="comms"
@@ -204,6 +215,102 @@ export default function AdminPage() {
               </CardContent>
             </Card>
           ))}
+        </TabsContent>
+
+        <TabsContent value="monitoring" className="mt-6 space-y-4">
+          <div className="flex flex-col sm:flex-row justify-between sm:items-center bg-card p-4 rounded-lg border border-border mb-4 gap-4">
+            <div>
+              <h3 className="text-white font-medium flex items-center gap-2">
+                <ShieldAlert className="w-5 h-5 text-primary" /> Monitoramento Mensal
+              </h3>
+              <p className="text-sm text-muted-foreground mt-1 max-w-xl">
+                Acompanhamento automático de adoção e comprometimento. Corretores fora do padrão ou
+                inativos são sinalizados para exclusão imediata.
+              </p>
+            </div>
+            <Button
+              variant="outline"
+              className="border-border text-muted-foreground whitespace-nowrap"
+              onClick={() => toast.success('Análise mensal executada com sucesso.')}
+            >
+              Rodar Análise
+            </Button>
+          </div>
+
+          <div className="grid gap-4">
+            {brokerMonitoring.map((broker) => (
+              <Card
+                key={broker.id}
+                className={`bg-secondary border-border ${
+                  broker.status === 'Risco de Exclusão'
+                    ? 'border-destructive/40 shadow-[0_0_15px_rgba(255,0,0,0.1)]'
+                    : ''
+                }`}
+              >
+                <CardContent className="p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+                  <div className="flex items-center gap-4">
+                    <Avatar className="h-10 w-10">
+                      <AvatarImage
+                        src={`https://img.usecurling.com/ppl/thumbnail?seed=${broker.id}`}
+                      />
+                      <AvatarFallback>{broker.name[0]}</AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <h3 className="font-semibold text-white flex flex-col sm:flex-row sm:items-center gap-2">
+                        {broker.name}
+                        {broker.status === 'Risco de Exclusão' && (
+                          <Badge variant="destructive" className="text-[10px] uppercase w-fit">
+                            Risco de Exclusão
+                          </Badge>
+                        )}
+                      </h3>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Último acesso: {broker.lastActive}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row gap-4 sm:gap-8 w-full md:w-auto">
+                    <div className="space-y-1">
+                      <p className="text-xs text-muted-foreground uppercase tracking-wider">
+                        Adoção de Ferramenta
+                      </p>
+                      <p
+                        className={`text-sm font-medium ${
+                          broker.toolAdoption === 'Baixa' ? 'text-destructive' : 'text-primary'
+                        }`}
+                      >
+                        {broker.toolAdoption}
+                      </p>
+                    </div>
+                    <div className="space-y-1">
+                      <p className="text-xs text-muted-foreground uppercase tracking-wider">
+                        Comprometimento
+                      </p>
+                      <p
+                        className={`text-sm font-medium ${
+                          broker.commitmentLevel === 'Baixo' ? 'text-destructive' : 'text-primary'
+                        }`}
+                      >
+                        {broker.commitmentLevel}
+                      </p>
+                    </div>
+                    {broker.status === 'Risco de Exclusão' && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="border-destructive/50 text-destructive hover:bg-destructive/10 self-start sm:self-center"
+                        onClick={() => handleWarnBroker(broker.id)}
+                      >
+                        <AlertTriangle className="w-4 h-4 mr-2" />
+                        Avisar
+                      </Button>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </TabsContent>
 
         <TabsContent value="suggestions" className="mt-6 space-y-4">

@@ -19418,22 +19418,6 @@ var TrendingUp = createLucideIcon("trending-up", [["path", {
 	d: "m22 7-8.5 8.5-5-5L2 17",
 	key: "1t1m79"
 }]]);
-var UserCheck = createLucideIcon("user-check", [
-	["path", {
-		d: "m16 11 2 2 4-4",
-		key: "9rsbq5"
-	}],
-	["path", {
-		d: "M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2",
-		key: "1yyitq"
-	}],
-	["circle", {
-		cx: "9",
-		cy: "7",
-		r: "4",
-		key: "nufk8"
-	}]
-]);
 var Users = createLucideIcon("users", [
 	["path", {
 		d: "M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2",
@@ -19460,6 +19444,10 @@ var X = createLucideIcon("x", [["path", {
 }], ["path", {
 	d: "m6 6 12 12",
 	key: "d8bk6v"
+}]]);
+var Zap = createLucideIcon("zap", [["path", {
+	d: "M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z",
+	key: "1xq2db"
 }]]);
 //#endregion
 //#region src/assets/gemini_generated_image_c06t14c06t14c06t-7beec.png
@@ -20260,19 +20248,29 @@ function ReferralSection() {
 							children: "Parceiros Qualificados"
 						})]
 					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
 						"data-uid": "src/components/home/ReferralSection.tsx:17:11",
 						"data-prohibitions": "[]",
 						className: "text-xl text-muted-foreground max-w-2xl mb-10 leading-relaxed",
-						children: "Indique parceiros qualificados e fortaleça nossa rede. Uma comunidade de alto nível gera mais liquidez, segurança e oportunidades exclusivas para todos os membros."
+						children: [
+							"Indique parceiros qualificados e fortaleça nossa rede. Uma vez aprovados, eles recebem",
+							" ",
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", {
+								"data-uid": "src/components/home/ReferralSection.tsx:19:13",
+								"data-prohibitions": "[]",
+								className: "text-primary font-semibold",
+								children: "acesso imediato"
+							}),
+							" à plataforma. Uma comunidade de alto nível gera mais liquidez, segurança e oportunidades exclusivas para todos os membros."
+						]
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
-						"data-uid": "src/components/home/ReferralSection.tsx:21:11",
+						"data-uid": "src/components/home/ReferralSection.tsx:23:11",
 						"data-prohibitions": "[]",
 						size: "lg",
 						className: "h-16 px-10 font-bold text-lg shadow-[0_0_20px_rgba(201,168,76,0.2)] hover:shadow-[0_0_40px_rgba(201,168,76,0.4)] hover:-translate-y-1 transition-all duration-300",
 						children: ["Indicar um Parceiro ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ArrowRight, {
-							"data-uid": "src/components/home/ReferralSection.tsx:25:33",
+							"data-uid": "src/components/home/ReferralSection.tsx:27:33",
 							"data-prohibitions": "[editContent]",
 							className: "ml-3 w-6 h-6"
 						})]
@@ -20297,9 +20295,9 @@ function ProcessTimeline() {
 			desc: "Avaliação de portfólio e background check detalhado."
 		},
 		{
-			icon: UserCheck,
-			title: "Entrevista",
-			desc: "Alinhamento cultural e validação dos 7 pilares."
+			icon: Zap,
+			title: "Acesso Imediato",
+			desc: "Aprovação ágil e liberação instantânea de todo o ecossistema."
 		},
 		{
 			icon: Play,
@@ -20339,7 +20337,7 @@ function ProcessTimeline() {
 						"data-uid": "src/components/home/ProcessTimeline.tsx:41:11",
 						"data-prohibitions": "[]",
 						className: "text-xl text-muted-foreground max-w-2xl mx-auto",
-						children: "Um processo seletivo estruturado para garantir a excelência e exclusividade da nossa comunidade."
+						children: "Um processo estruturado para garantir a excelência e liberação imediata da infraestrutura para profissionais qualificados."
 					})]
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
@@ -25551,4 +25549,4 @@ function App() {
 }));
 //#endregion
 
-//# sourceMappingURL=index-DyP8q-lc.js.map
+//# sourceMappingURL=index-7tnE7FtR.js.map

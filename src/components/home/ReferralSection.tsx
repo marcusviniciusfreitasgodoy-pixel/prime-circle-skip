@@ -15,8 +15,10 @@ export function ReferralSection() {
             Indicação de <span className="text-primary">Parceiros Qualificados</span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mb-10 leading-relaxed">
-            Indique parceiros qualificados e fortaleça nossa rede. Uma comunidade de alto nível gera
-            mais liquidez, segurança e oportunidades exclusivas para todos os membros.
+            Indique parceiros qualificados e fortaleça nossa rede. Uma vez aprovados, eles recebem{' '}
+            <strong className="text-primary font-semibold">acesso imediato</strong> à plataforma.
+            Uma comunidade de alto nível gera mais liquidez, segurança e oportunidades exclusivas
+            para todos os membros.
           </p>
           <Button
             size="lg"

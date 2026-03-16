@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
-import { ChevronRight, FileText, Search, UserCheck, Play, DollarSign } from 'lucide-react'
+import { ChevronRight, FileText, Search, Zap, Play, DollarSign } from 'lucide-react'
 
 export function ProcessTimeline() {
   const steps = [
@@ -15,9 +15,9 @@ export function ProcessTimeline() {
       desc: 'Avaliação de portfólio e background check detalhado.',
     },
     {
-      icon: UserCheck,
-      title: 'Entrevista',
-      desc: 'Alinhamento cultural e validação dos 7 pilares.',
+      icon: Zap,
+      title: 'Acesso Imediato',
+      desc: 'Aprovação ágil e liberação instantânea de todo o ecossistema.',
     },
     {
       icon: Play,
@@ -39,8 +39,8 @@ export function ProcessTimeline() {
             Seu Caminho até a <span className="text-primary">Elite</span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Um processo seletivo estruturado para garantir a excelência e exclusividade da nossa
-            comunidade.
+            Um processo estruturado para garantir a excelência e liberação imediata da
+            infraestrutura para profissionais qualificados.
           </p>
         </div>
 
