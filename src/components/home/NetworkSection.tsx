@@ -10,11 +10,12 @@ export function NetworkSection() {
           <div className="flex-1 space-y-8">
             <div>
               <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                Uma infraestrutura desenhada para liquidez e confiança.
+                Tecnologia proprietária para gerar liquidez imediata.
               </h2>
               <p className="text-lg text-muted-foreground">
-                O Prime Circle não é um portal. É uma ferramenta operacional focada na garantia de
-                negócios (50/50) através de Chapter Isolation e curadoria rigorosa.
+                O Prime Circle não é mais uma vitrine de imóveis. É um clube de negócios movido por
+                uma infraestrutura de liquidez automática, focada na garantia de negócios (50/50) e
+                curadoria rigorosa.
               </p>
             </div>
 
@@ -24,10 +25,10 @@ export function NetworkSection() {
                   <Shield className="w-5 h-5 text-primary" />
                 </div>
                 <div>
-                  <h4 className="text-lg font-semibold text-white">Governança Rigorosa</h4>
+                  <h4 className="text-lg font-semibold text-white">Governança de Elite</h4>
                   <p className="text-muted-foreground mt-1">
-                    Acesso exclusivo por convite. Verificação automática de 7 critérios e auditoria
-                    contínua de atividade.
+                    Acesso exclusivo por convite e aprovação. Verificação de credenciais e auditoria
+                    contínua para garantir um ambiente 100% profissional.
                   </p>
                 </div>
               </li>
@@ -36,10 +37,11 @@ export function NetworkSection() {
                   <Target className="w-5 h-5 text-primary" />
                 </div>
                 <div>
-                  <h4 className="text-lg font-semibold text-white">Matches Precisos</h4>
+                  <h4 className="text-lg font-semibold text-white">Algoritmo de Match</h4>
                   <p className="text-muted-foreground mt-1">
-                    Algoritmo liga diretamente suas demandas ativas aos imóveis da rede, gerando um
-                    pipeline estruturado até o fechamento.
+                    Nossa tecnologia cruza automaticamente as demandas ativas com os imóveis
+                    off-market da rede, gerando liquidez imediata e conexões precisas sem esforço
+                    manual.
                   </p>
                 </div>
               </li>
@@ -50,8 +52,8 @@ export function NetworkSection() {
                 <div>
                   <h4 className="text-lg font-semibold text-white">Chapter Isolation</h4>
                   <p className="text-muted-foreground mt-1">
-                    Informações isoladas por região (Ex: Barra da Tijuca). Suas demandas não vazam
-                    para fora do seu círculo de atuação.
+                    Suas operações são isoladas e protegidas. Demandas e ofertas da Barra da Tijuca
+                    não vazam, mantendo a exclusividade e confidencialidade dos seus clientes.
                   </p>
                 </div>
               </li>
@@ -64,7 +66,7 @@ export function NetworkSection() {
                 AMBIENTE SEGURO
               </div>
               <h3 className="text-xl font-bold text-white mb-6 border-b border-border pb-4">
-                Política de Engajamento
+                O Padrão Prime Circle
               </h3>
               <div className="space-y-4 text-sm text-muted-foreground">
                 <div className="flex items-center gap-2">
@@ -72,16 +74,16 @@ export function NetworkSection() {
                   à divisão 50/50 em comissões.
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-primary shrink-0" /> Necessidade de
-                  confirmação bilateral para negócios fechados.
+                  <div className="w-1.5 h-1.5 rounded-full bg-primary shrink-0" /> Sigilo absoluto
+                  sobre as operações e clientes envolvidos.
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-1.5 h-1.5 rounded-full bg-destructive shrink-0" /> Inatividade
-                  prolongada (&gt;60 dias) acarreta perda de benefícios.
+                  prolongada (&gt;60 dias) acarreta perda de acesso.
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-destructive shrink-0" /> Transgressão
-                  ética resulta em banimento sem recurso.
+                  <div className="w-1.5 h-1.5 rounded-full bg-destructive shrink-0" /> Quebra de
+                  governança ou ética resulta em banimento irreversível.
                 </div>
               </div>
             </div>

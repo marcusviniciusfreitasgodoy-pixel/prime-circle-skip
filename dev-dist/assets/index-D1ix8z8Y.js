@@ -19753,7 +19753,7 @@ function HeroSection() {
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 						"data-uid": "src/components/home/HeroSection.tsx:20:9",
 						"data-prohibitions": "[]",
-						className: "inline-flex items-center text-left sm:text-center rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-sm sm:text-base font-medium text-white mb-8 backdrop-blur-md animate-fade-in-up max-w-[95%]",
+						className: "inline-flex items-center text-left sm:text-center rounded-full border border-primary/30 bg-primary/10 px-4 py-1.5 text-sm sm:text-base font-medium text-white mb-8 backdrop-blur-md animate-fade-in-up max-w-[95%]",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Lock, {
 							"data-uid": "src/components/home/HeroSection.tsx:21:11",
 							"data-prohibitions": "[editContent]",
@@ -19762,7 +19762,7 @@ function HeroSection() {
 							"data-uid": "src/components/home/HeroSection.tsx:22:11",
 							"data-prohibitions": "[]",
 							className: "truncate whitespace-normal sm:whitespace-nowrap",
-							children: "Acesso restrito a corretores convidados por membros do núcleo."
+							children: "Um clube exclusivo para a elite do mercado imobiliário."
 						})]
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h1", {
@@ -19771,14 +19771,14 @@ function HeroSection() {
 						className: "text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-white max-w-5xl mx-auto animate-fade-in-up drop-shadow-md leading-tight",
 						style: { animationDelay: "100ms" },
 						children: [
-							"Aqui, o outro lado do seu negócio",
-							" ",
+							"O ",
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-								"data-uid": "src/components/home/HeroSection.tsx:32:11",
+								"data-uid": "src/components/home/HeroSection.tsx:31:13",
 								"data-prohibitions": "[]",
 								className: "text-primary drop-shadow-sm",
-								children: "já está esperando."
-							})
+								children: "Lado B dos negócios"
+							}),
+							" imobiliários de alto padrão."
 						]
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
@@ -19786,14 +19786,14 @@ function HeroSection() {
 						"data-prohibitions": "[]",
 						className: "mt-6 text-lg sm:text-xl md:text-2xl text-gray-200 max-w-3xl mx-auto animate-fade-in-up drop-shadow",
 						style: { animationDelay: "200ms" },
-						children: "Uma rede privada para corretores selecionados da Barra da Tijuca — onde demandas reais circulam antes de qualquer portal ver."
+						children: "Um clube exclusivo onde demandas reais e imóveis off-market circulam e se conectam muito antes de chegarem aos portais públicos."
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
 						"data-uid": "src/components/home/HeroSection.tsx:43:9",
 						"data-prohibitions": "[]",
 						className: "mt-4 text-base sm:text-lg text-gray-300 max-w-2xl mx-auto animate-fade-in-up drop-shadow font-medium",
 						style: { animationDelay: "250ms" },
-						children: "Acesso por indicação e aprovação. Demandas e imóveis que não aparecem em nenhum outro lugar."
+						children: "Acesso rigoroso por indicação e aprovação. Liquidez silenciosa e parcerias de alto nível na Barra da Tijuca."
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 						"data-uid": "src/components/home/HeroSection.tsx:51:9",
@@ -19844,102 +19844,102 @@ function ProblemSection() {
 					"data-uid": "src/components/home/ProblemSection.tsx:8:11",
 					"data-prohibitions": "[]",
 					className: "text-3xl md:text-4xl font-bold mb-4",
-					children: "O mercado de alto padrão está quebrado."
+					children: "O fim do caos no mercado de alto padrão."
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
 					"data-uid": "src/components/home/ProblemSection.tsx:11:11",
 					"data-prohibitions": "[]",
 					className: "text-lg text-muted-foreground",
-					children: "Grupos de WhatsApp lotados, informações perdidas, parcerias não honradas e falta de privacidade para seus clientes exclusivos."
+					children: "Diga adeus à fadiga dos portais ineficientes e ao ruído dos grupos de WhatsApp desorganizados. O Prime Circle é a solução curada que elimina distrações e foca no que importa para a elite da Barra da Tijuca."
 				})]
 			}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				"data-uid": "src/components/home/ProblemSection.tsx:17:9",
+				"data-uid": "src/components/home/ProblemSection.tsx:18:9",
 				"data-prohibitions": "[]",
 				className: "grid md:grid-cols-3 gap-8",
 				children: [
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-						"data-uid": "src/components/home/ProblemSection.tsx:18:11",
+						"data-uid": "src/components/home/ProblemSection.tsx:19:11",
 						"data-prohibitions": "[]",
 						className: "bg-secondary/50 p-8 rounded-2xl border border-border",
 						children: [
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-								"data-uid": "src/components/home/ProblemSection.tsx:19:13",
+								"data-uid": "src/components/home/ProblemSection.tsx:20:13",
 								"data-prohibitions": "[]",
 								className: "w-12 h-12 rounded-full bg-destructive/10 flex items-center justify-center mb-6",
 								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(EyeOff, {
-									"data-uid": "src/components/home/ProblemSection.tsx:20:15",
+									"data-uid": "src/components/home/ProblemSection.tsx:21:15",
 									"data-prohibitions": "[editContent]",
 									className: "w-6 h-6 text-destructive"
 								})
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
-								"data-uid": "src/components/home/ProblemSection.tsx:22:13",
-								"data-prohibitions": "[]",
-								className: "text-xl font-semibold text-white mb-3",
-								children: "Exposição Desnecessária"
-							}),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
 								"data-uid": "src/components/home/ProblemSection.tsx:23:13",
 								"data-prohibitions": "[]",
+								className: "text-xl font-semibold text-white mb-3",
+								children: "A Ineficiência dos Portais"
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+								"data-uid": "src/components/home/ProblemSection.tsx:24:13",
+								"data-prohibitions": "[]",
 								className: "text-muted-foreground",
-								children: "Colocar imóveis de clientes premium em portais abertos desvaloriza o ativo e irrita o proprietário."
+								children: "Publicar imóveis premium em portais abertos desvaloriza o ativo, atrai curiosos e desgasta a relação de exclusividade com o proprietário."
 							})
 						]
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-						"data-uid": "src/components/home/ProblemSection.tsx:29:11",
+						"data-uid": "src/components/home/ProblemSection.tsx:30:11",
 						"data-prohibitions": "[]",
 						className: "bg-secondary/50 p-8 rounded-2xl border border-border",
 						children: [
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-								"data-uid": "src/components/home/ProblemSection.tsx:30:13",
+								"data-uid": "src/components/home/ProblemSection.tsx:31:13",
 								"data-prohibitions": "[]",
 								className: "w-12 h-12 rounded-full bg-destructive/10 flex items-center justify-center mb-6",
 								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CircleAlert, {
-									"data-uid": "src/components/home/ProblemSection.tsx:31:15",
+									"data-uid": "src/components/home/ProblemSection.tsx:32:15",
 									"data-prohibitions": "[editContent]",
 									className: "w-6 h-6 text-destructive"
 								})
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
-								"data-uid": "src/components/home/ProblemSection.tsx:33:13",
-								"data-prohibitions": "[]",
-								className: "text-xl font-semibold text-white mb-3",
-								children: "O Caos dos Grupos"
-							}),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
 								"data-uid": "src/components/home/ProblemSection.tsx:34:13",
 								"data-prohibitions": "[]",
+								className: "text-xl font-semibold text-white mb-3",
+								children: "O Caos do WhatsApp"
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+								"data-uid": "src/components/home/ProblemSection.tsx:35:13",
+								"data-prohibitions": "[]",
 								className: "text-muted-foreground",
-								children: "Mensagens perdidas, demandas irrelevantes e a constante insegurança sobre a procedência da informação."
+								children: "Centenas de mensagens irrelevantes por dia. Demandas reais se perdem em meio ao amadorismo, à falta de filtros e à desorganização total."
 							})
 						]
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-						"data-uid": "src/components/home/ProblemSection.tsx:40:11",
+						"data-uid": "src/components/home/ProblemSection.tsx:41:11",
 						"data-prohibitions": "[]",
 						className: "bg-secondary/50 p-8 rounded-2xl border border-border",
 						children: [
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-								"data-uid": "src/components/home/ProblemSection.tsx:41:13",
+								"data-uid": "src/components/home/ProblemSection.tsx:42:13",
 								"data-prohibitions": "[]",
 								className: "w-12 h-12 rounded-full bg-destructive/10 flex items-center justify-center mb-6",
 								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Handshake, {
-									"data-uid": "src/components/home/ProblemSection.tsx:42:15",
+									"data-uid": "src/components/home/ProblemSection.tsx:43:15",
 									"data-prohibitions": "[editContent]",
 									className: "w-6 h-6 text-destructive"
 								})
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
-								"data-uid": "src/components/home/ProblemSection.tsx:44:13",
-								"data-prohibitions": "[]",
-								className: "text-xl font-semibold text-white mb-3",
-								children: "Ética Questionável"
-							}),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
 								"data-uid": "src/components/home/ProblemSection.tsx:45:13",
 								"data-prohibitions": "[]",
+								className: "text-xl font-semibold text-white mb-3",
+								children: "Parcerias Inseguras"
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+								"data-uid": "src/components/home/ProblemSection.tsx:46:13",
+								"data-prohibitions": "[]",
 								className: "text-muted-foreground",
-								children: "Acordos de 50/50 não honrados e \"atravessamentos\" que minam a confiança entre os profissionais."
+								children: "Acordos de boca não honrados, falta de governança e atravessamentos que minam a confiança e destroem negócios de alto ticket."
 							})
 						]
 					})
@@ -19978,172 +19978,172 @@ function NetworkSection() {
 							"data-uid": "src/components/home/NetworkSection.tsx:12:15",
 							"data-prohibitions": "[]",
 							className: "text-3xl md:text-4xl font-bold mb-4",
-							children: "Uma infraestrutura desenhada para liquidez e confiança."
+							children: "Tecnologia proprietária para gerar liquidez imediata."
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
 							"data-uid": "src/components/home/NetworkSection.tsx:15:15",
 							"data-prohibitions": "[]",
 							className: "text-lg text-muted-foreground",
-							children: "O Prime Circle não é um portal. É uma ferramenta operacional focada na garantia de negócios (50/50) através de Chapter Isolation e curadoria rigorosa."
+							children: "O Prime Circle não é mais uma vitrine de imóveis. É um clube de negócios movido por uma infraestrutura de liquidez automática, focada na garantia de negócios (50/50) e curadoria rigorosa."
 						})]
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("ul", {
-						"data-uid": "src/components/home/NetworkSection.tsx:21:13",
+						"data-uid": "src/components/home/NetworkSection.tsx:22:13",
 						"data-prohibitions": "[]",
 						className: "space-y-6",
 						children: [
 							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("li", {
-								"data-uid": "src/components/home/NetworkSection.tsx:22:15",
+								"data-uid": "src/components/home/NetworkSection.tsx:23:15",
 								"data-prohibitions": "[]",
 								className: "flex gap-4",
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-									"data-uid": "src/components/home/NetworkSection.tsx:23:17",
+									"data-uid": "src/components/home/NetworkSection.tsx:24:17",
 									"data-prohibitions": "[]",
 									className: "w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0",
 									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Shield, {
-										"data-uid": "src/components/home/NetworkSection.tsx:24:19",
+										"data-uid": "src/components/home/NetworkSection.tsx:25:19",
 										"data-prohibitions": "[editContent]",
 										className: "w-5 h-5 text-primary"
 									})
 								}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-									"data-uid": "src/components/home/NetworkSection.tsx:26:17",
+									"data-uid": "src/components/home/NetworkSection.tsx:27:17",
 									"data-prohibitions": "[]",
 									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h4", {
-										"data-uid": "src/components/home/NetworkSection.tsx:27:19",
-										"data-prohibitions": "[]",
-										className: "text-lg font-semibold text-white",
-										children: "Governança Rigorosa"
-									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
 										"data-uid": "src/components/home/NetworkSection.tsx:28:19",
 										"data-prohibitions": "[]",
+										className: "text-lg font-semibold text-white",
+										children: "Governança de Elite"
+									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+										"data-uid": "src/components/home/NetworkSection.tsx:29:19",
+										"data-prohibitions": "[]",
 										className: "text-muted-foreground mt-1",
-										children: "Acesso exclusivo por convite. Verificação automática de 7 critérios e auditoria contínua de atividade."
+										children: "Acesso exclusivo por convite e aprovação. Verificação de credenciais e auditoria contínua para garantir um ambiente 100% profissional."
 									})]
 								})]
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("li", {
-								"data-uid": "src/components/home/NetworkSection.tsx:34:15",
+								"data-uid": "src/components/home/NetworkSection.tsx:35:15",
 								"data-prohibitions": "[]",
 								className: "flex gap-4",
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-									"data-uid": "src/components/home/NetworkSection.tsx:35:17",
+									"data-uid": "src/components/home/NetworkSection.tsx:36:17",
 									"data-prohibitions": "[]",
 									className: "w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0",
 									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Target, {
-										"data-uid": "src/components/home/NetworkSection.tsx:36:19",
+										"data-uid": "src/components/home/NetworkSection.tsx:37:19",
 										"data-prohibitions": "[editContent]",
 										className: "w-5 h-5 text-primary"
 									})
 								}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-									"data-uid": "src/components/home/NetworkSection.tsx:38:17",
+									"data-uid": "src/components/home/NetworkSection.tsx:39:17",
 									"data-prohibitions": "[]",
 									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h4", {
-										"data-uid": "src/components/home/NetworkSection.tsx:39:19",
-										"data-prohibitions": "[]",
-										className: "text-lg font-semibold text-white",
-										children: "Matches Precisos"
-									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
 										"data-uid": "src/components/home/NetworkSection.tsx:40:19",
 										"data-prohibitions": "[]",
+										className: "text-lg font-semibold text-white",
+										children: "Algoritmo de Match"
+									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+										"data-uid": "src/components/home/NetworkSection.tsx:41:19",
+										"data-prohibitions": "[]",
 										className: "text-muted-foreground mt-1",
-										children: "Algoritmo liga diretamente suas demandas ativas aos imóveis da rede, gerando um pipeline estruturado até o fechamento."
+										children: "Nossa tecnologia cruza automaticamente as demandas ativas com os imóveis off-market da rede, gerando liquidez imediata e conexões precisas sem esforço manual."
 									})]
 								})]
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("li", {
-								"data-uid": "src/components/home/NetworkSection.tsx:46:15",
+								"data-uid": "src/components/home/NetworkSection.tsx:48:15",
 								"data-prohibitions": "[]",
 								className: "flex gap-4",
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-									"data-uid": "src/components/home/NetworkSection.tsx:47:17",
+									"data-uid": "src/components/home/NetworkSection.tsx:49:17",
 									"data-prohibitions": "[]",
 									className: "w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0",
 									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Lock, {
-										"data-uid": "src/components/home/NetworkSection.tsx:48:19",
+										"data-uid": "src/components/home/NetworkSection.tsx:50:19",
 										"data-prohibitions": "[editContent]",
 										className: "w-5 h-5 text-primary"
 									})
 								}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-									"data-uid": "src/components/home/NetworkSection.tsx:50:17",
+									"data-uid": "src/components/home/NetworkSection.tsx:52:17",
 									"data-prohibitions": "[]",
 									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h4", {
-										"data-uid": "src/components/home/NetworkSection.tsx:51:19",
+										"data-uid": "src/components/home/NetworkSection.tsx:53:19",
 										"data-prohibitions": "[]",
 										className: "text-lg font-semibold text-white",
 										children: "Chapter Isolation"
 									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-										"data-uid": "src/components/home/NetworkSection.tsx:52:19",
+										"data-uid": "src/components/home/NetworkSection.tsx:54:19",
 										"data-prohibitions": "[]",
 										className: "text-muted-foreground mt-1",
-										children: "Informações isoladas por região (Ex: Barra da Tijuca). Suas demandas não vazam para fora do seu círculo de atuação."
+										children: "Suas operações são isoladas e protegidas. Demandas e ofertas da Barra da Tijuca não vazam, mantendo a exclusividade e confidencialidade dos seus clientes."
 									})]
 								})]
 							})
 						]
 					})]
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-					"data-uid": "src/components/home/NetworkSection.tsx:61:11",
+					"data-uid": "src/components/home/NetworkSection.tsx:63:11",
 					"data-prohibitions": "[]",
 					className: "flex-1 w-full max-w-md lg:max-w-none",
 					children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-						"data-uid": "src/components/home/NetworkSection.tsx:62:13",
+						"data-uid": "src/components/home/NetworkSection.tsx:64:13",
 						"data-prohibitions": "[]",
 						className: "bg-card border border-primary/30 p-8 rounded-2xl shadow-[0_0_40px_rgba(201,168,76,0.15)] relative",
 						children: [
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-								"data-uid": "src/components/home/NetworkSection.tsx:63:15",
+								"data-uid": "src/components/home/NetworkSection.tsx:65:15",
 								"data-prohibitions": "[]",
 								className: "absolute -top-4 -right-4 bg-primary text-black font-bold text-xs px-3 py-1 rounded-full",
 								children: "AMBIENTE SEGURO"
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
-								"data-uid": "src/components/home/NetworkSection.tsx:66:15",
+								"data-uid": "src/components/home/NetworkSection.tsx:68:15",
 								"data-prohibitions": "[]",
 								className: "text-xl font-bold text-white mb-6 border-b border-border pb-4",
-								children: "Política de Engajamento"
+								children: "O Padrão Prime Circle"
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								"data-uid": "src/components/home/NetworkSection.tsx:69:15",
+								"data-uid": "src/components/home/NetworkSection.tsx:71:15",
 								"data-prohibitions": "[]",
 								className: "space-y-4 text-sm text-muted-foreground",
 								children: [
 									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-										"data-uid": "src/components/home/NetworkSection.tsx:70:17",
+										"data-uid": "src/components/home/NetworkSection.tsx:72:17",
 										"data-prohibitions": "[]",
 										className: "flex items-center gap-2",
 										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-											"data-uid": "src/components/home/NetworkSection.tsx:71:19",
+											"data-uid": "src/components/home/NetworkSection.tsx:73:19",
 											"data-prohibitions": "[editContent]",
 											className: "w-1.5 h-1.5 rounded-full bg-primary shrink-0"
 										}), " Adesão mandatória à divisão 50/50 em comissões."]
 									}),
 									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-										"data-uid": "src/components/home/NetworkSection.tsx:74:17",
+										"data-uid": "src/components/home/NetworkSection.tsx:76:17",
 										"data-prohibitions": "[]",
 										className: "flex items-center gap-2",
 										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-											"data-uid": "src/components/home/NetworkSection.tsx:75:19",
+											"data-uid": "src/components/home/NetworkSection.tsx:77:19",
 											"data-prohibitions": "[editContent]",
 											className: "w-1.5 h-1.5 rounded-full bg-primary shrink-0"
-										}), " Necessidade de confirmação bilateral para negócios fechados."]
+										}), " Sigilo absoluto sobre as operações e clientes envolvidos."]
 									}),
 									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-										"data-uid": "src/components/home/NetworkSection.tsx:78:17",
+										"data-uid": "src/components/home/NetworkSection.tsx:80:17",
 										"data-prohibitions": "[]",
 										className: "flex items-center gap-2",
 										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-											"data-uid": "src/components/home/NetworkSection.tsx:79:19",
+											"data-uid": "src/components/home/NetworkSection.tsx:81:19",
 											"data-prohibitions": "[editContent]",
 											className: "w-1.5 h-1.5 rounded-full bg-destructive shrink-0"
-										}), " Inatividade prolongada (>60 dias) acarreta perda de benefícios."]
+										}), " Inatividade prolongada (>60 dias) acarreta perda de acesso."]
 									}),
 									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-										"data-uid": "src/components/home/NetworkSection.tsx:82:17",
+										"data-uid": "src/components/home/NetworkSection.tsx:84:17",
 										"data-prohibitions": "[]",
 										className: "flex items-center gap-2",
 										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-											"data-uid": "src/components/home/NetworkSection.tsx:83:19",
+											"data-uid": "src/components/home/NetworkSection.tsx:85:19",
 											"data-prohibitions": "[editContent]",
 											className: "w-1.5 h-1.5 rounded-full bg-destructive shrink-0"
-										}), " Transgressão ética resulta em banimento sem recurso."]
+										}), " Quebra de governança ou ética resulta em banimento irreversível."]
 									})
 								]
 							})
@@ -20158,60 +20158,90 @@ function NetworkSection() {
 //#region src/components/home/CriteriaSection.tsx
 function CriteriaSection() {
 	const criteria = [
-		"Atuação principal na Barra da Tijuca",
-		"Ticket médio acima de R$ 1 Milhão",
-		"CRECI ativo e verificado",
-		"Concordância com a política 50/50",
-		"Recomendação de um membro fundador (Prioridade)"
+		"Atuação principal focada na Barra da Tijuca",
+		"Ticket médio comprovado acima de R$ 1 Milhão",
+		"CRECI ativo, regular e verificado",
+		"Adesão incondicional à política de parceria 50/50",
+		"Indicação direta de um membro fundador (Requisito Ouro)"
 	];
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("section", {
-		"data-uid": "src/components/home/CriteriaSection.tsx:13:5",
+		"data-uid": "src/components/home/CriteriaSection.tsx:14:5",
 		"data-prohibitions": "[editContent]",
 		className: "py-24 bg-secondary/30 relative border-t border-border",
 		children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-			"data-uid": "src/components/home/CriteriaSection.tsx:14:7",
+			"data-uid": "src/components/home/CriteriaSection.tsx:15:7",
 			"data-prohibitions": "[editContent]",
 			className: "container mx-auto px-4 sm:px-6 lg:px-8",
-			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				"data-uid": "src/components/home/CriteriaSection.tsx:15:9",
-				"data-prohibitions": "[]",
-				className: "max-w-3xl mx-auto text-center mb-12",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
-					"data-uid": "src/components/home/CriteriaSection.tsx:16:11",
+			children: [
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					"data-uid": "src/components/home/CriteriaSection.tsx:16:9",
 					"data-prohibitions": "[]",
-					className: "text-3xl md:text-4xl font-bold mb-4",
-					children: "Não é para todos. E esse é o ponto."
-				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-					"data-uid": "src/components/home/CriteriaSection.tsx:19:11",
-					"data-prohibitions": "[]",
-					className: "text-lg text-muted-foreground",
-					children: "Mantemos a integridade da rede com uma barreira de entrada alta. Auto-aprovação habilitada apenas para quem cumpre 100% dos requisitos abaixo."
-				})]
-			}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-				"data-uid": "src/components/home/CriteriaSection.tsx:25:9",
-				"data-prohibitions": "[editContent]",
-				className: "max-w-xl mx-auto bg-card rounded-2xl border border-border p-8 shadow-elevation",
-				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ul", {
-					"data-uid": "src/components/home/CriteriaSection.tsx:26:11",
+					className: "max-w-3xl mx-auto text-center mb-12",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
+						"data-uid": "src/components/home/CriteriaSection.tsx:17:11",
+						"data-prohibitions": "[]",
+						className: "text-3xl md:text-4xl font-bold mb-4",
+						children: "Não é para todos. E esse é exatamente o ponto."
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+						"data-uid": "src/components/home/CriteriaSection.tsx:20:11",
+						"data-prohibitions": "[]",
+						className: "text-lg text-muted-foreground",
+						children: "Preservamos a integridade e a altíssima performance da nossa rede através de uma barreira de entrada rigorosa. O acesso é liberado apenas para quem cumpre integralmente nossos requisitos."
+					})]
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+					"data-uid": "src/components/home/CriteriaSection.tsx:27:9",
 					"data-prohibitions": "[editContent]",
-					className: "space-y-4",
-					children: criteria.map((c, i) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("li", {
-						"data-uid": "src/components/home/CriteriaSection.tsx:28:15",
+					className: "max-w-xl mx-auto bg-card rounded-2xl border border-border p-8 shadow-elevation",
+					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ul", {
+						"data-uid": "src/components/home/CriteriaSection.tsx:28:11",
 						"data-prohibitions": "[editContent]",
-						className: "flex items-center gap-3 text-white text-lg",
-						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-							"data-uid": "src/components/home/CriteriaSection.tsx:29:17",
-							"data-prohibitions": "[]",
-							className: "w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center shrink-0",
-							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Check, {
-								"data-uid": "src/components/home/CriteriaSection.tsx:30:19",
+						className: "space-y-4",
+						children: criteria.map((c, i) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("li", {
+							"data-uid": "src/components/home/CriteriaSection.tsx:30:15",
+							"data-prohibitions": "[editContent]",
+							className: "flex items-center gap-3 text-white text-lg",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+								"data-uid": "src/components/home/CriteriaSection.tsx:31:17",
+								"data-prohibitions": "[]",
+								className: "w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center shrink-0",
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Check, {
+									"data-uid": "src/components/home/CriteriaSection.tsx:32:19",
+									"data-prohibitions": "[editContent]",
+									className: "w-4 h-4 text-primary"
+								})
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+								"data-uid": "src/components/home/CriteriaSection.tsx:34:17",
 								"data-prohibitions": "[editContent]",
-								className: "w-4 h-4 text-primary"
-							})
-						}), c]
-					}, i))
+								children: c
+							})]
+						}, i))
+					})
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					"data-uid": "src/components/home/CriteriaSection.tsx:40:9",
+					"data-prohibitions": "[]",
+					className: "mt-12 flex flex-col sm:flex-row gap-4 justify-center items-center",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
+						"data-uid": "src/components/home/CriteriaSection.tsx:41:11",
+						"data-prohibitions": "[]",
+						size: "lg",
+						className: "h-14 px-8 text-base w-full sm:w-auto shadow-lg shadow-primary/25 hover:scale-105 transition-transform duration-300",
+						children: ["Quero fazer parte", /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ArrowRight, {
+							"data-uid": "src/components/home/CriteriaSection.tsx:46:13",
+							"data-prohibitions": "[editContent]",
+							className: "ml-2 h-5 w-5"
+						})]
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+						"data-uid": "src/components/home/CriteriaSection.tsx:48:11",
+						"data-prohibitions": "[]",
+						size: "lg",
+						variant: "outline",
+						className: "h-14 px-8 text-base w-full sm:w-auto border-border text-white hover:bg-secondary transition-all duration-300",
+						children: "Ver requisitos"
+					})]
 				})
-			})]
+			]
 		})
 	});
 }
@@ -35590,4 +35620,4 @@ function App() {
 }));
 //#endregion
 
-//# sourceMappingURL=index-CChl9D01.js.map
+//# sourceMappingURL=index-D1ix8z8Y.js.map

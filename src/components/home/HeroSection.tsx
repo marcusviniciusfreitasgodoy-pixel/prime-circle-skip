@@ -17,10 +17,10 @@ export function HeroSection() {
 
       {/* Hero Content */}
       <div className="container relative z-20 px-4 md:px-6 py-24 sm:py-32 flex flex-col items-center text-center">
-        <div className="inline-flex items-center text-left sm:text-center rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-sm sm:text-base font-medium text-white mb-8 backdrop-blur-md animate-fade-in-up max-w-[95%]">
+        <div className="inline-flex items-center text-left sm:text-center rounded-full border border-primary/30 bg-primary/10 px-4 py-1.5 text-sm sm:text-base font-medium text-white mb-8 backdrop-blur-md animate-fade-in-up max-w-[95%]">
           <Lock className="mr-2 h-4 w-4 text-primary shrink-0" />
           <span className="truncate whitespace-normal sm:whitespace-nowrap">
-            Acesso restrito a corretores convidados por membros do núcleo.
+            Um clube exclusivo para a elite do mercado imobiliário.
           </span>
         </div>
 
@@ -28,24 +28,24 @@ export function HeroSection() {
           className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-white max-w-5xl mx-auto animate-fade-in-up drop-shadow-md leading-tight"
           style={{ animationDelay: '100ms' }}
         >
-          Aqui, o outro lado do seu negócio{' '}
-          <span className="text-primary drop-shadow-sm">já está esperando.</span>
+          O <span className="text-primary drop-shadow-sm">Lado B dos negócios</span> imobiliários de
+          alto padrão.
         </h1>
 
         <p
           className="mt-6 text-lg sm:text-xl md:text-2xl text-gray-200 max-w-3xl mx-auto animate-fade-in-up drop-shadow"
           style={{ animationDelay: '200ms' }}
         >
-          Uma rede privada para corretores selecionados da Barra da Tijuca — onde demandas reais
-          circulam antes de qualquer portal ver.
+          Um clube exclusivo onde demandas reais e imóveis off-market circulam e se conectam muito
+          antes de chegarem aos portais públicos.
         </p>
 
         <p
           className="mt-4 text-base sm:text-lg text-gray-300 max-w-2xl mx-auto animate-fade-in-up drop-shadow font-medium"
           style={{ animationDelay: '250ms' }}
         >
-          Acesso por indicação e aprovação. Demandas e imóveis que não aparecem em nenhum outro
-          lugar.
+          Acesso rigoroso por indicação e aprovação. Liquidez silenciosa e parcerias de alto nível
+          na Barra da Tijuca.
         </p>
 
         <div

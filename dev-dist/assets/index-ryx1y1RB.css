@@ -1721,9 +1721,6 @@ video {
 .border-transparent {
   border-color: transparent;
 }
-.border-white\/20 {
-  border-color: rgb(255 255 255 / 0.2);
-}
 .border-white\/40 {
   border-color: rgb(255 255 255 / 0.4);
 }
@@ -1834,9 +1831,6 @@ video {
 }
 .bg-transparent {
   background-color: transparent;
-}
-.bg-white\/10 {
-  background-color: rgb(255 255 255 / 0.1);
 }
 .bg-yellow-500 {
   --tw-bg-opacity: 1;
