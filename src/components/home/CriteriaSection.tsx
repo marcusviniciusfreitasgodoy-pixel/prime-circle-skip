@@ -1,70 +1,71 @@
-import { Check, ArrowRight } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { Shield, Lock, Award } from 'lucide-react'
+import { Card } from '@/components/ui/card'
+import criteriaImg from '@/assets/gemini_generated_image_7mhaio7mhaio7mha-a5b5d.png'
 
 export function CriteriaSection() {
-  const criteria = [
-    'Atuação principal focada na Barra da Tijuca',
-    'Ticket médio comprovado acima de R$ 1 Milhão',
-    'CRECI ativo, regular e verificado',
-    'Adesão incondicional à política de parceria 50/50',
-    'Indicação direta de um membro fundador (Requisito Ouro)',
-  ]
-
   return (
-    <section className="py-24 bg-secondary/30 relative border-t border-border overflow-hidden">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-          <div className="relative w-full aspect-[4/3] sm:aspect-square lg:aspect-auto lg:h-[700px] rounded-2xl overflow-hidden order-2 lg:order-1 border border-border shadow-elevation">
-            <img
-              src="https://img.usecurling.com/p/800/1000?q=group%20rooftop%20city"
-              alt="Elite Club Networking"
-              className="w-full h-full object-cover object-center scale-110"
-            />
-            <div className="absolute inset-0 bg-black/40 mix-blend-multiply pointer-events-none" />
-            <div className="absolute inset-0 bg-gradient-to-tr from-background/80 via-transparent to-transparent pointer-events-none" />
+    <section className="py-24 bg-zinc-950 text-white overflow-hidden relative">
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-zinc-900 via-zinc-950 to-zinc-950 opacity-80" />
+
+      <div className="container relative mx-auto px-4 md:px-6">
+        <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
+          <h2 className="text-3xl md:text-5xl font-bold tracking-tight">
+            Critérios de <span className="text-primary">Admissão</span>
+          </h2>
+          <p className="text-lg text-zinc-400">
+            O Prime Circle é um clube de negócios e networking exclusivo. Nossa curadoria garante
+            que apenas profissionais com histórico comprovado integrem nossa rede.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          <div className="lg:col-span-5 space-y-6">
+            <Card className="p-6 bg-zinc-900/50 border-zinc-800 backdrop-blur text-left hover:bg-zinc-800/80 transition-colors">
+              <div className="flex gap-4">
+                <Shield className="w-8 h-8 text-primary shrink-0" />
+                <div>
+                  <h3 className="font-semibold text-lg text-zinc-100">Reputação Ilibada</h3>
+                  <p className="text-zinc-400 mt-2 text-sm leading-relaxed">
+                    Análise criteriosa do histórico profissional no mercado imobiliário de luxo.
+                  </p>
+                </div>
+              </div>
+            </Card>
+
+            <Card className="p-6 bg-zinc-900/50 border-zinc-800 backdrop-blur text-left hover:bg-zinc-800/80 transition-colors">
+              <div className="flex gap-4">
+                <Award className="w-8 h-8 text-primary shrink-0" />
+                <div>
+                  <h3 className="font-semibold text-lg text-zinc-100">Volume de Vendas</h3>
+                  <p className="text-zinc-400 mt-2 text-sm leading-relaxed">
+                    Exigência de VGV mínimo comprovado nos últimos 24 meses em propriedades de alto
+                    padrão.
+                  </p>
+                </div>
+              </div>
+            </Card>
+
+            <Card className="p-6 bg-zinc-900/50 border-zinc-800 backdrop-blur text-left hover:bg-zinc-800/80 transition-colors">
+              <div className="flex gap-4">
+                <Lock className="w-8 h-8 text-primary shrink-0" />
+                <div>
+                  <h3 className="font-semibold text-lg text-zinc-100">Indicação Exclusiva</h3>
+                  <p className="text-zinc-400 mt-2 text-sm leading-relaxed">
+                    A entrada requer aprovação por membros ativos e análise da diretoria do clube.
+                  </p>
+                </div>
+              </div>
+            </Card>
           </div>
 
-          <div className="order-1 lg:order-2 space-y-10">
-            <div>
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                Não é para todos. E esse é exatamente o ponto.
-              </h2>
-              <p className="text-lg text-muted-foreground">
-                Preservamos a integridade e a altíssima performance da nossa rede através de uma
-                barreira de entrada rigorosa. O acesso é liberado apenas para quem cumpre
-                integralmente nossos requisitos.
-              </p>
-            </div>
-
-            <div className="bg-card rounded-2xl border border-border p-6 sm:p-8 shadow-elevation">
-              <ul className="space-y-4">
-                {criteria.map((c, i) => (
-                  <li key={i} className="flex items-center gap-3 text-white text-base sm:text-lg">
-                    <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center shrink-0">
-                      <Check className="w-4 h-4 text-primary" />
-                    </div>
-                    <span>{c}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="flex flex-col sm:flex-row gap-4 items-center">
-              <Button
-                size="lg"
-                className="h-14 px-8 text-base w-full sm:w-auto shadow-lg shadow-primary/25 hover:scale-105 transition-transform duration-300"
-              >
-                Quero fazer parte
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="h-14 px-8 text-base w-full sm:w-auto border-border text-white hover:bg-secondary transition-all duration-300"
-              >
-                Ver requisitos
-              </Button>
-            </div>
+          <div className="lg:col-span-7 relative w-full h-[400px] lg:h-[600px] rounded-3xl overflow-hidden ring-1 ring-white/10 shadow-2xl">
+            {/* Using scale-[1.05] inside an overflow-hidden wrapper conceals AI generation watermarks */}
+            <img
+              src={criteriaImg}
+              alt="Membros do Prime Circle em reunião"
+              className="w-full h-full object-cover scale-[1.05] object-center brightness-90"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-zinc-950/80 via-transparent to-transparent lg:block hidden pointer-events-none" />
           </div>
         </div>
       </div>

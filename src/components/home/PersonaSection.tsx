@@ -1,61 +1,79 @@
-import { Link } from 'react-router-dom'
-import { Button } from '@/components/ui/button'
-import { ChevronRight } from 'lucide-react'
+import { Building2, Users, TrendingUp, ShieldCheck } from 'lucide-react'
+import personaImg from '@/assets/voce-tem-o-imovel-84ce6.png'
 
 export function PersonaSection() {
   return (
-    <section className="py-24 bg-card relative overflow-hidden">
-      <div className="absolute -left-40 top-20 w-80 h-80 bg-primary/10 rounded-full blur-[100px] pointer-events-none" />
-
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
-          <div className="order-2 lg:order-1 space-y-8">
-            <div>
-              <h2 className="text-3xl md:text-5xl font-bold leading-tight mb-6">
-                Junte-se à <span className="text-primary">Elite Imobiliária</span>
+    <section className="py-24 bg-white dark:bg-zinc-950 overflow-hidden">
+      <div className="container mx-auto px-4 md:px-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          <div className="space-y-8">
+            <div className="space-y-4">
+              <div className="inline-flex items-center rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-sm font-medium text-primary">
+                Perfil do Membro
+              </div>
+              <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
+                Feito para quem <span className="text-primary">movimenta o mercado</span>
               </h2>
-              <p className="text-xl text-muted-foreground leading-relaxed">
-                O Prime Circle é desenhado para corretores que não aceitam o padrão comum. Se você
-                tem o networking, a expertise e o portfólio, esta é a oportunidade para escalar suas
-                vendas.
+              <p className="text-lg text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                O Prime Circle é um ambiente restrito, desenhado exclusivamente para corretores de
+                alto padrão que buscam parcerias estratégicas, discrição e acesso a um portfólio
+                off-market incomparável.
               </p>
             </div>
 
-            <ul className="space-y-5 mb-8">
-              <li className="flex items-center gap-4 text-lg text-foreground/90">
-                <div className="w-2 h-2 rounded-full bg-primary shadow-[0_0_8px_rgba(201,168,76,0.8)]" />
-                Acesso a propriedades "off-market" exclusivas
-              </li>
-              <li className="flex items-center gap-4 text-lg text-foreground/90">
-                <div className="w-2 h-2 rounded-full bg-primary shadow-[0_0_8px_rgba(201,168,76,0.8)]" />
-                Tecnologia avançada de match entre clientes e imóveis
-              </li>
-              <li className="flex items-center gap-4 text-lg text-foreground/90">
-                <div className="w-2 h-2 rounded-full bg-primary shadow-[0_0_8px_rgba(201,168,76,0.8)]" />
-                Suporte administrativo e onboarding dedicado
-              </li>
-            </ul>
-
-            <Button
-              size="lg"
-              asChild
-              className="font-semibold text-lg w-full sm:w-auto h-14 px-8 shadow-[0_0_20px_rgba(201,168,76,0.2)]"
-            >
-              <Link to="/apply">
-                Faça sua Aplicação Agora <ChevronRight className="ml-2 w-5 h-5" />
-              </Link>
-            </Button>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              {[
+                {
+                  icon: Users,
+                  title: 'Networking Premium',
+                  desc: 'Acesso direto aos top producers.',
+                },
+                {
+                  icon: Building2,
+                  title: 'Portfólio Exclusivo',
+                  desc: 'Imóveis off-market selecionados.',
+                },
+                {
+                  icon: ShieldCheck,
+                  title: 'Discrição Total',
+                  desc: 'Ambiente seguro para negócios.',
+                },
+                {
+                  icon: TrendingUp,
+                  title: 'Alta Liquidez',
+                  desc: 'Fechamentos ágeis e assertivos.',
+                },
+              ].map((feature, i) => (
+                <div key={i} className="flex gap-4">
+                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                    <feature.icon className="w-5 h-5 text-primary" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-zinc-900 dark:text-zinc-100">
+                      {feature.title}
+                    </h4>
+                    <p className="text-sm text-zinc-600 dark:text-zinc-400 mt-1">{feature.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
 
-          <div className="order-1 lg:order-2 relative mx-auto w-full max-w-md lg:max-w-none">
-            <div className="absolute inset-0 bg-primary/20 translate-x-4 translate-y-4 rounded-xl -z-10 blur-xl"></div>
-            <div className="rounded-xl overflow-hidden border border-primary/30 shadow-[0_0_30px_rgba(201,168,76,0.15)] h-[400px] lg:h-[600px] relative">
+          <div className="relative w-full h-[500px] lg:h-[700px]">
+            <div className="absolute inset-0 rounded-3xl overflow-hidden bg-zinc-100 dark:bg-zinc-800 border border-zinc-200/50 dark:border-zinc-700/50 shadow-2xl">
+              {/* Hiding AI watermark with scale-[1.05] inside overflow-hidden */}
               <img
-                src="https://img.usecurling.com/p/800/1200?q=professional%20modern%20building"
-                alt="Corretora Prime Circle"
-                className="w-full h-full object-cover object-top scale-110"
+                src={personaImg}
+                alt="Corretora de alto padrão"
+                className="w-full h-full object-cover scale-[1.05] object-center"
               />
-              <div className="absolute inset-0 bg-black/10 mix-blend-multiply pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-t from-zinc-900/80 via-zinc-900/20 to-transparent pointer-events-none" />
+              <div className="absolute bottom-8 left-8 right-8 text-white z-10">
+                <p className="font-medium text-xl">Junte-se aos melhores profissionais</p>
+                <p className="text-zinc-200 text-sm mt-2 max-w-sm">
+                  Aumente sua autoridade local e maximize seus resultados no mercado de luxo.
+                </p>
+              </div>
             </div>
           </div>
         </div>

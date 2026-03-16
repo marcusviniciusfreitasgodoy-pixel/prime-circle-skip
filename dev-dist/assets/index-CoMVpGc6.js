@@ -19274,6 +19274,15 @@ var ArrowRight = createLucideIcon("arrow-right", [["path", {
 	d: "m12 5 7 7-7 7",
 	key: "xquz4c"
 }]]);
+var Award = createLucideIcon("award", [["path", {
+	d: "m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526",
+	key: "1yiouv"
+}], ["circle", {
+	cx: "12",
+	cy: "8",
+	r: "6",
+	key: "1vp47v"
+}]]);
 var CalendarDays = createLucideIcon("calendar-days", [
 	["path", {
 		d: "M8 2v4",
@@ -19350,6 +19359,15 @@ var CircleAlert = createLucideIcon("circle-alert", [
 		key: "4dfq90"
 	}]
 ]);
+var CircleCheck = createLucideIcon("circle-check", [["circle", {
+	cx: "12",
+	cy: "12",
+	r: "10",
+	key: "1mglay"
+}], ["path", {
+	d: "m9 12 2 2 4-4",
+	key: "dzmm74"
+}]]);
 var Clock = createLucideIcon("clock", [["circle", {
 	cx: "12",
 	cy: "12",
@@ -19546,6 +19564,40 @@ var Mail = createLucideIcon("mail", [["path", {
 	rx: "2",
 	key: "izxlao"
 }]]);
+var Network = createLucideIcon("network", [
+	["rect", {
+		x: "16",
+		y: "16",
+		width: "6",
+		height: "6",
+		rx: "1",
+		key: "4q2zg0"
+	}],
+	["rect", {
+		x: "2",
+		y: "16",
+		width: "6",
+		height: "6",
+		rx: "1",
+		key: "8cvhb9"
+	}],
+	["rect", {
+		x: "9",
+		y: "2",
+		width: "6",
+		height: "6",
+		rx: "1",
+		key: "1egb70"
+	}],
+	["path", {
+		d: "M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3",
+		key: "1jsf9p"
+	}],
+	["path", {
+		d: "M12 12V8",
+		key: "2874zd"
+	}]
+]);
 var PartyPopper = createLucideIcon("party-popper", [
 	["path", {
 		d: "M5.8 11.3 2 22l10.7-3.79",
@@ -19644,26 +19696,6 @@ var Star = createLucideIcon("star", [["path", {
 	d: "M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z",
 	key: "r04s7s"
 }]]);
-var Target = createLucideIcon("target", [
-	["circle", {
-		cx: "12",
-		cy: "12",
-		r: "10",
-		key: "1mglay"
-	}],
-	["circle", {
-		cx: "12",
-		cy: "12",
-		r: "6",
-		key: "1vlfrh"
-	}],
-	["circle", {
-		cx: "12",
-		cy: "12",
-		r: "2",
-		key: "1c9p78"
-	}]
-]);
 var ThumbsUp = createLucideIcon("thumbs-up", [["path", {
 	d: "M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z",
 	key: "emmmcr"
@@ -19949,355 +19981,342 @@ function ProblemSection() {
 	});
 }
 //#endregion
+//#region src/components/ui/card.tsx
+var Card = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+	"data-uid": "src/components/ui/card.tsx:8:5",
+	"data-prohibitions": "[editContent]",
+	ref,
+	className: cn("rounded-lg border bg-card text-card-foreground shadow-sm", className),
+	...props
+}));
+Card.displayName = "Card";
+var CardHeader = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+	"data-uid": "src/components/ui/card.tsx:19:5",
+	"data-prohibitions": "[editContent]",
+	ref,
+	className: cn("flex flex-col space-y-1.5 p-6", className),
+	...props
+}));
+CardHeader.displayName = "CardHeader";
+var CardTitle = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+	"data-uid": "src/components/ui/card.tsx:26:5",
+	"data-prohibitions": "[editContent]",
+	ref,
+	className: cn("text-2xl font-semibold leading-none tracking-tight", className),
+	...props
+}));
+CardTitle.displayName = "CardTitle";
+var CardDescription = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+	"data-uid": "src/components/ui/card.tsx:37:5",
+	"data-prohibitions": "[editContent]",
+	ref,
+	className: cn("text-sm text-muted-foreground", className),
+	...props
+}));
+CardDescription.displayName = "CardDescription";
+var CardContent = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+	"data-uid": "src/components/ui/card.tsx:44:5",
+	"data-prohibitions": "[editContent]",
+	ref,
+	className: cn("p-6 pt-0", className),
+	...props
+}));
+CardContent.displayName = "CardContent";
+var CardFooter = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+	"data-uid": "src/components/ui/card.tsx:51:5",
+	"data-prohibitions": "[editContent]",
+	ref,
+	className: cn("flex items-center p-6 pt-0", className),
+	...props
+}));
+CardFooter.displayName = "CardFooter";
+//#endregion
+//#region src/assets/voce-quer-parceria-seria-45452.png
+var voce_quer_parceria_seria_45452_default = "/assets/voce-quer-parceria-seria-45452-CwhFEKrN.png";
+//#endregion
 //#region src/components/home/NetworkSection.tsx
 function NetworkSection() {
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
-		"data-uid": "src/components/home/NetworkSection.tsx:5:5",
-		"data-prohibitions": "[]",
-		className: "py-24 bg-background relative border-t border-border overflow-hidden",
-		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-			"data-uid": "src/components/home/NetworkSection.tsx:6:7",
-			"data-prohibitions": "[editContent]",
-			className: "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/5 rounded-full blur-[120px] pointer-events-none"
-		}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-			"data-uid": "src/components/home/NetworkSection.tsx:8:7",
-			"data-prohibitions": "[]",
-			className: "container mx-auto px-4 sm:px-6 lg:px-8 relative z-10",
-			children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				"data-uid": "src/components/home/NetworkSection.tsx:9:9",
-				"data-prohibitions": "[]",
-				className: "flex flex-col lg:flex-row gap-16 items-center",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					"data-uid": "src/components/home/NetworkSection.tsx:10:11",
-					"data-prohibitions": "[]",
-					className: "flex-1 space-y-8",
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-						"data-uid": "src/components/home/NetworkSection.tsx:11:13",
-						"data-prohibitions": "[]",
-						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
-							"data-uid": "src/components/home/NetworkSection.tsx:12:15",
-							"data-prohibitions": "[]",
-							className: "text-3xl md:text-4xl font-bold mb-4",
-							children: "Tecnologia proprietária para gerar liquidez imediata."
-						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-							"data-uid": "src/components/home/NetworkSection.tsx:15:15",
-							"data-prohibitions": "[]",
-							className: "text-lg text-muted-foreground",
-							children: "O Prime Circle não é mais uma vitrine de imóveis. É um clube de negócios movido por uma infraestrutura de liquidez automática, focada na garantia de negócios (50/50) e curadoria rigorosa."
-						})]
-					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("ul", {
-						"data-uid": "src/components/home/NetworkSection.tsx:22:13",
-						"data-prohibitions": "[]",
-						className: "space-y-6",
-						children: [
-							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("li", {
-								"data-uid": "src/components/home/NetworkSection.tsx:23:15",
-								"data-prohibitions": "[]",
-								className: "flex gap-4",
-								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-									"data-uid": "src/components/home/NetworkSection.tsx:24:17",
-									"data-prohibitions": "[]",
-									className: "w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0",
-									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Shield, {
-										"data-uid": "src/components/home/NetworkSection.tsx:25:19",
-										"data-prohibitions": "[editContent]",
-										className: "w-5 h-5 text-primary"
-									})
-								}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-									"data-uid": "src/components/home/NetworkSection.tsx:27:17",
-									"data-prohibitions": "[]",
-									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h4", {
-										"data-uid": "src/components/home/NetworkSection.tsx:28:19",
-										"data-prohibitions": "[]",
-										className: "text-lg font-semibold text-white",
-										children: "Governança de Elite"
-									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-										"data-uid": "src/components/home/NetworkSection.tsx:29:19",
-										"data-prohibitions": "[]",
-										className: "text-muted-foreground mt-1",
-										children: "Acesso exclusivo por convite e aprovação. Verificação de credenciais e auditoria contínua para garantir um ambiente 100% profissional."
-									})]
-								})]
-							}),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("li", {
-								"data-uid": "src/components/home/NetworkSection.tsx:35:15",
-								"data-prohibitions": "[]",
-								className: "flex gap-4",
-								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-									"data-uid": "src/components/home/NetworkSection.tsx:36:17",
-									"data-prohibitions": "[]",
-									className: "w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0",
-									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Target, {
-										"data-uid": "src/components/home/NetworkSection.tsx:37:19",
-										"data-prohibitions": "[editContent]",
-										className: "w-5 h-5 text-primary"
-									})
-								}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-									"data-uid": "src/components/home/NetworkSection.tsx:39:17",
-									"data-prohibitions": "[]",
-									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h4", {
-										"data-uid": "src/components/home/NetworkSection.tsx:40:19",
-										"data-prohibitions": "[]",
-										className: "text-lg font-semibold text-white",
-										children: "Algoritmo de Match"
-									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-										"data-uid": "src/components/home/NetworkSection.tsx:41:19",
-										"data-prohibitions": "[]",
-										className: "text-muted-foreground mt-1",
-										children: "Nossa tecnologia cruza automaticamente as demandas ativas com os imóveis off-market da rede, gerando liquidez imediata e conexões precisas sem esforço manual."
-									})]
-								})]
-							}),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("li", {
-								"data-uid": "src/components/home/NetworkSection.tsx:48:15",
-								"data-prohibitions": "[]",
-								className: "flex gap-4",
-								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-									"data-uid": "src/components/home/NetworkSection.tsx:49:17",
-									"data-prohibitions": "[]",
-									className: "w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0",
-									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Lock, {
-										"data-uid": "src/components/home/NetworkSection.tsx:50:19",
-										"data-prohibitions": "[editContent]",
-										className: "w-5 h-5 text-primary"
-									})
-								}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-									"data-uid": "src/components/home/NetworkSection.tsx:52:17",
-									"data-prohibitions": "[]",
-									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h4", {
-										"data-uid": "src/components/home/NetworkSection.tsx:53:19",
-										"data-prohibitions": "[]",
-										className: "text-lg font-semibold text-white",
-										children: "Chapter Isolation"
-									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-										"data-uid": "src/components/home/NetworkSection.tsx:54:19",
-										"data-prohibitions": "[]",
-										className: "text-muted-foreground mt-1",
-										children: "Suas operações são isoladas e protegidas. Demandas e ofertas da Barra da Tijuca não vazam, mantendo a exclusividade e confidencialidade dos seus clientes."
-									})]
-								})]
-							})
-						]
-					})]
-				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					"data-uid": "src/components/home/NetworkSection.tsx:63:11",
-					"data-prohibitions": "[]",
-					className: "flex-1 w-full max-w-md lg:max-w-none relative mx-auto",
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-						"data-uid": "src/components/home/NetworkSection.tsx:64:13",
-						"data-prohibitions": "[]",
-						className: "relative w-full aspect-square lg:aspect-[4/5] rounded-2xl overflow-hidden border border-border",
-						children: [
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
-								"data-uid": "src/components/home/NetworkSection.tsx:65:15",
-								"data-prohibitions": "[editContent]",
-								src: "https://img.usecurling.com/p/800/1000?q=two%20business%20professionals%20office",
-								alt: "Match Algorithm e Inteligência de Mercado",
-								className: "w-full h-full object-cover object-center scale-110"
-							}),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-								"data-uid": "src/components/home/NetworkSection.tsx:70:15",
-								"data-prohibitions": "[editContent]",
-								className: "absolute inset-0 bg-black/30 mix-blend-multiply pointer-events-none"
-							}),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-								"data-uid": "src/components/home/NetworkSection.tsx:71:15",
-								"data-prohibitions": "[editContent]",
-								className: "absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-90 pointer-events-none"
-							})
-						]
-					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-						"data-uid": "src/components/home/NetworkSection.tsx:74:13",
-						"data-prohibitions": "[]",
-						className: "bg-card border border-primary/30 p-6 sm:p-8 rounded-2xl shadow-[0_0_40px_rgba(201,168,76,0.15)] relative -mt-24 lg:mt-0 lg:absolute lg:-left-12 lg:bottom-12 lg:w-[calc(100%+3rem)] lg:max-w-md mx-4 lg:mx-0 z-10",
-						children: [
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-								"data-uid": "src/components/home/NetworkSection.tsx:75:15",
-								"data-prohibitions": "[]",
-								className: "absolute -top-4 -right-4 bg-primary text-black font-bold text-xs px-3 py-1 rounded-full",
-								children: "AMBIENTE SEGURO"
-							}),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
-								"data-uid": "src/components/home/NetworkSection.tsx:78:15",
-								"data-prohibitions": "[]",
-								className: "text-xl font-bold text-white mb-6 border-b border-border pb-4",
-								children: "O Padrão Prime Circle"
-							}),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								"data-uid": "src/components/home/NetworkSection.tsx:81:15",
-								"data-prohibitions": "[]",
-								className: "space-y-4 text-sm text-muted-foreground",
-								children: [
-									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-										"data-uid": "src/components/home/NetworkSection.tsx:82:17",
-										"data-prohibitions": "[]",
-										className: "flex items-center gap-2",
-										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-											"data-uid": "src/components/home/NetworkSection.tsx:83:19",
-											"data-prohibitions": "[editContent]",
-											className: "w-1.5 h-1.5 rounded-full bg-primary shrink-0"
-										}), " Adesão mandatória à divisão 50/50 em comissões."]
-									}),
-									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-										"data-uid": "src/components/home/NetworkSection.tsx:86:17",
-										"data-prohibitions": "[]",
-										className: "flex items-center gap-2",
-										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-											"data-uid": "src/components/home/NetworkSection.tsx:87:19",
-											"data-prohibitions": "[editContent]",
-											className: "w-1.5 h-1.5 rounded-full bg-primary shrink-0"
-										}), " Sigilo absoluto sobre as operações e clientes envolvidos."]
-									}),
-									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-										"data-uid": "src/components/home/NetworkSection.tsx:90:17",
-										"data-prohibitions": "[]",
-										className: "flex items-center gap-2",
-										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-											"data-uid": "src/components/home/NetworkSection.tsx:91:19",
-											"data-prohibitions": "[editContent]",
-											className: "w-1.5 h-1.5 rounded-full bg-destructive shrink-0"
-										}), " Inatividade prolongada (>60 dias) acarreta perda de acesso."]
-									}),
-									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-										"data-uid": "src/components/home/NetworkSection.tsx:94:17",
-										"data-prohibitions": "[]",
-										className: "flex items-center gap-2",
-										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-											"data-uid": "src/components/home/NetworkSection.tsx:95:19",
-											"data-prohibitions": "[editContent]",
-											className: "w-1.5 h-1.5 rounded-full bg-destructive shrink-0"
-										}), " Quebra de governança ou ética resulta em banimento irreversível."]
-									})
-								]
-							})
-						]
-					})]
-				})]
-			})
-		})]
-	});
-}
-//#endregion
-//#region src/components/home/CriteriaSection.tsx
-function CriteriaSection() {
-	const criteria = [
-		"Atuação principal focada na Barra da Tijuca",
-		"Ticket médio comprovado acima de R$ 1 Milhão",
-		"CRECI ativo, regular e verificado",
-		"Adesão incondicional à política de parceria 50/50",
-		"Indicação direta de um membro fundador (Requisito Ouro)"
-	];
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("section", {
-		"data-uid": "src/components/home/CriteriaSection.tsx:14:5",
+		"data-uid": "src/components/home/NetworkSection.tsx:8:5",
 		"data-prohibitions": "[editContent]",
-		className: "py-24 bg-secondary/30 relative border-t border-border overflow-hidden",
+		className: "py-24 bg-zinc-50 dark:bg-zinc-900 overflow-hidden",
 		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-			"data-uid": "src/components/home/CriteriaSection.tsx:15:7",
+			"data-uid": "src/components/home/NetworkSection.tsx:9:7",
 			"data-prohibitions": "[editContent]",
-			className: "container mx-auto px-4 sm:px-6 lg:px-8",
+			className: "container mx-auto px-4 md:px-6",
 			children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				"data-uid": "src/components/home/CriteriaSection.tsx:16:9",
+				"data-uid": "src/components/home/NetworkSection.tsx:10:9",
 				"data-prohibitions": "[editContent]",
-				className: "grid lg:grid-cols-2 gap-12 lg:gap-16 items-center",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					"data-uid": "src/components/home/CriteriaSection.tsx:17:11",
-					"data-prohibitions": "[]",
-					className: "relative w-full aspect-[4/3] sm:aspect-square lg:aspect-auto lg:h-[700px] rounded-2xl overflow-hidden order-2 lg:order-1 border border-border shadow-elevation",
-					children: [
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
-							"data-uid": "src/components/home/CriteriaSection.tsx:18:13",
-							"data-prohibitions": "[editContent]",
-							src: "https://img.usecurling.com/p/800/1000?q=group%20rooftop%20city",
-							alt: "Elite Club Networking",
-							className: "w-full h-full object-cover object-center scale-110"
-						}),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-							"data-uid": "src/components/home/CriteriaSection.tsx:23:13",
-							"data-prohibitions": "[editContent]",
-							className: "absolute inset-0 bg-black/40 mix-blend-multiply pointer-events-none"
-						}),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-							"data-uid": "src/components/home/CriteriaSection.tsx:24:13",
-							"data-prohibitions": "[editContent]",
-							className: "absolute inset-0 bg-gradient-to-tr from-background/80 via-transparent to-transparent pointer-events-none"
-						})
-					]
-				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					"data-uid": "src/components/home/CriteriaSection.tsx:27:11",
+				className: "grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+					"data-uid": "src/components/home/NetworkSection.tsx:11:11",
 					"data-prohibitions": "[editContent]",
-					className: "order-1 lg:order-2 space-y-10",
+					className: "order-2 lg:order-1 relative",
+					children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						"data-uid": "src/components/home/NetworkSection.tsx:12:13",
+						"data-prohibitions": "[editContent]",
+						className: "relative w-full h-[400px] lg:h-[600px] rounded-3xl overflow-hidden shadow-2xl border border-zinc-200/50 dark:border-zinc-800/50",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
+							"data-uid": "src/components/home/NetworkSection.tsx:14:15",
+							"data-prohibitions": "[editContent]",
+							src: voce_quer_parceria_seria_45452_default,
+							alt: "Profissionais trabalhando juntos em um escritório",
+							className: "absolute inset-0 w-full h-full object-cover scale-[1.05] object-center"
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Card, {
+							"data-uid": "src/components/home/NetworkSection.tsx:19:15",
+							"data-prohibitions": "[]",
+							className: "absolute bottom-6 left-6 right-6 p-4 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-sm border-zinc-200/50 dark:border-zinc-800/50 shadow-lg",
+							children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								"data-uid": "src/components/home/NetworkSection.tsx:20:17",
+								"data-prohibitions": "[]",
+								className: "flex items-center gap-4",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+									"data-uid": "src/components/home/NetworkSection.tsx:21:19",
+									"data-prohibitions": "[]",
+									className: "w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0",
+									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Network, {
+										"data-uid": "src/components/home/NetworkSection.tsx:22:21",
+										"data-prohibitions": "[editContent]",
+										className: "w-6 h-6"
+									})
+								}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+									"data-uid": "src/components/home/NetworkSection.tsx:24:19",
+									"data-prohibitions": "[]",
+									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+										"data-uid": "src/components/home/NetworkSection.tsx:25:21",
+										"data-prohibitions": "[]",
+										className: "font-semibold text-zinc-900 dark:text-zinc-100",
+										children: "Algorithm Match"
+									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+										"data-uid": "src/components/home/NetworkSection.tsx:28:21",
+										"data-prohibitions": "[]",
+										className: "text-sm text-zinc-600 dark:text-zinc-400",
+										children: "Conexões inteligentes e alta liquidez"
+									})]
+								})]
+							})
+						})]
+					})
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					"data-uid": "src/components/home/NetworkSection.tsx:37:11",
+					"data-prohibitions": "[editContent]",
+					className: "order-1 lg:order-2 space-y-8",
 					children: [
 						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-							"data-uid": "src/components/home/CriteriaSection.tsx:28:13",
+							"data-uid": "src/components/home/NetworkSection.tsx:38:13",
 							"data-prohibitions": "[]",
-							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
-								"data-uid": "src/components/home/CriteriaSection.tsx:29:15",
+							className: "space-y-4",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h2", {
+								"data-uid": "src/components/home/NetworkSection.tsx:39:15",
 								"data-prohibitions": "[]",
-								className: "text-3xl md:text-4xl font-bold mb-4",
-								children: "Não é para todos. E esse é exatamente o ponto."
+								className: "text-3xl md:text-4xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50",
+								children: ["Conexões que geram ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+									"data-uid": "src/components/home/NetworkSection.tsx:40:36",
+									"data-prohibitions": "[]",
+									className: "text-primary",
+									children: "liquidez imediata"
+								})]
 							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-								"data-uid": "src/components/home/CriteriaSection.tsx:32:15",
+								"data-uid": "src/components/home/NetworkSection.tsx:42:15",
 								"data-prohibitions": "[]",
-								className: "text-lg text-muted-foreground",
-								children: "Preservamos a integridade e a altíssima performance da nossa rede através de uma barreira de entrada rigorosa. O acesso é liberado apenas para quem cumpre integralmente nossos requisitos."
+								className: "text-lg text-zinc-600 dark:text-zinc-400 leading-relaxed",
+								children: "Nossa infraestrutura utiliza inteligência de mercado avançada para cruzar dados de oferta e demanda entre os principais corretores de alto padrão, garantindo negócios mais rápidos e eficientes."
 							})]
 						}),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-							"data-uid": "src/components/home/CriteriaSection.tsx:39:13",
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("ul", {
+							"data-uid": "src/components/home/NetworkSection.tsx:49:13",
 							"data-prohibitions": "[editContent]",
-							className: "bg-card rounded-2xl border border-border p-6 sm:p-8 shadow-elevation",
-							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ul", {
-								"data-uid": "src/components/home/CriteriaSection.tsx:40:15",
+							className: "space-y-4",
+							children: [
+								"Match perfeito entre o seu imóvel e o cliente ideal.",
+								"Acesso a uma rede fechada de corretores de elite.",
+								"Transações otimizadas com foco em resultados reais."
+							].map((item, i) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("li", {
+								"data-uid": "src/components/home/NetworkSection.tsx:55:17",
 								"data-prohibitions": "[editContent]",
-								className: "space-y-4",
-								children: criteria.map((c, i) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("li", {
-									"data-uid": "src/components/home/CriteriaSection.tsx:42:19",
+								className: "flex items-start gap-3",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CircleCheck, {
+									"data-uid": "src/components/home/NetworkSection.tsx:56:19",
 									"data-prohibitions": "[editContent]",
-									className: "flex items-center gap-3 text-white text-base sm:text-lg",
-									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-										"data-uid": "src/components/home/CriteriaSection.tsx:43:21",
-										"data-prohibitions": "[]",
-										className: "w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center shrink-0",
-										children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Check, {
-											"data-uid": "src/components/home/CriteriaSection.tsx:44:23",
-											"data-prohibitions": "[editContent]",
-											className: "w-4 h-4 text-primary"
-										})
-									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-										"data-uid": "src/components/home/CriteriaSection.tsx:46:21",
-										"data-prohibitions": "[editContent]",
-										children: c
-									})]
-								}, i))
-							})
-						}),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-							"data-uid": "src/components/home/CriteriaSection.tsx:52:13",
-							"data-prohibitions": "[]",
-							className: "flex flex-col sm:flex-row gap-4 items-center",
-							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
-								"data-uid": "src/components/home/CriteriaSection.tsx:53:15",
-								"data-prohibitions": "[]",
-								size: "lg",
-								className: "h-14 px-8 text-base w-full sm:w-auto shadow-lg shadow-primary/25 hover:scale-105 transition-transform duration-300",
-								children: ["Quero fazer parte", /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ArrowRight, {
-									"data-uid": "src/components/home/CriteriaSection.tsx:58:17",
+									className: "w-6 h-6 text-primary shrink-0"
+								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+									"data-uid": "src/components/home/NetworkSection.tsx:57:19",
 									"data-prohibitions": "[editContent]",
-									className: "ml-2 h-5 w-5"
+									className: "text-zinc-700 dark:text-zinc-300",
+									children: item
 								})]
-							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-								"data-uid": "src/components/home/CriteriaSection.tsx:60:15",
-								"data-prohibitions": "[]",
-								size: "lg",
-								variant: "outline",
-								className: "h-14 px-8 text-base w-full sm:w-auto border-border text-white hover:bg-secondary transition-all duration-300",
-								children: "Ver requisitos"
+							}, i))
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
+							"data-uid": "src/components/home/NetworkSection.tsx:62:13",
+							"data-prohibitions": "[]",
+							size: "lg",
+							className: "gap-2",
+							children: ["Entenda o Algoritmo ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ArrowRight, {
+								"data-uid": "src/components/home/NetworkSection.tsx:63:35",
+								"data-prohibitions": "[editContent]",
+								className: "w-4 h-4"
 							})]
 						})
 					]
 				})]
 			})
 		})
+	});
+}
+//#endregion
+//#region src/assets/gemini_generated_image_7mhaio7mhaio7mha-a5b5d.png
+var gemini_generated_image_7mhaio7mhaio7mha_a5b5d_default = "/assets/gemini_generated_image_7mhaio7mhaio7mha-a5b5d-Dwk9dSHM.png";
+//#endregion
+//#region src/components/home/CriteriaSection.tsx
+function CriteriaSection() {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
+		"data-uid": "src/components/home/CriteriaSection.tsx:7:5",
+		"data-prohibitions": "[editContent]",
+		className: "py-24 bg-zinc-950 text-white overflow-hidden relative",
+		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+			"data-uid": "src/components/home/CriteriaSection.tsx:8:7",
+			"data-prohibitions": "[editContent]",
+			className: "absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-zinc-900 via-zinc-950 to-zinc-950 opacity-80"
+		}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+			"data-uid": "src/components/home/CriteriaSection.tsx:10:7",
+			"data-prohibitions": "[editContent]",
+			className: "container relative mx-auto px-4 md:px-6",
+			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				"data-uid": "src/components/home/CriteriaSection.tsx:11:9",
+				"data-prohibitions": "[]",
+				className: "text-center max-w-3xl mx-auto mb-16 space-y-4",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h2", {
+					"data-uid": "src/components/home/CriteriaSection.tsx:12:11",
+					"data-prohibitions": "[]",
+					className: "text-3xl md:text-5xl font-bold tracking-tight",
+					children: ["Critérios de ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+						"data-uid": "src/components/home/CriteriaSection.tsx:13:26",
+						"data-prohibitions": "[]",
+						className: "text-primary",
+						children: "Admissão"
+					})]
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+					"data-uid": "src/components/home/CriteriaSection.tsx:15:11",
+					"data-prohibitions": "[]",
+					className: "text-lg text-zinc-400",
+					children: "O Prime Circle é um clube de negócios e networking exclusivo. Nossa curadoria garante que apenas profissionais com histórico comprovado integrem nossa rede."
+				})]
+			}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				"data-uid": "src/components/home/CriteriaSection.tsx:21:9",
+				"data-prohibitions": "[editContent]",
+				className: "grid grid-cols-1 lg:grid-cols-12 gap-12 items-center",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					"data-uid": "src/components/home/CriteriaSection.tsx:22:11",
+					"data-prohibitions": "[]",
+					className: "lg:col-span-5 space-y-6",
+					children: [
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Card, {
+							"data-uid": "src/components/home/CriteriaSection.tsx:23:13",
+							"data-prohibitions": "[]",
+							className: "p-6 bg-zinc-900/50 border-zinc-800 backdrop-blur text-left hover:bg-zinc-800/80 transition-colors",
+							children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								"data-uid": "src/components/home/CriteriaSection.tsx:24:15",
+								"data-prohibitions": "[]",
+								className: "flex gap-4",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Shield, {
+									"data-uid": "src/components/home/CriteriaSection.tsx:25:17",
+									"data-prohibitions": "[editContent]",
+									className: "w-8 h-8 text-primary shrink-0"
+								}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+									"data-uid": "src/components/home/CriteriaSection.tsx:26:17",
+									"data-prohibitions": "[]",
+									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
+										"data-uid": "src/components/home/CriteriaSection.tsx:27:19",
+										"data-prohibitions": "[]",
+										className: "font-semibold text-lg text-zinc-100",
+										children: "Reputação Ilibada"
+									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+										"data-uid": "src/components/home/CriteriaSection.tsx:28:19",
+										"data-prohibitions": "[]",
+										className: "text-zinc-400 mt-2 text-sm leading-relaxed",
+										children: "Análise criteriosa do histórico profissional no mercado imobiliário de luxo."
+									})]
+								})]
+							})
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Card, {
+							"data-uid": "src/components/home/CriteriaSection.tsx:35:13",
+							"data-prohibitions": "[]",
+							className: "p-6 bg-zinc-900/50 border-zinc-800 backdrop-blur text-left hover:bg-zinc-800/80 transition-colors",
+							children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								"data-uid": "src/components/home/CriteriaSection.tsx:36:15",
+								"data-prohibitions": "[]",
+								className: "flex gap-4",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Award, {
+									"data-uid": "src/components/home/CriteriaSection.tsx:37:17",
+									"data-prohibitions": "[editContent]",
+									className: "w-8 h-8 text-primary shrink-0"
+								}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+									"data-uid": "src/components/home/CriteriaSection.tsx:38:17",
+									"data-prohibitions": "[]",
+									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
+										"data-uid": "src/components/home/CriteriaSection.tsx:39:19",
+										"data-prohibitions": "[]",
+										className: "font-semibold text-lg text-zinc-100",
+										children: "Volume de Vendas"
+									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+										"data-uid": "src/components/home/CriteriaSection.tsx:40:19",
+										"data-prohibitions": "[]",
+										className: "text-zinc-400 mt-2 text-sm leading-relaxed",
+										children: "Exigência de VGV mínimo comprovado nos últimos 24 meses em propriedades de alto padrão."
+									})]
+								})]
+							})
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Card, {
+							"data-uid": "src/components/home/CriteriaSection.tsx:48:13",
+							"data-prohibitions": "[]",
+							className: "p-6 bg-zinc-900/50 border-zinc-800 backdrop-blur text-left hover:bg-zinc-800/80 transition-colors",
+							children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								"data-uid": "src/components/home/CriteriaSection.tsx:49:15",
+								"data-prohibitions": "[]",
+								className: "flex gap-4",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Lock, {
+									"data-uid": "src/components/home/CriteriaSection.tsx:50:17",
+									"data-prohibitions": "[editContent]",
+									className: "w-8 h-8 text-primary shrink-0"
+								}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+									"data-uid": "src/components/home/CriteriaSection.tsx:51:17",
+									"data-prohibitions": "[]",
+									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
+										"data-uid": "src/components/home/CriteriaSection.tsx:52:19",
+										"data-prohibitions": "[]",
+										className: "font-semibold text-lg text-zinc-100",
+										children: "Indicação Exclusiva"
+									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+										"data-uid": "src/components/home/CriteriaSection.tsx:53:19",
+										"data-prohibitions": "[]",
+										className: "text-zinc-400 mt-2 text-sm leading-relaxed",
+										children: "A entrada requer aprovação por membros ativos e análise da diretoria do clube."
+									})]
+								})]
+							})
+						})
+					]
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					"data-uid": "src/components/home/CriteriaSection.tsx:61:11",
+					"data-prohibitions": "[editContent]",
+					className: "lg:col-span-7 relative w-full h-[400px] lg:h-[600px] rounded-3xl overflow-hidden ring-1 ring-white/10 shadow-2xl",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
+						"data-uid": "src/components/home/CriteriaSection.tsx:63:13",
+						"data-prohibitions": "[editContent]",
+						src: gemini_generated_image_7mhaio7mhaio7mha_a5b5d_default,
+						alt: "Membros do Prime Circle em reunião",
+						className: "w-full h-full object-cover scale-[1.05] object-center brightness-90"
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+						"data-uid": "src/components/home/CriteriaSection.tsx:68:13",
+						"data-prohibitions": "[editContent]",
+						className: "absolute inset-0 bg-gradient-to-r from-zinc-950/80 via-transparent to-transparent lg:block hidden pointer-events-none"
+					})]
+				})]
+			})]
+		})]
 	});
 }
 //#endregion
@@ -28142,56 +28161,6 @@ function WaitlistPage() {
 	});
 }
 //#endregion
-//#region src/components/ui/card.tsx
-var Card = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-	"data-uid": "src/components/ui/card.tsx:8:5",
-	"data-prohibitions": "[editContent]",
-	ref,
-	className: cn("rounded-lg border bg-card text-card-foreground shadow-sm", className),
-	...props
-}));
-Card.displayName = "Card";
-var CardHeader = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-	"data-uid": "src/components/ui/card.tsx:19:5",
-	"data-prohibitions": "[editContent]",
-	ref,
-	className: cn("flex flex-col space-y-1.5 p-6", className),
-	...props
-}));
-CardHeader.displayName = "CardHeader";
-var CardTitle = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-	"data-uid": "src/components/ui/card.tsx:26:5",
-	"data-prohibitions": "[editContent]",
-	ref,
-	className: cn("text-2xl font-semibold leading-none tracking-tight", className),
-	...props
-}));
-CardTitle.displayName = "CardTitle";
-var CardDescription = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-	"data-uid": "src/components/ui/card.tsx:37:5",
-	"data-prohibitions": "[editContent]",
-	ref,
-	className: cn("text-sm text-muted-foreground", className),
-	...props
-}));
-CardDescription.displayName = "CardDescription";
-var CardContent = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-	"data-uid": "src/components/ui/card.tsx:44:5",
-	"data-prohibitions": "[editContent]",
-	ref,
-	className: cn("p-6 pt-0", className),
-	...props
-}));
-CardContent.displayName = "CardContent";
-var CardFooter = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-	"data-uid": "src/components/ui/card.tsx:51:5",
-	"data-prohibitions": "[editContent]",
-	ref,
-	className: cn("flex items-center p-6 pt-0", className),
-	...props
-}));
-CardFooter.displayName = "CardFooter";
-//#endregion
 //#region src/components/ui/alert.tsx
 var alertVariants = cva("relative w-full rounded-lg border p-4 [&>svg~*]:pl-7 [&>svg+div]:translate-y-[-3px] [&>svg]:absolute [&>svg]:left-4 [&>svg]:top-4 [&>svg]:text-foreground", {
 	variants: { variant: {
@@ -35675,4 +35644,4 @@ function App() {
 }));
 //#endregion
 
-//# sourceMappingURL=index-BHxY5502.js.map
+//# sourceMappingURL=index-CoMVpGc6.js.map
