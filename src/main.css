@@ -6,25 +6,25 @@
 
 @layer base {
   :root {
-    --background: 240 26% 8%; /* #0F0F1A */
+    --background: 240 28% 14%; /* #1A1A2E */
     --foreground: 0 0% 100%;
 
-    --card: 240 28% 14%; /* #1A1A2E */
+    --card: 240 28% 12%;
     --card-foreground: 0 0% 100%;
 
-    --popover: 240 28% 14%;
+    --popover: 240 28% 12%;
     --popover-foreground: 0 0% 100%;
 
     --primary: 44 55% 54%; /* #C9A84C Gold */
-    --primary-foreground: 240 26% 8%;
+    --primary-foreground: 240 28% 14%;
 
-    --secondary: 240 27% 20%; /* #252541 */
+    --secondary: 240 27% 20%;
     --secondary-foreground: 0 0% 100%;
 
     --muted: 240 27% 20%;
     --muted-foreground: 215 16% 65%; /* Slate 400 */
 
-    --accent: 240 29% 27%; /* #32325A */
+    --accent: 240 29% 27%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
@@ -36,10 +36,10 @@
 
     --radius: 0.75rem;
 
-    --sidebar-background: 240 26% 8%;
+    --sidebar-background: 240 28% 14%;
     --sidebar-foreground: 0 0% 100%;
     --sidebar-primary: 44 55% 54%;
-    --sidebar-primary-foreground: 240 26% 8%;
+    --sidebar-primary-foreground: 240 28% 14%;
     --sidebar-accent: 240 27% 20%;
     --sidebar-accent-foreground: 0 0% 100%;
     --sidebar-border: 240 27% 20%;
@@ -59,11 +59,16 @@
 
 @layer utilities {
   .gold-gradient {
-    @apply bg-gradient-to-r from-[#C9A84C] to-[#E3C67B] text-[#0F0F1A];
+    @apply bg-gradient-to-r from-[#C9A84C] to-[#E3C67B] text-[#1A1A2E] border-none hover:opacity-90 transition-opacity;
   }
 
   .gold-glow {
-    box-shadow: 0 0 15px rgba(201, 168, 76, 0.3);
+    box-shadow: 0 0 15px rgba(201, 168, 76, 0.4);
+    transition: box-shadow 0.3s ease-in-out;
+  }
+
+  .gold-glow:hover {
+    box-shadow: 0 0 25px rgba(201, 168, 76, 0.6);
   }
 
   .glass-header {

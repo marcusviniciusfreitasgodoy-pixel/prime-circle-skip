@@ -13,8 +13,18 @@ export function ProtectedRoute() {
     return <Navigate to="/pending" replace />
   }
 
-  if (user.status === 'approved' && location.pathname === '/pending') {
-    return <Navigate to="/dashboard" replace />
+  if (user.status === 'approved' || user.status === 'admin') {
+    if (location.pathname === '/pending') {
+      return <Navigate to={user.onboarded ? '/dashboard' : '/onboarding'} replace />
+    }
+
+    if (!user.onboarded && location.pathname !== '/onboarding') {
+      return <Navigate to="/onboarding" replace />
+    }
+
+    if (user.onboarded && location.pathname === '/onboarding') {
+      return <Navigate to="/dashboard" replace />
+    }
   }
 
   return <Outlet />

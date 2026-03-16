@@ -3,12 +3,17 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
-import { Check, X, Send, Activity } from 'lucide-react'
+import { Check, X, Send, Activity, Zap } from 'lucide-react'
 import { toast } from 'sonner'
 import useAppStore from '@/stores/main'
+import {
+  simulateInactivityReminders,
+  simulateBiWeeklyReport,
+  sendTransactionalEmail,
+} from '@/lib/email'
 
 export default function AdminPage() {
-  const { logs } = useAppStore()
+  const { logs, logEvent } = useAppStore()
 
   const requests = [
     {
@@ -33,26 +38,48 @@ export default function AdminPage() {
     {
       id: 1,
       to: 'João Corretor',
-      type: 'Lembrete de Visita',
+      type: 'Lembrete de Inatividade (14 dias)',
       status: 'Enviado',
       time: '10 min atrás',
     },
     {
       id: 2,
       to: 'Maria Santos',
-      type: 'Alerta de Novo Match',
+      type: 'Report Quinzenal',
       status: 'Lido',
       time: '1 hora atrás',
     },
-    { id: 3, to: 'Carlos Mendes', type: 'Boas-vindas', status: 'Pendente', time: '2 horas atrás' },
+    {
+      id: 3,
+      to: 'Carlos Mendes',
+      type: 'Boas-vindas',
+      status: 'Pendente',
+      time: '2 horas atrás',
+    },
   ]
 
-  const handleAction = (name: string, action: 'approved' | 'rejected') => {
-    toast.success(
-      action === 'approved'
-        ? `Solicitação de ${name} aprovada. E-mail de boas-vindas na fila.`
-        : `Solicitação de ${name} rejeitada. E-mail de feedback enviado.`,
-    )
+  const handleAction = async (name: string, email: string, action: 'approved' | 'rejected') => {
+    if (action === 'approved') {
+      toast.success(`Solicitação de ${name} aprovada. Enviando link mágico...`)
+      await sendTransactionalEmail('Magic Link Email', { to: email, name })
+      logEvent('Aprovação de Usuário', `O candidato ${name} foi aprovado.`)
+    } else {
+      toast.error(`Solicitação de ${name} rejeitada. E-mail de feedback enviado.`)
+      await sendTransactionalEmail('Rejection Feedback', { to: email, name })
+      logEvent('Rejeição de Usuário', `O candidato ${name} foi rejeitado.`)
+    }
+  }
+
+  const handleTriggerInactivity = () => {
+    simulateInactivityReminders()
+    toast.success('Job de inatividade executado. Notificações na fila.')
+    logEvent('Cron Job', 'Verificação de inatividade de 14 dias disparada manualmente.')
+  }
+
+  const handleTriggerReport = () => {
+    simulateBiWeeklyReport()
+    toast.success('Report Quinzenal gerado e enviado aos membros ativos.')
+    logEvent('Cron Job', 'Report quinzenal de inteligência de mercado disparado manualmente.')
   }
 
   return (
@@ -79,10 +106,16 @@ export default function AdminPage() {
             Comunicações
           </TabsTrigger>
           <TabsTrigger
+            value="automations"
+            className="data-[state=active]:bg-secondary data-[state=active]:text-primary py-2 px-4"
+          >
+            Automações
+          </TabsTrigger>
+          <TabsTrigger
             value="logs"
             className="data-[state=active]:bg-secondary data-[state=active]:text-primary py-2 px-4"
           >
-            Logs de Atividade
+            Logs
           </TabsTrigger>
         </TabsList>
 
@@ -114,13 +147,13 @@ export default function AdminPage() {
                   <Button
                     variant="outline"
                     className="flex-1 md:flex-none border-red-500/50 text-red-500 hover:bg-red-500/10"
-                    onClick={() => handleAction(req.name, 'rejected')}
+                    onClick={() => handleAction(req.name, req.email, 'rejected')}
                   >
                     <X className="w-4 h-4 mr-2" /> Rejeitar
                   </Button>
                   <Button
                     className="flex-1 md:flex-none bg-green-500/20 text-green-500 hover:bg-green-500/30 border-none"
-                    onClick={() => handleAction(req.name, 'approved')}
+                    onClick={() => handleAction(req.name, req.email, 'approved')}
                   >
                     <Check className="w-4 h-4 mr-2" /> Aprovar
                   </Button>
@@ -168,6 +201,54 @@ export default function AdminPage() {
                     </div>
                   </div>
                 ))}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="automations" className="mt-6">
+          <Card className="bg-card border-border">
+            <CardHeader>
+              <CardTitle className="text-lg text-white flex items-center gap-2">
+                <Zap className="w-5 h-5 text-primary" /> Disparos Manuais (Cron Jobs)
+              </CardTitle>
+              <CardDescription>
+                Simule o comportamento dos cron jobs de engajamento do ecossistema.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="flex flex-col md:flex-row items-start md:items-center justify-between p-4 bg-secondary rounded-lg border border-border gap-4">
+                <div>
+                  <h4 className="text-white font-medium">Lembretes de Inatividade</h4>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Gatilho automático de e-mail para membros que não logaram ou atualizaram
+                    demandas nos últimos 14 dias.
+                  </p>
+                </div>
+                <Button
+                  onClick={handleTriggerInactivity}
+                  variant="outline"
+                  className="border-primary text-primary hover:bg-primary/10 shrink-0"
+                >
+                  Disparar Verificação
+                </Button>
+              </div>
+
+              <div className="flex flex-col md:flex-row items-start md:items-center justify-between p-4 bg-secondary rounded-lg border border-border gap-4">
+                <div>
+                  <h4 className="text-white font-medium">Report Quinzenal (Newsletter)</h4>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Dispara o e-mail de resumo de mercado para todos os membros ativos com os
+                    últimos imóveis e demandas curadas.
+                  </p>
+                </div>
+                <Button
+                  onClick={handleTriggerReport}
+                  variant="outline"
+                  className="border-primary text-primary hover:bg-primary/10 shrink-0"
+                >
+                  Gerar Report
+                </Button>
               </div>
             </CardContent>
           </Card>

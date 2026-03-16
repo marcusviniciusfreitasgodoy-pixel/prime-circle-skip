@@ -2,7 +2,15 @@ import { createContext, createElement, useContext, useState, ReactNode } from 'r
 
 export type UserStatus = 'pending' | 'approved' | 'admin' | null
 export type Tier = 'None' | 'Ambassador' | 'Silver' | 'Gold' | 'Elite'
-export type User = { id: string; name: string; status: UserStatus; avatar?: string; tier: Tier }
+export type User = {
+  id: string
+  name: string
+  status: UserStatus
+  avatar?: string
+  tier: Tier
+  onboarded?: boolean
+  lastLogin?: string
+}
 
 export type Listing = {
   id: string
@@ -35,7 +43,7 @@ export type Match = {
 }
 
 interface AppState {
-  user: User
+  user: User | null
   listings: Listing[]
   needs: Need[]
   matches: Match[]
@@ -43,6 +51,7 @@ interface AppState {
   logs: { action: string; details: string; timestamp: string }[]
   login: (status: UserStatus) => void
   logout: () => void
+  completeOnboarding: () => void
   addMatch: (needId: string, listingId: string) => void
   updateMatchStatus: (matchId: string, status: Match['status']) => void
   closeMatch: (matchId: string, finalValue: string) => void
@@ -64,32 +73,6 @@ const initialListings: Listing[] = [
     image: 'https://img.usecurling.com/p/600/400?q=luxury%20penthouse',
     ownerId: 'user1',
   },
-  {
-    id: '2',
-    title: 'Mansão Jardim Oceânico',
-    type: 'Casa',
-    price: 'R$ 12.000.000',
-    priceValue: 12000000,
-    area: '800m²',
-    beds: 5,
-    neighborhood: 'Jardim Oceânico',
-    status: 'Disponível',
-    image: 'https://img.usecurling.com/p/600/400?q=modern%20mansion',
-    ownerId: 'user1',
-  },
-  {
-    id: '3',
-    title: 'Casa Cond. Santa Mônica',
-    type: 'Casa',
-    price: 'R$ 6.200.000',
-    priceValue: 6200000,
-    area: '380m²',
-    beds: 4,
-    neighborhood: 'Santa Mônica',
-    status: 'Reservado',
-    image: 'https://img.usecurling.com/p/600/400?q=luxury%20villa',
-    ownerId: 'other',
-  },
 ]
 
 const initialNeeds: Need[] = [
@@ -102,26 +85,14 @@ const initialNeeds: Need[] = [
     urgency: 'Alta',
     ownerId: 'other',
   },
-  {
-    id: '2',
-    title: 'Investidor Gringo',
-    type: 'Cobertura',
-    priceRange: 'Até R$ 15M',
-    neighborhood: 'Jardim Oceânico',
-    urgency: 'Média',
-    ownerId: 'other',
-  },
 ]
 
-const initialMatches: Match[] = [
-  { id: '1', needId: '1', listingId: '3', status: 'Contato' },
-  { id: '2', needId: '2', listingId: '1', status: 'Proposta' },
-]
+const initialMatches: Match[] = [{ id: '1', needId: '1', listingId: '1', status: 'Contato' }]
 
 const AppContext = createContext<AppState | null>(null)
 
 export function AppProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User>(null)
+  const [user, setUser] = useState<User | null>(null)
   const [listings, setListings] = useState<Listing[]>(initialListings)
   const [needs, setNeeds] = useState<Need[]>(initialNeeds)
   const [matches, setMatches] = useState<Match[]>(initialMatches)
@@ -135,8 +106,15 @@ export function AppProvider({ children }: { children: ReactNode }) {
       status,
       tier: 'Gold',
       avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=1',
+      onboarded: status === 'admin' ? true : false,
+      lastLogin: new Date().toISOString(),
     })
+
   const logout = () => setUser(null)
+
+  const completeOnboarding = () => {
+    setUser((prev) => (prev ? { ...prev, onboarded: true } : prev))
+  }
 
   const logEvent = (action: string, details: string) => {
     setLogs((prev) => [...prev, { action, details, timestamp: new Date().toISOString() }])
@@ -178,6 +156,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
         logs,
         login,
         logout,
+        completeOnboarding,
         addMatch,
         updateMatchStatus,
         closeMatch,

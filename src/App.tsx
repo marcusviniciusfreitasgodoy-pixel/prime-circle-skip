@@ -11,6 +11,11 @@ import NotFound from './pages/NotFound'
 
 import Index from './pages/Index'
 import ApplyPage from './pages/ApplyPage'
+import WaitlistPage from './pages/WaitlistPage'
+import AuthConfirmPage from './pages/AuthConfirmPage'
+import OnboardingPage from './pages/OnboardingPage'
+import TermsPage from './pages/TermsPage'
+import PrivacyPage from './pages/PrivacyPage'
 import PendingPage from './pages/PendingPage'
 import DashboardPage from './pages/DashboardPage'
 import ListingsListPage from './pages/ListingsListPage'
@@ -34,13 +39,22 @@ const App = () => (
           <Route element={<Layout />}>
             <Route path="/" element={<Index />} />
             <Route path="/apply" element={<ApplyPage />} />
+            <Route path="/apply/lista-de-espera" element={<WaitlistPage />} />
+            <Route path="/auth/confirm" element={<AuthConfirmPage />} />
+            <Route path="/terms" element={<TermsPage />} />
+            <Route path="/privacy" element={<PrivacyPage />} />
           </Route>
 
           {/* Protected Routes */}
           <Route element={<ProtectedRoute />}>
+            <Route path="/onboarding" element={<Layout />}>
+              <Route index element={<OnboardingPage />} />
+            </Route>
+
             <Route path="/pending" element={<Layout />}>
               <Route index element={<PendingPage />} />
             </Route>
+
             <Route element={<AppLayout />}>
               <Route path="/dashboard" element={<DashboardPage />} />
               <Route path="/profile" element={<ProfilePage />} />
