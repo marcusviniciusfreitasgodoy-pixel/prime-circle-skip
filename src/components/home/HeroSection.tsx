@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button'
-import { ArrowRight, Building } from 'lucide-react'
+import { ArrowRight, Lock } from 'lucide-react'
 import heroBg from '@/assets/acesso-fundador-aace0.png'
 
 export function HeroSection() {
@@ -17,25 +17,35 @@ export function HeroSection() {
 
       {/* Hero Content */}
       <div className="container relative z-20 px-4 md:px-6 py-24 sm:py-32 flex flex-col items-center text-center">
-        <div className="inline-flex items-center rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-sm font-medium text-white mb-8 backdrop-blur-md animate-fade-in-up">
-          <Building className="mr-2 h-4 w-4 text-primary" />
-          <span>Acesso Exclusivo para Corretores de Elite</span>
+        <div className="inline-flex items-center text-left sm:text-center rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-sm sm:text-base font-medium text-white mb-8 backdrop-blur-md animate-fade-in-up max-w-[95%]">
+          <Lock className="mr-2 h-4 w-4 text-primary shrink-0" />
+          <span className="truncate whitespace-normal sm:whitespace-nowrap">
+            Acesso restrito a corretores convidados por membros do núcleo.
+          </span>
         </div>
 
         <h1
-          className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-white max-w-5xl mx-auto animate-fade-in-up drop-shadow-md"
+          className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-white max-w-5xl mx-auto animate-fade-in-up drop-shadow-md leading-tight"
           style={{ animationDelay: '100ms' }}
         >
-          A Infraestrutura Privada de <br className="hidden lg:block" />
-          <span className="text-primary drop-shadow-sm">Liquidez Imobiliária</span>
+          Aqui, o outro lado do seu negócio{' '}
+          <span className="text-primary drop-shadow-sm">já está esperando.</span>
         </h1>
 
         <p
           className="mt-6 text-lg sm:text-xl md:text-2xl text-gray-200 max-w-3xl mx-auto animate-fade-in-up drop-shadow"
           style={{ animationDelay: '200ms' }}
         >
-          Uma plataforma exclusiva desenhada para corretores de alto padrão acelerarem fechamentos,
-          acessarem oportunidades off-market e maximizarem seus resultados.
+          Uma rede privada para corretores selecionados da Barra da Tijuca — onde demandas reais
+          circulam antes de qualquer portal ver.
+        </p>
+
+        <p
+          className="mt-4 text-base sm:text-lg text-gray-300 max-w-2xl mx-auto animate-fade-in-up drop-shadow font-medium"
+          style={{ animationDelay: '250ms' }}
+        >
+          Acesso por indicação e aprovação. Demandas e imóveis que não aparecem em nenhum outro
+          lugar.
         </p>
 
         <div
@@ -46,7 +56,7 @@ export function HeroSection() {
             size="lg"
             className="h-14 px-8 text-base w-full sm:w-auto shadow-lg shadow-primary/25 hover:scale-105 transition-transform duration-300"
           >
-            Solicitar Acesso
+            Quero fazer parte
             <ArrowRight className="ml-2 h-5 w-5" />
           </Button>
           <Button

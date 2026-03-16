@@ -19274,56 +19274,6 @@ var ArrowRight = createLucideIcon("arrow-right", [["path", {
 	d: "m12 5 7 7-7 7",
 	key: "xquz4c"
 }]]);
-var Building = createLucideIcon("building", [
-	["path", {
-		d: "M12 10h.01",
-		key: "1nrarc"
-	}],
-	["path", {
-		d: "M12 14h.01",
-		key: "1etili"
-	}],
-	["path", {
-		d: "M12 6h.01",
-		key: "1vi96p"
-	}],
-	["path", {
-		d: "M16 10h.01",
-		key: "1m94wz"
-	}],
-	["path", {
-		d: "M16 14h.01",
-		key: "1gbofw"
-	}],
-	["path", {
-		d: "M16 6h.01",
-		key: "1x0f13"
-	}],
-	["path", {
-		d: "M8 10h.01",
-		key: "19clt8"
-	}],
-	["path", {
-		d: "M8 14h.01",
-		key: "6423bh"
-	}],
-	["path", {
-		d: "M8 6h.01",
-		key: "1dz90k"
-	}],
-	["path", {
-		d: "M9 22v-3a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3",
-		key: "cabbwy"
-	}],
-	["rect", {
-		x: "4",
-		y: "2",
-		width: "16",
-		height: "20",
-		rx: "2",
-		key: "1uxh74"
-	}]
-]);
 var CalendarDays = createLucideIcon("calendar-days", [
 	["path", {
 		d: "M8 2v4",
@@ -19803,61 +19753,65 @@ function HeroSection() {
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 						"data-uid": "src/components/home/HeroSection.tsx:20:9",
 						"data-prohibitions": "[]",
-						className: "inline-flex items-center rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-sm font-medium text-white mb-8 backdrop-blur-md animate-fade-in-up",
-						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Building, {
+						className: "inline-flex items-center text-left sm:text-center rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-sm sm:text-base font-medium text-white mb-8 backdrop-blur-md animate-fade-in-up max-w-[95%]",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Lock, {
 							"data-uid": "src/components/home/HeroSection.tsx:21:11",
 							"data-prohibitions": "[editContent]",
-							className: "mr-2 h-4 w-4 text-primary"
+							className: "mr-2 h-4 w-4 text-primary shrink-0"
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
 							"data-uid": "src/components/home/HeroSection.tsx:22:11",
 							"data-prohibitions": "[]",
-							children: "Acesso Exclusivo para Corretores de Elite"
+							className: "truncate whitespace-normal sm:whitespace-nowrap",
+							children: "Acesso restrito a corretores convidados por membros do núcleo."
 						})]
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h1", {
-						"data-uid": "src/components/home/HeroSection.tsx:25:9",
+						"data-uid": "src/components/home/HeroSection.tsx:27:9",
 						"data-prohibitions": "[]",
-						className: "text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-white max-w-5xl mx-auto animate-fade-in-up drop-shadow-md",
+						className: "text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-white max-w-5xl mx-auto animate-fade-in-up drop-shadow-md leading-tight",
 						style: { animationDelay: "100ms" },
 						children: [
-							"A Infraestrutura Privada de ",
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("br", {
-								"data-uid": "src/components/home/HeroSection.tsx:29:39",
-								"data-prohibitions": "[editContent]",
-								className: "hidden lg:block"
-							}),
+							"Aqui, o outro lado do seu negócio",
+							" ",
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-								"data-uid": "src/components/home/HeroSection.tsx:30:11",
+								"data-uid": "src/components/home/HeroSection.tsx:32:11",
 								"data-prohibitions": "[]",
 								className: "text-primary drop-shadow-sm",
-								children: "Liquidez Imobiliária"
+								children: "já está esperando."
 							})
 						]
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-						"data-uid": "src/components/home/HeroSection.tsx:33:9",
+						"data-uid": "src/components/home/HeroSection.tsx:35:9",
 						"data-prohibitions": "[]",
 						className: "mt-6 text-lg sm:text-xl md:text-2xl text-gray-200 max-w-3xl mx-auto animate-fade-in-up drop-shadow",
 						style: { animationDelay: "200ms" },
-						children: "Uma plataforma exclusiva desenhada para corretores de alto padrão acelerarem fechamentos, acessarem oportunidades off-market e maximizarem seus resultados."
+						children: "Uma rede privada para corretores selecionados da Barra da Tijuca — onde demandas reais circulam antes de qualquer portal ver."
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+						"data-uid": "src/components/home/HeroSection.tsx:43:9",
+						"data-prohibitions": "[]",
+						className: "mt-4 text-base sm:text-lg text-gray-300 max-w-2xl mx-auto animate-fade-in-up drop-shadow font-medium",
+						style: { animationDelay: "250ms" },
+						children: "Acesso por indicação e aprovação. Demandas e imóveis que não aparecem em nenhum outro lugar."
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-						"data-uid": "src/components/home/HeroSection.tsx:41:9",
+						"data-uid": "src/components/home/HeroSection.tsx:51:9",
 						"data-prohibitions": "[]",
 						className: "mt-10 flex flex-col sm:flex-row gap-4 sm:gap-6 w-full sm:w-auto animate-fade-in-up",
 						style: { animationDelay: "300ms" },
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
-							"data-uid": "src/components/home/HeroSection.tsx:45:11",
+							"data-uid": "src/components/home/HeroSection.tsx:55:11",
 							"data-prohibitions": "[]",
 							size: "lg",
 							className: "h-14 px-8 text-base w-full sm:w-auto shadow-lg shadow-primary/25 hover:scale-105 transition-transform duration-300",
-							children: ["Solicitar Acesso", /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ArrowRight, {
-								"data-uid": "src/components/home/HeroSection.tsx:50:13",
+							children: ["Quero fazer parte", /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ArrowRight, {
+								"data-uid": "src/components/home/HeroSection.tsx:60:13",
 								"data-prohibitions": "[editContent]",
 								className: "ml-2 h-5 w-5"
 							})]
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-							"data-uid": "src/components/home/HeroSection.tsx:52:11",
+							"data-uid": "src/components/home/HeroSection.tsx:62:11",
 							"data-prohibitions": "[]",
 							size: "lg",
 							variant: "outline",
@@ -35636,4 +35590,4 @@ function App() {
 }));
 //#endregion
 
-//# sourceMappingURL=index-Cdwsihoy.js.map
+//# sourceMappingURL=index-DYUj49C8.js.map
