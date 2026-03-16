@@ -1,5 +1,4 @@
 import { HeroSection } from '@/components/home/HeroSection'
-import { MetricsSection } from '@/components/home/MetricsSection'
 import { ProblemSection } from '@/components/home/ProblemSection'
 import { ComparisonSection } from '@/components/home/ComparisonSection'
 import { NetworkSection } from '@/components/home/NetworkSection'
@@ -18,7 +17,6 @@ export default function Index() {
       <main className="flex-1">
         <HeroSection />
         <ProblemSection />
-        <MetricsSection />
         <ComparisonSection />
         <NetworkSection />
         <CriteriaSection />
