@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
-import { Crown } from 'lucide-react'
+import { Crown, Mail } from 'lucide-react'
 import {
   Form,
   FormControl,
@@ -75,7 +75,7 @@ export default function ApplyPage() {
         candidate: values.name,
       })
       await sendTransactionalEmail('Referral Confirmation', {
-        to: 'admin@primecircle.com',
+        to: 'contato@primecircle.app.br',
         candidate: values.name,
         code: values.referral,
       })
@@ -101,7 +101,9 @@ export default function ApplyPage() {
     })
 
     login('pending')
-    toast.success('Solicitação recebida com sucesso! Você está em análise.')
+    toast.success(
+      'Solicitação recebida com sucesso! Em caso de dúvidas, envie email para contato@primecircle.app.br',
+    )
     navigate('/pending')
   }
 
@@ -138,7 +140,11 @@ export default function ApplyPage() {
                 <FormItem>
                   <FormLabel className="text-white">Email Profissional</FormLabel>
                   <FormControl>
-                    <Input placeholder="joao@prime.com" {...field} className="bg-background" />
+                    <Input
+                      placeholder="joao@primecircle.app.br"
+                      {...field}
+                      className="bg-background"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -246,6 +252,16 @@ export default function ApplyPage() {
             >
               Enviar Solicitação
             </Button>
+
+            <div className="mt-6 text-center pt-4 border-t border-border/50">
+              <a
+                href="mailto:contato@primecircle.app.br"
+                className="inline-flex items-center gap-2 text-xs text-muted-foreground hover:text-primary transition-colors"
+              >
+                <Mail className="w-3 h-3" />
+                contato@primecircle.app.br
+              </a>
+            </div>
           </form>
         </Form>
       </div>

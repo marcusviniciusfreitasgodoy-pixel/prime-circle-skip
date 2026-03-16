@@ -27,6 +27,22 @@ export function FAQSection() {
       q: 'Como funciona a tecnologia de matchmaking?',
       a: 'Os membros cadastram suas demandas (clientes buscando) e ofertas (imóveis em carteira) de forma confidencial. Nosso algoritmo inteligente cruza esses dados e alerta as duas pontas instantaneamente quando há um match ideal, acelerando drasticamente a liquidez.',
     },
+    {
+      q: 'Como posso entrar em contato com o suporte?',
+      a: (
+        <>
+          Nossa equipe está disponível através do email oficial:{' '}
+          <a
+            href="mailto:contato@primecircle.app.br"
+            className="text-primary hover:underline font-medium"
+          >
+            contato@primecircle.app.br
+          </a>
+          . Sinta-se à vontade para nos acionar em caso de dúvidas ou necessidades de suporte
+          técnico.
+        </>
+      ),
+    },
   ]
 
   return (
@@ -59,6 +75,16 @@ export function FAQSection() {
             </AccordionItem>
           ))}
         </Accordion>
+
+        <div className="mt-12 text-center text-muted-foreground text-sm">
+          Ainda tem dúvidas? Fale conosco em{' '}
+          <a
+            href="mailto:contato@primecircle.app.br"
+            className="text-primary hover:underline font-medium"
+          >
+            contato@primecircle.app.br
+          </a>
+        </div>
       </div>
     </section>
   )

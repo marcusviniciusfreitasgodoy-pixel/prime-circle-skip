@@ -19352,6 +19352,17 @@ var Handshake = createLucideIcon("handshake", [
 		key: "1ep09j"
 	}]
 ]);
+var Mail = createLucideIcon("mail", [["path", {
+	d: "m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7",
+	key: "132q7q"
+}], ["rect", {
+	x: "2",
+	y: "4",
+	width: "20",
+	height: "16",
+	rx: "2",
+	key: "izxlao"
+}]]);
 var Play = createLucideIcon("play", [["path", {
 	d: "M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z",
 	key: "10ikf1"
@@ -21476,64 +21487,98 @@ function FAQSection() {
 		{
 			q: "Como funciona a tecnologia de matchmaking?",
 			a: "Os membros cadastram suas demandas (clientes buscando) e ofertas (imóveis em carteira) de forma confidencial. Nosso algoritmo inteligente cruza esses dados e alerta as duas pontas instantaneamente quando há um match ideal, acelerando drasticamente a liquidez."
+		},
+		{
+			q: "Como posso entrar em contato com o suporte?",
+			a: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
+				"Nossa equipe está disponível através do email oficial:",
+				" ",
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("a", {
+					"data-uid": "src/components/home/FAQSection.tsx:35:11",
+					"data-prohibitions": "[]",
+					href: "mailto:contato@primecircle.app.br",
+					className: "text-primary hover:underline font-medium",
+					children: "contato@primecircle.app.br"
+				}),
+				". Sinta-se à vontade para nos acionar em caso de dúvidas ou necessidades de suporte técnico."
+			] })
 		}
 	];
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
-		"data-uid": "src/components/home/FAQSection.tsx:33:5",
+		"data-uid": "src/components/home/FAQSection.tsx:49:5",
 		"data-prohibitions": "[editContent]",
 		className: "py-24 bg-background border-t border-border/50 relative",
 		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-			"data-uid": "src/components/home/FAQSection.tsx:34:7",
+			"data-uid": "src/components/home/FAQSection.tsx:50:7",
 			"data-prohibitions": "[editContent]",
 			className: "absolute bottom-0 left-0 w-full h-[300px] bg-gradient-to-t from-primary/5 to-transparent pointer-events-none"
 		}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-			"data-uid": "src/components/home/FAQSection.tsx:36:7",
+			"data-uid": "src/components/home/FAQSection.tsx:52:7",
 			"data-prohibitions": "[editContent]",
 			className: "container mx-auto px-4 sm:px-6 lg:px-8 max-w-3xl relative z-10",
-			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				"data-uid": "src/components/home/FAQSection.tsx:37:9",
-				"data-prohibitions": "[]",
-				className: "text-center mb-16",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h2", {
-					"data-uid": "src/components/home/FAQSection.tsx:38:11",
+			children: [
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					"data-uid": "src/components/home/FAQSection.tsx:53:9",
 					"data-prohibitions": "[]",
-					className: "text-3xl md:text-5xl font-bold mb-4",
-					children: ["Perguntas ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-						"data-uid": "src/components/home/FAQSection.tsx:39:23",
+					className: "text-center mb-16",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h2", {
+						"data-uid": "src/components/home/FAQSection.tsx:54:11",
 						"data-prohibitions": "[]",
-						className: "text-primary",
-						children: "Frequentes"
+						className: "text-3xl md:text-5xl font-bold mb-4",
+						children: ["Perguntas ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+							"data-uid": "src/components/home/FAQSection.tsx:55:23",
+							"data-prohibitions": "[]",
+							className: "text-primary",
+							children: "Frequentes"
+						})]
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+						"data-uid": "src/components/home/FAQSection.tsx:57:11",
+						"data-prohibitions": "[]",
+						className: "text-xl text-muted-foreground",
+						children: "Tire suas dúvidas sobre o ecossistema exclusivo do Prime Circle."
 					})]
-				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-					"data-uid": "src/components/home/FAQSection.tsx:41:11",
-					"data-prohibitions": "[]",
-					className: "text-xl text-muted-foreground",
-					children: "Tire suas dúvidas sobre o ecossistema exclusivo do Prime Circle."
-				})]
-			}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Accordion, {
-				"data-uid": "src/components/home/FAQSection.tsx:46:9",
-				"data-prohibitions": "[editContent]",
-				type: "single",
-				collapsible: true,
-				className: "w-full space-y-4",
-				children: faqs.map((faq, index) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(AccordionItem, {
-					"data-uid": "src/components/home/FAQSection.tsx:48:13",
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Accordion, {
+					"data-uid": "src/components/home/FAQSection.tsx:62:9",
 					"data-prohibitions": "[editContent]",
-					value: `item-${index}`,
-					className: "border border-border/50 bg-card rounded-lg px-6 data-[state=open]:border-primary/50 data-[state=open]:shadow-[0_0_20px_rgba(201,168,76,0.05)] transition-all",
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(AccordionTrigger, {
-						"data-uid": "src/components/home/FAQSection.tsx:53:15",
+					type: "single",
+					collapsible: true,
+					className: "w-full space-y-4",
+					children: faqs.map((faq, index) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(AccordionItem, {
+						"data-uid": "src/components/home/FAQSection.tsx:64:13",
 						"data-prohibitions": "[editContent]",
-						className: "text-left text-lg font-medium hover:no-underline hover:text-primary py-6",
-						children: faq.q
-					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(AccordionContent, {
-						"data-uid": "src/components/home/FAQSection.tsx:56:15",
-						"data-prohibitions": "[editContent]",
-						className: "text-muted-foreground text-base leading-relaxed pb-6",
-						children: faq.a
-					})]
-				}, index))
-			})]
+						value: `item-${index}`,
+						className: "border border-border/50 bg-card rounded-lg px-6 data-[state=open]:border-primary/50 data-[state=open]:shadow-[0_0_20px_rgba(201,168,76,0.05)] transition-all",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(AccordionTrigger, {
+							"data-uid": "src/components/home/FAQSection.tsx:69:15",
+							"data-prohibitions": "[editContent]",
+							className: "text-left text-lg font-medium hover:no-underline hover:text-primary py-6",
+							children: faq.q
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(AccordionContent, {
+							"data-uid": "src/components/home/FAQSection.tsx:72:15",
+							"data-prohibitions": "[editContent]",
+							className: "text-muted-foreground text-base leading-relaxed pb-6",
+							children: faq.a
+						})]
+					}, index))
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					"data-uid": "src/components/home/FAQSection.tsx:79:9",
+					"data-prohibitions": "[]",
+					className: "mt-12 text-center text-muted-foreground text-sm",
+					children: [
+						"Ainda tem dúvidas? Fale conosco em",
+						" ",
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("a", {
+							"data-uid": "src/components/home/FAQSection.tsx:81:11",
+							"data-prohibitions": "[]",
+							href: "mailto:contato@primecircle.app.br",
+							className: "text-primary hover:underline font-medium",
+							children: "contato@primecircle.app.br"
+						})
+					]
+				})
+			]
 		})]
 	});
 }
@@ -21609,43 +21654,94 @@ function Navbar() {
 //#region src/components/layout/Footer.tsx
 function Footer() {
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("footer", {
-		"data-uid": "src/components/layout/Footer.tsx:3:5",
+		"data-uid": "src/components/layout/Footer.tsx:5:5",
 		"data-prohibitions": "[editContent]",
 		className: "bg-background border-t border-border py-12",
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-			"data-uid": "src/components/layout/Footer.tsx:4:7",
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+			"data-uid": "src/components/layout/Footer.tsx:6:7",
 			"data-prohibitions": "[editContent]",
 			className: "container mx-auto px-4 sm:px-6 lg:px-8",
-			children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				"data-uid": "src/components/layout/Footer.tsx:5:9",
-				"data-prohibitions": "[editContent]",
-				className: "flex flex-col md:flex-row justify-between items-center gap-6",
+			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				"data-uid": "src/components/layout/Footer.tsx:7:9",
+				"data-prohibitions": "[]",
+				className: "flex flex-col md:flex-row justify-between items-center md:items-start gap-8",
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					"data-uid": "src/components/layout/Footer.tsx:6:11",
+					"data-uid": "src/components/layout/Footer.tsx:8:11",
 					"data-prohibitions": "[]",
-					className: "flex items-center gap-2",
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-						"data-uid": "src/components/layout/Footer.tsx:7:13",
+					className: "flex flex-col items-center md:items-start gap-4",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						"data-uid": "src/components/layout/Footer.tsx:9:13",
 						"data-prohibitions": "[]",
-						className: "w-6 h-6 rounded-full bg-primary flex items-center justify-center",
-						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-							"data-uid": "src/components/layout/Footer.tsx:8:15",
-							"data-prohibitions": "[editContent]",
-							className: "w-3 h-3 rounded-full bg-background"
-						})
-					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
-						"data-uid": "src/components/layout/Footer.tsx:10:13",
-						"data-prohibitions": "[]",
-						className: "text-lg font-bold tracking-widest",
-						children: ["PRIME", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-							"data-uid": "src/components/layout/Footer.tsx:11:20",
+						className: "flex items-center gap-2",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+							"data-uid": "src/components/layout/Footer.tsx:10:15",
 							"data-prohibitions": "[]",
-							className: "text-primary",
-							children: "CIRCLE"
+							className: "w-6 h-6 rounded-full bg-primary flex items-center justify-center",
+							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+								"data-uid": "src/components/layout/Footer.tsx:11:17",
+								"data-prohibitions": "[editContent]",
+								className: "w-3 h-3 rounded-full bg-background"
+							})
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
+							"data-uid": "src/components/layout/Footer.tsx:13:15",
+							"data-prohibitions": "[]",
+							className: "text-lg font-bold tracking-widest text-foreground",
+							children: ["PRIME", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+								"data-uid": "src/components/layout/Footer.tsx:14:22",
+								"data-prohibitions": "[]",
+								className: "text-primary",
+								children: "CIRCLE"
+							})]
 						})]
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+						"data-uid": "src/components/layout/Footer.tsx:17:13",
+						"data-prohibitions": "[]",
+						className: "text-muted-foreground text-sm text-center md:text-left max-w-xs",
+						children: "A infraestrutura privada de liquidez imobiliária definitiva para corretores de alto padrão."
 					})]
-				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
-					"data-uid": "src/components/layout/Footer.tsx:15:11",
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					"data-uid": "src/components/layout/Footer.tsx:23:11",
+					"data-prohibitions": "[]",
+					className: "flex flex-col items-center md:items-end gap-3",
+					children: [
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h4", {
+							"data-uid": "src/components/layout/Footer.tsx:24:13",
+							"data-prohibitions": "[]",
+							className: "font-semibold text-foreground mb-1",
+							children: "Contato & Suporte"
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("a", {
+							"data-uid": "src/components/layout/Footer.tsx:25:13",
+							"data-prohibitions": "[]",
+							href: "mailto:contato@primecircle.app.br",
+							className: "text-muted-foreground hover:text-primary transition-colors text-sm flex items-center gap-2 group",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Mail, {
+								"data-uid": "src/components/layout/Footer.tsx:29:15",
+								"data-prohibitions": "[editContent]",
+								className: "w-4 h-4 group-hover:text-primary transition-colors"
+							}), "contato@primecircle.app.br"]
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("a", {
+							"data-uid": "src/components/layout/Footer.tsx:32:13",
+							"data-prohibitions": "[]",
+							href: "https://primecircle.app.br",
+							target: "_blank",
+							rel: "noopener noreferrer",
+							className: "text-muted-foreground hover:text-primary transition-colors text-sm flex items-center gap-2 group",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Globe, {
+								"data-uid": "src/components/layout/Footer.tsx:38:15",
+								"data-prohibitions": "[editContent]",
+								className: "w-4 h-4 group-hover:text-primary transition-colors"
+							}), "primecircle.app.br"]
+						})
+					]
+				})]
+			}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+				"data-uid": "src/components/layout/Footer.tsx:44:9",
+				"data-prohibitions": "[editContent]",
+				className: "mt-12 pt-8 border-t border-border/50 flex justify-center md:justify-start",
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
+					"data-uid": "src/components/layout/Footer.tsx:45:11",
 					"data-prohibitions": "[editContent]",
 					className: "text-muted-foreground text-sm",
 					children: [
@@ -21653,8 +21749,8 @@ function Footer() {
 						(/* @__PURE__ */ new Date()).getFullYear(),
 						" Prime Circle. Todos os direitos reservados."
 					]
-				})]
-			})
+				})
+			})]
 		})
 	});
 }
@@ -21924,80 +22020,80 @@ function Apply() {
 		setTimeout(() => {
 			toast({
 				title: "Aplicação enviada com sucesso!",
-				description: "Nossa equipe analisará seu perfil e entrará em contato em breve."
+				description: "Em breve entraremos em contato. Dúvidas? Fale com contato@primecircle.app.br"
 			});
 			setIsSubmitting(false);
 			navigate("/");
 		}, 1500);
 	};
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-		"data-uid": "src/pages/Apply.tsx:31:5",
+		"data-uid": "src/pages/Apply.tsx:32:5",
 		"data-prohibitions": "[editContent]",
 		className: "min-h-screen bg-background text-foreground flex flex-col",
 		children: [
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Navbar, {
-				"data-uid": "src/pages/Apply.tsx:32:7",
+				"data-uid": "src/pages/Apply.tsx:33:7",
 				"data-prohibitions": "[editContent]"
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("main", {
-				"data-uid": "src/pages/Apply.tsx:33:7",
+				"data-uid": "src/pages/Apply.tsx:34:7",
 				"data-prohibitions": "[editContent]",
 				className: "flex-1 pt-32 pb-24 flex items-center justify-center relative overflow-hidden",
 				children: [
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-						"data-uid": "src/pages/Apply.tsx:34:9",
+						"data-uid": "src/pages/Apply.tsx:35:9",
 						"data-prohibitions": "[editContent]",
 						className: "absolute top-1/4 -right-40 w-96 h-96 bg-primary/5 rounded-full blur-[120px] pointer-events-none"
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-						"data-uid": "src/pages/Apply.tsx:35:9",
+						"data-uid": "src/pages/Apply.tsx:36:9",
 						"data-prohibitions": "[editContent]",
 						className: "absolute bottom-1/4 -left-40 w-96 h-96 bg-primary/5 rounded-full blur-[120px] pointer-events-none"
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-						"data-uid": "src/pages/Apply.tsx:37:9",
+						"data-uid": "src/pages/Apply.tsx:38:9",
 						"data-prohibitions": "[editContent]",
 						className: "container mx-auto px-4 max-w-xl relative z-10",
 						children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-							"data-uid": "src/pages/Apply.tsx:38:11",
+							"data-uid": "src/pages/Apply.tsx:39:11",
 							"data-prohibitions": "[editContent]",
 							className: "bg-card/80 backdrop-blur-sm p-8 sm:p-12 rounded-2xl border border-border shadow-[0_0_40px_rgba(0,0,0,0.5)]",
 							children: [
 								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h1", {
-									"data-uid": "src/pages/Apply.tsx:39:13",
+									"data-uid": "src/pages/Apply.tsx:40:13",
 									"data-prohibitions": "[]",
 									className: "text-3xl sm:text-4xl font-bold mb-4",
 									children: ["Aplicar para o ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-										"data-uid": "src/pages/Apply.tsx:40:30",
+										"data-uid": "src/pages/Apply.tsx:41:30",
 										"data-prohibitions": "[]",
 										className: "text-primary",
 										children: "Prime Circle"
 									})]
 								}),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-									"data-uid": "src/pages/Apply.tsx:42:13",
+									"data-uid": "src/pages/Apply.tsx:43:13",
 									"data-prohibitions": "[]",
 									className: "text-muted-foreground mb-10 text-lg",
 									children: "Preencha seus dados para avaliação do nosso comitê de admissão."
 								}),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("form", {
-									"data-uid": "src/pages/Apply.tsx:46:13",
+									"data-uid": "src/pages/Apply.tsx:47:13",
 									"data-prohibitions": "[editContent]",
 									className: "space-y-8",
 									onSubmit: handleSubmit,
 									children: [
 										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-											"data-uid": "src/pages/Apply.tsx:47:15",
+											"data-uid": "src/pages/Apply.tsx:48:15",
 											"data-prohibitions": "[]",
 											className: "space-y-3",
 											children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label, {
-												"data-uid": "src/pages/Apply.tsx:48:17",
+												"data-uid": "src/pages/Apply.tsx:49:17",
 												"data-prohibitions": "[]",
 												htmlFor: "name",
 												className: "text-base",
 												children: "Nome Completo"
 											}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
-												"data-uid": "src/pages/Apply.tsx:51:17",
+												"data-uid": "src/pages/Apply.tsx:52:17",
 												"data-prohibitions": "[editContent]",
 												required: true,
 												id: "name",
@@ -22006,17 +22102,17 @@ function Apply() {
 											})]
 										}),
 										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-											"data-uid": "src/pages/Apply.tsx:58:15",
+											"data-uid": "src/pages/Apply.tsx:59:15",
 											"data-prohibitions": "[]",
 											className: "space-y-3",
 											children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label, {
-												"data-uid": "src/pages/Apply.tsx:59:17",
+												"data-uid": "src/pages/Apply.tsx:60:17",
 												"data-prohibitions": "[]",
 												htmlFor: "creci",
 												className: "text-base",
 												children: "CRECI"
 											}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
-												"data-uid": "src/pages/Apply.tsx:62:17",
+												"data-uid": "src/pages/Apply.tsx:63:17",
 												"data-prohibitions": "[editContent]",
 												required: true,
 												id: "creci",
@@ -22025,17 +22121,17 @@ function Apply() {
 											})]
 										}),
 										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-											"data-uid": "src/pages/Apply.tsx:69:15",
+											"data-uid": "src/pages/Apply.tsx:70:15",
 											"data-prohibitions": "[]",
 											className: "space-y-3",
 											children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label, {
-												"data-uid": "src/pages/Apply.tsx:70:17",
+												"data-uid": "src/pages/Apply.tsx:71:17",
 												"data-prohibitions": "[]",
 												htmlFor: "linkedin",
 												className: "text-base",
 												children: "LinkedIn ou Instagram Profissional"
 											}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
-												"data-uid": "src/pages/Apply.tsx:73:17",
+												"data-uid": "src/pages/Apply.tsx:74:17",
 												"data-prohibitions": "[editContent]",
 												required: true,
 												id: "linkedin",
@@ -22044,13 +22140,39 @@ function Apply() {
 												className: "bg-background h-12 text-base border-border/50 focus-visible:ring-primary"
 											})]
 										}),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-											"data-uid": "src/pages/Apply.tsx:81:15",
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+											"data-uid": "src/pages/Apply.tsx:83:15",
 											"data-prohibitions": "[editContent]",
-											type: "submit",
-											className: "w-full text-lg h-14 font-semibold shadow-[0_0_20px_rgba(201,168,76,0.15)]",
-											disabled: isSubmitting,
-											children: isSubmitting ? "Enviando..." : "Enviar Aplicação"
+											className: "pt-2",
+											children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+												"data-uid": "src/pages/Apply.tsx:84:17",
+												"data-prohibitions": "[editContent]",
+												type: "submit",
+												className: "w-full text-lg h-14 font-semibold shadow-[0_0_20px_rgba(201,168,76,0.15)]",
+												disabled: isSubmitting,
+												children: isSubmitting ? "Enviando..." : "Enviar Aplicação"
+											})
+										}),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+											"data-uid": "src/pages/Apply.tsx:93:15",
+											"data-prohibitions": "[]",
+											className: "pt-6 mt-6 border-t border-border/50 text-center",
+											children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+												"data-uid": "src/pages/Apply.tsx:94:17",
+												"data-prohibitions": "[]",
+												className: "text-sm text-muted-foreground mb-2",
+												children: "Precisa de ajuda com sua aplicação?"
+											}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("a", {
+												"data-uid": "src/pages/Apply.tsx:97:17",
+												"data-prohibitions": "[]",
+												href: "mailto:contato@primecircle.app.br",
+												className: "inline-flex items-center gap-2 text-sm text-primary hover:text-primary/80 transition-colors font-medium",
+												children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Mail, {
+													"data-uid": "src/pages/Apply.tsx:101:19",
+													"data-prohibitions": "[editContent]",
+													className: "w-4 h-4"
+												}), "contato@primecircle.app.br"]
+											})]
 										})
 									]
 								})
@@ -22060,7 +22182,7 @@ function Apply() {
 				]
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Footer, {
-				"data-uid": "src/pages/Apply.tsx:92:7",
+				"data-uid": "src/pages/Apply.tsx:109:7",
 				"data-prohibitions": "[editContent]"
 			})
 		]
@@ -25496,4 +25618,4 @@ function App() {
 }));
 //#endregion
 
-//# sourceMappingURL=index-BLJbcaXf.js.map
+//# sourceMappingURL=index-C0T-JaJQ.js.map

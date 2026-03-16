@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useToast } from '@/hooks/use-toast'
+import { Mail } from 'lucide-react'
 
 export default function Apply() {
   const { toast } = useToast()
@@ -20,7 +21,7 @@ export default function Apply() {
     setTimeout(() => {
       toast({
         title: 'Aplicação enviada com sucesso!',
-        description: 'Nossa equipe analisará seu perfil e entrará em contato em breve.',
+        description: 'Em breve entraremos em contato. Dúvidas? Fale com contato@primecircle.app.br',
       })
       setIsSubmitting(false)
       navigate('/')
@@ -78,13 +79,29 @@ export default function Apply() {
                   className="bg-background h-12 text-base border-border/50 focus-visible:ring-primary"
                 />
               </div>
-              <Button
-                type="submit"
-                className="w-full text-lg h-14 font-semibold shadow-[0_0_20px_rgba(201,168,76,0.15)]"
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? 'Enviando...' : 'Enviar Aplicação'}
-              </Button>
+
+              <div className="pt-2">
+                <Button
+                  type="submit"
+                  className="w-full text-lg h-14 font-semibold shadow-[0_0_20px_rgba(201,168,76,0.15)]"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? 'Enviando...' : 'Enviar Aplicação'}
+                </Button>
+              </div>
+
+              <div className="pt-6 mt-6 border-t border-border/50 text-center">
+                <p className="text-sm text-muted-foreground mb-2">
+                  Precisa de ajuda com sua aplicação?
+                </p>
+                <a
+                  href="mailto:contato@primecircle.app.br"
+                  className="inline-flex items-center gap-2 text-sm text-primary hover:text-primary/80 transition-colors font-medium"
+                >
+                  <Mail className="w-4 h-4" />
+                  contato@primecircle.app.br
+                </a>
+              </div>
             </form>
           </div>
         </div>
