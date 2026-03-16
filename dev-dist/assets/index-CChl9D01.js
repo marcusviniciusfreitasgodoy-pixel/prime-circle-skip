@@ -19736,7 +19736,7 @@ function HeroSection() {
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 				"data-uid": "src/components/home/HeroSection.tsx:9:7",
 				"data-prohibitions": "[editContent]",
-				className: "absolute inset-0 z-0 bg-cover bg-center bg-no-repeat",
+				className: "absolute inset-0 z-0 bg-cover bg-center bg-no-repeat scale-110",
 				style: { backgroundImage: `url(${acesso_fundador_aace0_default})` },
 				"aria-hidden": "true"
 			}),
@@ -35590,4 +35590,4 @@ function App() {
 }));
 //#endregion
 
-//# sourceMappingURL=index-DYUj49C8.js.map
+//# sourceMappingURL=index-CChl9D01.js.map
