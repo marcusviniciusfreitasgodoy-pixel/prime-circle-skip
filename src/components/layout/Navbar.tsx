@@ -1,7 +1,10 @@
 import { Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
+import useAppStore from '@/stores/main'
 
 export function Navbar() {
+  const { user, login, logout } = useAppStore()
+
   return (
     <nav className="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-md border-b border-border">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -22,7 +25,31 @@ export function Navbar() {
             >
               Como Funciona
             </a>
-            <Button asChild variant="default" className="font-semibold">
+
+            {user ? (
+              <>
+                <Button
+                  asChild
+                  variant="ghost"
+                  className="font-semibold text-primary hover:text-primary/80"
+                >
+                  <Link to="/dashboard">Dashboard</Link>
+                </Button>
+                <Button variant="ghost" onClick={logout} className="text-muted-foreground">
+                  Sair
+                </Button>
+              </>
+            ) : (
+              <Button variant="ghost" onClick={() => login('admin')} className="font-semibold">
+                Entrar
+              </Button>
+            )}
+
+            <Button
+              asChild
+              variant="default"
+              className="font-semibold shadow-[0_0_15px_rgba(201,168,76,0.2)]"
+            >
               <Link to="/apply">Aplicar Agora</Link>
             </Button>
           </div>

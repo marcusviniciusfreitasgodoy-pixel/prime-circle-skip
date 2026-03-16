@@ -1,13 +1,27 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { Activity, GitMerge, Home, Search, AlertCircle } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Activity, GitMerge, Home, Search, AlertCircle, Copy, Crown } from 'lucide-react'
 import useAppStore from '@/stores/main'
+import { useToast } from '@/hooks/use-toast'
 
 export default function DashboardPage() {
   const { user, listings, needs, matches } = useAppStore()
+  const { toast } = useToast()
 
   const myListings = listings.filter((l) => l.ownerId === user?.id).length
   const activeMatches = matches.filter((m) => m.status !== 'Fechado').length
+
+  const referralLink = `${window.location.origin}/apply?ref=${user?.id || 'founder-123'}`
+
+  const copyLink = () => {
+    navigator.clipboard.writeText(referralLink)
+    toast({
+      title: 'Link copiado!',
+      description: 'Envie este link para convidar parceiros para a rede.',
+    })
+  }
 
   const stats = [
     { title: 'Demandas Ativas', value: needs.length.toString(), icon: Search, trend: '+2 hoje' },
@@ -53,6 +67,39 @@ export default function DashboardPage() {
           Aqui está o resumo do seu círculo na Barra da Tijuca.
         </p>
       </div>
+
+      {/* Referral Section for Founder Brokers */}
+      <Card className="bg-card border-primary/30 shadow-[0_0_30px_rgba(201,168,76,0.1)] relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-[80px] pointer-events-none" />
+        <CardHeader>
+          <CardTitle className="text-2xl text-primary flex items-center gap-2">
+            <Crown className="w-6 h-6" />
+            Seu Caminho até a Elite: Indique um Parceiro
+          </CardTitle>
+          <CardDescription className="text-base text-muted-foreground max-w-2xl">
+            Nesta fase inicial, o crescimento da rede é orgânico e curado. Compartilhe seu link
+            exclusivo para convidar corretores de alto padrão. Parceiros indicados por você têm{' '}
+            <strong>acesso imediato</strong> à plataforma.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-col sm:flex-row gap-3 mt-2 relative z-10">
+            <Input
+              readOnly
+              value={referralLink}
+              className="bg-background/80 border-primary/20 text-muted-foreground font-mono h-12 flex-1 focus-visible:ring-primary"
+            />
+            <Button
+              onClick={copyLink}
+              size="lg"
+              className="gold-gradient text-black font-semibold h-12 shadow-[0_0_15px_rgba(201,168,76,0.2)] hover:shadow-[0_0_30px_rgba(201,168,76,0.4)] transition-all"
+            >
+              <Copy className="w-4 h-4 mr-2" />
+              Copiar Link
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {stats.map((stat, i) => (

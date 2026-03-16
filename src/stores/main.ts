@@ -12,6 +12,16 @@ export type User = {
   lastLogin?: string
 }
 
+export type Candidate = {
+  id: string
+  name: string
+  email: string
+  phone: string
+  creci: string
+  referredBy?: string
+  status: 'approved' | 'waitlist'
+}
+
 export type Listing = {
   id: string
   title: string
@@ -56,6 +66,7 @@ interface AppState {
   needs: Need[]
   matches: Match[]
   brokerMonitoring: BrokerMonitor[]
+  candidates: Candidate[]
   pageViews: { path: string; timestamp: string }[]
   logs: { action: string; details: string; timestamp: string }[]
   planLimitModalOpen: boolean
@@ -68,6 +79,7 @@ interface AppState {
   addMatch: (needId: string, listingId: string) => boolean
   updateMatchStatus: (matchId: string, status: Match['status']) => void
   closeMatch: (matchId: string, finalValue: string) => void
+  addCandidate: (candidate: Omit<Candidate, 'id'>) => void
   trackPageView: (path: string) => void
   logEvent: (action: string, details: string) => void
 }
@@ -137,6 +149,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [needs, setNeeds] = useState<Need[]>(initialNeeds)
   const [matches, setMatches] = useState<Match[]>(initialMatches)
   const [brokerMonitoring] = useState<BrokerMonitor[]>(initialBrokerMonitoring)
+  const [candidates, setCandidates] = useState<Candidate[]>([])
   const [pageViews, setPageViews] = useState<{ path: string; timestamp: string }[]>([])
   const [logs, setLogs] = useState<{ action: string; details: string; timestamp: string }[]>([])
   const [planLimitModalOpen, setPlanLimitModalOpen] = useState(false)
@@ -146,7 +159,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       id: 'user1',
       name: 'João Corretor',
       status,
-      tier: 'None',
+      tier: 'Elite',
       avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=1',
       onboarded: status === 'admin' ? true : false,
       lastLogin: new Date().toISOString(),
@@ -241,6 +254,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
     logEvent('Negócio Fechado', `Match: ${matchId}, Valor Final: ${finalValue}`)
   }
 
+  const addCandidate = (candidate: Omit<Candidate, 'id'>) => {
+    setCandidates((prev) => [...prev, { ...candidate, id: Date.now().toString() }])
+    logEvent('Nova Aplicação', `Candidato: ${candidate.name}, Status: ${candidate.status}`)
+  }
+
   return createElement(
     AppContext.Provider,
     {
@@ -250,6 +268,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
         needs,
         matches,
         brokerMonitoring,
+        candidates,
         pageViews,
         logs,
         planLimitModalOpen,
@@ -262,6 +281,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
         addMatch,
         updateMatchStatus,
         closeMatch,
+        addCandidate,
         trackPageView,
         logEvent,
       },
