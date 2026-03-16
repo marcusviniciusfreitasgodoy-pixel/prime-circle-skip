@@ -9,7 +9,7 @@ export function FAQSection() {
   const faqs = [
     {
       q: 'Como funciona a divisão 50/50?',
-      a: 'Todos os negócios fechados dentro da rede Prime Circle têm a comissão dividida igualmente (50% para quem detém o imóvel, 50% para quem traz o comprador). Nossa infraestrutura jurídica garante que esse repasse seja seguro, contratual e imediato, eliminando burocracias e desgastes.',
+      a: 'Todos os negócios fechados dentro da rede Prime Circle têm a comissão dividida igualmente (50% para quem detém o imóvel, 50% para quem traz o comprador). Essa é uma das condições de acesso, para que se evite surpresas com negociações 2/2/1 não mencionadas antes.',
     },
     {
       q: 'Quem pode se candidatar?',
