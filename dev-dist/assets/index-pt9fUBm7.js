@@ -21113,7 +21113,7 @@ function Footer() {
 									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link, {
 										"data-uid": "src/components/layout/Footer.tsx:57:17",
 										"data-prohibitions": "[]",
-										to: "/terms",
+										to: "/termos-de-uso",
 										className: "text-muted-foreground hover:text-primary transition-colors",
 										children: "Termos de Uso"
 									})
@@ -21124,9 +21124,9 @@ function Footer() {
 									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link, {
 										"data-uid": "src/components/layout/Footer.tsx:65:17",
 										"data-prohibitions": "[]",
-										to: "/privacy",
+										to: "/politica-de-privacidade",
 										className: "text-muted-foreground hover:text-primary transition-colors",
-										children: "Privacidade"
+										children: "Política de Privacidade"
 									})
 								}),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", {
@@ -26637,7 +26637,7 @@ var Primitive$1 = [
 }, {});
 //#endregion
 //#region ../../cache/modules/prime-circle-migration-fd549/node_modules/.pnpm/@radix-ui+react-label@2.1.8_@types+react-dom@19.2.3_@types+react@19.2.14__@types+react@_55fa612a976b7bdfbf4dcdd93d861aab/node_modules/@radix-ui/react-label/dist/index.mjs
-var NAME$2 = "Label";
+var NAME$3 = "Label";
 var Label$1 = import_react.forwardRef((props, forwardedRef) => {
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.label, {
 		...props,
@@ -26649,19 +26649,19 @@ var Label$1 = import_react.forwardRef((props, forwardedRef) => {
 		}
 	});
 });
-Label$1.displayName = NAME$2;
-var Root$6 = Label$1;
+Label$1.displayName = NAME$3;
+var Root$7 = Label$1;
 //#endregion
 //#region src/components/ui/label.tsx
 var labelVariants = cva("text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70");
-var Label = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$6, {
+var Label = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$7, {
 	"data-uid": "src/components/ui/label.tsx:15:3",
 	"data-prohibitions": "[editContent]",
 	ref,
 	className: cn$1(labelVariants(), className),
 	...props
 }));
-Label.displayName = Root$6.displayName;
+Label.displayName = Root$7.displayName;
 //#endregion
 //#region src/components/ui/form.tsx
 var Form = FormProvider;
@@ -28291,11 +28291,11 @@ function getInvalidValueError(propValue, componentName) {
 
 Defaulting to \`null\`.`;
 }
-var Root$5 = Progress$1;
+var Root$6 = Progress$1;
 var Indicator = ProgressIndicator;
 //#endregion
 //#region src/components/ui/progress.tsx
-var Progress = import_react.forwardRef(({ className, value, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$5, {
+var Progress = import_react.forwardRef(({ className, value, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$6, {
 	"data-uid": "src/components/ui/progress.tsx:11:3",
 	"data-prohibitions": "[editContent]",
 	ref,
@@ -28308,7 +28308,7 @@ var Progress = import_react.forwardRef(({ className, value, ...props }, ref) => 
 		style: { transform: `translateX(-${100 - (value || 0)}%)` }
 	})
 }));
-Progress.displayName = Root$5.displayName;
+Progress.displayName = Root$6.displayName;
 //#endregion
 //#region src/components/AmbassadorWidget.tsx
 var TIER_DATA = {
@@ -29380,7 +29380,7 @@ function focusFirst$1(candidates, preventScroll = false) {
 function wrapArray(array, startIndex) {
 	return array.map((_, index) => array[(startIndex + index) % array.length]);
 }
-var Root$4 = RovingFocusGroup;
+var Root$5 = RovingFocusGroup;
 var Item = RovingFocusGroupItem;
 //#endregion
 //#region ../../cache/modules/prime-circle-migration-fd549/node_modules/.pnpm/@radix-ui+react-tabs@1.1.13_@types+react-dom@19.2.3_@types+react@19.2.14__@types+react@_2ad0945e3cb98dc5bbfaaf29c105e977/node_modules/@radix-ui/react-tabs/dist/index.mjs
@@ -29419,7 +29419,7 @@ var TabsList$1 = import_react.forwardRef((props, forwardedRef) => {
 	const { __scopeTabs, loop = true, ...listProps } = props;
 	const context = useTabsContext(TAB_LIST_NAME, __scopeTabs);
 	const rovingFocusGroupScope = useRovingFocusGroupScope(__scopeTabs);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$4, {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$5, {
 		asChild: true,
 		...rovingFocusGroupScope,
 		orientation: context.orientation,
@@ -29714,19 +29714,19 @@ function useImageLoadingStatus(src, { referrerPolicy, crossOrigin }) {
 	]);
 	return loadingStatus;
 }
-var Root$3 = Avatar$1;
+var Root$4 = Avatar$1;
 var Image = AvatarImage$1;
 var Fallback = AvatarFallback$1;
 //#endregion
 //#region src/components/ui/avatar.tsx
-var Avatar = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$3, {
+var Avatar = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$4, {
 	"data-uid": "src/components/ui/avatar.tsx:11:3",
 	"data-prohibitions": "[editContent]",
 	ref,
 	className: cn$1("relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full", className),
 	...props
 }));
-Avatar.displayName = Root$3.displayName;
+Avatar.displayName = Root$4.displayName;
 var AvatarImage = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Image, {
 	"data-uid": "src/components/ui/avatar.tsx:23:3",
 	"data-prohibitions": "[editContent]",
@@ -31541,6 +31541,458 @@ function PlansPage() {
 						]
 					}, i);
 				})
+			})
+		]
+	});
+}
+//#endregion
+//#region ../../cache/modules/prime-circle-migration-fd549/node_modules/.pnpm/@radix-ui+react-separator@1.1.8_@types+react-dom@19.2.3_@types+react@19.2.14__@types+re_aa2d5d85a81bb702303f0548763b9797/node_modules/@radix-ui/react-separator/dist/index.mjs
+var NAME$2 = "Separator";
+var DEFAULT_ORIENTATION = "horizontal";
+var ORIENTATIONS = ["horizontal", "vertical"];
+var Separator$1 = import_react.forwardRef((props, forwardedRef) => {
+	const { decorative, orientation: orientationProp = DEFAULT_ORIENTATION, ...domProps } = props;
+	const orientation = isValidOrientation(orientationProp) ? orientationProp : DEFAULT_ORIENTATION;
+	const ariaOrientation = orientation === "vertical" ? orientation : void 0;
+	const semanticProps = decorative ? { role: "none" } : {
+		"aria-orientation": ariaOrientation,
+		role: "separator"
+	};
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.div, {
+		"data-orientation": orientation,
+		...semanticProps,
+		...domProps,
+		ref: forwardedRef
+	});
+});
+Separator$1.displayName = NAME$2;
+function isValidOrientation(orientation) {
+	return ORIENTATIONS.includes(orientation);
+}
+var Root$3 = Separator$1;
+//#endregion
+//#region src/components/ui/separator.tsx
+var Separator = import_react.forwardRef(({ className, orientation = "horizontal", decorative = true, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$3, {
+	"data-uid": "src/components/ui/separator.tsx:11:3",
+	"data-prohibitions": "[editContent]",
+	ref,
+	decorative,
+	orientation,
+	className: cn$1("shrink-0 bg-border", orientation === "horizontal" ? "h-[1px] w-full" : "h-full w-[1px]", className),
+	...props
+}));
+Separator.displayName = Root$3.displayName;
+//#endregion
+//#region src/pages/TermsPage.tsx
+function TermsPage() {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+		"data-uid": "src/pages/TermsPage.tsx:8:5",
+		"data-prohibitions": "[]",
+		className: "min-h-screen bg-background text-foreground flex flex-col",
+		children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Navbar, {
+				"data-uid": "src/pages/TermsPage.tsx:9:7",
+				"data-prohibitions": "[editContent]"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("main", {
+				"data-uid": "src/pages/TermsPage.tsx:10:7",
+				"data-prohibitions": "[]",
+				className: "flex-1 container mx-auto px-4 pt-32 pb-24 max-w-4xl animate-fade-in-up",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					"data-uid": "src/pages/TermsPage.tsx:11:9",
+					"data-prohibitions": "[]",
+					className: "mb-8",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", {
+						"data-uid": "src/pages/TermsPage.tsx:12:11",
+						"data-prohibitions": "[]",
+						className: "text-4xl font-bold text-white mb-4",
+						children: "Termos de Uso"
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+						"data-uid": "src/pages/TermsPage.tsx:13:11",
+						"data-prohibitions": "[]",
+						className: "text-muted-foreground text-lg",
+						children: "Diretrizes legais e regras operacionais do ecossistema Prime Circle."
+					})]
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Card, {
+					"data-uid": "src/pages/TermsPage.tsx:18:9",
+					"data-prohibitions": "[]",
+					className: "bg-card border-primary/20 shadow-elevation",
+					children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardContent, {
+						"data-uid": "src/pages/TermsPage.tsx:19:11",
+						"data-prohibitions": "[]",
+						className: "p-8 space-y-8 text-muted-foreground leading-relaxed",
+						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
+								"data-uid": "src/pages/TermsPage.tsx:20:13",
+								"data-prohibitions": "[]",
+								className: "space-y-4",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
+									"data-uid": "src/pages/TermsPage.tsx:21:15",
+									"data-prohibitions": "[]",
+									className: "text-2xl font-semibold text-white",
+									children: "1. Planos e Mensalidades"
+								}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
+									"data-uid": "src/pages/TermsPage.tsx:22:15",
+									"data-prohibitions": "[]",
+									children: [
+										"A infraestrutura do Prime Circle atua sob um modelo de assinatura de",
+										" ",
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", {
+											"data-uid": "src/pages/TermsPage.tsx:24:17",
+											"data-prohibitions": "[]",
+											className: "text-white",
+											children: "R$ 97,00 mensais"
+										}),
+										" para membros padrão e acessos com trial expirado. Corretores aprovados no ",
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", {
+											"data-uid": "src/pages/TermsPage.tsx:25:69",
+											"data-prohibitions": "[]",
+											children: "Plano Founder"
+										}),
+										" ",
+										"recebem um período de carência com 12 meses de acesso gratuito, contados estritamente a partir da data de ativação da assinatura (",
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("code", {
+											"data-uid": "src/pages/TermsPage.tsx:28:17",
+											"data-prohibitions": "[]",
+											className: "bg-secondary text-primary px-1.5 py-0.5 rounded text-sm",
+											children: "plan_started_at"
+										}),
+										")."
+									]
+								})]
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Separator, {
+								"data-uid": "src/pages/TermsPage.tsx:35:13",
+								"data-prohibitions": "[editContent]",
+								className: "bg-border"
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
+								"data-uid": "src/pages/TermsPage.tsx:37:13",
+								"data-prohibitions": "[]",
+								className: "space-y-4",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
+									"data-uid": "src/pages/TermsPage.tsx:38:15",
+									"data-prohibitions": "[]",
+									className: "text-2xl font-semibold text-white",
+									children: "2. Programa Ambassador"
+								}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
+									"data-uid": "src/pages/TermsPage.tsx:39:15",
+									"data-prohibitions": "[]",
+									children: [
+										"Membros ativos podem participar do Programa Ambassador convidando parceiros de alto nível. Dependendo da sua contribuição e volume de indicações aprovadas, seu perfil será classificado em diferentes Tiers (níveis), podendo receber benefícios exclusivos e descontos vitalícios de",
+										" ",
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", {
+											"data-uid": "src/pages/TermsPage.tsx:44:17",
+											"data-prohibitions": "[]",
+											className: "text-white",
+											children: "20% ou 30%"
+										}),
+										" em sua assinatura."
+									]
+								})]
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Separator, {
+								"data-uid": "src/pages/TermsPage.tsx:48:13",
+								"data-prohibitions": "[editContent]",
+								className: "bg-border"
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
+								"data-uid": "src/pages/TermsPage.tsx:50:13",
+								"data-prohibitions": "[]",
+								className: "space-y-4",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
+									"data-uid": "src/pages/TermsPage.tsx:51:15",
+									"data-prohibitions": "[]",
+									className: "text-2xl font-semibold text-white",
+									children: "3. Regras de Atividade e Suspensão"
+								}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
+									"data-uid": "src/pages/TermsPage.tsx:54:15",
+									"data-prohibitions": "[]",
+									children: [
+										"A liquidez da plataforma exige engajamento. A inatividade prolongada prejudica todos os membros do Chapter. Se for detectada inatividade superior a",
+										" ",
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", {
+											"data-uid": "src/pages/TermsPage.tsx:57:17",
+											"data-prohibitions": "[]",
+											className: "text-white",
+											children: "60 dias"
+										}),
+										" (monitorado via a métrica",
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("code", {
+											"data-uid": "src/pages/TermsPage.tsx:58:17",
+											"data-prohibitions": "[]",
+											className: "bg-secondary text-primary px-1.5 py-0.5 rounded text-sm ml-1",
+											children: "last_contribution_at"
+										}),
+										"), seus benefícios de plano e privilégios do Programa Ambassador serão automaticamente suspensos pelo sistema."
+									]
+								})]
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Separator, {
+								"data-uid": "src/pages/TermsPage.tsx:66:13",
+								"data-prohibitions": "[editContent]",
+								className: "bg-border"
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
+								"data-uid": "src/pages/TermsPage.tsx:68:13",
+								"data-prohibitions": "[]",
+								className: "space-y-4",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
+									"data-uid": "src/pages/TermsPage.tsx:69:15",
+									"data-prohibitions": "[]",
+									className: "text-2xl font-semibold text-white",
+									children: "4. Programa Colaborativo (Sugestões)"
+								}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
+									"data-uid": "src/pages/TermsPage.tsx:72:15",
+									"data-prohibitions": "[]",
+									children: [
+										"No Prime Circle, a evolução é conjunta. Ao submeter ideias, você concorda em ceder os direitos de implementação das mesmas para a plataforma. Como forma de agradecimento financeiro pela co-criação, para",
+										" ",
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", {
+											"data-uid": "src/pages/TermsPage.tsx:76:17",
+											"data-prohibitions": "[]",
+											children: "cada sugestão sua que for aprovada e implementada"
+										}),
+										", sua conta será bonificada com ",
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", {
+											"data-uid": "src/pages/TermsPage.tsx:77:32",
+											"data-prohibitions": "[]",
+											className: "text-primary",
+											children: "1 mês extra de acesso"
+										}),
+										" ",
+										"adicionado imediatamente ao seu plano."
+									]
+								})]
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Separator, {
+								"data-uid": "src/pages/TermsPage.tsx:82:13",
+								"data-prohibitions": "[editContent]",
+								className: "bg-border"
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
+								"data-uid": "src/pages/TermsPage.tsx:84:13",
+								"data-prohibitions": "[]",
+								className: "space-y-4",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
+									"data-uid": "src/pages/TermsPage.tsx:85:15",
+									"data-prohibitions": "[]",
+									className: "text-2xl font-semibold text-white",
+									children: "5. Conduta Ética 50/50"
+								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+									"data-uid": "src/pages/TermsPage.tsx:86:15",
+									"data-prohibitions": "[]",
+									children: "A premissa base de toda conexão é a divisão exata de 50/50 em todas as transações facilitadas pela plataforma. A quebra desta diretriz resulta em banimento irreversível da rede Prime Circle."
+								})]
+							})
+						]
+					})
+				})]
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Footer, {
+				"data-uid": "src/pages/TermsPage.tsx:95:7",
+				"data-prohibitions": "[editContent]"
+			})
+		]
+	});
+}
+//#endregion
+//#region src/pages/PrivacyPage.tsx
+function PrivacyPage() {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+		"data-uid": "src/pages/PrivacyPage.tsx:8:5",
+		"data-prohibitions": "[]",
+		className: "min-h-screen bg-background text-foreground flex flex-col",
+		children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Navbar, {
+				"data-uid": "src/pages/PrivacyPage.tsx:9:7",
+				"data-prohibitions": "[editContent]"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("main", {
+				"data-uid": "src/pages/PrivacyPage.tsx:10:7",
+				"data-prohibitions": "[]",
+				className: "flex-1 container mx-auto px-4 pt-32 pb-24 max-w-4xl animate-fade-in-up",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					"data-uid": "src/pages/PrivacyPage.tsx:11:9",
+					"data-prohibitions": "[]",
+					className: "mb-8",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", {
+						"data-uid": "src/pages/PrivacyPage.tsx:12:11",
+						"data-prohibitions": "[]",
+						className: "text-4xl font-bold text-white mb-4",
+						children: "Política de Privacidade"
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+						"data-uid": "src/pages/PrivacyPage.tsx:13:11",
+						"data-prohibitions": "[]",
+						className: "text-muted-foreground text-lg",
+						children: "Transparência sobre a coleta, uso e segurança dos seus dados."
+					})]
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Card, {
+					"data-uid": "src/pages/PrivacyPage.tsx:18:9",
+					"data-prohibitions": "[]",
+					className: "bg-card border-primary/20 shadow-elevation",
+					children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardContent, {
+						"data-uid": "src/pages/PrivacyPage.tsx:19:11",
+						"data-prohibitions": "[]",
+						className: "p-8 space-y-8 text-muted-foreground leading-relaxed",
+						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
+								"data-uid": "src/pages/PrivacyPage.tsx:20:13",
+								"data-prohibitions": "[]",
+								className: "space-y-4",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
+									"data-uid": "src/pages/PrivacyPage.tsx:21:15",
+									"data-prohibitions": "[]",
+									className: "text-2xl font-semibold text-white",
+									children: "1. Coleta de Dados"
+								}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
+									"data-uid": "src/pages/PrivacyPage.tsx:22:15",
+									"data-prohibitions": "[]",
+									children: [
+										"Para prover uma infraestrutura privada e confiável, coletamos",
+										" ",
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", {
+											"data-uid": "src/pages/PrivacyPage.tsx:24:17",
+											"data-prohibitions": "[]",
+											children: "dados de perfil"
+										}),
+										" (incluindo nome, e-mail, telefone, CRECI, ticket de atuação e Chapter) e mantemos ",
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", {
+											"data-uid": "src/pages/PrivacyPage.tsx:25:47",
+											"data-prohibitions": "[]",
+											children: "logs de atividade"
+										}),
+										" e status (cadastros de imóveis, interações com demandas, fechamentos de conexões)."
+									]
+								})]
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Separator, {
+								"data-uid": "src/pages/PrivacyPage.tsx:30:13",
+								"data-prohibitions": "[editContent]",
+								className: "bg-border"
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
+								"data-uid": "src/pages/PrivacyPage.tsx:32:13",
+								"data-prohibitions": "[]",
+								className: "space-y-4",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
+									"data-uid": "src/pages/PrivacyPage.tsx:33:15",
+									"data-prohibitions": "[]",
+									className: "text-2xl font-semibold text-white",
+									children: "2. Uso das Informações"
+								}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
+									"data-uid": "src/pages/PrivacyPage.tsx:34:15",
+									"data-prohibitions": "[]",
+									children: [
+										"Todos os dados recolhidos pelo Prime Circle têm uma finalidade estrita:",
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("strong", {
+											"data-uid": "src/pages/PrivacyPage.tsx:36:17",
+											"data-prohibitions": "[]",
+											className: "text-white",
+											children: [" ", "melhorar a eficiência colaborativa da rede"]
+										}),
+										" ",
+										"e assegurar o cumprimento das regras. Nós não comercializamos, compartilhamos ou vendemos listas de leads, e os imóveis/demandas operam isolados exclusivamente dentro do escopo do seu respectivo Chapter."
+									]
+								})]
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Separator, {
+								"data-uid": "src/pages/PrivacyPage.tsx:46:13",
+								"data-prohibitions": "[editContent]",
+								className: "bg-border"
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
+								"data-uid": "src/pages/PrivacyPage.tsx:48:13",
+								"data-prohibitions": "[]",
+								className: "space-y-4",
+								children: [
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
+										"data-uid": "src/pages/PrivacyPage.tsx:49:15",
+										"data-prohibitions": "[]",
+										className: "text-2xl font-semibold text-white",
+										children: "3. Notificações e Comunicações (E-mail)"
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
+										"data-uid": "src/pages/PrivacyPage.tsx:52:15",
+										"data-prohibitions": "[]",
+										children: [
+											"Comunicações críticas utilizam o seu endereço de e-mail através da nossa infraestrutura integrada via ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", {
+												"data-uid": "src/pages/PrivacyPage.tsx:54:46",
+												"data-prohibitions": "[]",
+												children: "Resend"
+											}),
+											". O uso destas mensagens tem natureza exclusivamente transacional, cobrindo aspectos como:"
+										]
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("ul", {
+										"data-uid": "src/pages/PrivacyPage.tsx:57:15",
+										"data-prohibitions": "[]",
+										className: "list-disc pl-6 space-y-2 text-sm mt-2",
+										children: [
+											/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("li", {
+												"data-uid": "src/pages/PrivacyPage.tsx:58:17",
+												"data-prohibitions": "[]",
+												children: [
+													"Avisos e alertas de ",
+													/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", {
+														"data-uid": "src/pages/PrivacyPage.tsx:59:39",
+														"data-prohibitions": "[]",
+														children: "expiração de plano"
+													}),
+													" (30 dias, 7 dias, etc)."
+												]
+											}),
+											/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("li", {
+												"data-uid": "src/pages/PrivacyPage.tsx:61:17",
+												"data-prohibitions": "[]",
+												children: [
+													"Notificações do ciclo de avaliação e",
+													" ",
+													/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", {
+														"data-uid": "src/pages/PrivacyPage.tsx:63:19",
+														"data-prohibitions": "[]",
+														children: "status do programa de sugestões"
+													}),
+													" (ex: \"Sua ideia foi Implementada!\")."
+												]
+											}),
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", {
+												"data-uid": "src/pages/PrivacyPage.tsx:66:17",
+												"data-prohibitions": "[]",
+												children: "Envio de Links Mágicos e aprovação no comitê de admissão."
+											})
+										]
+									})
+								]
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Separator, {
+								"data-uid": "src/pages/PrivacyPage.tsx:70:13",
+								"data-prohibitions": "[editContent]",
+								className: "bg-border"
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
+								"data-uid": "src/pages/PrivacyPage.tsx:72:13",
+								"data-prohibitions": "[]",
+								className: "space-y-4",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
+									"data-uid": "src/pages/PrivacyPage.tsx:73:15",
+									"data-prohibitions": "[]",
+									className: "text-2xl font-semibold text-white",
+									children: "4. Exclusão e Retenção"
+								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+									"data-uid": "src/pages/PrivacyPage.tsx:74:15",
+									"data-prohibitions": "[]",
+									children: "Você pode solicitar o descredenciamento e remoção das suas listagens ativas a qualquer momento. Para garantir a trilha de auditoria (audit trail) e estabilidade do match making preexistente, dados anonimizados de histórico de transações podem ser mantidos de acordo com as permissões da legislação vigente de proteção de dados aplicável ao território nacional."
+								})]
+							})
+						]
+					})
+				})]
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Footer, {
+				"data-uid": "src/pages/PrivacyPage.tsx:85:7",
+				"data-prohibitions": "[editContent]"
 			})
 		]
 	});
@@ -34933,164 +35385,189 @@ function AnalyticsTracker() {
 //#region src/App.tsx
 function DashboardLayout() {
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-		"data-uid": "src/App.tsx:23:5",
+		"data-uid": "src/App.tsx:26:5",
 		"data-prohibitions": "[]",
 		className: "min-h-screen bg-background text-foreground flex flex-col",
-		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Navbar, {
-			"data-uid": "src/App.tsx:24:7",
-			"data-prohibitions": "[editContent]"
-		}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("main", {
-			"data-uid": "src/App.tsx:25:7",
-			"data-prohibitions": "[]",
-			className: "flex-1 container mx-auto px-4 pt-32 pb-24",
-			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Outlet, {
-				"data-uid": "src/App.tsx:26:9",
+		children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Navbar, {
+				"data-uid": "src/App.tsx:27:7",
+				"data-prohibitions": "[editContent]"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("main", {
+				"data-uid": "src/App.tsx:28:7",
+				"data-prohibitions": "[]",
+				className: "flex-1 container mx-auto px-4 pt-32 pb-24",
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Outlet, {
+					"data-uid": "src/App.tsx:29:9",
+					"data-prohibitions": "[editContent]"
+				})
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Footer, {
+				"data-uid": "src/App.tsx:31:7",
 				"data-prohibitions": "[editContent]"
 			})
-		})]
+		]
 	});
 }
 function App() {
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(AppProvider, {
-		"data-uid": "src/App.tsx:34:5",
+		"data-uid": "src/App.tsx:38:5",
 		"data-prohibitions": "[]",
 		children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(TooltipProvider, {
-			"data-uid": "src/App.tsx:35:7",
+			"data-uid": "src/App.tsx:39:7",
 			"data-prohibitions": "[]",
 			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Toaster, {
-				"data-uid": "src/App.tsx:36:9",
+				"data-uid": "src/App.tsx:40:9",
 				"data-prohibitions": "[editContent]"
 			}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(BrowserRouter, {
-				"data-uid": "src/App.tsx:37:9",
+				"data-uid": "src/App.tsx:41:9",
 				"data-prohibitions": "[]",
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(AnalyticsTracker, {
-					"data-uid": "src/App.tsx:38:11",
+					"data-uid": "src/App.tsx:42:11",
 					"data-prohibitions": "[editContent]"
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Routes, {
-					"data-uid": "src/App.tsx:39:11",
+					"data-uid": "src/App.tsx:43:11",
 					"data-prohibitions": "[]",
 					children: [
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-							"data-uid": "src/App.tsx:40:13",
+							"data-uid": "src/App.tsx:44:13",
 							"data-prohibitions": "[editContent]",
 							path: "/",
 							element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Index, {
-								"data-uid": "src/App.tsx:40:38",
+								"data-uid": "src/App.tsx:44:38",
 								"data-prohibitions": "[editContent]"
 							})
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-							"data-uid": "src/App.tsx:41:13",
+							"data-uid": "src/App.tsx:45:13",
 							"data-prohibitions": "[editContent]",
 							path: "/apply",
 							element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ApplyPage, {
-								"data-uid": "src/App.tsx:41:43",
+								"data-uid": "src/App.tsx:45:43",
 								"data-prohibitions": "[editContent]"
 							})
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-							"data-uid": "src/App.tsx:42:13",
+							"data-uid": "src/App.tsx:46:13",
 							"data-prohibitions": "[editContent]",
 							path: "/apply/lista-de-espera",
 							element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(WaitlistPage, {
-								"data-uid": "src/App.tsx:42:59",
+								"data-uid": "src/App.tsx:46:59",
 								"data-prohibitions": "[editContent]"
 							})
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-							"data-uid": "src/App.tsx:43:13",
+							"data-uid": "src/App.tsx:47:13",
 							"data-prohibitions": "[editContent]",
 							path: "/waitlist",
 							element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(WaitlistPage, {
-								"data-uid": "src/App.tsx:43:46",
+								"data-uid": "src/App.tsx:47:46",
 								"data-prohibitions": "[editContent]"
 							})
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-							"data-uid": "src/App.tsx:44:13",
+							"data-uid": "src/App.tsx:48:13",
 							"data-prohibitions": "[editContent]",
 							path: "/auth/confirm",
 							element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(AuthConfirmPage, {
-								"data-uid": "src/App.tsx:44:50",
+								"data-uid": "src/App.tsx:48:50",
+								"data-prohibitions": "[editContent]"
+							})
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
+							"data-uid": "src/App.tsx:49:13",
+							"data-prohibitions": "[editContent]",
+							path: "/termos-de-uso",
+							element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TermsPage, {
+								"data-uid": "src/App.tsx:49:51",
+								"data-prohibitions": "[editContent]"
+							})
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
+							"data-uid": "src/App.tsx:50:13",
+							"data-prohibitions": "[editContent]",
+							path: "/politica-de-privacidade",
+							element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(PrivacyPage, {
+								"data-uid": "src/App.tsx:50:61",
 								"data-prohibitions": "[editContent]"
 							})
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Route, {
-							"data-uid": "src/App.tsx:46:13",
+							"data-uid": "src/App.tsx:52:13",
 							"data-prohibitions": "[]",
 							element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
-								"data-uid": "src/App.tsx:46:29",
+								"data-uid": "src/App.tsx:52:29",
 								"data-prohibitions": "[editContent]"
 							}),
 							children: [
 								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-									"data-uid": "src/App.tsx:47:15",
+									"data-uid": "src/App.tsx:53:15",
 									"data-prohibitions": "[editContent]",
 									path: "/pending",
 									element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(PendingPage, {
-										"data-uid": "src/App.tsx:47:47",
+										"data-uid": "src/App.tsx:53:47",
 										"data-prohibitions": "[editContent]"
 									})
 								}),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-									"data-uid": "src/App.tsx:48:15",
+									"data-uid": "src/App.tsx:54:15",
 									"data-prohibitions": "[editContent]",
 									path: "/onboarding",
 									element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(OnboardingPage, {
-										"data-uid": "src/App.tsx:48:50",
+										"data-uid": "src/App.tsx:54:50",
 										"data-prohibitions": "[editContent]"
 									})
 								}),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Route, {
-									"data-uid": "src/App.tsx:49:15",
+									"data-uid": "src/App.tsx:55:15",
 									"data-prohibitions": "[]",
 									element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(DashboardLayout, {
-										"data-uid": "src/App.tsx:49:31",
+										"data-uid": "src/App.tsx:55:31",
 										"data-prohibitions": "[editContent]"
 									}),
 									children: [
 										/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-											"data-uid": "src/App.tsx:50:17",
+											"data-uid": "src/App.tsx:56:17",
 											"data-prohibitions": "[editContent]",
 											path: "/dashboard",
 											element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(DashboardPage, {
-												"data-uid": "src/App.tsx:50:51",
+												"data-uid": "src/App.tsx:56:51",
 												"data-prohibitions": "[editContent]"
 											})
 										}),
 										/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-											"data-uid": "src/App.tsx:51:17",
+											"data-uid": "src/App.tsx:57:17",
 											"data-prohibitions": "[editContent]",
 											path: "/admin",
 											element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(AdminPage, {
-												"data-uid": "src/App.tsx:51:47",
+												"data-uid": "src/App.tsx:57:47",
 												"data-prohibitions": "[editContent]"
 											})
 										}),
 										/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-											"data-uid": "src/App.tsx:52:17",
+											"data-uid": "src/App.tsx:58:17",
 											"data-prohibitions": "[editContent]",
 											path: "/plans",
 											element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(PlansPage, {
-												"data-uid": "src/App.tsx:52:47",
+												"data-uid": "src/App.tsx:58:47",
 												"data-prohibitions": "[editContent]"
 											})
 										}),
 										/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-											"data-uid": "src/App.tsx:53:17",
+											"data-uid": "src/App.tsx:59:17",
 											"data-prohibitions": "[editContent]",
 											path: "/suggestions",
 											element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SuggestionsPage, {
-												"data-uid": "src/App.tsx:53:53",
+												"data-uid": "src/App.tsx:59:53",
 												"data-prohibitions": "[editContent]"
 											})
 										}),
 										/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-											"data-uid": "src/App.tsx:54:17",
+											"data-uid": "src/App.tsx:60:17",
 											"data-prohibitions": "[editContent]",
 											path: "/matches/:id/close",
 											element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(MatchClosePage, {
-												"data-uid": "src/App.tsx:54:59",
+												"data-uid": "src/App.tsx:60:59",
 												"data-prohibitions": "[editContent]"
 											})
 										})
@@ -35099,11 +35576,11 @@ function App() {
 							]
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-							"data-uid": "src/App.tsx:58:13",
+							"data-uid": "src/App.tsx:64:13",
 							"data-prohibitions": "[editContent]",
 							path: "*",
 							element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(NotFound, {
-								"data-uid": "src/App.tsx:58:38",
+								"data-uid": "src/App.tsx:64:38",
 								"data-prohibitions": "[editContent]"
 							})
 						})
@@ -35121,4 +35598,4 @@ function App() {
 }));
 //#endregion
 
-//# sourceMappingURL=index-RS32H62q.js.map
+//# sourceMappingURL=index-pt9fUBm7.js.map

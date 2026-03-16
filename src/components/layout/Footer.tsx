@@ -55,7 +55,7 @@ export function Footer() {
             <ul className="space-y-3">
               <li>
                 <Link
-                  to="/terms"
+                  to="/termos-de-uso"
                   className="text-muted-foreground hover:text-primary transition-colors"
                 >
                   Termos de Uso
@@ -63,10 +63,10 @@ export function Footer() {
               </li>
               <li>
                 <Link
-                  to="/privacy"
+                  to="/politica-de-privacidade"
                   className="text-muted-foreground hover:text-primary transition-colors"
                 >
-                  Privacidade
+                  Política de Privacidade
                 </Link>
               </li>
               <li>

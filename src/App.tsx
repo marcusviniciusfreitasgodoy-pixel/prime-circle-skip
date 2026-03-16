@@ -10,10 +10,13 @@ import PendingPage from './pages/PendingPage'
 import MatchClosePage from './pages/MatchClosePage'
 import SuggestionsPage from './pages/SuggestionsPage'
 import PlansPage from './pages/PlansPage'
+import TermsPage from './pages/TermsPage'
+import PrivacyPage from './pages/PrivacyPage'
 import NotFound from './pages/NotFound'
 import { Toaster } from '@/components/ui/toaster'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import { Navbar } from '@/components/layout/Navbar'
+import { Footer } from '@/components/layout/Footer'
 import { ProtectedRoute } from '@/components/ProtectedRoute'
 import { AnalyticsTracker } from '@/components/AnalyticsTracker'
 import useAppStore, { AppProvider } from '@/stores/main'
@@ -25,6 +28,7 @@ function DashboardLayout() {
       <main className="flex-1 container mx-auto px-4 pt-32 pb-24">
         <Outlet />
       </main>
+      <Footer />
     </div>
   )
 }
@@ -42,6 +46,8 @@ function App() {
             <Route path="/apply/lista-de-espera" element={<WaitlistPage />} />
             <Route path="/waitlist" element={<WaitlistPage />} />
             <Route path="/auth/confirm" element={<AuthConfirmPage />} />
+            <Route path="/termos-de-uso" element={<TermsPage />} />
+            <Route path="/politica-de-privacidade" element={<PrivacyPage />} />
 
             <Route element={<ProtectedRoute />}>
               <Route path="/pending" element={<PendingPage />} />
