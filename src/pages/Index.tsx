@@ -58,7 +58,7 @@ export default function Index() {
             style={{ animationDelay: '100ms' }}
           >
             Substitua a desordem dos grupos de WhatsApp por uma infraestrutura privada, rastreável e
-            focada em parcerias 50/50 reais.
+            focada em parcerias 50/50.
           </p>
           <div
             className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up"

@@ -22,11 +22,9 @@ const formSchema = z.object({
   email: z.string().email('Email inválido'),
   phone: z.string().min(10, 'Telefone inválido'),
   creci: z.string().min(4, 'CRECI inválido'),
-  region: z
-    .string()
-    .refine((val) => val.toLowerCase().includes('barra'), {
-      message: 'Apenas corretores com foco na Barra da Tijuca',
-    }),
+  region: z.string().refine((val) => val.toLowerCase().includes('barra'), {
+    message: 'Apenas corretores com foco na Barra da Tijuca',
+  }),
   ticket: z.string().min(1, 'Informe seu ticket médio'),
   agreement: z
     .boolean()
