@@ -8,6 +8,7 @@ import {
   CardFooter,
 } from '@/components/ui/card'
 import { Check, X, Gift, CalendarDays, Zap } from 'lucide-react'
+import { FounderExpiryBanner } from '@/components/FounderExpiryBanner'
 import useAppStore from '@/stores/main'
 import { toast } from 'sonner'
 
@@ -59,19 +60,21 @@ export default function PlansPage() {
       desc: 'Acesso completo com condições de fundador.',
       features: ['Acesso Vitalício', 'Limites Ilimitados', 'Voto no Board', 'Eventos Presenciais'],
       missing: [],
-      active: user?.plan === 'Founder' && !expInfo?.isExpired,
+      active: (user?.plan === 'Founder' || user?.wasFounder) && !expInfo?.isExpired,
       btn:
-        user?.plan === 'Founder'
+        user?.plan === 'Founder' || user?.wasFounder
           ? expInfo?.isExpired
             ? 'Renovar Assinatura'
             : 'Plano Atual'
           : 'Esgotado',
-      canBuy: user?.plan === 'Founder', // Only founders can renew/buy founder
+      canBuy: user?.plan === 'Founder' || user?.wasFounder,
     },
   ]
 
   return (
     <div className="max-w-5xl mx-auto space-y-8 animate-fade-in-up">
+      <FounderExpiryBanner />
+
       <div className="text-center space-y-2 mb-8">
         <h2 className="text-3xl font-bold text-white">Invista na sua Infraestrutura</h2>
         <p className="text-muted-foreground">

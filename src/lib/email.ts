@@ -13,6 +13,9 @@
  * 10. new_suggestion
  * 11. suggestion_status_changed
  * 12. waitlist_invite
+ * 13. founder_expiry_30_days
+ * 14. founder_expiry_7_days
+ * 15. founder_expiry_expired
  */
 
 type EmailTriggerType =
@@ -29,6 +32,9 @@ type EmailTriggerType =
   | 'suggestion_status_changed'
   | 'waitlist_invite'
   | 'magic_link_otp'
+  | 'founder_expiry_30_days'
+  | 'founder_expiry_7_days'
+  | 'founder_expiry_expired'
 
 interface EmailPayload {
   to?: string
@@ -55,4 +61,10 @@ export function simulateInactivityReminders() {
 
 export function simulateBiWeeklyReview() {
   console.log('[CRON MOCK] Auto-validating members pending review > 20 days...')
+}
+
+export function checkFounderExpiry() {
+  console.log('[CRON MOCK] Executing daily edge function check-founder-expiry at 12:00 UTC')
+  // Note: The actual logic is handled reactively in the frontend mock via src/stores/main.ts
+  // to properly simulate the database updates and email triggers in a browser environment.
 }

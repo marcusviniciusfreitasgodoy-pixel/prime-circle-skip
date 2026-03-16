@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { AmbassadorWidget } from '@/components/AmbassadorWidget'
+import { FounderExpiryBanner } from '@/components/FounderExpiryBanner'
 import {
   Activity,
   GitMerge,
@@ -86,6 +87,8 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-8 animate-fade-in-up">
+      <FounderExpiryBanner />
+
       <Alert className="bg-card border-primary/20 text-foreground shadow-[0_0_15px_rgba(201,168,76,0.1)]">
         <AlertCircle className="h-5 w-5 text-primary" />
         <AlertTitle className="text-primary font-semibold ml-2">

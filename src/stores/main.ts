@@ -1,4 +1,4 @@
-import { createContext, createElement, useContext, useState, ReactNode } from 'react'
+import { createContext, createElement, useContext, useState, useEffect, ReactNode } from 'react'
 
 export type UserStatus = 'pending' | 'approved' | 'admin' | null
 export type Tier = 'None' | 'Ambassador' | 'Silver' | 'Gold' | 'Elite' | 'Elite+'
@@ -12,6 +12,7 @@ export type User = {
   avatar?: string
   tier: Tier
   plan: Plan
+  wasFounder?: boolean
   chapter: string
   onboarded?: boolean
   lastLogin?: string
@@ -95,6 +96,13 @@ export type ExpirationInfo = {
   isExpired: boolean
 }
 
+export type PlanExpiryNotification = {
+  id: string
+  userId: string
+  notificationType: '30_days' | '7_days' | 'expired'
+  sentAt: string
+}
+
 interface AppState {
   user: User | null
   listings: Listing[]
@@ -112,6 +120,7 @@ interface AppState {
     newStatus: string
     timestamp: string
   }[]
+  planExpiryNotifications: PlanExpiryNotification[]
   planLimitModalOpen: boolean
   setPlanLimitModalOpen: (open: boolean) => void
   login: (email: string, method: 'magic_link' | 'password', status?: UserStatus) => void
@@ -220,6 +229,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [statusLogs, setStatusLogs] = useState<
     { entity: string; entityId: string; oldStatus: string; newStatus: string; timestamp: string }[]
   >([])
+  const [planExpiryNotifications, setPlanExpiryNotifications] = useState<PlanExpiryNotification[]>(
+    [],
+  )
   const [planLimitModalOpen, setPlanLimitModalOpen] = useState(false)
 
   const login = (email: string, method: 'magic_link' | 'password', forcedStatus?: UserStatus) => {
@@ -236,6 +248,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       status,
       tier: isAdmin ? 'Ambassador' : 'Elite', // Elite to test 20% discount
       plan: isAdmin ? 'Founder' : 'Founder',
+      wasFounder: true,
       chapter: 'Barra da Tijuca',
       avatar: `https://img.usecurling.com/ppl/thumbnail?gender=${isAdmin ? 'female' : 'male'}&seed=1`,
       onboarded: isAdmin,
@@ -265,9 +278,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }
 
   const getExpirationInfo = (): ExpirationInfo | null => {
-    if (!user || user.plan === 'Free') return null
+    if (!user || (!user.wasFounder && user.plan === 'Free')) return null
     const start = new Date(user.planStartedAt || new Date())
-    const baseMonths = user.plan === 'Founder' ? 12 : 1
+    const baseMonths = user.plan === 'Founder' || user.wasFounder ? 12 : 1
     const totalCredits = (user.referralMonthsCredited || 0) + (user.suggestionMonthsCredited || 0)
 
     start.setMonth(start.getMonth() + baseMonths + totalCredits)
@@ -284,6 +297,58 @@ export function AppProvider({ children }: { children: ReactNode }) {
       isExpired: daysLeft <= 0,
     }
   }
+
+  useEffect(() => {
+    if (!user || (!user.wasFounder && user.plan !== 'Founder')) return
+
+    const start = new Date(user.planStartedAt || new Date())
+    const baseMonths = user.plan === 'Founder' || user.wasFounder ? 12 : 1
+    const totalCredits = (user.referralMonthsCredited || 0) + (user.suggestionMonthsCredited || 0)
+    start.setMonth(start.getMonth() + baseMonths + totalCredits)
+
+    const now = new Date()
+    const diffTime = start.getTime() - now.getTime()
+    const daysLeft = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+    const isExpired = daysLeft <= 0
+
+    const checkAndSend = (type: '30_days' | '7_days' | 'expired') => {
+      const alreadySent = planExpiryNotifications.some(
+        (n) => n.userId === user.id && n.notificationType === type,
+      )
+      if (!alreadySent) {
+        setPlanExpiryNotifications((prev) => [
+          ...prev,
+          {
+            id: Date.now().toString(),
+            userId: user.id,
+            notificationType: type,
+            sentAt: new Date().toISOString(),
+          },
+        ])
+
+        let body = ''
+        if (type === '30_days')
+          body = `Seu periodo gratuito encerra em 30 dias. A partir de ${start.toLocaleDateString()}, sua mensalidade de R$ 97/mes sera ativada.`
+        else if (type === '7_days')
+          body = `Faltam 7 dias para o fim do seu acesso gratuito como Fundador.`
+        else if (type === 'expired')
+          body = `Seu periodo gratuito encerrou. Sua mensalidade de R$ 97/mes esta ativa a partir de hoje.`
+
+        console.log(`[EMAIL MOCK] To: ${user.email} | Type: founder_expiry_${type} | Body: ${body}`)
+      }
+    }
+
+    if (isExpired) {
+      checkAndSend('expired')
+      if (user.plan === 'Founder') {
+        setUser((prev) => (prev ? { ...prev, plan: 'Free' } : prev))
+      }
+    } else if (daysLeft <= 7) {
+      checkAndSend('7_days')
+    } else if (daysLeft <= 30) {
+      checkAndSend('30_days')
+    }
+  }, [user?.id, user?.plan, user?.planStartedAt, user?.wasFounder, planExpiryNotifications])
 
   const checkPlanLimits = (type: 'listings' | 'needs' | 'matches' | 'closing') => {
     if (!user) return false
@@ -460,7 +525,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }
 
   const enforceInactivity = () => {
-    // Mocking 60-89 days inactivity enforcement for Ambassador
     setUser((prev) => {
       if (!prev) return prev
       const newReferrals = Math.max(0, prev.referrals - 1)
@@ -493,6 +557,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
         pageViews,
         logs,
         statusLogs,
+        planExpiryNotifications,
         planLimitModalOpen,
         setPlanLimitModalOpen,
         login,

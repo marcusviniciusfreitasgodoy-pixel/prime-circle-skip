@@ -19465,6 +19465,22 @@ var House = createLucideIcon("house", [["path", {
 	d: "M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z",
 	key: "r6nss1"
 }]]);
+var Info = createLucideIcon("info", [
+	["circle", {
+		cx: "12",
+		cy: "12",
+		r: "10",
+		key: "1mglay"
+	}],
+	["path", {
+		d: "M12 16v-4",
+		key: "1dtifu"
+	}],
+	["path", {
+		d: "M12 8h.01",
+		key: "e9boi3"
+	}]
+]);
 var KeyRound = createLucideIcon("key-round", [["path", {
 	d: "M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z",
 	key: "1s6t7t"
@@ -19655,6 +19671,20 @@ var ThumbsUp = createLucideIcon("thumbs-up", [["path", {
 	d: "M7 10v12",
 	key: "1qc93n"
 }]]);
+var TriangleAlert = createLucideIcon("triangle-alert", [
+	["path", {
+		d: "m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3",
+		key: "wmoenq"
+	}],
+	["path", {
+		d: "M12 9v4",
+		key: "juzpu7"
+	}],
+	["path", {
+		d: "M12 17h.01",
+		key: "p32p05"
+	}]
+]);
 var Trophy = createLucideIcon("trophy", [
 	["path", {
 		d: "M10 14.66v1.626a2 2 0 0 1-.976 1.696A5 5 0 0 0 7 21.978",
@@ -20441,6 +20471,7 @@ function AppProvider({ children }) {
 	const [pageViews, setPageViews] = (0, import_react.useState)([]);
 	const [logs, setLogs] = (0, import_react.useState)([]);
 	const [statusLogs, setStatusLogs] = (0, import_react.useState)([]);
+	const [planExpiryNotifications, setPlanExpiryNotifications] = (0, import_react.useState)([]);
 	const [planLimitModalOpen, setPlanLimitModalOpen] = (0, import_react.useState)(false);
 	const login = (email, method, forcedStatus) => {
 		const status = forcedStatus || (email.includes("admin") ? "admin" : "approved");
@@ -20454,6 +20485,7 @@ function AppProvider({ children }) {
 			status,
 			tier: isAdmin ? "Ambassador" : "Elite",
 			plan: isAdmin ? "Founder" : "Founder",
+			wasFounder: true,
 			chapter: "Barra da Tijuca",
 			avatar: `https://img.usecurling.com/ppl/thumbnail?gender=${isAdmin ? "female" : "male"}&seed=1`,
 			onboarded: isAdmin,
@@ -20488,9 +20520,9 @@ function AppProvider({ children }) {
 		}]);
 	};
 	const getExpirationInfo = () => {
-		if (!user || user.plan === "Free") return null;
+		if (!user || !user.wasFounder && user.plan === "Free") return null;
 		const start = new Date(user.planStartedAt || /* @__PURE__ */ new Date());
-		const baseMonths = user.plan === "Founder" ? 12 : 1;
+		const baseMonths = user.plan === "Founder" || user.wasFounder ? 12 : 1;
 		const totalCredits = (user.referralMonthsCredited || 0) + (user.suggestionMonthsCredited || 0);
 		start.setMonth(start.getMonth() + baseMonths + totalCredits);
 		const now = /* @__PURE__ */ new Date();
@@ -20504,6 +20536,46 @@ function AppProvider({ children }) {
 			isExpired: daysLeft <= 0
 		};
 	};
+	(0, import_react.useEffect)(() => {
+		if (!user || !user.wasFounder && user.plan !== "Founder") return;
+		const start = new Date(user.planStartedAt || /* @__PURE__ */ new Date());
+		const baseMonths = user.plan === "Founder" || user.wasFounder ? 12 : 1;
+		const totalCredits = (user.referralMonthsCredited || 0) + (user.suggestionMonthsCredited || 0);
+		start.setMonth(start.getMonth() + baseMonths + totalCredits);
+		const now = /* @__PURE__ */ new Date();
+		const diffTime = start.getTime() - now.getTime();
+		const daysLeft = Math.ceil(diffTime / (1e3 * 60 * 60 * 24));
+		const isExpired = daysLeft <= 0;
+		const checkAndSend = (type) => {
+			if (!planExpiryNotifications.some((n) => n.userId === user.id && n.notificationType === type)) {
+				setPlanExpiryNotifications((prev) => [...prev, {
+					id: Date.now().toString(),
+					userId: user.id,
+					notificationType: type,
+					sentAt: (/* @__PURE__ */ new Date()).toISOString()
+				}]);
+				let body = "";
+				if (type === "30_days") body = `Seu periodo gratuito encerra em 30 dias. A partir de ${start.toLocaleDateString()}, sua mensalidade de R$ 97/mes sera ativada.`;
+				else if (type === "7_days") body = `Faltam 7 dias para o fim do seu acesso gratuito como Fundador.`;
+				else if (type === "expired") body = `Seu periodo gratuito encerrou. Sua mensalidade de R$ 97/mes esta ativa a partir de hoje.`;
+				console.log(`[EMAIL MOCK] To: ${user.email} | Type: founder_expiry_${type} | Body: ${body}`);
+			}
+		};
+		if (isExpired) {
+			checkAndSend("expired");
+			if (user.plan === "Founder") setUser((prev) => prev ? {
+				...prev,
+				plan: "Free"
+			} : prev);
+		} else if (daysLeft <= 7) checkAndSend("7_days");
+		else if (daysLeft <= 30) checkAndSend("30_days");
+	}, [
+		user?.id,
+		user?.plan,
+		user?.planStartedAt,
+		user?.wasFounder,
+		planExpiryNotifications
+	]);
 	const checkPlanLimits = (type) => {
 		if (!user) return false;
 		const effectivePlan = getExpirationInfo()?.isExpired ? "Free" : user.plan;
@@ -20690,6 +20762,7 @@ function AppProvider({ children }) {
 		pageViews,
 		logs,
 		statusLogs,
+		planExpiryNotifications,
 		planLimitModalOpen,
 		setPlanLimitModalOpen,
 		login,
@@ -28325,6 +28398,129 @@ function AmbassadorWidget({ tier, referrals = 0 }) {
 	});
 }
 //#endregion
+//#region src/hooks/useFounderExpiry.ts
+function useFounderExpiry() {
+	const { user, getExpirationInfo } = useAppStore();
+	const isFounderUser = user?.plan === "Founder" || user?.wasFounder;
+	if (!user || !isFounderUser) return {
+		isFounder: false,
+		daysRemaining: 0,
+		isExpiring: false,
+		isExpired: false,
+		expiryDate: null
+	};
+	const info = getExpirationInfo();
+	if (!info) return {
+		isFounder: true,
+		daysRemaining: 0,
+		isExpiring: false,
+		isExpired: false,
+		expiryDate: null
+	};
+	return {
+		isFounder: true,
+		daysRemaining: info.daysLeft,
+		isExpiring: info.daysLeft <= 30 && info.daysLeft > 0,
+		isExpired: info.isExpired,
+		expiryDate: info.expirationDate
+	};
+}
+//#endregion
+//#region src/components/FounderExpiryBanner.tsx
+function FounderExpiryBanner() {
+	const { isFounder, isExpiring, isExpired, daysRemaining } = useFounderExpiry();
+	if (!isFounder || !isExpiring && !isExpired) return null;
+	if (isExpired) return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Alert, {
+		"data-uid": "src/components/FounderExpiryBanner.tsx:14:7",
+		"data-prohibitions": "[]",
+		variant: "destructive",
+		className: "mb-6 bg-destructive/10 border-destructive shadow-[0_0_15px_rgba(255,0,0,0.1)]",
+		children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TriangleAlert, {
+				"data-uid": "src/components/FounderExpiryBanner.tsx:18:9",
+				"data-prohibitions": "[editContent]",
+				className: "h-5 w-5"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(AlertTitle, {
+				"data-uid": "src/components/FounderExpiryBanner.tsx:19:9",
+				"data-prohibitions": "[]",
+				className: "font-semibold ml-2",
+				children: "Seu período gratuito encerrou"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(AlertDescription, {
+				"data-uid": "src/components/FounderExpiryBanner.tsx:20:9",
+				"data-prohibitions": "[]",
+				className: "mt-2 ml-2 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+					"data-uid": "src/components/FounderExpiryBanner.tsx:21:11",
+					"data-prohibitions": "[]",
+					className: "leading-relaxed",
+					children: "Sua mensalidade de R$ 97/mês está ativa a partir de hoje. Atualize sua forma de pagamento para manter os limites ilimitados e benefícios do plano Founder."
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+					"data-uid": "src/components/FounderExpiryBanner.tsx:25:11",
+					"data-prohibitions": "[]",
+					asChild: true,
+					size: "sm",
+					variant: "destructive",
+					className: "whitespace-nowrap",
+					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link, {
+						"data-uid": "src/components/FounderExpiryBanner.tsx:26:13",
+						"data-prohibitions": "[]",
+						to: "/plans",
+						children: "Ver Planos"
+					})
+				})]
+			})
+		]
+	});
+	if (isExpiring) return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Alert, {
+		"data-uid": "src/components/FounderExpiryBanner.tsx:35:7",
+		"data-prohibitions": "[editContent]",
+		className: "mb-6 bg-yellow-500/10 border-yellow-500/50 text-yellow-700 dark:text-yellow-400 [&>svg]:text-yellow-600 dark:[&>svg]:text-yellow-500 shadow-[0_0_15px_rgba(234,179,8,0.1)]",
+		children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Info, {
+				"data-uid": "src/components/FounderExpiryBanner.tsx:36:9",
+				"data-prohibitions": "[editContent]",
+				className: "h-5 w-5"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(AlertTitle, {
+				"data-uid": "src/components/FounderExpiryBanner.tsx:37:9",
+				"data-prohibitions": "[]",
+				className: "font-semibold ml-2",
+				children: "Aviso de Expiração"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(AlertDescription, {
+				"data-uid": "src/components/FounderExpiryBanner.tsx:38:9",
+				"data-prohibitions": "[editContent]",
+				className: "mt-2 ml-2 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
+					"data-uid": "src/components/FounderExpiryBanner.tsx:39:11",
+					"data-prohibitions": "[editContent]",
+					className: "leading-relaxed",
+					children: [
+						"Seu acesso gratuito encerra em ",
+						daysRemaining,
+						" dias. A partir da expiração, sua mensalidade será ativada para manter seu acesso sem restrições."
+					]
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+					"data-uid": "src/components/FounderExpiryBanner.tsx:43:11",
+					"data-prohibitions": "[]",
+					asChild: true,
+					size: "sm",
+					className: "bg-yellow-500 text-white hover:bg-yellow-600 whitespace-nowrap border-none",
+					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link, {
+						"data-uid": "src/components/FounderExpiryBanner.tsx:48:13",
+						"data-prohibitions": "[]",
+						to: "/plans",
+						children: "Ver Planos"
+					})
+				})]
+			})
+		]
+	});
+	return null;
+}
+//#endregion
 //#region src/hooks/use-toast.ts
 var TOAST_LIMIT = 1;
 var TOAST_REMOVE_DELAY = 1e6;
@@ -28501,22 +28697,26 @@ function DashboardPage() {
 		} else if (idx === MATCH_STAGES.length - 2) navigate(`/matches/${id}/close`);
 	};
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-		"data-uid": "src/pages/DashboardPage.tsx:88:5",
+		"data-uid": "src/pages/DashboardPage.tsx:89:5",
 		"data-prohibitions": "[editContent]",
 		className: "space-y-8 animate-fade-in-up",
 		children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FounderExpiryBanner, {
+				"data-uid": "src/pages/DashboardPage.tsx:90:7",
+				"data-prohibitions": "[editContent]"
+			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Alert, {
-				"data-uid": "src/pages/DashboardPage.tsx:89:7",
+				"data-uid": "src/pages/DashboardPage.tsx:92:7",
 				"data-prohibitions": "[editContent]",
 				className: "bg-card border-primary/20 text-foreground shadow-[0_0_15px_rgba(201,168,76,0.1)]",
 				children: [
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CircleAlert, {
-						"data-uid": "src/pages/DashboardPage.tsx:90:9",
+						"data-uid": "src/pages/DashboardPage.tsx:93:9",
 						"data-prohibitions": "[editContent]",
 						className: "h-5 w-5 text-primary"
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(AlertTitle, {
-						"data-uid": "src/pages/DashboardPage.tsx:91:9",
+						"data-uid": "src/pages/DashboardPage.tsx:94:9",
 						"data-prohibitions": "[editContent]",
 						className: "text-primary font-semibold ml-2",
 						children: [
@@ -28526,11 +28726,11 @@ function DashboardPage() {
 						]
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(AlertDescription, {
-						"data-uid": "src/pages/DashboardPage.tsx:94:9",
+						"data-uid": "src/pages/DashboardPage.tsx:97:9",
 						"data-prohibitions": "[]",
 						className: "text-muted-foreground mt-2 ml-2 leading-relaxed",
 						children: ["Seu acesso e status de Embaixador dependem de atividade constante na plataforma. A inatividade superior a 30 dias gerará avisos, podendo resultar em suspensão do plano.", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", {
-							"data-uid": "src/pages/DashboardPage.tsx:97:11",
+							"data-uid": "src/pages/DashboardPage.tsx:100:11",
 							"data-prohibitions": "[]",
 							className: "text-foreground block mt-1 font-medium",
 							children: "Lembre-se: Prática obrigatória de 50/50 em todas as conexões."
@@ -28539,26 +28739,26 @@ function DashboardPage() {
 				]
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-				"data-uid": "src/pages/DashboardPage.tsx:103:7",
+				"data-uid": "src/pages/DashboardPage.tsx:106:7",
 				"data-prohibitions": "[editContent]",
 				className: "flex flex-col md:flex-row gap-6 md:items-center justify-between",
 				children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					"data-uid": "src/pages/DashboardPage.tsx:104:9",
+					"data-uid": "src/pages/DashboardPage.tsx:107:9",
 					"data-prohibitions": "[editContent]",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h2", {
-						"data-uid": "src/pages/DashboardPage.tsx:105:11",
+						"data-uid": "src/pages/DashboardPage.tsx:108:11",
 						"data-prohibitions": "[editContent]",
 						className: "text-3xl font-bold tracking-tight text-white",
 						children: ["Dashboard, ", user?.name?.split(" ")[0]]
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
-						"data-uid": "src/pages/DashboardPage.tsx:108:11",
+						"data-uid": "src/pages/DashboardPage.tsx:111:11",
 						"data-prohibitions": "[editContent]",
 						className: "text-muted-foreground mt-2",
 						children: [
 							"Plano atual:",
 							" ",
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Badge, {
-								"data-uid": "src/pages/DashboardPage.tsx:110:13",
+								"data-uid": "src/pages/DashboardPage.tsx:113:13",
 								"data-prohibitions": "[editContent]",
 								variant: "outline",
 								className: "border-primary/50 text-primary",
@@ -28569,63 +28769,63 @@ function DashboardPage() {
 				})
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				"data-uid": "src/pages/DashboardPage.tsx:117:7",
+				"data-uid": "src/pages/DashboardPage.tsx:120:7",
 				"data-prohibitions": "[editContent]",
 				className: "grid gap-6 md:grid-cols-3",
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					"data-uid": "src/pages/DashboardPage.tsx:118:9",
+					"data-uid": "src/pages/DashboardPage.tsx:121:9",
 					"data-prohibitions": "[editContent]",
 					className: "md:col-span-2 space-y-6",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
-						"data-uid": "src/pages/DashboardPage.tsx:119:11",
+						"data-uid": "src/pages/DashboardPage.tsx:122:11",
 						"data-prohibitions": "[]",
 						className: "bg-card border-primary/30 shadow-[0_0_30px_rgba(201,168,76,0.1)] relative overflow-hidden",
 						children: [
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-								"data-uid": "src/pages/DashboardPage.tsx:120:13",
+								"data-uid": "src/pages/DashboardPage.tsx:123:13",
 								"data-prohibitions": "[editContent]",
 								className: "absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-[80px] pointer-events-none"
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardHeader, {
-								"data-uid": "src/pages/DashboardPage.tsx:121:13",
+								"data-uid": "src/pages/DashboardPage.tsx:124:13",
 								"data-prohibitions": "[]",
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardTitle, {
-									"data-uid": "src/pages/DashboardPage.tsx:122:15",
+									"data-uid": "src/pages/DashboardPage.tsx:125:15",
 									"data-prohibitions": "[]",
 									className: "text-2xl text-primary flex items-center gap-2",
 									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Crown, {
-										"data-uid": "src/pages/DashboardPage.tsx:123:17",
+										"data-uid": "src/pages/DashboardPage.tsx:126:17",
 										"data-prohibitions": "[editContent]",
 										className: "w-6 h-6"
 									}), " Indique Parceiros"]
 								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardDescription, {
-									"data-uid": "src/pages/DashboardPage.tsx:125:15",
+									"data-uid": "src/pages/DashboardPage.tsx:128:15",
 									"data-prohibitions": "[]",
 									className: "text-base text-muted-foreground max-w-2xl",
 									children: "Convide corretores alinhados à política 50/50 e receba meses grátis. Parceiros com seu código têm prioridade na análise."
 								})]
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardContent, {
-								"data-uid": "src/pages/DashboardPage.tsx:130:13",
+								"data-uid": "src/pages/DashboardPage.tsx:133:13",
 								"data-prohibitions": "[]",
 								children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-									"data-uid": "src/pages/DashboardPage.tsx:131:15",
+									"data-uid": "src/pages/DashboardPage.tsx:134:15",
 									"data-prohibitions": "[]",
 									className: "flex flex-col sm:flex-row gap-3 mt-2 relative z-10",
 									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
-										"data-uid": "src/pages/DashboardPage.tsx:132:17",
+										"data-uid": "src/pages/DashboardPage.tsx:135:17",
 										"data-prohibitions": "[editContent]",
 										readOnly: true,
 										value: referralLink,
 										className: "bg-background/80 border-primary/20 text-muted-foreground font-mono h-12 flex-1 focus-visible:ring-primary"
 									}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
-										"data-uid": "src/pages/DashboardPage.tsx:137:17",
+										"data-uid": "src/pages/DashboardPage.tsx:140:17",
 										"data-prohibitions": "[]",
 										onClick: copyLink,
 										size: "lg",
 										className: "gold-gradient text-black font-semibold h-12 shadow-[0_0_15px_rgba(201,168,76,0.2)]",
 										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Copy, {
-											"data-uid": "src/pages/DashboardPage.tsx:142:19",
+											"data-uid": "src/pages/DashboardPage.tsx:145:19",
 											"data-prohibitions": "[editContent]",
 											className: "w-4 h-4 mr-2"
 										}), " Copiar Link"]
@@ -28634,37 +28834,37 @@ function DashboardPage() {
 							})
 						]
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-						"data-uid": "src/pages/DashboardPage.tsx:148:11",
+						"data-uid": "src/pages/DashboardPage.tsx:151:11",
 						"data-prohibitions": "[editContent]",
 						className: "grid gap-4 sm:grid-cols-2",
 						children: stats.map((stat, i) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
-							"data-uid": "src/pages/DashboardPage.tsx:150:15",
+							"data-uid": "src/pages/DashboardPage.tsx:153:15",
 							"data-prohibitions": "[editContent]",
 							className: "bg-card border-border",
 							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardHeader, {
-								"data-uid": "src/pages/DashboardPage.tsx:151:17",
+								"data-uid": "src/pages/DashboardPage.tsx:154:17",
 								"data-prohibitions": "[editContent]",
 								className: "flex flex-row items-center justify-between pb-2 space-y-0",
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardTitle, {
-									"data-uid": "src/pages/DashboardPage.tsx:152:19",
+									"data-uid": "src/pages/DashboardPage.tsx:155:19",
 									"data-prohibitions": "[editContent]",
 									className: "text-sm font-medium text-muted-foreground",
 									children: stat.title
 								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(stat.icon, {
-									"data-uid": "src/pages/DashboardPage.tsx:155:19",
+									"data-uid": "src/pages/DashboardPage.tsx:158:19",
 									"data-prohibitions": "[editContent]",
 									className: "w-4 h-4 text-primary"
 								})]
 							}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardContent, {
-								"data-uid": "src/pages/DashboardPage.tsx:157:17",
+								"data-uid": "src/pages/DashboardPage.tsx:160:17",
 								"data-prohibitions": "[editContent]",
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-									"data-uid": "src/pages/DashboardPage.tsx:158:19",
+									"data-uid": "src/pages/DashboardPage.tsx:161:19",
 									"data-prohibitions": "[editContent]",
 									className: "text-2xl font-bold text-white",
 									children: stat.value
 								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-									"data-uid": "src/pages/DashboardPage.tsx:159:19",
+									"data-uid": "src/pages/DashboardPage.tsx:162:19",
 									"data-prohibitions": "[editContent]",
 									className: "text-xs text-muted-foreground mt-1",
 									children: stat.trend
@@ -28673,11 +28873,11 @@ function DashboardPage() {
 						}, i))
 					})]
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-					"data-uid": "src/pages/DashboardPage.tsx:166:9",
+					"data-uid": "src/pages/DashboardPage.tsx:169:9",
 					"data-prohibitions": "[]",
 					className: "md:col-span-1",
 					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(AmbassadorWidget, {
-						"data-uid": "src/pages/DashboardPage.tsx:167:11",
+						"data-uid": "src/pages/DashboardPage.tsx:170:11",
 						"data-prohibitions": "[editContent]",
 						tier: user?.tier || "None",
 						referrals: user?.referrals
@@ -28685,27 +28885,27 @@ function DashboardPage() {
 				})]
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
-				"data-uid": "src/pages/DashboardPage.tsx:171:7",
+				"data-uid": "src/pages/DashboardPage.tsx:174:7",
 				"data-prohibitions": "[editContent]",
 				className: "bg-card border-border",
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardHeader, {
-					"data-uid": "src/pages/DashboardPage.tsx:172:9",
+					"data-uid": "src/pages/DashboardPage.tsx:175:9",
 					"data-prohibitions": "[]",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardTitle, {
-						"data-uid": "src/pages/DashboardPage.tsx:173:11",
+						"data-uid": "src/pages/DashboardPage.tsx:176:11",
 						"data-prohibitions": "[]",
 						className: "text-lg text-white",
 						children: "Pipeline de Conexões (Matches)"
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardDescription, {
-						"data-uid": "src/pages/DashboardPage.tsx:174:11",
+						"data-uid": "src/pages/DashboardPage.tsx:177:11",
 						"data-prohibitions": "[]",
 						children: "Fluxo de validação obrigatório até o fechamento."
 					})]
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardContent, {
-					"data-uid": "src/pages/DashboardPage.tsx:176:9",
+					"data-uid": "src/pages/DashboardPage.tsx:179:9",
 					"data-prohibitions": "[editContent]",
 					children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-						"data-uid": "src/pages/DashboardPage.tsx:177:11",
+						"data-uid": "src/pages/DashboardPage.tsx:180:11",
 						"data-prohibitions": "[editContent]",
 						className: "space-y-6",
 						children: [matches.map((match) => {
@@ -28713,26 +28913,26 @@ function DashboardPage() {
 							const listing = listings.find((l) => l.id === match.listingId);
 							const currentIdx = MATCH_STAGES.indexOf(match.status);
 							return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								"data-uid": "src/pages/DashboardPage.tsx:184:17",
+								"data-uid": "src/pages/DashboardPage.tsx:187:17",
 								"data-prohibitions": "[editContent]",
 								className: "p-4 bg-background rounded-lg border border-border",
 								children: [
 									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-										"data-uid": "src/pages/DashboardPage.tsx:185:19",
+										"data-uid": "src/pages/DashboardPage.tsx:188:19",
 										"data-prohibitions": "[editContent]",
 										className: "flex justify-between items-start mb-4",
 										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-											"data-uid": "src/pages/DashboardPage.tsx:186:21",
+											"data-uid": "src/pages/DashboardPage.tsx:189:21",
 											"data-prohibitions": "[editContent]",
 											children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
-												"data-uid": "src/pages/DashboardPage.tsx:187:23",
+												"data-uid": "src/pages/DashboardPage.tsx:190:23",
 												"data-prohibitions": "[editContent]",
 												className: "text-white font-medium",
 												children: [
 													need?.title,
 													" ",
 													/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-														"data-uid": "src/pages/DashboardPage.tsx:188:39",
+														"data-uid": "src/pages/DashboardPage.tsx:191:39",
 														"data-prohibitions": "[]",
 														className: "text-muted-foreground mx-2",
 														children: "↔"
@@ -28741,13 +28941,13 @@ function DashboardPage() {
 													listing?.title
 												]
 											}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
-												"data-uid": "src/pages/DashboardPage.tsx:191:23",
+												"data-uid": "src/pages/DashboardPage.tsx:194:23",
 												"data-prohibitions": "[editContent]",
 												className: "text-xs text-muted-foreground mt-1",
 												children: ["Conexão ID: ", match.id]
 											})]
 										}), match.status !== "Fechado" ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
-											"data-uid": "src/pages/DashboardPage.tsx:194:23",
+											"data-uid": "src/pages/DashboardPage.tsx:197:23",
 											"data-prohibitions": "[editContent]",
 											size: "sm",
 											variant: "outline",
@@ -28757,44 +28957,44 @@ function DashboardPage() {
 												match.status === "Proposta" ? "Registrar Fechamento" : "Avançar Status",
 												" ",
 												/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ChevronRight, {
-													"data-uid": "src/pages/DashboardPage.tsx:201:25",
+													"data-uid": "src/pages/DashboardPage.tsx:204:25",
 													"data-prohibitions": "[editContent]",
 													className: "w-4 h-4 ml-1"
 												})
 											]
 										}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Badge, {
-											"data-uid": "src/pages/DashboardPage.tsx:204:23",
+											"data-uid": "src/pages/DashboardPage.tsx:207:23",
 											"data-prohibitions": "[]",
 											className: "bg-green-500/20 text-green-500 border-none hover:bg-green-500/30",
 											children: "Fechamento Validado"
 										})]
 									}),
 									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-										"data-uid": "src/pages/DashboardPage.tsx:210:19",
+										"data-uid": "src/pages/DashboardPage.tsx:213:19",
 										"data-prohibitions": "[editContent]",
 										className: "flex items-center w-full justify-between mt-6 relative",
 										children: [
 											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-												"data-uid": "src/pages/DashboardPage.tsx:211:21",
+												"data-uid": "src/pages/DashboardPage.tsx:214:21",
 												"data-prohibitions": "[editContent]",
 												className: "absolute top-1/2 left-0 w-full h-0.5 bg-secondary -translate-y-1/2 z-0"
 											}),
 											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-												"data-uid": "src/pages/DashboardPage.tsx:212:21",
+												"data-uid": "src/pages/DashboardPage.tsx:215:21",
 												"data-prohibitions": "[editContent]",
 												className: "absolute top-1/2 left-0 h-0.5 bg-primary -translate-y-1/2 z-0 transition-all duration-500",
 												style: { width: `${currentIdx / (MATCH_STAGES.length - 1) * 100}%` }
 											}),
 											MATCH_STAGES.map((stage, i) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-												"data-uid": "src/pages/DashboardPage.tsx:218:23",
+												"data-uid": "src/pages/DashboardPage.tsx:221:23",
 												"data-prohibitions": "[editContent]",
 												className: "relative z-10 flex flex-col items-center gap-2",
 												children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-													"data-uid": "src/pages/DashboardPage.tsx:219:25",
+													"data-uid": "src/pages/DashboardPage.tsx:222:25",
 													"data-prohibitions": "[editContent]",
 													className: `w-4 h-4 rounded-full border-2 transition-colors ${i <= currentIdx ? "bg-primary border-primary" : "bg-background border-border"} ${i === currentIdx ? "shadow-[0_0_10px_rgba(201,168,76,0.5)] scale-125" : ""}`
 												}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-													"data-uid": "src/pages/DashboardPage.tsx:222:25",
+													"data-uid": "src/pages/DashboardPage.tsx:225:25",
 													"data-prohibitions": "[editContent]",
 													className: `text-[10px] uppercase font-bold tracking-wider absolute top-6 whitespace-nowrap ${i <= currentIdx ? "text-white" : "text-muted-foreground"}`,
 													children: stage
@@ -28803,7 +29003,7 @@ function DashboardPage() {
 										]
 									}),
 									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-										"data-uid": "src/pages/DashboardPage.tsx:230:19",
+										"data-uid": "src/pages/DashboardPage.tsx:233:19",
 										"data-prohibitions": "[editContent]",
 										className: "h-4"
 									}),
@@ -28811,7 +29011,7 @@ function DashboardPage() {
 								]
 							}, match.id);
 						}), matches.length === 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-							"data-uid": "src/pages/DashboardPage.tsx:235:15",
+							"data-uid": "src/pages/DashboardPage.tsx:238:15",
 							"data-prohibitions": "[]",
 							className: "text-sm text-muted-foreground text-center py-4",
 							children: "Nenhuma conexão ativa no momento."
@@ -30695,87 +30895,91 @@ function PlansPage() {
 				"Eventos Presenciais"
 			],
 			missing: [],
-			active: user?.plan === "Founder" && !expInfo?.isExpired,
-			btn: user?.plan === "Founder" ? expInfo?.isExpired ? "Renovar Assinatura" : "Plano Atual" : "Esgotado",
-			canBuy: user?.plan === "Founder"
+			active: (user?.plan === "Founder" || user?.wasFounder) && !expInfo?.isExpired,
+			btn: user?.plan === "Founder" || user?.wasFounder ? expInfo?.isExpired ? "Renovar Assinatura" : "Plano Atual" : "Esgotado",
+			canBuy: user?.plan === "Founder" || user?.wasFounder
 		}
 	];
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-		"data-uid": "src/pages/PlansPage.tsx:74:5",
+		"data-uid": "src/pages/PlansPage.tsx:75:5",
 		"data-prohibitions": "[editContent]",
 		className: "max-w-5xl mx-auto space-y-8 animate-fade-in-up",
 		children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FounderExpiryBanner, {
+				"data-uid": "src/pages/PlansPage.tsx:76:7",
+				"data-prohibitions": "[editContent]"
+			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				"data-uid": "src/pages/PlansPage.tsx:75:7",
+				"data-uid": "src/pages/PlansPage.tsx:78:7",
 				"data-prohibitions": "[]",
 				className: "text-center space-y-2 mb-8",
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
-					"data-uid": "src/pages/PlansPage.tsx:76:9",
+					"data-uid": "src/pages/PlansPage.tsx:79:9",
 					"data-prohibitions": "[]",
 					className: "text-3xl font-bold text-white",
 					children: "Invista na sua Infraestrutura"
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-					"data-uid": "src/pages/PlansPage.tsx:77:9",
+					"data-uid": "src/pages/PlansPage.tsx:80:9",
 					"data-prohibitions": "[]",
 					className: "text-muted-foreground",
 					children: "Evolua seu plano e destrave os limites operacionais."
 				})]
 			}),
 			user && user.plan !== "Free" && expInfo && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
-				"data-uid": "src/pages/PlansPage.tsx:83:9",
+				"data-uid": "src/pages/PlansPage.tsx:86:9",
 				"data-prohibitions": "[editContent]",
 				className: "bg-primary/10 border-primary/30 mb-8 shadow-elevation relative overflow-hidden",
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-					"data-uid": "src/pages/PlansPage.tsx:84:11",
+					"data-uid": "src/pages/PlansPage.tsx:87:11",
 					"data-prohibitions": "[]",
 					className: "absolute top-0 right-0 p-8 opacity-10 pointer-events-none",
 					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Zap, {
-						"data-uid": "src/pages/PlansPage.tsx:85:13",
+						"data-uid": "src/pages/PlansPage.tsx:88:13",
 						"data-prohibitions": "[editContent]",
 						className: "w-32 h-32 text-primary"
 					})
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardContent, {
-					"data-uid": "src/pages/PlansPage.tsx:87:11",
+					"data-uid": "src/pages/PlansPage.tsx:90:11",
 					"data-prohibitions": "[editContent]",
 					className: "p-6 flex flex-col md:flex-row items-center justify-between gap-6 relative z-10",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-						"data-uid": "src/pages/PlansPage.tsx:88:13",
+						"data-uid": "src/pages/PlansPage.tsx:91:13",
 						"data-prohibitions": "[editContent]",
 						children: [
 							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h3", {
-								"data-uid": "src/pages/PlansPage.tsx:89:15",
+								"data-uid": "src/pages/PlansPage.tsx:92:15",
 								"data-prohibitions": "[editContent]",
 								className: "text-xl font-bold text-white mb-1",
 								children: ["Status da Assinatura: ", user.plan]
 							}),
 							user.plan === "Founder" && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-								"data-uid": "src/pages/PlansPage.tsx:93:17",
+								"data-uid": "src/pages/PlansPage.tsx:96:17",
 								"data-prohibitions": "[]",
 								className: "text-primary font-medium mb-3",
 								children: "Pagamentos ativados após os 12 meses de acesso gratuito para fundadores."
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								"data-uid": "src/pages/PlansPage.tsx:97:15",
+								"data-uid": "src/pages/PlansPage.tsx:100:15",
 								"data-prohibitions": "[editContent]",
 								className: "flex flex-wrap gap-4 mt-2",
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-									"data-uid": "src/pages/PlansPage.tsx:98:17",
+									"data-uid": "src/pages/PlansPage.tsx:101:17",
 									"data-prohibitions": "[editContent]",
 									className: "bg-background rounded-md px-4 py-2 border border-border flex items-center gap-3",
 									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CalendarDays, {
-										"data-uid": "src/pages/PlansPage.tsx:99:19",
+										"data-uid": "src/pages/PlansPage.tsx:102:19",
 										"data-prohibitions": "[editContent]",
 										className: "w-5 h-5 text-muted-foreground"
 									}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-										"data-uid": "src/pages/PlansPage.tsx:100:19",
+										"data-uid": "src/pages/PlansPage.tsx:103:19",
 										"data-prohibitions": "[editContent]",
 										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-											"data-uid": "src/pages/PlansPage.tsx:101:21",
+											"data-uid": "src/pages/PlansPage.tsx:104:21",
 											"data-prohibitions": "[]",
 											className: "text-xs text-muted-foreground block",
 											children: "Vencimento (Trial)"
 										}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
-											"data-uid": "src/pages/PlansPage.tsx:102:21",
+											"data-uid": "src/pages/PlansPage.tsx:105:21",
 											"data-prohibitions": "[editContent]",
 											className: `text-sm font-semibold ${expInfo.isExpired ? "text-destructive" : "text-white"}`,
 											children: [
@@ -30786,23 +30990,23 @@ function PlansPage() {
 										})]
 									})]
 								}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-									"data-uid": "src/pages/PlansPage.tsx:110:17",
+									"data-uid": "src/pages/PlansPage.tsx:113:17",
 									"data-prohibitions": "[editContent]",
 									className: "bg-background rounded-md px-4 py-2 border border-border flex items-center gap-3",
 									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Gift, {
-										"data-uid": "src/pages/PlansPage.tsx:111:19",
+										"data-uid": "src/pages/PlansPage.tsx:114:19",
 										"data-prohibitions": "[editContent]",
 										className: "w-5 h-5 text-primary"
 									}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-										"data-uid": "src/pages/PlansPage.tsx:112:19",
+										"data-uid": "src/pages/PlansPage.tsx:115:19",
 										"data-prohibitions": "[editContent]",
 										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-											"data-uid": "src/pages/PlansPage.tsx:113:21",
+											"data-uid": "src/pages/PlansPage.tsx:116:21",
 											"data-prohibitions": "[]",
 											className: "text-xs text-muted-foreground block",
 											children: "Créditos Acumulados"
 										}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
-											"data-uid": "src/pages/PlansPage.tsx:114:21",
+											"data-uid": "src/pages/PlansPage.tsx:117:21",
 											"data-prohibitions": "[editContent]",
 											className: "text-sm font-semibold text-white",
 											children: [expInfo.totalCredits, " meses extras"]
@@ -30812,16 +31016,16 @@ function PlansPage() {
 							})
 						]
 					}), discountPct > 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-						"data-uid": "src/pages/PlansPage.tsx:122:15",
+						"data-uid": "src/pages/PlansPage.tsx:125:15",
 						"data-prohibitions": "[editContent]",
 						className: "text-center bg-background border border-primary/50 p-4 rounded-lg min-w-[140px]",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-							"data-uid": "src/pages/PlansPage.tsx:123:17",
+							"data-uid": "src/pages/PlansPage.tsx:126:17",
 							"data-prohibitions": "[]",
 							className: "text-xs text-muted-foreground block uppercase tracking-wider mb-1",
 							children: "Desconto Nível"
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
-							"data-uid": "src/pages/PlansPage.tsx:126:17",
+							"data-uid": "src/pages/PlansPage.tsx:129:17",
 							"data-prohibitions": "[editContent]",
 							className: "text-3xl font-bold text-primary",
 							children: [discountPct, "% OFF"]
@@ -30830,46 +31034,46 @@ function PlansPage() {
 				})]
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-				"data-uid": "src/pages/PlansPage.tsx:133:7",
+				"data-uid": "src/pages/PlansPage.tsx:136:7",
 				"data-prohibitions": "[editContent]",
 				className: "grid md:grid-cols-3 gap-6",
 				children: plans.map((plan, i) => {
 					const finalPrice = plan.basePrice * (1 - discountPct / 100);
 					const displayPrice = plan.basePrice === 0 ? "R$ 0" : `R$ ${finalPrice.toFixed(0)}/mês`;
 					return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
-						"data-uid": "src/pages/PlansPage.tsx:139:13",
+						"data-uid": "src/pages/PlansPage.tsx:142:13",
 						"data-prohibitions": "[editContent]",
 						className: `bg-card border-border flex flex-col ${plan.name === "Standard" ? "border-primary shadow-[0_0_30px_rgba(201,168,76,0.1)] relative" : ""}`,
 						children: [
 							plan.name === "Standard" && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-								"data-uid": "src/pages/PlansPage.tsx:144:17",
+								"data-uid": "src/pages/PlansPage.tsx:147:17",
 								"data-prohibitions": "[]",
 								className: "absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-primary text-black text-xs font-bold px-3 py-1 rounded-full",
 								children: "RECOMENDADO"
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardHeader, {
-								"data-uid": "src/pages/PlansPage.tsx:148:15",
+								"data-uid": "src/pages/PlansPage.tsx:151:15",
 								"data-prohibitions": "[editContent]",
 								className: "text-center pb-2",
 								children: [
 									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardTitle, {
-										"data-uid": "src/pages/PlansPage.tsx:149:17",
+										"data-uid": "src/pages/PlansPage.tsx:152:17",
 										"data-prohibitions": "[editContent]",
 										className: "text-xl text-white",
 										children: plan.name
 									}),
 									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardDescription, {
-										"data-uid": "src/pages/PlansPage.tsx:150:17",
+										"data-uid": "src/pages/PlansPage.tsx:153:17",
 										"data-prohibitions": "[editContent]",
 										className: "text-muted-foreground min-h-[40px]",
 										children: plan.desc
 									}),
 									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-										"data-uid": "src/pages/PlansPage.tsx:153:17",
+										"data-uid": "src/pages/PlansPage.tsx:156:17",
 										"data-prohibitions": "[editContent]",
 										className: "text-3xl font-bold text-white mt-4 flex items-center justify-center gap-2",
 										children: [plan.basePrice > 0 && discountPct > 0 && plan.canBuy && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
-											"data-uid": "src/pages/PlansPage.tsx:155:21",
+											"data-uid": "src/pages/PlansPage.tsx:158:21",
 											"data-prohibitions": "[editContent]",
 											className: "text-lg text-muted-foreground line-through",
 											children: ["R$ ", plan.basePrice]
@@ -30878,36 +31082,36 @@ function PlansPage() {
 								]
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardContent, {
-								"data-uid": "src/pages/PlansPage.tsx:164:15",
+								"data-uid": "src/pages/PlansPage.tsx:167:15",
 								"data-prohibitions": "[editContent]",
 								className: "flex-1 mt-6",
 								children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("ul", {
-									"data-uid": "src/pages/PlansPage.tsx:165:17",
+									"data-uid": "src/pages/PlansPage.tsx:168:17",
 									"data-prohibitions": "[editContent]",
 									className: "space-y-3",
 									children: [plan.features.map((feat, j) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("li", {
-										"data-uid": "src/pages/PlansPage.tsx:167:21",
+										"data-uid": "src/pages/PlansPage.tsx:170:21",
 										"data-prohibitions": "[editContent]",
 										className: "flex items-center gap-2 text-sm text-muted-foreground",
 										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Check, {
-											"data-uid": "src/pages/PlansPage.tsx:168:23",
+											"data-uid": "src/pages/PlansPage.tsx:171:23",
 											"data-prohibitions": "[editContent]",
 											className: "w-4 h-4 text-primary shrink-0"
 										}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-											"data-uid": "src/pages/PlansPage.tsx:169:23",
+											"data-uid": "src/pages/PlansPage.tsx:172:23",
 											"data-prohibitions": "[editContent]",
 											children: feat
 										})]
 									}, j)), plan.missing.map((feat, j) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("li", {
-										"data-uid": "src/pages/PlansPage.tsx:173:21",
+										"data-uid": "src/pages/PlansPage.tsx:176:21",
 										"data-prohibitions": "[editContent]",
 										className: "flex items-center gap-2 text-sm text-muted-foreground/50 line-through",
 										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(X, {
-											"data-uid": "src/pages/PlansPage.tsx:177:23",
+											"data-uid": "src/pages/PlansPage.tsx:180:23",
 											"data-prohibitions": "[editContent]",
 											className: "w-4 h-4 shrink-0"
 										}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-											"data-uid": "src/pages/PlansPage.tsx:178:23",
+											"data-uid": "src/pages/PlansPage.tsx:181:23",
 											"data-prohibitions": "[editContent]",
 											children: feat
 										})]
@@ -30915,10 +31119,10 @@ function PlansPage() {
 								})
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardFooter, {
-								"data-uid": "src/pages/PlansPage.tsx:183:15",
+								"data-uid": "src/pages/PlansPage.tsx:186:15",
 								"data-prohibitions": "[editContent]",
 								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-									"data-uid": "src/pages/PlansPage.tsx:184:17",
+									"data-uid": "src/pages/PlansPage.tsx:187:17",
 									"data-prohibitions": "[editContent]",
 									variant: plan.active ? "outline" : "default",
 									disabled: !plan.canBuy || plan.active,
@@ -34510,4 +34714,4 @@ function App() {
 }));
 //#endregion
 
-//# sourceMappingURL=index-T6wmNMB8.js.map
+//# sourceMappingURL=index-Pkqkst9e.js.map
