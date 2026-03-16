@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
@@ -20,9 +21,21 @@ import useAppStore from '@/stores/main'
 import { useToast } from '@/hooks/use-toast'
 
 export default function DashboardPage() {
-  const { user, listings, needs, matches, updateMatchStatus } = useAppStore()
+  const { user, listings, needs, matches, updateMatchStatus, suggestions, updateSuggestionStatus } =
+    useAppStore()
   const { toast } = useToast()
   const navigate = useNavigate()
+
+  // Demo: Automatically approve a specific pending suggestion to show the notification AC working end-to-end
+  useEffect(() => {
+    const pendingSug = suggestions.find((s) => s.id === '2' && s.status === 'Pendente')
+    if (pendingSug && user?.id === 'user1') {
+      const timer = setTimeout(() => {
+        updateSuggestionStatus('2', 'Implementado')
+      }, 5000)
+      return () => clearTimeout(timer)
+    }
+  }, [suggestions, user?.id, updateSuggestionStatus])
 
   // Chapter Isolation Enforced: Only see data from the same chapter
   const chapterListings = listings.filter((l) => l.chapter === user?.chapter)
@@ -74,7 +87,6 @@ export default function DashboardPage() {
   const advanceMatch = (id: string, currentStatus: string) => {
     const idx = MATCH_STAGES.indexOf(currentStatus as any)
     if (idx < MATCH_STAGES.length - 2) {
-      // Cannot auto-advance to Fechado here
       updateMatchStatus(id, MATCH_STAGES[idx + 1])
       toast({
         title: 'Status Atualizado',

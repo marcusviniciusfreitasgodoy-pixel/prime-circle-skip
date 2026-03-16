@@ -21,6 +21,18 @@ export type User = {
   planStartedAt: string
   referralMonthsCredited: number
   suggestionMonthsCredited: number
+  suggestionsSubmitted: number
+  suggestionsImplemented: number
+  lastViewedSuggestionsAt?: string
+}
+
+export type CommunityMember = {
+  id: string
+  name: string
+  avatar: string
+  suggestionsSubmitted: number
+  suggestionsImplemented: number
+  suggestionMonthsCredited: number
 }
 
 export type Candidate = {
@@ -86,6 +98,7 @@ export type Suggestion = {
   status: 'Planejado' | 'Pendente' | 'Implementado'
   votes: number
   authorId: string
+  updatedAt: string
 }
 
 export type ExpirationInfo = {
@@ -111,6 +124,7 @@ interface AppState {
   brokerMonitoring: BrokerMonitor[]
   candidates: Candidate[]
   suggestions: Suggestion[]
+  communityMembers: CommunityMember[]
   pageViews: { path: string; timestamp: string }[]
   logs: { action: string; details: string; timestamp: string }[]
   statusLogs: {
@@ -121,6 +135,7 @@ interface AppState {
     timestamp: string
   }[]
   planExpiryNotifications: PlanExpiryNotification[]
+  notifications: { id: string; title: string; description: string }[]
   planLimitModalOpen: boolean
   setPlanLimitModalOpen: (open: boolean) => void
   login: (email: string, method: 'magic_link' | 'password', status?: UserStatus) => void
@@ -141,6 +156,8 @@ interface AppState {
   addSuggestion: (title: string, desc: string) => void
   voteSuggestion: (id: string) => void
   updateSuggestionStatus: (id: string, status: Suggestion['status']) => void
+  markSuggestionsAsViewed: () => void
+  clearNotifications: () => void
   enforceInactivity: () => void
 }
 
@@ -184,6 +201,7 @@ const initialSuggestions: Suggestion[] = [
     status: 'Planejado',
     votes: 12,
     authorId: 'other',
+    updatedAt: new Date(Date.now() - 86400000).toISOString(),
   },
   {
     id: '2',
@@ -192,6 +210,7 @@ const initialSuggestions: Suggestion[] = [
     status: 'Pendente',
     votes: 8,
     authorId: 'user1',
+    updatedAt: new Date(Date.now() - 172800000).toISOString(),
   },
   {
     id: '3',
@@ -200,6 +219,34 @@ const initialSuggestions: Suggestion[] = [
     status: 'Implementado',
     votes: 45,
     authorId: 'other',
+    updatedAt: new Date(Date.now() - 259200000).toISOString(),
+  },
+]
+
+const initialMembers: CommunityMember[] = [
+  {
+    id: 'user2',
+    name: 'Maria Silva',
+    avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=2',
+    suggestionsSubmitted: 12,
+    suggestionsImplemented: 5,
+    suggestionMonthsCredited: 5,
+  },
+  {
+    id: 'other',
+    name: 'Pedro Alves',
+    avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=3',
+    suggestionsSubmitted: 8,
+    suggestionsImplemented: 3,
+    suggestionMonthsCredited: 3,
+  },
+  {
+    id: 'user1',
+    name: 'João Corretor',
+    avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=1',
+    suggestionsSubmitted: 4,
+    suggestionsImplemented: 1,
+    suggestionMonthsCredited: 1,
   },
 ]
 
@@ -211,6 +258,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [needs, setNeeds] = useState<Need[]>(initialNeeds)
   const [matches, setMatches] = useState<Match[]>(initialMatches)
   const [suggestions, setSuggestions] = useState<Suggestion[]>(initialSuggestions)
+  const [communityMembers, setCommunityMembers] = useState<CommunityMember[]>(initialMembers)
+  const [notifications, setNotifications] = useState<
+    { id: string; title: string; description: string }[]
+  >([])
   const [brokerMonitoring] = useState<BrokerMonitor[]>([])
   const [candidates, setCandidates] = useState<Candidate[]>([
     {
@@ -239,14 +290,14 @@ export function AppProvider({ children }: { children: ReactNode }) {
     const isAdmin = status === 'admin'
 
     const userStart = new Date()
-    userStart.setMonth(userStart.getMonth() - 11) // Simulating 11 months passed for Founder trial test
+    userStart.setMonth(userStart.getMonth() - 11)
 
     setUser({
       id: isAdmin ? 'admin-1' : 'user1',
       name: isAdmin ? 'Admin Root' : 'João Corretor',
       email,
       status,
-      tier: isAdmin ? 'Ambassador' : 'Elite', // Elite to test 20% discount
+      tier: isAdmin ? 'Ambassador' : 'Elite',
       plan: isAdmin ? 'Founder' : 'Founder',
       wasFounder: true,
       chapter: 'Barra da Tijuca',
@@ -257,7 +308,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
       referrals: isAdmin ? 2 : 16,
       planStartedAt: userStart.toISOString(),
       referralMonthsCredited: 0,
-      suggestionMonthsCredited: 0,
+      suggestionMonthsCredited: 1,
+      suggestionsSubmitted: 4,
+      suggestionsImplemented: 1,
+      lastViewedSuggestionsAt: new Date(Date.now() - 86400000 * 5).toISOString(),
     })
     logEvent('Login', `User logged in via ${method}`)
   }
@@ -276,6 +330,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const trackPageView = (path: string) => {
     setPageViews((prev) => [...prev, { path, timestamp: new Date().toISOString() }])
   }
+
+  const clearNotifications = () => setNotifications([])
 
   const getExpirationInfo = (): ExpirationInfo | null => {
     if (!user || (!user.wasFounder && user.plan === 'Free')) return null
@@ -325,16 +381,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
             sentAt: new Date().toISOString(),
           },
         ])
-
-        let body = ''
-        if (type === '30_days')
-          body = `Seu periodo gratuito encerra em 30 dias. A partir de ${start.toLocaleDateString()}, sua mensalidade de R$ 97/mes sera ativada.`
-        else if (type === '7_days')
-          body = `Faltam 7 dias para o fim do seu acesso gratuito como Fundador.`
-        else if (type === 'expired')
-          body = `Seu periodo gratuito encerrou. Sua mensalidade de R$ 97/mes esta ativa a partir de hoje.`
-
-        console.log(`[EMAIL MOCK] To: ${user.email} | Type: founder_expiry_${type} | Body: ${body}`)
       }
     }
 
@@ -348,7 +394,15 @@ export function AppProvider({ children }: { children: ReactNode }) {
     } else if (daysLeft <= 30) {
       checkAndSend('30_days')
     }
-  }, [user?.id, user?.plan, user?.planStartedAt, user?.wasFounder, planExpiryNotifications])
+  }, [
+    user?.id,
+    user?.plan,
+    user?.planStartedAt,
+    user?.wasFounder,
+    planExpiryNotifications,
+    user?.suggestionMonthsCredited,
+    user?.referralMonthsCredited,
+  ])
 
   const checkPlanLimits = (type: 'listings' | 'needs' | 'matches' | 'closing') => {
     if (!user) return false
@@ -500,8 +554,24 @@ export function AppProvider({ children }: { children: ReactNode }) {
     const id = Date.now().toString()
     setSuggestions((prev) => [
       ...prev,
-      { id, title, desc, status: 'Pendente', votes: 1, authorId: user?.id || 'unknown' },
+      {
+        id,
+        title,
+        desc,
+        status: 'Pendente',
+        votes: 1,
+        authorId: user?.id || 'unknown',
+        updatedAt: new Date().toISOString(),
+      },
     ])
+    if (user) {
+      setUser((u) => (u ? { ...u, suggestionsSubmitted: (u.suggestionsSubmitted || 0) + 1 } : u))
+      setCommunityMembers((members) =>
+        members.map((m) =>
+          m.id === user.id ? { ...m, suggestionsSubmitted: m.suggestionsSubmitted + 1 } : m,
+        ),
+      )
+    }
     logEvent('Sugestão Adicionada', `Título: ${title}`)
   }
 
@@ -515,13 +585,46 @@ export function AppProvider({ children }: { children: ReactNode }) {
       if (suggestion && status === 'Implementado' && suggestion.status !== 'Implementado') {
         if (user && user.id === suggestion.authorId) {
           setUser((u) =>
-            u ? { ...u, suggestionMonthsCredited: u.suggestionMonthsCredited + 1 } : u,
+            u
+              ? {
+                  ...u,
+                  suggestionMonthsCredited: u.suggestionMonthsCredited + 1,
+                  suggestionsImplemented: (u.suggestionsImplemented || 0) + 1,
+                }
+              : u,
           )
+          setNotifications((n) => [
+            ...n,
+            {
+              id: Date.now().toString(),
+              title: '🚀 Novidades!',
+              description: `Sua sugestão '${suggestion.title}' foi marcada como Implementada. +1 mês de crédito adicionado à sua conta!`,
+            },
+          ])
         }
+        setCommunityMembers((members) =>
+          members.map((m) =>
+            m.id === suggestion.authorId
+              ? {
+                  ...m,
+                  suggestionsImplemented: m.suggestionsImplemented + 1,
+                  suggestionMonthsCredited: m.suggestionMonthsCredited + 1,
+                }
+              : m,
+          ),
+        )
       }
-      return prev.map((s) => (s.id === id ? { ...s, status } : s))
+      return prev.map((s) =>
+        s.id === id ? { ...s, status, updatedAt: new Date().toISOString() } : s,
+      )
     })
     logEvent('Sugestão Atualizada', `ID: ${id}, Novo Status: ${status}`)
+  }
+
+  const markSuggestionsAsViewed = () => {
+    setUser((prev) =>
+      prev ? { ...prev, lastViewedSuggestionsAt: new Date().toISOString() } : prev,
+    )
   }
 
   const enforceInactivity = () => {
@@ -554,10 +657,12 @@ export function AppProvider({ children }: { children: ReactNode }) {
         brokerMonitoring,
         candidates,
         suggestions,
+        communityMembers,
         pageViews,
         logs,
         statusLogs,
         planExpiryNotifications,
+        notifications,
         planLimitModalOpen,
         setPlanLimitModalOpen,
         login,
@@ -578,6 +683,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
         addSuggestion,
         voteSuggestion,
         updateSuggestionStatus,
+        markSuggestionsAsViewed,
+        clearNotifications,
         enforceInactivity,
       },
     },

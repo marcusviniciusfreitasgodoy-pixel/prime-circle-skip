@@ -19106,7 +19106,7 @@ var getDefaultConfig = () => {
 var twMerge = /* @__PURE__ */ createTailwindMerge(getDefaultConfig);
 //#endregion
 //#region src/lib/utils.ts
-function cn(...inputs) {
+function cn$1(...inputs) {
 	return twMerge(clsx(inputs));
 }
 //#endregion
@@ -19137,7 +19137,7 @@ var Button = import_react.forwardRef(({ className, variant, size, asChild = fals
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(asChild ? Slot : "button", {
 		"data-uid": "src/components/ui/button.tsx:43:7",
 		"data-prohibitions": "[editContent]",
-		className: cn(buttonVariants({
+		className: cn$1(buttonVariants({
 			variant,
 			size,
 			className
@@ -20239,7 +20239,7 @@ function Badge({ className, variant, ...props }) {
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 		"data-uid": "src/components/ui/badge.tsx:29:10",
 		"data-prohibitions": "[editContent]",
-		className: cn(badgeVariants({ variant }), className),
+		className: cn$1(badgeVariants({ variant }), className),
 		...props
 	});
 }
@@ -20431,7 +20431,8 @@ var initialSuggestions = [
 		desc: "Seria ótimo poder filtrar demandas pelo nome do condomínio.",
 		status: "Planejado",
 		votes: 12,
-		authorId: "other"
+		authorId: "other",
+		updatedAt: (/* @__PURE__ */ new Date(Date.now() - 864e5)).toISOString()
 	},
 	{
 		id: "2",
@@ -20439,7 +20440,8 @@ var initialSuggestions = [
 		desc: "Conectar com RD Station para puxar os leads automaticamente.",
 		status: "Pendente",
 		votes: 8,
-		authorId: "user1"
+		authorId: "user1",
+		updatedAt: (/* @__PURE__ */ new Date(Date.now() - 1728e5)).toISOString()
 	},
 	{
 		id: "3",
@@ -20447,7 +20449,34 @@ var initialSuggestions = [
 		desc: "Comunicação direta sem precisar ir pro WhatsApp.",
 		status: "Implementado",
 		votes: 45,
-		authorId: "other"
+		authorId: "other",
+		updatedAt: (/* @__PURE__ */ new Date(Date.now() - 2592e5)).toISOString()
+	}
+];
+var initialMembers = [
+	{
+		id: "user2",
+		name: "Maria Silva",
+		avatar: "https://img.usecurling.com/ppl/thumbnail?gender=female&seed=2",
+		suggestionsSubmitted: 12,
+		suggestionsImplemented: 5,
+		suggestionMonthsCredited: 5
+	},
+	{
+		id: "other",
+		name: "Pedro Alves",
+		avatar: "https://img.usecurling.com/ppl/thumbnail?gender=male&seed=3",
+		suggestionsSubmitted: 8,
+		suggestionsImplemented: 3,
+		suggestionMonthsCredited: 3
+	},
+	{
+		id: "user1",
+		name: "João Corretor",
+		avatar: "https://img.usecurling.com/ppl/thumbnail?gender=male&seed=1",
+		suggestionsSubmitted: 4,
+		suggestionsImplemented: 1,
+		suggestionMonthsCredited: 1
 	}
 ];
 var AppContext = (0, import_react.createContext)(null);
@@ -20457,6 +20486,8 @@ function AppProvider({ children }) {
 	const [needs, setNeeds] = (0, import_react.useState)(initialNeeds);
 	const [matches, setMatches] = (0, import_react.useState)(initialMatches);
 	const [suggestions, setSuggestions] = (0, import_react.useState)(initialSuggestions);
+	const [communityMembers, setCommunityMembers] = (0, import_react.useState)(initialMembers);
+	const [notifications, setNotifications] = (0, import_react.useState)([]);
 	const [brokerMonitoring] = (0, import_react.useState)([]);
 	const [candidates, setCandidates] = (0, import_react.useState)([{
 		id: "c1",
@@ -20494,7 +20525,10 @@ function AppProvider({ children }) {
 			referrals: isAdmin ? 2 : 16,
 			planStartedAt: userStart.toISOString(),
 			referralMonthsCredited: 0,
-			suggestionMonthsCredited: 0
+			suggestionMonthsCredited: 1,
+			suggestionsSubmitted: 4,
+			suggestionsImplemented: 1,
+			lastViewedSuggestionsAt: (/* @__PURE__ */ new Date(Date.now() - 864e5 * 5)).toISOString()
 		});
 		logEvent("Login", `User logged in via ${method}`);
 	};
@@ -20519,6 +20553,7 @@ function AppProvider({ children }) {
 			timestamp: (/* @__PURE__ */ new Date()).toISOString()
 		}]);
 	};
+	const clearNotifications = () => setNotifications([]);
 	const getExpirationInfo = () => {
 		if (!user || !user.wasFounder && user.plan === "Free") return null;
 		const start = new Date(user.planStartedAt || /* @__PURE__ */ new Date());
@@ -20547,19 +20582,12 @@ function AppProvider({ children }) {
 		const daysLeft = Math.ceil(diffTime / (1e3 * 60 * 60 * 24));
 		const isExpired = daysLeft <= 0;
 		const checkAndSend = (type) => {
-			if (!planExpiryNotifications.some((n) => n.userId === user.id && n.notificationType === type)) {
-				setPlanExpiryNotifications((prev) => [...prev, {
-					id: Date.now().toString(),
-					userId: user.id,
-					notificationType: type,
-					sentAt: (/* @__PURE__ */ new Date()).toISOString()
-				}]);
-				let body = "";
-				if (type === "30_days") body = `Seu periodo gratuito encerra em 30 dias. A partir de ${start.toLocaleDateString()}, sua mensalidade de R$ 97/mes sera ativada.`;
-				else if (type === "7_days") body = `Faltam 7 dias para o fim do seu acesso gratuito como Fundador.`;
-				else if (type === "expired") body = `Seu periodo gratuito encerrou. Sua mensalidade de R$ 97/mes esta ativa a partir de hoje.`;
-				console.log(`[EMAIL MOCK] To: ${user.email} | Type: founder_expiry_${type} | Body: ${body}`);
-			}
+			if (!planExpiryNotifications.some((n) => n.userId === user.id && n.notificationType === type)) setPlanExpiryNotifications((prev) => [...prev, {
+				id: Date.now().toString(),
+				userId: user.id,
+				notificationType: type,
+				sentAt: (/* @__PURE__ */ new Date()).toISOString()
+			}]);
 		};
 		if (isExpired) {
 			checkAndSend("expired");
@@ -20574,7 +20602,9 @@ function AppProvider({ children }) {
 		user?.plan,
 		user?.planStartedAt,
 		user?.wasFounder,
-		planExpiryNotifications
+		planExpiryNotifications,
+		user?.suggestionMonthsCredited,
+		user?.referralMonthsCredited
 	]);
 	const checkPlanLimits = (type) => {
 		if (!user) return false;
@@ -20707,8 +20737,19 @@ function AppProvider({ children }) {
 			desc,
 			status: "Pendente",
 			votes: 1,
-			authorId: user?.id || "unknown"
+			authorId: user?.id || "unknown",
+			updatedAt: (/* @__PURE__ */ new Date()).toISOString()
 		}]);
+		if (user) {
+			setUser((u) => u ? {
+				...u,
+				suggestionsSubmitted: (u.suggestionsSubmitted || 0) + 1
+			} : u);
+			setCommunityMembers((members) => members.map((m) => m.id === user.id ? {
+				...m,
+				suggestionsSubmitted: m.suggestionsSubmitted + 1
+			} : m));
+		}
 		logEvent("Sugestão Adicionada", `Título: ${title}`);
 	};
 	const voteSuggestion = (id) => {
@@ -20721,17 +20762,37 @@ function AppProvider({ children }) {
 		setSuggestions((prev) => {
 			const suggestion = prev.find((s) => s.id === id);
 			if (suggestion && status === "Implementado" && suggestion.status !== "Implementado") {
-				if (user && user.id === suggestion.authorId) setUser((u) => u ? {
-					...u,
-					suggestionMonthsCredited: u.suggestionMonthsCredited + 1
-				} : u);
+				if (user && user.id === suggestion.authorId) {
+					setUser((u) => u ? {
+						...u,
+						suggestionMonthsCredited: u.suggestionMonthsCredited + 1,
+						suggestionsImplemented: (u.suggestionsImplemented || 0) + 1
+					} : u);
+					setNotifications((n) => [...n, {
+						id: Date.now().toString(),
+						title: "🚀 Novidades!",
+						description: `Sua sugestão '${suggestion.title}' foi marcada como Implementada. +1 mês de crédito adicionado à sua conta!`
+					}]);
+				}
+				setCommunityMembers((members) => members.map((m) => m.id === suggestion.authorId ? {
+					...m,
+					suggestionsImplemented: m.suggestionsImplemented + 1,
+					suggestionMonthsCredited: m.suggestionMonthsCredited + 1
+				} : m));
 			}
 			return prev.map((s) => s.id === id ? {
 				...s,
-				status
+				status,
+				updatedAt: (/* @__PURE__ */ new Date()).toISOString()
 			} : s);
 		});
 		logEvent("Sugestão Atualizada", `ID: ${id}, Novo Status: ${status}`);
+	};
+	const markSuggestionsAsViewed = () => {
+		setUser((prev) => prev ? {
+			...prev,
+			lastViewedSuggestionsAt: (/* @__PURE__ */ new Date()).toISOString()
+		} : prev);
 	};
 	const enforceInactivity = () => {
 		setUser((prev) => {
@@ -20759,10 +20820,12 @@ function AppProvider({ children }) {
 		brokerMonitoring,
 		candidates,
 		suggestions,
+		communityMembers,
 		pageViews,
 		logs,
 		statusLogs,
 		planExpiryNotifications,
+		notifications,
 		planLimitModalOpen,
 		setPlanLimitModalOpen,
 		login,
@@ -20783,6 +20846,8 @@ function AppProvider({ children }) {
 		addSuggestion,
 		voteSuggestion,
 		updateSuggestionStatus,
+		markSuggestionsAsViewed,
+		clearNotifications,
 		enforceInactivity
 	} }, children);
 }
@@ -26593,7 +26658,7 @@ var Label = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE
 	"data-uid": "src/components/ui/label.tsx:15:3",
 	"data-prohibitions": "[editContent]",
 	ref,
-	className: cn(labelVariants(), className),
+	className: cn$1(labelVariants(), className),
 	...props
 }));
 Label.displayName = Root$6.displayName;
@@ -26640,7 +26705,7 @@ var FormItem = import_react.forwardRef(({ className, ...props }, ref) => {
 			"data-uid": "src/components/ui/form.tsx:76:9",
 			"data-prohibitions": "[editContent]",
 			ref,
-			className: cn("space-y-2", className),
+			className: cn$1("space-y-2", className),
 			...props
 		})
 	});
@@ -26652,7 +26717,7 @@ var FormLabel = import_react.forwardRef(({ className, ...props }, ref) => {
 		"data-uid": "src/components/ui/form.tsx:90:5",
 		"data-prohibitions": "[editContent]",
 		ref,
-		className: cn(error && "text-destructive", className),
+		className: cn$1(error && "text-destructive", className),
 		htmlFor: formItemId,
 		...props
 	});
@@ -26678,7 +26743,7 @@ var FormDescription = import_react.forwardRef(({ className, ...props }, ref) => 
 		"data-prohibitions": "[editContent]",
 		ref,
 		id: formDescriptionId,
-		className: cn("text-sm text-muted-foreground", className),
+		className: cn$1("text-sm text-muted-foreground", className),
 		...props
 	});
 });
@@ -26692,7 +26757,7 @@ var FormMessage = import_react.forwardRef(({ className, children, ...props }, re
 		"data-prohibitions": "[editContent]",
 		ref,
 		id: formMessageId,
-		className: cn("text-sm font-medium text-destructive", className),
+		className: cn$1("text-sm font-medium text-destructive", className),
 		...props,
 		children: body
 	});
@@ -26705,7 +26770,7 @@ var Input = import_react.forwardRef(({ className, type, ...props }, ref) => {
 		"data-uid": "src/components/ui/input.tsx:8:7",
 		"data-prohibitions": "[editContent]",
 		type,
-		className: cn("flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm", className),
+		className: cn$1("flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm", className),
 		ref,
 		...props
 	});
@@ -27302,12 +27367,12 @@ var Checkbox = import_react.forwardRef(({ className, ...props }, ref) => /* @__P
 	"data-uid": "src/components/ui/checkbox.tsx:11:3",
 	"data-prohibitions": "[editContent]",
 	ref,
-	className: cn("peer h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground", className),
+	className: cn$1("peer h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground", className),
 	...props,
 	children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CheckboxIndicator, {
 		"data-uid": "src/components/ui/checkbox.tsx:19:5",
 		"data-prohibitions": "[editContent]",
-		className: cn("flex items-center justify-center text-current"),
+		className: cn$1("flex items-center justify-center text-current"),
 		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Check, {
 			"data-uid": "src/components/ui/checkbox.tsx:20:7",
 			"data-prohibitions": "[editContent]",
@@ -28012,7 +28077,7 @@ var Card = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE_
 	"data-uid": "src/components/ui/card.tsx:8:5",
 	"data-prohibitions": "[editContent]",
 	ref,
-	className: cn("rounded-lg border bg-card text-card-foreground shadow-sm", className),
+	className: cn$1("rounded-lg border bg-card text-card-foreground shadow-sm", className),
 	...props
 }));
 Card.displayName = "Card";
@@ -28020,7 +28085,7 @@ var CardHeader = import_react.forwardRef(({ className, ...props }, ref) => /* @_
 	"data-uid": "src/components/ui/card.tsx:19:5",
 	"data-prohibitions": "[editContent]",
 	ref,
-	className: cn("flex flex-col space-y-1.5 p-6", className),
+	className: cn$1("flex flex-col space-y-1.5 p-6", className),
 	...props
 }));
 CardHeader.displayName = "CardHeader";
@@ -28028,7 +28093,7 @@ var CardTitle = import_react.forwardRef(({ className, ...props }, ref) => /* @__
 	"data-uid": "src/components/ui/card.tsx:26:5",
 	"data-prohibitions": "[editContent]",
 	ref,
-	className: cn("text-2xl font-semibold leading-none tracking-tight", className),
+	className: cn$1("text-2xl font-semibold leading-none tracking-tight", className),
 	...props
 }));
 CardTitle.displayName = "CardTitle";
@@ -28036,7 +28101,7 @@ var CardDescription = import_react.forwardRef(({ className, ...props }, ref) => 
 	"data-uid": "src/components/ui/card.tsx:37:5",
 	"data-prohibitions": "[editContent]",
 	ref,
-	className: cn("text-sm text-muted-foreground", className),
+	className: cn$1("text-sm text-muted-foreground", className),
 	...props
 }));
 CardDescription.displayName = "CardDescription";
@@ -28044,7 +28109,7 @@ var CardContent = import_react.forwardRef(({ className, ...props }, ref) => /* @
 	"data-uid": "src/components/ui/card.tsx:44:5",
 	"data-prohibitions": "[editContent]",
 	ref,
-	className: cn("p-6 pt-0", className),
+	className: cn$1("p-6 pt-0", className),
 	...props
 }));
 CardContent.displayName = "CardContent";
@@ -28052,7 +28117,7 @@ var CardFooter = import_react.forwardRef(({ className, ...props }, ref) => /* @_
 	"data-uid": "src/components/ui/card.tsx:51:5",
 	"data-prohibitions": "[editContent]",
 	ref,
-	className: cn("flex items-center p-6 pt-0", className),
+	className: cn$1("flex items-center p-6 pt-0", className),
 	...props
 }));
 CardFooter.displayName = "CardFooter";
@@ -28070,7 +28135,7 @@ var Alert = import_react.forwardRef(({ className, variant, ...props }, ref) => /
 	"data-prohibitions": "[editContent]",
 	ref,
 	role: "alert",
-	className: cn(alertVariants({ variant }), className),
+	className: cn$1(alertVariants({ variant }), className),
 	...props
 }));
 Alert.displayName = "Alert";
@@ -28078,7 +28143,7 @@ var AlertTitle = import_react.forwardRef(({ className, ...props }, ref) => /* @_
 	"data-uid": "src/components/ui/alert.tsx:33:5",
 	"data-prohibitions": "[editContent]",
 	ref,
-	className: cn("mb-1 font-medium leading-none tracking-tight", className),
+	className: cn$1("mb-1 font-medium leading-none tracking-tight", className),
 	...props
 }));
 AlertTitle.displayName = "AlertTitle";
@@ -28086,7 +28151,7 @@ var AlertDescription = import_react.forwardRef(({ className, ...props }, ref) =>
 	"data-uid": "src/components/ui/alert.tsx:46:3",
 	"data-prohibitions": "[editContent]",
 	ref,
-	className: cn("text-sm [&_p]:leading-relaxed", className),
+	className: cn$1("text-sm [&_p]:leading-relaxed", className),
 	...props
 }));
 AlertDescription.displayName = "AlertDescription";
@@ -28234,7 +28299,7 @@ var Progress = import_react.forwardRef(({ className, value, ...props }, ref) => 
 	"data-uid": "src/components/ui/progress.tsx:11:3",
 	"data-prohibitions": "[editContent]",
 	ref,
-	className: cn("relative h-4 w-full overflow-hidden rounded-full bg-secondary", className),
+	className: cn$1("relative h-4 w-full overflow-hidden rounded-full bg-secondary", className),
 	...props,
 	children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Indicator, {
 		"data-uid": "src/components/ui/progress.tsx:16:5",
@@ -28638,9 +28703,21 @@ function useToast() {
 //#endregion
 //#region src/pages/DashboardPage.tsx
 function DashboardPage() {
-	const { user, listings, needs, matches, updateMatchStatus } = useAppStore();
+	const { user, listings, needs, matches, updateMatchStatus, suggestions, updateSuggestionStatus } = useAppStore();
 	const { toast } = useToast();
 	const navigate = useNavigate();
+	(0, import_react.useEffect)(() => {
+		if (suggestions.find((s) => s.id === "2" && s.status === "Pendente") && user?.id === "user1") {
+			const timer = setTimeout(() => {
+				updateSuggestionStatus("2", "Implementado");
+			}, 5e3);
+			return () => clearTimeout(timer);
+		}
+	}, [
+		suggestions,
+		user?.id,
+		updateSuggestionStatus
+	]);
 	const chapterListings = listings.filter((l) => l.chapter === user?.chapter);
 	const chapterNeeds = needs.filter((n) => n.chapter === user?.chapter);
 	const myListings = chapterListings.filter((l) => l.ownerId === user?.id).length;
@@ -28697,26 +28774,26 @@ function DashboardPage() {
 		} else if (idx === MATCH_STAGES.length - 2) navigate(`/matches/${id}/close`);
 	};
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-		"data-uid": "src/pages/DashboardPage.tsx:89:5",
+		"data-uid": "src/pages/DashboardPage.tsx:101:5",
 		"data-prohibitions": "[editContent]",
 		className: "space-y-8 animate-fade-in-up",
 		children: [
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FounderExpiryBanner, {
-				"data-uid": "src/pages/DashboardPage.tsx:90:7",
+				"data-uid": "src/pages/DashboardPage.tsx:102:7",
 				"data-prohibitions": "[editContent]"
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Alert, {
-				"data-uid": "src/pages/DashboardPage.tsx:92:7",
+				"data-uid": "src/pages/DashboardPage.tsx:104:7",
 				"data-prohibitions": "[editContent]",
 				className: "bg-card border-primary/20 text-foreground shadow-[0_0_15px_rgba(201,168,76,0.1)]",
 				children: [
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CircleAlert, {
-						"data-uid": "src/pages/DashboardPage.tsx:93:9",
+						"data-uid": "src/pages/DashboardPage.tsx:105:9",
 						"data-prohibitions": "[editContent]",
 						className: "h-5 w-5 text-primary"
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(AlertTitle, {
-						"data-uid": "src/pages/DashboardPage.tsx:94:9",
+						"data-uid": "src/pages/DashboardPage.tsx:106:9",
 						"data-prohibitions": "[editContent]",
 						className: "text-primary font-semibold ml-2",
 						children: [
@@ -28726,11 +28803,11 @@ function DashboardPage() {
 						]
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(AlertDescription, {
-						"data-uid": "src/pages/DashboardPage.tsx:97:9",
+						"data-uid": "src/pages/DashboardPage.tsx:109:9",
 						"data-prohibitions": "[]",
 						className: "text-muted-foreground mt-2 ml-2 leading-relaxed",
 						children: ["Seu acesso e status de Embaixador dependem de atividade constante na plataforma. A inatividade superior a 30 dias gerará avisos, podendo resultar em suspensão do plano.", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", {
-							"data-uid": "src/pages/DashboardPage.tsx:100:11",
+							"data-uid": "src/pages/DashboardPage.tsx:112:11",
 							"data-prohibitions": "[]",
 							className: "text-foreground block mt-1 font-medium",
 							children: "Lembre-se: Prática obrigatória de 50/50 em todas as conexões."
@@ -28739,26 +28816,26 @@ function DashboardPage() {
 				]
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-				"data-uid": "src/pages/DashboardPage.tsx:106:7",
+				"data-uid": "src/pages/DashboardPage.tsx:118:7",
 				"data-prohibitions": "[editContent]",
 				className: "flex flex-col md:flex-row gap-6 md:items-center justify-between",
 				children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					"data-uid": "src/pages/DashboardPage.tsx:107:9",
+					"data-uid": "src/pages/DashboardPage.tsx:119:9",
 					"data-prohibitions": "[editContent]",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h2", {
-						"data-uid": "src/pages/DashboardPage.tsx:108:11",
+						"data-uid": "src/pages/DashboardPage.tsx:120:11",
 						"data-prohibitions": "[editContent]",
 						className: "text-3xl font-bold tracking-tight text-white",
 						children: ["Dashboard, ", user?.name?.split(" ")[0]]
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
-						"data-uid": "src/pages/DashboardPage.tsx:111:11",
+						"data-uid": "src/pages/DashboardPage.tsx:123:11",
 						"data-prohibitions": "[editContent]",
 						className: "text-muted-foreground mt-2",
 						children: [
 							"Plano atual:",
 							" ",
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Badge, {
-								"data-uid": "src/pages/DashboardPage.tsx:113:13",
+								"data-uid": "src/pages/DashboardPage.tsx:125:13",
 								"data-prohibitions": "[editContent]",
 								variant: "outline",
 								className: "border-primary/50 text-primary",
@@ -28769,63 +28846,63 @@ function DashboardPage() {
 				})
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				"data-uid": "src/pages/DashboardPage.tsx:120:7",
+				"data-uid": "src/pages/DashboardPage.tsx:132:7",
 				"data-prohibitions": "[editContent]",
 				className: "grid gap-6 md:grid-cols-3",
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					"data-uid": "src/pages/DashboardPage.tsx:121:9",
+					"data-uid": "src/pages/DashboardPage.tsx:133:9",
 					"data-prohibitions": "[editContent]",
 					className: "md:col-span-2 space-y-6",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
-						"data-uid": "src/pages/DashboardPage.tsx:122:11",
+						"data-uid": "src/pages/DashboardPage.tsx:134:11",
 						"data-prohibitions": "[]",
 						className: "bg-card border-primary/30 shadow-[0_0_30px_rgba(201,168,76,0.1)] relative overflow-hidden",
 						children: [
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-								"data-uid": "src/pages/DashboardPage.tsx:123:13",
+								"data-uid": "src/pages/DashboardPage.tsx:135:13",
 								"data-prohibitions": "[editContent]",
 								className: "absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-[80px] pointer-events-none"
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardHeader, {
-								"data-uid": "src/pages/DashboardPage.tsx:124:13",
+								"data-uid": "src/pages/DashboardPage.tsx:136:13",
 								"data-prohibitions": "[]",
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardTitle, {
-									"data-uid": "src/pages/DashboardPage.tsx:125:15",
+									"data-uid": "src/pages/DashboardPage.tsx:137:15",
 									"data-prohibitions": "[]",
 									className: "text-2xl text-primary flex items-center gap-2",
 									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Crown, {
-										"data-uid": "src/pages/DashboardPage.tsx:126:17",
+										"data-uid": "src/pages/DashboardPage.tsx:138:17",
 										"data-prohibitions": "[editContent]",
 										className: "w-6 h-6"
 									}), " Indique Parceiros"]
 								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardDescription, {
-									"data-uid": "src/pages/DashboardPage.tsx:128:15",
+									"data-uid": "src/pages/DashboardPage.tsx:140:15",
 									"data-prohibitions": "[]",
 									className: "text-base text-muted-foreground max-w-2xl",
 									children: "Convide corretores alinhados à política 50/50 e receba meses grátis. Parceiros com seu código têm prioridade na análise."
 								})]
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardContent, {
-								"data-uid": "src/pages/DashboardPage.tsx:133:13",
+								"data-uid": "src/pages/DashboardPage.tsx:145:13",
 								"data-prohibitions": "[]",
 								children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-									"data-uid": "src/pages/DashboardPage.tsx:134:15",
+									"data-uid": "src/pages/DashboardPage.tsx:146:15",
 									"data-prohibitions": "[]",
 									className: "flex flex-col sm:flex-row gap-3 mt-2 relative z-10",
 									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
-										"data-uid": "src/pages/DashboardPage.tsx:135:17",
+										"data-uid": "src/pages/DashboardPage.tsx:147:17",
 										"data-prohibitions": "[editContent]",
 										readOnly: true,
 										value: referralLink,
 										className: "bg-background/80 border-primary/20 text-muted-foreground font-mono h-12 flex-1 focus-visible:ring-primary"
 									}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
-										"data-uid": "src/pages/DashboardPage.tsx:140:17",
+										"data-uid": "src/pages/DashboardPage.tsx:152:17",
 										"data-prohibitions": "[]",
 										onClick: copyLink,
 										size: "lg",
 										className: "gold-gradient text-black font-semibold h-12 shadow-[0_0_15px_rgba(201,168,76,0.2)]",
 										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Copy, {
-											"data-uid": "src/pages/DashboardPage.tsx:145:19",
+											"data-uid": "src/pages/DashboardPage.tsx:157:19",
 											"data-prohibitions": "[editContent]",
 											className: "w-4 h-4 mr-2"
 										}), " Copiar Link"]
@@ -28834,37 +28911,37 @@ function DashboardPage() {
 							})
 						]
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-						"data-uid": "src/pages/DashboardPage.tsx:151:11",
+						"data-uid": "src/pages/DashboardPage.tsx:163:11",
 						"data-prohibitions": "[editContent]",
 						className: "grid gap-4 sm:grid-cols-2",
 						children: stats.map((stat, i) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
-							"data-uid": "src/pages/DashboardPage.tsx:153:15",
+							"data-uid": "src/pages/DashboardPage.tsx:165:15",
 							"data-prohibitions": "[editContent]",
 							className: "bg-card border-border",
 							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardHeader, {
-								"data-uid": "src/pages/DashboardPage.tsx:154:17",
+								"data-uid": "src/pages/DashboardPage.tsx:166:17",
 								"data-prohibitions": "[editContent]",
 								className: "flex flex-row items-center justify-between pb-2 space-y-0",
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardTitle, {
-									"data-uid": "src/pages/DashboardPage.tsx:155:19",
+									"data-uid": "src/pages/DashboardPage.tsx:167:19",
 									"data-prohibitions": "[editContent]",
 									className: "text-sm font-medium text-muted-foreground",
 									children: stat.title
 								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(stat.icon, {
-									"data-uid": "src/pages/DashboardPage.tsx:158:19",
+									"data-uid": "src/pages/DashboardPage.tsx:170:19",
 									"data-prohibitions": "[editContent]",
 									className: "w-4 h-4 text-primary"
 								})]
 							}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardContent, {
-								"data-uid": "src/pages/DashboardPage.tsx:160:17",
+								"data-uid": "src/pages/DashboardPage.tsx:172:17",
 								"data-prohibitions": "[editContent]",
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-									"data-uid": "src/pages/DashboardPage.tsx:161:19",
+									"data-uid": "src/pages/DashboardPage.tsx:173:19",
 									"data-prohibitions": "[editContent]",
 									className: "text-2xl font-bold text-white",
 									children: stat.value
 								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-									"data-uid": "src/pages/DashboardPage.tsx:162:19",
+									"data-uid": "src/pages/DashboardPage.tsx:174:19",
 									"data-prohibitions": "[editContent]",
 									className: "text-xs text-muted-foreground mt-1",
 									children: stat.trend
@@ -28873,11 +28950,11 @@ function DashboardPage() {
 						}, i))
 					})]
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-					"data-uid": "src/pages/DashboardPage.tsx:169:9",
+					"data-uid": "src/pages/DashboardPage.tsx:181:9",
 					"data-prohibitions": "[]",
 					className: "md:col-span-1",
 					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(AmbassadorWidget, {
-						"data-uid": "src/pages/DashboardPage.tsx:170:11",
+						"data-uid": "src/pages/DashboardPage.tsx:182:11",
 						"data-prohibitions": "[editContent]",
 						tier: user?.tier || "None",
 						referrals: user?.referrals
@@ -28885,27 +28962,27 @@ function DashboardPage() {
 				})]
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
-				"data-uid": "src/pages/DashboardPage.tsx:174:7",
+				"data-uid": "src/pages/DashboardPage.tsx:186:7",
 				"data-prohibitions": "[editContent]",
 				className: "bg-card border-border",
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardHeader, {
-					"data-uid": "src/pages/DashboardPage.tsx:175:9",
+					"data-uid": "src/pages/DashboardPage.tsx:187:9",
 					"data-prohibitions": "[]",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardTitle, {
-						"data-uid": "src/pages/DashboardPage.tsx:176:11",
+						"data-uid": "src/pages/DashboardPage.tsx:188:11",
 						"data-prohibitions": "[]",
 						className: "text-lg text-white",
 						children: "Pipeline de Conexões (Matches)"
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardDescription, {
-						"data-uid": "src/pages/DashboardPage.tsx:177:11",
+						"data-uid": "src/pages/DashboardPage.tsx:189:11",
 						"data-prohibitions": "[]",
 						children: "Fluxo de validação obrigatório até o fechamento."
 					})]
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardContent, {
-					"data-uid": "src/pages/DashboardPage.tsx:179:9",
+					"data-uid": "src/pages/DashboardPage.tsx:191:9",
 					"data-prohibitions": "[editContent]",
 					children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-						"data-uid": "src/pages/DashboardPage.tsx:180:11",
+						"data-uid": "src/pages/DashboardPage.tsx:192:11",
 						"data-prohibitions": "[editContent]",
 						className: "space-y-6",
 						children: [matches.map((match) => {
@@ -28913,26 +28990,26 @@ function DashboardPage() {
 							const listing = listings.find((l) => l.id === match.listingId);
 							const currentIdx = MATCH_STAGES.indexOf(match.status);
 							return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								"data-uid": "src/pages/DashboardPage.tsx:187:17",
+								"data-uid": "src/pages/DashboardPage.tsx:199:17",
 								"data-prohibitions": "[editContent]",
 								className: "p-4 bg-background rounded-lg border border-border",
 								children: [
 									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-										"data-uid": "src/pages/DashboardPage.tsx:188:19",
+										"data-uid": "src/pages/DashboardPage.tsx:200:19",
 										"data-prohibitions": "[editContent]",
 										className: "flex justify-between items-start mb-4",
 										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-											"data-uid": "src/pages/DashboardPage.tsx:189:21",
+											"data-uid": "src/pages/DashboardPage.tsx:201:21",
 											"data-prohibitions": "[editContent]",
 											children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
-												"data-uid": "src/pages/DashboardPage.tsx:190:23",
+												"data-uid": "src/pages/DashboardPage.tsx:202:23",
 												"data-prohibitions": "[editContent]",
 												className: "text-white font-medium",
 												children: [
 													need?.title,
 													" ",
 													/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-														"data-uid": "src/pages/DashboardPage.tsx:191:39",
+														"data-uid": "src/pages/DashboardPage.tsx:203:39",
 														"data-prohibitions": "[]",
 														className: "text-muted-foreground mx-2",
 														children: "↔"
@@ -28941,13 +29018,13 @@ function DashboardPage() {
 													listing?.title
 												]
 											}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
-												"data-uid": "src/pages/DashboardPage.tsx:194:23",
+												"data-uid": "src/pages/DashboardPage.tsx:206:23",
 												"data-prohibitions": "[editContent]",
 												className: "text-xs text-muted-foreground mt-1",
 												children: ["Conexão ID: ", match.id]
 											})]
 										}), match.status !== "Fechado" ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
-											"data-uid": "src/pages/DashboardPage.tsx:197:23",
+											"data-uid": "src/pages/DashboardPage.tsx:209:23",
 											"data-prohibitions": "[editContent]",
 											size: "sm",
 											variant: "outline",
@@ -28957,44 +29034,44 @@ function DashboardPage() {
 												match.status === "Proposta" ? "Registrar Fechamento" : "Avançar Status",
 												" ",
 												/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ChevronRight, {
-													"data-uid": "src/pages/DashboardPage.tsx:204:25",
+													"data-uid": "src/pages/DashboardPage.tsx:216:25",
 													"data-prohibitions": "[editContent]",
 													className: "w-4 h-4 ml-1"
 												})
 											]
 										}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Badge, {
-											"data-uid": "src/pages/DashboardPage.tsx:207:23",
+											"data-uid": "src/pages/DashboardPage.tsx:219:23",
 											"data-prohibitions": "[]",
 											className: "bg-green-500/20 text-green-500 border-none hover:bg-green-500/30",
 											children: "Fechamento Validado"
 										})]
 									}),
 									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-										"data-uid": "src/pages/DashboardPage.tsx:213:19",
+										"data-uid": "src/pages/DashboardPage.tsx:225:19",
 										"data-prohibitions": "[editContent]",
 										className: "flex items-center w-full justify-between mt-6 relative",
 										children: [
 											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-												"data-uid": "src/pages/DashboardPage.tsx:214:21",
+												"data-uid": "src/pages/DashboardPage.tsx:226:21",
 												"data-prohibitions": "[editContent]",
 												className: "absolute top-1/2 left-0 w-full h-0.5 bg-secondary -translate-y-1/2 z-0"
 											}),
 											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-												"data-uid": "src/pages/DashboardPage.tsx:215:21",
+												"data-uid": "src/pages/DashboardPage.tsx:227:21",
 												"data-prohibitions": "[editContent]",
 												className: "absolute top-1/2 left-0 h-0.5 bg-primary -translate-y-1/2 z-0 transition-all duration-500",
 												style: { width: `${currentIdx / (MATCH_STAGES.length - 1) * 100}%` }
 											}),
 											MATCH_STAGES.map((stage, i) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-												"data-uid": "src/pages/DashboardPage.tsx:221:23",
+												"data-uid": "src/pages/DashboardPage.tsx:233:23",
 												"data-prohibitions": "[editContent]",
 												className: "relative z-10 flex flex-col items-center gap-2",
 												children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-													"data-uid": "src/pages/DashboardPage.tsx:222:25",
+													"data-uid": "src/pages/DashboardPage.tsx:234:25",
 													"data-prohibitions": "[editContent]",
 													className: `w-4 h-4 rounded-full border-2 transition-colors ${i <= currentIdx ? "bg-primary border-primary" : "bg-background border-border"} ${i === currentIdx ? "shadow-[0_0_10px_rgba(201,168,76,0.5)] scale-125" : ""}`
 												}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-													"data-uid": "src/pages/DashboardPage.tsx:225:25",
+													"data-uid": "src/pages/DashboardPage.tsx:237:25",
 													"data-prohibitions": "[editContent]",
 													className: `text-[10px] uppercase font-bold tracking-wider absolute top-6 whitespace-nowrap ${i <= currentIdx ? "text-white" : "text-muted-foreground"}`,
 													children: stage
@@ -29003,7 +29080,7 @@ function DashboardPage() {
 										]
 									}),
 									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-										"data-uid": "src/pages/DashboardPage.tsx:233:19",
+										"data-uid": "src/pages/DashboardPage.tsx:245:19",
 										"data-prohibitions": "[editContent]",
 										className: "h-4"
 									}),
@@ -29011,7 +29088,7 @@ function DashboardPage() {
 								]
 							}, match.id);
 						}), matches.length === 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-							"data-uid": "src/pages/DashboardPage.tsx:238:15",
+							"data-uid": "src/pages/DashboardPage.tsx:250:15",
 							"data-prohibitions": "[]",
 							className: "text-sm text-muted-foreground text-center py-4",
 							children: "Nenhuma conexão ativa no momento."
@@ -29446,7 +29523,7 @@ var TabsList = import_react.forwardRef(({ className, ...props }, ref) => /* @__P
 	"data-uid": "src/components/ui/tabs.tsx:13:3",
 	"data-prohibitions": "[editContent]",
 	ref,
-	className: cn("inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground", className),
+	className: cn$1("inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground", className),
 	...props
 }));
 TabsList.displayName = List.displayName;
@@ -29454,7 +29531,7 @@ var TabsTrigger = import_react.forwardRef(({ className, ...props }, ref) => /* @
 	"data-uid": "src/components/ui/tabs.tsx:28:3",
 	"data-prohibitions": "[editContent]",
 	ref,
-	className: cn("inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm", className),
+	className: cn$1("inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm", className),
 	...props
 }));
 TabsTrigger.displayName = Trigger$1.displayName;
@@ -29462,7 +29539,7 @@ var TabsContent = import_react.forwardRef(({ className, ...props }, ref) => /* @
 	"data-uid": "src/components/ui/tabs.tsx:43:3",
 	"data-prohibitions": "[editContent]",
 	ref,
-	className: cn("mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2", className),
+	className: cn$1("mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2", className),
 	...props
 }));
 TabsContent.displayName = Content$1.displayName;
@@ -29646,7 +29723,7 @@ var Avatar = import_react.forwardRef(({ className, ...props }, ref) => /* @__PUR
 	"data-uid": "src/components/ui/avatar.tsx:11:3",
 	"data-prohibitions": "[editContent]",
 	ref,
-	className: cn("relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full", className),
+	className: cn$1("relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full", className),
 	...props
 }));
 Avatar.displayName = Root$3.displayName;
@@ -29654,7 +29731,7 @@ var AvatarImage = import_react.forwardRef(({ className, ...props }, ref) => /* @
 	"data-uid": "src/components/ui/avatar.tsx:23:3",
 	"data-prohibitions": "[editContent]",
 	ref,
-	className: cn("aspect-square h-full w-full", className),
+	className: cn$1("aspect-square h-full w-full", className),
 	...props
 }));
 AvatarImage.displayName = Image.displayName;
@@ -29662,7 +29739,7 @@ var AvatarFallback = import_react.forwardRef(({ className, ...props }, ref) => /
 	"data-uid": "src/components/ui/avatar.tsx:35:3",
 	"data-prohibitions": "[editContent]",
 	ref,
-	className: cn("flex h-full w-full items-center justify-center rounded-full bg-muted", className),
+	className: cn$1("flex h-full w-full items-center justify-center rounded-full bg-muted", className),
 	...props
 }));
 AvatarFallback.displayName = Fallback.displayName;
@@ -30241,150 +30318,260 @@ function AuthConfirmPage() {
 function OnboardingPage() {
 	const navigate = useNavigate();
 	const { user, completeOnboarding } = useAppStore();
+	const [step, setStep] = (0, import_react.useState)(1);
 	const [terms, setTerms] = (0, import_react.useState)(false);
 	const [privacy, setPrivacy] = (0, import_react.useState)(false);
 	const [model5050, setModel5050] = (0, import_react.useState)(false);
 	const canProceed = terms && privacy && model5050;
-	const handleComplete = () => {
+	const handleComplete = (path) => {
 		completeOnboarding();
-		navigate("/dashboard");
+		navigate(path);
 	};
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-		"data-uid": "src/pages/OnboardingPage.tsx:23:5",
+		"data-uid": "src/pages/OnboardingPage.tsx:24:5",
 		"data-prohibitions": "[editContent]",
 		className: "min-h-screen bg-background flex flex-col items-center justify-center p-4",
 		children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-			"data-uid": "src/pages/OnboardingPage.tsx:24:7",
+			"data-uid": "src/pages/OnboardingPage.tsx:25:7",
 			"data-prohibitions": "[editContent]",
-			className: "max-w-md w-full bg-card p-8 rounded-2xl border border-primary/30 text-left space-y-6 shadow-elevation gold-glow",
-			children: [
-				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					"data-uid": "src/pages/OnboardingPage.tsx:25:9",
-					"data-prohibitions": "[editContent]",
-					className: "text-center mb-8",
-					children: [
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Crown, {
-							"data-uid": "src/pages/OnboardingPage.tsx:26:11",
+			className: "max-w-md w-full bg-card p-8 rounded-2xl border border-primary/30 text-left space-y-6 shadow-elevation gold-glow animate-in slide-in-from-bottom-4 duration-500",
+			children: [step === 1 && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				"data-uid": "src/pages/OnboardingPage.tsx:27:11",
+				"data-prohibitions": "[editContent]",
+				className: "animate-in fade-in-0 duration-500",
+				children: [
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						"data-uid": "src/pages/OnboardingPage.tsx:28:13",
+						"data-prohibitions": "[editContent]",
+						className: "text-center mb-8",
+						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Crown, {
+								"data-uid": "src/pages/OnboardingPage.tsx:29:15",
+								"data-prohibitions": "[editContent]",
+								className: "w-12 h-12 text-primary mx-auto mb-4"
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h1", {
+								"data-uid": "src/pages/OnboardingPage.tsx:30:15",
+								"data-prohibitions": "[editContent]",
+								className: "text-2xl font-bold text-white",
+								children: ["Bem-vindo, ", user?.name?.split(" ")[0]]
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+								"data-uid": "src/pages/OnboardingPage.tsx:33:15",
+								"data-prohibitions": "[]",
+								className: "text-muted-foreground text-sm mt-2",
+								children: "Antes de acessar o painel, confirme sua adesão às regras do ecossistema."
+							})
+						]
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						"data-uid": "src/pages/OnboardingPage.tsx:38:13",
+						"data-prohibitions": "[]",
+						className: "space-y-4",
+						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								"data-uid": "src/pages/OnboardingPage.tsx:39:15",
+								"data-prohibitions": "[]",
+								className: "flex items-start space-x-3 p-3 bg-secondary rounded-lg border border-border",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Checkbox, {
+									"data-uid": "src/pages/OnboardingPage.tsx:40:17",
+									"data-prohibitions": "[editContent]",
+									id: "terms",
+									checked: terms,
+									onCheckedChange: (c) => setTerms(!!c),
+									className: "mt-1"
+								}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+									"data-uid": "src/pages/OnboardingPage.tsx:46:17",
+									"data-prohibitions": "[]",
+									className: "grid gap-1.5 leading-none",
+									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("label", {
+										"data-uid": "src/pages/OnboardingPage.tsx:47:19",
+										"data-prohibitions": "[]",
+										htmlFor: "terms",
+										className: "text-sm font-medium text-white cursor-pointer",
+										children: "Termos de Uso"
+									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+										"data-uid": "src/pages/OnboardingPage.tsx:50:19",
+										"data-prohibitions": "[]",
+										className: "text-xs text-muted-foreground",
+										children: "Concordo com as diretrizes de conduta e penalidades por inatividade."
+									})]
+								})]
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								"data-uid": "src/pages/OnboardingPage.tsx:56:15",
+								"data-prohibitions": "[]",
+								className: "flex items-start space-x-3 p-3 bg-secondary rounded-lg border border-border",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Checkbox, {
+									"data-uid": "src/pages/OnboardingPage.tsx:57:17",
+									"data-prohibitions": "[editContent]",
+									id: "privacy",
+									checked: privacy,
+									onCheckedChange: (c) => setPrivacy(!!c),
+									className: "mt-1"
+								}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+									"data-uid": "src/pages/OnboardingPage.tsx:63:17",
+									"data-prohibitions": "[]",
+									className: "grid gap-1.5 leading-none",
+									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("label", {
+										"data-uid": "src/pages/OnboardingPage.tsx:64:19",
+										"data-prohibitions": "[]",
+										htmlFor: "privacy",
+										className: "text-sm font-medium text-white cursor-pointer",
+										children: "Política de Privacidade"
+									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+										"data-uid": "src/pages/OnboardingPage.tsx:70:19",
+										"data-prohibitions": "[]",
+										className: "text-xs text-muted-foreground",
+										children: "Autorizo o uso de dados para match isolado dentro do meu Chapter."
+									})]
+								})]
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								"data-uid": "src/pages/OnboardingPage.tsx:76:15",
+								"data-prohibitions": "[]",
+								className: "flex items-start space-x-3 p-3 bg-primary/10 rounded-lg border border-primary/30",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Checkbox, {
+									"data-uid": "src/pages/OnboardingPage.tsx:77:17",
+									"data-prohibitions": "[editContent]",
+									id: "model",
+									checked: model5050,
+									onCheckedChange: (c) => setModel5050(!!c),
+									className: "mt-1 border-primary"
+								}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+									"data-uid": "src/pages/OnboardingPage.tsx:83:17",
+									"data-prohibitions": "[]",
+									className: "grid gap-1.5 leading-none",
+									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("label", {
+										"data-uid": "src/pages/OnboardingPage.tsx:84:19",
+										"data-prohibitions": "[]",
+										htmlFor: "model",
+										className: "text-sm font-bold text-primary cursor-pointer",
+										children: "Compromisso 50/50"
+									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+										"data-uid": "src/pages/OnboardingPage.tsx:87:19",
+										"data-prohibitions": "[]",
+										className: "text-xs text-muted-foreground",
+										children: "Prometo praticar a divisão exata de 50/50 em comissões geradas no app."
+									})]
+								})]
+							})
+						]
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+						"data-uid": "src/pages/OnboardingPage.tsx:94:13",
+						"data-prohibitions": "[]",
+						onClick: () => setStep(2),
+						disabled: !canProceed,
+						className: "w-full bg-primary hover:bg-primary/90 text-lg h-14 font-semibold text-black mt-8",
+						children: "Continuar"
+					})
+				]
+			}), step === 2 && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				"data-uid": "src/pages/OnboardingPage.tsx:105:11",
+				"data-prohibitions": "[]",
+				className: "animate-in fade-in-0 duration-500 text-center flex flex-col items-center",
+				children: [
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						"data-uid": "src/pages/OnboardingPage.tsx:106:13",
+						"data-prohibitions": "[]",
+						className: "w-20 h-20 bg-primary/20 rounded-full flex items-center justify-center mb-6 relative",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Sparkles, {
+							"data-uid": "src/pages/OnboardingPage.tsx:107:15",
 							"data-prohibitions": "[editContent]",
-							className: "w-12 h-12 text-primary mx-auto mb-4"
-						}),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h1", {
-							"data-uid": "src/pages/OnboardingPage.tsx:27:11",
+							className: "w-10 h-10 text-primary"
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+							"data-uid": "src/pages/OnboardingPage.tsx:108:15",
 							"data-prohibitions": "[editContent]",
-							className: "text-2xl font-bold text-white",
-							children: ["Bem-vindo, ", user?.name?.split(" ")[0]]
-						}),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-							"data-uid": "src/pages/OnboardingPage.tsx:28:11",
+							className: "absolute top-0 right-0 w-4 h-4 bg-primary rounded-full animate-ping"
+						})]
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
+						"data-uid": "src/pages/OnboardingPage.tsx:111:13",
+						"data-prohibitions": "[]",
+						className: "text-3xl font-bold text-white mb-4",
+						children: "Ferramenta Colaborativa"
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
+						"data-uid": "src/pages/OnboardingPage.tsx:113:13",
+						"data-prohibitions": "[]",
+						className: "text-muted-foreground text-base leading-relaxed mb-6",
+						children: [
+							"Sua voz constrói o Prime Circle. Sugestões aprovadas e implementadas garantem",
+							" ",
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", {
+								"data-uid": "src/pages/OnboardingPage.tsx:115:15",
+								"data-prohibitions": "[]",
+								className: "text-primary font-bold",
+								children: "1 mês de mensalidade gratuita"
+							}),
+							" ",
+							"adicionado automaticamente à sua conta."
+						]
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+						"data-uid": "src/pages/OnboardingPage.tsx:119:13",
+						"data-prohibitions": "[]",
+						className: "bg-secondary/50 p-4 rounded-lg border border-border w-full text-sm text-left mb-8",
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("ul", {
+							"data-uid": "src/pages/OnboardingPage.tsx:120:15",
 							"data-prohibitions": "[]",
-							className: "text-muted-foreground text-sm mt-2",
-							children: "Antes de acessar o painel, confirme sua adesão às regras do ecossistema."
+							className: "space-y-3 text-muted-foreground",
+							children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("li", {
+									"data-uid": "src/pages/OnboardingPage.tsx:121:17",
+									"data-prohibitions": "[]",
+									className: "flex items-center gap-2",
+									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+										"data-uid": "src/pages/OnboardingPage.tsx:122:19",
+										"data-prohibitions": "[editContent]",
+										className: "w-1.5 h-1.5 rounded-full bg-primary"
+									}), " Compartilhe novas ideias"]
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("li", {
+									"data-uid": "src/pages/OnboardingPage.tsx:124:17",
+									"data-prohibitions": "[]",
+									className: "flex items-center gap-2",
+									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+										"data-uid": "src/pages/OnboardingPage.tsx:125:19",
+										"data-prohibitions": "[editContent]",
+										className: "w-1.5 h-1.5 rounded-full bg-primary"
+									}), " Vote nas melhores propostas"]
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("li", {
+									"data-uid": "src/pages/OnboardingPage.tsx:128:17",
+									"data-prohibitions": "[]",
+									className: "flex items-center gap-2",
+									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+										"data-uid": "src/pages/OnboardingPage.tsx:129:19",
+										"data-prohibitions": "[editContent]",
+										className: "w-1.5 h-1.5 rounded-full bg-primary"
+									}), " Suba no Ranking de Colaboradores"]
+								})
+							]
 						})
-					]
-				}),
-				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					"data-uid": "src/pages/OnboardingPage.tsx:33:9",
-					"data-prohibitions": "[]",
-					className: "space-y-4",
-					children: [
-						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-							"data-uid": "src/pages/OnboardingPage.tsx:34:11",
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						"data-uid": "src/pages/OnboardingPage.tsx:135:13",
+						"data-prohibitions": "[]",
+						className: "flex flex-col sm:flex-row gap-3 w-full",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+							"data-uid": "src/pages/OnboardingPage.tsx:136:15",
 							"data-prohibitions": "[]",
-							className: "flex items-start space-x-3 p-3 bg-secondary rounded-lg border border-border",
-							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Checkbox, {
-								"data-uid": "src/pages/OnboardingPage.tsx:35:13",
-								"data-prohibitions": "[editContent]",
-								id: "terms",
-								checked: terms,
-								onCheckedChange: (c) => setTerms(!!c),
-								className: "mt-1"
-							}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								"data-uid": "src/pages/OnboardingPage.tsx:41:13",
-								"data-prohibitions": "[]",
-								className: "grid gap-1.5 leading-none",
-								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("label", {
-									"data-uid": "src/pages/OnboardingPage.tsx:42:15",
-									"data-prohibitions": "[]",
-									htmlFor: "terms",
-									className: "text-sm font-medium text-white cursor-pointer",
-									children: "Termos de Uso"
-								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-									"data-uid": "src/pages/OnboardingPage.tsx:45:15",
-									"data-prohibitions": "[]",
-									className: "text-xs text-muted-foreground",
-									children: "Concordo com as diretrizes de conduta e penalidades por inatividade."
-								})]
-							})]
-						}),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-							"data-uid": "src/pages/OnboardingPage.tsx:51:11",
+							variant: "outline",
+							onClick: () => handleComplete("/dashboard"),
+							className: "flex-1 h-14 font-semibold border-border hover:bg-secondary text-white",
+							children: "Ir para Dashboard"
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+							"data-uid": "src/pages/OnboardingPage.tsx:143:15",
 							"data-prohibitions": "[]",
-							className: "flex items-start space-x-3 p-3 bg-secondary rounded-lg border border-border",
-							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Checkbox, {
-								"data-uid": "src/pages/OnboardingPage.tsx:52:13",
-								"data-prohibitions": "[editContent]",
-								id: "privacy",
-								checked: privacy,
-								onCheckedChange: (c) => setPrivacy(!!c),
-								className: "mt-1"
-							}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								"data-uid": "src/pages/OnboardingPage.tsx:58:13",
-								"data-prohibitions": "[]",
-								className: "grid gap-1.5 leading-none",
-								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("label", {
-									"data-uid": "src/pages/OnboardingPage.tsx:59:15",
-									"data-prohibitions": "[]",
-									htmlFor: "privacy",
-									className: "text-sm font-medium text-white cursor-pointer",
-									children: "Política de Privacidade"
-								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-									"data-uid": "src/pages/OnboardingPage.tsx:62:15",
-									"data-prohibitions": "[]",
-									className: "text-xs text-muted-foreground",
-									children: "Autorizo o uso de dados para match isolado dentro do meu Chapter."
-								})]
-							})]
-						}),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-							"data-uid": "src/pages/OnboardingPage.tsx:68:11",
-							"data-prohibitions": "[]",
-							className: "flex items-start space-x-3 p-3 bg-primary/10 rounded-lg border border-primary/30",
-							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Checkbox, {
-								"data-uid": "src/pages/OnboardingPage.tsx:69:13",
-								"data-prohibitions": "[editContent]",
-								id: "model",
-								checked: model5050,
-								onCheckedChange: (c) => setModel5050(!!c),
-								className: "mt-1 border-primary"
-							}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								"data-uid": "src/pages/OnboardingPage.tsx:75:13",
-								"data-prohibitions": "[]",
-								className: "grid gap-1.5 leading-none",
-								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("label", {
-									"data-uid": "src/pages/OnboardingPage.tsx:76:15",
-									"data-prohibitions": "[]",
-									htmlFor: "model",
-									className: "text-sm font-bold text-primary cursor-pointer",
-									children: "Compromisso 50/50"
-								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-									"data-uid": "src/pages/OnboardingPage.tsx:79:15",
-									"data-prohibitions": "[]",
-									className: "text-xs text-muted-foreground",
-									children: "Prometo praticar a divisão exata de 50/50 em comissões geradas no app."
-								})]
-							})]
-						})
-					]
-				}),
-				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-					"data-uid": "src/pages/OnboardingPage.tsx:86:9",
-					"data-prohibitions": "[]",
-					onClick: handleComplete,
-					disabled: !canProceed,
-					className: "w-full gold-gradient text-lg h-14 font-semibold text-black mt-8",
-					children: "Aceitar e Entrar"
-				})
-			]
+							onClick: () => handleComplete("/suggestions"),
+							className: "gold-gradient text-black flex-1 h-14 font-bold text-lg",
+							children: "Ver Sugestões"
+						})]
+					})
+				]
+			})]
 		})
 	});
 }
@@ -30666,18 +30853,92 @@ var Textarea = import_react.forwardRef(({ className, ...props }, ref) => {
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("textarea", {
 		"data-uid": "src/components/ui/textarea.tsx:8:7",
 		"data-prohibitions": "[editContent]",
-		className: cn("flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm", className),
+		className: cn$1("flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm", className),
 		ref,
 		...props
 	});
 });
 Textarea.displayName = "Textarea";
 //#endregion
+//#region src/components/ui/table.tsx
+var Table = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+	"data-uid": "src/components/ui/table.tsx:8:5",
+	"data-prohibitions": "[editContent]",
+	className: "relative w-full overflow-auto",
+	children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("table", {
+		"data-uid": "src/components/ui/table.tsx:9:7",
+		"data-prohibitions": "[editContent]",
+		ref,
+		className: cn$1("w-full caption-bottom text-sm", className),
+		...props
+	})
+}));
+Table.displayName = "Table";
+var TableHeader = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("thead", {
+	"data-uid": "src/components/ui/table.tsx:19:3",
+	"data-prohibitions": "[editContent]",
+	ref,
+	className: cn$1("[&_tr]:border-b", className),
+	...props
+}));
+TableHeader.displayName = "TableHeader";
+var TableBody = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("tbody", {
+	"data-uid": "src/components/ui/table.tsx:27:3",
+	"data-prohibitions": "[editContent]",
+	ref,
+	className: cn$1("[&_tr:last-child]:border-0", className),
+	...props
+}));
+TableBody.displayName = "TableBody";
+var TableFooter = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("tfoot", {
+	"data-uid": "src/components/ui/table.tsx:35:3",
+	"data-prohibitions": "[editContent]",
+	ref,
+	className: cn$1("border-t bg-muted/50 font-medium [&>tr]:last:border-b-0", className),
+	...props
+}));
+TableFooter.displayName = "TableFooter";
+var TableRow = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("tr", {
+	"data-uid": "src/components/ui/table.tsx:45:5",
+	"data-prohibitions": "[editContent]",
+	ref,
+	className: cn$1("border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted", className),
+	...props
+}));
+TableRow.displayName = "TableRow";
+var TableHead = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", {
+	"data-uid": "src/components/ui/table.tsx:61:3",
+	"data-prohibitions": "[editContent]",
+	ref,
+	className: cn$1("h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0", className),
+	...props
+}));
+TableHead.displayName = "TableHead";
+var TableCell = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+	"data-uid": "src/components/ui/table.tsx:76:3",
+	"data-prohibitions": "[editContent]",
+	ref,
+	className: cn$1("p-4 align-middle [&:has([role=checkbox])]:pr-0", className),
+	...props
+}));
+TableCell.displayName = "TableCell";
+var TableCaption = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("caption", {
+	"data-uid": "src/components/ui/table.tsx:88:3",
+	"data-prohibitions": "[editContent]",
+	ref,
+	className: cn$1("mt-4 text-sm text-muted-foreground", className),
+	...props
+}));
+TableCaption.displayName = "TableCaption";
+//#endregion
 //#region src/pages/SuggestionsPage.tsx
 function SuggestionsPage() {
-	const { suggestions, addSuggestion, voteSuggestion } = useAppStore();
+	const { suggestions, communityMembers, user, addSuggestion, voteSuggestion, markSuggestionsAsViewed } = useAppStore();
 	const [newTitle, setNewTitle] = (0, import_react.useState)("");
 	const [newDesc, setNewDesc] = (0, import_react.useState)("");
+	(0, import_react.useEffect)(() => {
+		markSuggestionsAsViewed();
+	}, [markSuggestionsAsViewed]);
 	const handleVote = (id) => {
 		voteSuggestion(id);
 		toast$1.success("Voto computado!");
@@ -30695,148 +30956,294 @@ function SuggestionsPage() {
 		if (status === "Planejado") return "bg-blue-500/10 text-blue-400 border-blue-500/20";
 		return "bg-secondary text-muted-foreground border-border";
 	};
+	const sortedRanking = [...communityMembers].sort((a, b) => {
+		if (b.suggestionsImplemented !== a.suggestionsImplemented) return b.suggestionsImplemented - a.suggestionsImplemented;
+		return b.suggestionsSubmitted - a.suggestionsSubmitted;
+	});
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-		"data-uid": "src/pages/SuggestionsPage.tsx:38:5",
+		"data-uid": "src/pages/SuggestionsPage.tsx:65:5",
 		"data-prohibitions": "[editContent]",
-		className: "max-w-3xl mx-auto space-y-8 animate-fade-in-up",
-		children: [
-			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				"data-uid": "src/pages/SuggestionsPage.tsx:39:7",
+		className: "max-w-4xl mx-auto space-y-8 animate-fade-in-up",
+		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+			"data-uid": "src/pages/SuggestionsPage.tsx:66:7",
+			"data-prohibitions": "[]",
+			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
+				"data-uid": "src/pages/SuggestionsPage.tsx:67:9",
 				"data-prohibitions": "[]",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
-					"data-uid": "src/pages/SuggestionsPage.tsx:40:9",
-					"data-prohibitions": "[]",
-					className: "text-3xl font-bold text-white mb-2",
-					children: "Comunidade e Sugestões"
-				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-					"data-uid": "src/pages/SuggestionsPage.tsx:41:9",
-					"data-prohibitions": "[]",
-					className: "text-muted-foreground text-base",
-					children: "Ajudou a implementar? Ganhe 1 mês de crédito extra na sua assinatura do Prime Circle."
-				})]
-			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
-				"data-uid": "src/pages/SuggestionsPage.tsx:46:7",
+				className: "text-3xl font-bold text-white mb-2",
+				children: "Comunidade e Sugestões"
+			}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
+				"data-uid": "src/pages/SuggestionsPage.tsx:68:9",
 				"data-prohibitions": "[]",
-				className: "bg-card border-primary/20 shadow-[0_0_15px_rgba(201,168,76,0.05)]",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardHeader, {
-					"data-uid": "src/pages/SuggestionsPage.tsx:47:9",
-					"data-prohibitions": "[]",
-					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardTitle, {
-						"data-uid": "src/pages/SuggestionsPage.tsx:48:11",
+				className: "text-muted-foreground text-base",
+				children: [
+					"Ajudou a implementar? Ganhe",
+					" ",
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", {
+						"data-uid": "src/pages/SuggestionsPage.tsx:70:11",
 						"data-prohibitions": "[]",
-						className: "text-lg text-white",
-						children: "Sugerir Funcionalidade"
-					})
-				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardContent, {
-					"data-uid": "src/pages/SuggestionsPage.tsx:50:9",
-					"data-prohibitions": "[]",
-					className: "space-y-4",
-					children: [
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
-							"data-uid": "src/pages/SuggestionsPage.tsx:51:11",
-							"data-prohibitions": "[editContent]",
-							placeholder: "Título da sugestão",
-							className: "bg-background border-border text-white mb-2",
-							value: newTitle,
-							onChange: (e) => setNewTitle(e.target.value)
-						}),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Textarea, {
-							"data-uid": "src/pages/SuggestionsPage.tsx:57:11",
-							"data-prohibitions": "[editContent]",
-							placeholder: "Descreva sua ideia em detalhes...",
-							className: "bg-background border-border text-white min-h-[100px]",
-							value: newDesc,
-							onChange: (e) => setNewDesc(e.target.value)
-						}),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-							"data-uid": "src/pages/SuggestionsPage.tsx:63:11",
-							"data-prohibitions": "[]",
-							onClick: handleSubmit,
-							className: "gold-gradient text-black font-semibold",
-							children: "Enviar para Votação"
-						})
-					]
-				})]
-			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-				"data-uid": "src/pages/SuggestionsPage.tsx:69:7",
+						className: "text-primary",
+						children: "1 mês de crédito extra"
+					}),
+					" na sua assinatura do Prime Circle."
+				]
+			})]
+		}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+			"data-uid": "src/pages/SuggestionsPage.tsx:75:7",
+			"data-prohibitions": "[editContent]",
+			className: "grid lg:grid-cols-3 gap-8",
+			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				"data-uid": "src/pages/SuggestionsPage.tsx:76:9",
 				"data-prohibitions": "[editContent]",
-				className: "space-y-4",
-				children: suggestions.map((sug) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Card, {
-					"data-uid": "src/pages/SuggestionsPage.tsx:71:11",
-					"data-prohibitions": "[editContent]",
-					className: "bg-secondary border-border overflow-hidden",
-					children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardContent, {
-						"data-uid": "src/pages/SuggestionsPage.tsx:72:13",
-						"data-prohibitions": "[editContent]",
-						className: "p-0 flex",
-						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-							"data-uid": "src/pages/SuggestionsPage.tsx:73:15",
-							"data-prohibitions": "[editContent]",
-							className: "flex flex-col items-center justify-start p-4 bg-background/50 border-r border-border min-w-[70px]",
-							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-								"data-uid": "src/pages/SuggestionsPage.tsx:74:17",
-								"data-prohibitions": "[]",
-								variant: "ghost",
-								size: "icon",
-								onClick: () => handleVote(sug.id),
-								className: "h-8 w-8 text-muted-foreground hover:text-primary",
-								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ThumbsUp, {
-									"data-uid": "src/pages/SuggestionsPage.tsx:80:19",
-									"data-prohibitions": "[editContent]",
-									className: "w-5 h-5"
-								})
-							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-								"data-uid": "src/pages/SuggestionsPage.tsx:82:17",
+				className: "lg:col-span-2 space-y-6",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
+					"data-uid": "src/pages/SuggestionsPage.tsx:77:11",
+					"data-prohibitions": "[]",
+					className: "bg-card border-primary/20 shadow-[0_0_15px_rgba(201,168,76,0.05)]",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardHeader, {
+						"data-uid": "src/pages/SuggestionsPage.tsx:78:13",
+						"data-prohibitions": "[]",
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardTitle, {
+							"data-uid": "src/pages/SuggestionsPage.tsx:79:15",
+							"data-prohibitions": "[]",
+							className: "text-lg text-white",
+							children: "Sugerir Funcionalidade"
+						})
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardContent, {
+						"data-uid": "src/pages/SuggestionsPage.tsx:81:13",
+						"data-prohibitions": "[]",
+						className: "space-y-4",
+						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
+								"data-uid": "src/pages/SuggestionsPage.tsx:82:15",
 								"data-prohibitions": "[editContent]",
-								className: "font-bold text-white mt-1",
-								children: sug.votes
-							})]
-						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-							"data-uid": "src/pages/SuggestionsPage.tsx:84:15",
+								placeholder: "Título da sugestão",
+								className: "bg-background border-border text-white mb-2",
+								value: newTitle,
+								onChange: (e) => setNewTitle(e.target.value)
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Textarea, {
+								"data-uid": "src/pages/SuggestionsPage.tsx:88:15",
+								"data-prohibitions": "[editContent]",
+								placeholder: "Descreva sua ideia em detalhes...",
+								className: "bg-background border-border text-white min-h-[100px]",
+								value: newDesc,
+								onChange: (e) => setNewDesc(e.target.value)
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+								"data-uid": "src/pages/SuggestionsPage.tsx:94:15",
+								"data-prohibitions": "[]",
+								onClick: handleSubmit,
+								className: "gold-gradient text-black font-semibold",
+								children: "Enviar para Votação"
+							})
+						]
+					})]
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+					"data-uid": "src/pages/SuggestionsPage.tsx:100:11",
+					"data-prohibitions": "[editContent]",
+					className: "space-y-4",
+					children: suggestions.sort((a, b) => b.votes - a.votes).map((sug) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Card, {
+						"data-uid": "src/pages/SuggestionsPage.tsx:104:17",
+						"data-prohibitions": "[editContent]",
+						className: "bg-secondary border-border overflow-hidden",
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardContent, {
+							"data-uid": "src/pages/SuggestionsPage.tsx:105:19",
 							"data-prohibitions": "[editContent]",
-							className: "flex-1 p-4 space-y-3",
-							children: [
-								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-									"data-uid": "src/pages/SuggestionsPage.tsx:85:17",
-									"data-prohibitions": "[editContent]",
-									className: "flex justify-between items-start gap-4",
-									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
-										"data-uid": "src/pages/SuggestionsPage.tsx:86:19",
-										"data-prohibitions": "[editContent]",
-										className: "font-semibold text-white text-lg",
-										children: sug.title
-									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Badge, {
-										"data-uid": "src/pages/SuggestionsPage.tsx:87:19",
-										"data-prohibitions": "[editContent]",
-										variant: "outline",
-										className: `whitespace-nowrap ${getStatusColor(sug.status)}`,
-										children: sug.status
-									})]
-								}),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-									"data-uid": "src/pages/SuggestionsPage.tsx:94:17",
-									"data-prohibitions": "[editContent]",
-									className: "text-sm text-muted-foreground leading-relaxed",
-									children: sug.desc
-								}),
-								sug.status === "Implementado" && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-									"data-uid": "src/pages/SuggestionsPage.tsx:96:19",
+							className: "p-0 flex",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								"data-uid": "src/pages/SuggestionsPage.tsx:106:21",
+								"data-prohibitions": "[editContent]",
+								className: "flex flex-col items-center justify-start p-4 bg-background/50 border-r border-border min-w-[70px]",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+									"data-uid": "src/pages/SuggestionsPage.tsx:107:23",
 									"data-prohibitions": "[]",
-									className: "text-xs text-primary font-medium flex items-center mt-2",
-									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ArrowRight, {
-										"data-uid": "src/pages/SuggestionsPage.tsx:97:21",
+									variant: "ghost",
+									size: "icon",
+									onClick: () => handleVote(sug.id),
+									className: "h-8 w-8 text-muted-foreground hover:text-primary",
+									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ThumbsUp, {
+										"data-uid": "src/pages/SuggestionsPage.tsx:113:25",
 										"data-prohibitions": "[editContent]",
-										className: "w-3 h-3 mr-1"
-									}), " Autor recompensado com 1 mês de acesso"]
+										className: "w-5 h-5"
+									})
+								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+									"data-uid": "src/pages/SuggestionsPage.tsx:115:23",
+									"data-prohibitions": "[editContent]",
+									className: "font-bold text-white mt-1",
+									children: sug.votes
+								})]
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								"data-uid": "src/pages/SuggestionsPage.tsx:117:21",
+								"data-prohibitions": "[editContent]",
+								className: "flex-1 p-4 space-y-3",
+								children: [
+									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+										"data-uid": "src/pages/SuggestionsPage.tsx:118:23",
+										"data-prohibitions": "[editContent]",
+										className: "flex justify-between items-start gap-4",
+										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
+											"data-uid": "src/pages/SuggestionsPage.tsx:119:25",
+											"data-prohibitions": "[editContent]",
+											className: "font-semibold text-white text-lg",
+											children: sug.title
+										}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Badge, {
+											"data-uid": "src/pages/SuggestionsPage.tsx:120:25",
+											"data-prohibitions": "[editContent]",
+											variant: "outline",
+											className: `whitespace-nowrap ${getStatusColor(sug.status)}`,
+											children: sug.status
+										})]
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+										"data-uid": "src/pages/SuggestionsPage.tsx:127:23",
+										"data-prohibitions": "[editContent]",
+										className: "text-sm text-muted-foreground leading-relaxed",
+										children: sug.desc
+									}),
+									sug.status === "Implementado" && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+										"data-uid": "src/pages/SuggestionsPage.tsx:129:25",
+										"data-prohibitions": "[]",
+										className: "text-xs text-primary font-medium flex items-center mt-2 bg-primary/10 p-2 rounded-md border border-primary/20 w-fit",
+										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ArrowRight, {
+											"data-uid": "src/pages/SuggestionsPage.tsx:130:27",
+											"data-prohibitions": "[editContent]",
+											className: "w-3 h-3 mr-1"
+										}), " Autor recompensado com +1 mês de acesso"]
+									})
+								]
+							})]
+						})
+					}, sug.id))
+				})]
+			}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+				"data-uid": "src/pages/SuggestionsPage.tsx:141:9",
+				"data-prohibitions": "[editContent]",
+				className: "lg:col-span-1",
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
+					"data-uid": "src/pages/SuggestionsPage.tsx:142:11",
+					"data-prohibitions": "[editContent]",
+					className: "bg-card border-border sticky top-24",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardHeader, {
+						"data-uid": "src/pages/SuggestionsPage.tsx:143:13",
+						"data-prohibitions": "[]",
+						className: "bg-secondary/50 border-b border-border pb-4",
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardTitle, {
+							"data-uid": "src/pages/SuggestionsPage.tsx:144:15",
+							"data-prohibitions": "[]",
+							className: "text-white text-lg flex items-center gap-2",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Trophy, {
+								"data-uid": "src/pages/SuggestionsPage.tsx:145:17",
+								"data-prohibitions": "[editContent]",
+								className: "w-5 h-5 text-primary"
+							}), " Ranking"]
+						})
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardContent, {
+						"data-uid": "src/pages/SuggestionsPage.tsx:148:13",
+						"data-prohibitions": "[editContent]",
+						className: "p-0",
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Table, {
+							"data-uid": "src/pages/SuggestionsPage.tsx:149:15",
+							"data-prohibitions": "[editContent]",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableHeader, {
+								"data-uid": "src/pages/SuggestionsPage.tsx:150:17",
+								"data-prohibitions": "[]",
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(TableRow, {
+									"data-uid": "src/pages/SuggestionsPage.tsx:151:19",
+									"data-prohibitions": "[]",
+									className: "border-border hover:bg-transparent",
+									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableHead, {
+										"data-uid": "src/pages/SuggestionsPage.tsx:152:21",
+										"data-prohibitions": "[]",
+										className: "text-muted-foreground py-3",
+										children: "Membro"
+									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableHead, {
+										"data-uid": "src/pages/SuggestionsPage.tsx:153:21",
+										"data-prohibitions": "[]",
+										className: "text-right text-muted-foreground py-3",
+										children: "Créditos"
+									})]
 								})
-							]
-						})]
-					})
-				}, sug.id))
-			})
-		]
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableBody, {
+								"data-uid": "src/pages/SuggestionsPage.tsx:158:17",
+								"data-prohibitions": "[editContent]",
+								children: sortedRanking.map((member, i) => {
+									const isCurrentUser = member.id === user?.id;
+									return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(TableRow, {
+										"data-uid": "src/pages/SuggestionsPage.tsx:162:23",
+										"data-prohibitions": "[editContent]",
+										className: cn("border-border hover:bg-secondary/50", isCurrentUser && "bg-primary/5"),
+										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(TableCell, {
+											"data-uid": "src/pages/SuggestionsPage.tsx:169:25",
+											"data-prohibitions": "[editContent]",
+											className: "font-medium text-white flex items-center gap-3 py-3",
+											children: [
+												/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
+													"data-uid": "src/pages/SuggestionsPage.tsx:170:27",
+													"data-prohibitions": "[editContent]",
+													className: cn("w-4 text-xs font-bold", i === 0 ? "text-yellow-400" : i === 1 ? "text-gray-300" : i === 2 ? "text-amber-600" : "text-muted-foreground"),
+													children: [i + 1, "º"]
+												}),
+												/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Avatar, {
+													"data-uid": "src/pages/SuggestionsPage.tsx:184:27",
+													"data-prohibitions": "[editContent]",
+													className: "h-8 w-8 ring-1 ring-primary/20",
+													children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(AvatarImage, {
+														"data-uid": "src/pages/SuggestionsPage.tsx:185:29",
+														"data-prohibitions": "[editContent]",
+														src: member.avatar
+													}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(AvatarFallback, {
+														"data-uid": "src/pages/SuggestionsPage.tsx:186:29",
+														"data-prohibitions": "[editContent]",
+														children: member.name[0]
+													})]
+												}),
+												/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+													"data-uid": "src/pages/SuggestionsPage.tsx:188:27",
+													"data-prohibitions": "[editContent]",
+													className: "flex flex-col min-w-0",
+													children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
+														"data-uid": "src/pages/SuggestionsPage.tsx:189:29",
+														"data-prohibitions": "[editContent]",
+														className: "truncate text-sm flex items-center gap-2",
+														children: [member.name.split(" ")[0], isCurrentUser && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Badge, {
+															"data-uid": "src/pages/SuggestionsPage.tsx:192:33",
+															"data-prohibitions": "[]",
+															className: "bg-primary/20 text-primary hover:bg-primary/30 px-1 py-0 text-[9px]",
+															children: "Você"
+														})]
+													}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
+														"data-uid": "src/pages/SuggestionsPage.tsx:197:29",
+														"data-prohibitions": "[editContent]",
+														className: "text-[10px] text-muted-foreground",
+														children: [member.suggestionsImplemented, " implementadas"]
+													})]
+												})
+											]
+										}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(TableCell, {
+											"data-uid": "src/pages/SuggestionsPage.tsx:202:25",
+											"data-prohibitions": "[editContent]",
+											className: "text-right py-3",
+											children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+												"data-uid": "src/pages/SuggestionsPage.tsx:203:27",
+												"data-prohibitions": "[editContent]",
+												className: "text-primary font-bold",
+												children: member.suggestionMonthsCredited
+											}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+												"data-uid": "src/pages/SuggestionsPage.tsx:206:27",
+												"data-prohibitions": "[]",
+												className: "text-muted-foreground text-xs ml-1",
+												children: "mês"
+											})]
+										})]
+									}, member.id);
+								})
+							})]
+						})
+					})]
+				})
+			})]
+		})]
 	});
 }
 //#endregion
@@ -31950,7 +32357,7 @@ var ToastViewport = import_react.forwardRef(({ className, ...props }, ref) => /*
 	"data-uid": "src/components/ui/toast.tsx:15:3",
 	"data-prohibitions": "[editContent]",
 	ref,
-	className: cn("fixed top-0 z-[100] flex max-h-screen w-full flex-col-reverse p-4 sm:bottom-0 sm:right-0 sm:top-auto sm:flex-col md:max-w-[420px]", className),
+	className: cn$1("fixed top-0 z-[100] flex max-h-screen w-full flex-col-reverse p-4 sm:bottom-0 sm:right-0 sm:top-auto sm:flex-col md:max-w-[420px]", className),
 	...props
 }));
 ToastViewport.displayName = Viewport.displayName;
@@ -31966,7 +32373,7 @@ var Toast = import_react.forwardRef(({ className, variant, ...props }, ref) => {
 		"data-uid": "src/components/ui/toast.tsx:47:5",
 		"data-prohibitions": "[editContent]",
 		ref,
-		className: cn(toastVariants({ variant }), className),
+		className: cn$1(toastVariants({ variant }), className),
 		...props
 	});
 });
@@ -31975,7 +32382,7 @@ var ToastAction = import_react.forwardRef(({ className, ...props }, ref) => /* @
 	"data-uid": "src/components/ui/toast.tsx:60:3",
 	"data-prohibitions": "[editContent]",
 	ref,
-	className: cn("inline-flex h-8 shrink-0 items-center justify-center rounded-md border bg-transparent px-3 text-sm font-medium ring-offset-background transition-colors hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 group-[.destructive]:border-muted/40 group-[.destructive]:hover:border-destructive/30 group-[.destructive]:hover:bg-destructive group-[.destructive]:hover:text-destructive-foreground group-[.destructive]:focus:ring-destructive", className),
+	className: cn$1("inline-flex h-8 shrink-0 items-center justify-center rounded-md border bg-transparent px-3 text-sm font-medium ring-offset-background transition-colors hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 group-[.destructive]:border-muted/40 group-[.destructive]:hover:border-destructive/30 group-[.destructive]:hover:bg-destructive group-[.destructive]:hover:text-destructive-foreground group-[.destructive]:focus:ring-destructive", className),
 	...props
 }));
 ToastAction.displayName = Action.displayName;
@@ -31983,7 +32390,7 @@ var ToastClose = import_react.forwardRef(({ className, ...props }, ref) => /* @_
 	"data-uid": "src/components/ui/toast.tsx:75:3",
 	"data-prohibitions": "[editContent]",
 	ref,
-	className: cn("absolute right-2 top-2 rounded-md p-1 text-foreground/50 opacity-0 transition-opacity hover:text-foreground focus:opacity-100 focus:outline-none focus:ring-2 group-hover:opacity-100 group-[.destructive]:text-red-300 group-[.destructive]:hover:text-red-50 group-[.destructive]:focus:ring-red-400 group-[.destructive]:focus:ring-offset-red-600", className),
+	className: cn$1("absolute right-2 top-2 rounded-md p-1 text-foreground/50 opacity-0 transition-opacity hover:text-foreground focus:opacity-100 focus:outline-none focus:ring-2 group-hover:opacity-100 group-[.destructive]:text-red-300 group-[.destructive]:hover:text-red-50 group-[.destructive]:focus:ring-red-400 group-[.destructive]:focus:ring-offset-red-600", className),
 	"toast-close": "",
 	...props,
 	children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(X, {
@@ -31997,7 +32404,7 @@ var ToastTitle = import_react.forwardRef(({ className, ...props }, ref) => /* @_
 	"data-uid": "src/components/ui/toast.tsx:93:3",
 	"data-prohibitions": "[editContent]",
 	ref,
-	className: cn("text-sm font-semibold", className),
+	className: cn$1("text-sm font-semibold", className),
 	...props
 }));
 ToastTitle.displayName = Title.displayName;
@@ -32005,7 +32412,7 @@ var ToastDescription = import_react.forwardRef(({ className, ...props }, ref) =>
 	"data-uid": "src/components/ui/toast.tsx:101:3",
 	"data-prohibitions": "[editContent]",
 	ref,
-	className: cn("text-sm opacity-90", className),
+	className: cn$1("text-sm opacity-90", className),
 	...props
 }));
 ToastDescription.displayName = Description.displayName;
@@ -34448,7 +34855,7 @@ var TooltipContent = import_react.forwardRef(({ className, sideOffset = 4, ...pr
 	"data-prohibitions": "[editContent]",
 	ref,
 	sideOffset,
-	className: cn("z-50 overflow-hidden rounded-md border bg-popover px-3 py-1.5 text-sm text-popover-foreground shadow-md animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 origin-[--radix-tooltip-content-transform-origin]", className),
+	className: cn$1("z-50 overflow-hidden rounded-md border bg-popover px-3 py-1.5 text-sm text-popover-foreground shadow-md animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 origin-[--radix-tooltip-content-transform-origin]", className),
 	...props
 }));
 TooltipContent.displayName = Content2.displayName;
@@ -34714,4 +35121,4 @@ function App() {
 }));
 //#endregion
 
-//# sourceMappingURL=index-Pkqkst9e.js.map
+//# sourceMappingURL=index-RS32H62q.js.map

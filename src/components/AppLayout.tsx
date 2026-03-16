@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { Outlet, Link, useLocation } from 'react-router-dom'
 import {
   LayoutDashboard,
@@ -22,13 +23,36 @@ import {
 } from '@/components/ui/sidebar'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
 import useAppStore from '@/stores/main'
+import { useToast } from '@/hooks/use-toast'
 import { cn } from '@/lib/utils'
 import { PlanLimitModal } from '@/components/PlanLimitModal'
 
 export function AppLayout() {
-  const { user, logout } = useAppStore()
+  const { user, logout, suggestions, notifications, clearNotifications } = useAppStore()
   const location = useLocation()
+  const { toast } = useToast()
+
+  useEffect(() => {
+    if (notifications.length > 0) {
+      notifications.forEach((n) => {
+        toast({
+          title: n.title,
+          description: n.description,
+          className: 'border-primary/50 bg-card text-white shadow-elevation',
+        })
+      })
+      clearNotifications()
+    }
+  }, [notifications, toast, clearNotifications])
+
+  const unseenSuggestionsCount = suggestions.filter(
+    (s) =>
+      ['Planejado', 'Implementado'].includes(s.status) &&
+      (!user?.lastViewedSuggestionsAt ||
+        new Date(s.updatedAt) > new Date(user.lastViewedSuggestionsAt)),
+  ).length
 
   const navItems = [
     { title: 'Dashboard', icon: LayoutDashboard, url: '/dashboard' },
@@ -63,14 +87,22 @@ export function AppLayout() {
                         <Link
                           to={item.url}
                           className={cn(
-                            'flex items-center gap-3 px-4 py-3 transition-colors rounded-lg',
+                            'flex items-center gap-3 px-4 py-3 transition-colors rounded-lg relative',
                             isActive
                               ? 'text-primary bg-primary/5'
                               : 'text-muted-foreground hover:text-white hover:bg-secondary/50',
                           )}
                         >
                           <item.icon className="w-5 h-5" />
-                          <span>{item.title}</span>
+                          <span className="flex-1">{item.title}</span>
+                          {item.title === 'Sugestões' && unseenSuggestionsCount > 0 && (
+                            <Badge
+                              variant="destructive"
+                              className="ml-auto h-5 min-w-5 px-1.5 flex items-center justify-center text-[10px]"
+                            >
+                              {unseenSuggestionsCount}
+                            </Badge>
+                          )}
                         </Link>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
@@ -115,7 +147,9 @@ export function AppLayout() {
               className="text-muted-foreground hover:text-primary relative"
             >
               <Bell className="w-5 h-5" />
-              <span className="absolute top-2 right-2 w-2 h-2 bg-primary rounded-full animate-pulse" />
+              {unseenSuggestionsCount > 0 && (
+                <span className="absolute top-2 right-2 w-2 h-2 bg-destructive rounded-full" />
+              )}
             </Button>
           </header>
           <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 pb-20 sm:pb-8">
