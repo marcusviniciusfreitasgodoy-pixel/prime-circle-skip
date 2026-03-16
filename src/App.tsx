@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { Toaster } from '@/components/ui/toaster'
 import { Toaster as Sonner } from '@/components/ui/sonner'
 import { TooltipProvider } from '@/components/ui/tooltip'
@@ -6,6 +6,7 @@ import { AppProvider } from '@/stores/main'
 import Layout from './components/Layout'
 import { AppLayout } from './components/AppLayout'
 import { ProtectedRoute } from './components/ProtectedRoute'
+import { AnalyticsTracker } from './components/AnalyticsTracker'
 import NotFound from './pages/NotFound'
 
 import Index from './pages/Index'
@@ -18,10 +19,13 @@ import MatchesListPage from './pages/MatchesListPage'
 import SuggestionsPage from './pages/SuggestionsPage'
 import PlansPage from './pages/PlansPage'
 import AdminPage from './pages/AdminPage'
+import ProfilePage from './pages/ProfilePage'
+import MatchClosePage from './pages/MatchClosePage'
 
 const App = () => (
   <AppProvider>
     <BrowserRouter future={{ v7_startTransition: false, v7_relativeSplatPath: false }}>
+      <AnalyticsTracker />
       <TooltipProvider>
         <Toaster />
         <Sonner theme="dark" position="top-right" />
@@ -39,9 +43,11 @@ const App = () => (
             </Route>
             <Route element={<AppLayout />}>
               <Route path="/dashboard" element={<DashboardPage />} />
+              <Route path="/profile" element={<ProfilePage />} />
               <Route path="/listings" element={<ListingsListPage />} />
               <Route path="/needs" element={<NeedsListPage />} />
               <Route path="/matches" element={<MatchesListPage />} />
+              <Route path="/matches/:id/close" element={<MatchClosePage />} />
               <Route path="/suggestions" element={<SuggestionsPage />} />
               <Route path="/plans" element={<PlansPage />} />
               <Route path="/admin" element={<AdminPage />} />

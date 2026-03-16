@@ -9,6 +9,7 @@ import {
   Settings,
   LogOut,
   Bell,
+  User as UserIcon,
 } from 'lucide-react'
 import {
   SidebarProvider,
@@ -30,6 +31,7 @@ export function AppLayout() {
 
   const navItems = [
     { title: 'Dashboard', icon: LayoutDashboard, url: '/dashboard' },
+    { title: 'Meu Perfil', icon: UserIcon, url: '/profile' },
     { title: 'Demandas', icon: FileText, url: '/needs' },
     { title: 'Imóveis', icon: Home, url: '/listings' },
     { title: 'Conexões', icon: GitMerge, url: '/matches' },
@@ -68,18 +70,19 @@ export function AppLayout() {
               </SidebarMenu>
             </SidebarGroup>
             <div className="mt-auto p-4 border-t border-border">
-              <div className="flex items-center gap-3 mb-4 px-2">
+              <Link
+                to="/profile"
+                className="flex items-center gap-3 mb-4 px-2 hover:bg-secondary p-2 rounded-lg transition-colors"
+              >
                 <Avatar>
                   <AvatarImage src={user?.avatar} />
                   <AvatarFallback>JC</AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col">
                   <span className="text-sm font-medium text-white">{user?.name}</span>
-                  <span className="text-xs text-primary">
-                    Status: {user?.status === 'admin' ? 'Admin' : 'Membro'}
-                  </span>
+                  <span className="text-xs text-primary">Tier {user?.tier}</span>
                 </div>
-              </div>
+              </Link>
               <Button
                 variant="ghost"
                 className="w-full justify-start text-muted-foreground hover:text-white"
@@ -112,7 +115,7 @@ export function AppLayout() {
 
         {/* Mobile Bottom Nav */}
         <div className="fixed bottom-0 w-full bg-card border-t border-border flex justify-around items-center h-16 sm:hidden z-50">
-          {[navItems[0], navItems[1], navItems[2], navItems[3]].map((item) => {
+          {[navItems[0], navItems[2], navItems[3], navItems[4]].map((item) => {
             const isActive = location.pathname === item.url
             return (
               <Link
