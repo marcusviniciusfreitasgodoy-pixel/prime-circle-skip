@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
@@ -26,16 +26,22 @@ export default function DashboardPage() {
   const { toast } = useToast()
   const navigate = useNavigate()
 
+  const updateSugRef = useRef(updateSuggestionStatus)
+
+  useEffect(() => {
+    updateSugRef.current = updateSuggestionStatus
+  }, [updateSuggestionStatus])
+
   // Demo: Automatically approve a specific pending suggestion to show the notification AC working end-to-end
   useEffect(() => {
     const pendingSug = suggestions.find((s) => s.id === '2' && s.status === 'Pendente')
     if (pendingSug && user?.id === 'user1') {
       const timer = setTimeout(() => {
-        updateSuggestionStatus('2', 'Implementado')
+        updateSugRef.current('2', 'Implementado')
       }, 5000)
       return () => clearTimeout(timer)
     }
-  }, [suggestions, user?.id, updateSuggestionStatus])
+  }, [suggestions, user?.id])
 
   // Chapter Isolation Enforced: Only see data from the same chapter
   const chapterListings = listings.filter((l) => l.chapter === user?.chapter)

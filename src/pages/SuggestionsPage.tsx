@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Textarea } from '@/components/ui/textarea'
@@ -17,6 +17,7 @@ import { ThumbsUp, ArrowRight, Trophy } from 'lucide-react'
 import { toast } from 'sonner'
 import { sendTransactionalEmail } from '@/lib/email'
 import useAppStore from '@/stores/main'
+import { cn } from '@/lib/utils'
 
 export default function SuggestionsPage() {
   const {
@@ -30,9 +31,15 @@ export default function SuggestionsPage() {
   const [newTitle, setNewTitle] = useState('')
   const [newDesc, setNewDesc] = useState('')
 
+  const markRef = useRef(markSuggestionsAsViewed)
+
   useEffect(() => {
-    markSuggestionsAsViewed()
+    markRef.current = markSuggestionsAsViewed
   }, [markSuggestionsAsViewed])
+
+  useEffect(() => {
+    markRef.current()
+  }, [])
 
   const handleVote = (id: string) => {
     voteSuggestion(id)

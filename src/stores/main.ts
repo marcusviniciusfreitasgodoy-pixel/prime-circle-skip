@@ -368,11 +368,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
     const isExpired = daysLeft <= 0
 
     const checkAndSend = (type: '30_days' | '7_days' | 'expired') => {
-      const alreadySent = planExpiryNotifications.some(
-        (n) => n.userId === user.id && n.notificationType === type,
-      )
-      if (!alreadySent) {
-        setPlanExpiryNotifications((prev) => [
+      setPlanExpiryNotifications((prev) => {
+        const alreadySent = prev.some((n) => n.userId === user.id && n.notificationType === type)
+        if (alreadySent) return prev
+        return [
           ...prev,
           {
             id: Date.now().toString(),
@@ -380,8 +379,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
             notificationType: type,
             sentAt: new Date().toISOString(),
           },
-        ])
-      }
+        ]
+      })
     }
 
     if (isExpired) {
@@ -394,12 +393,12 @@ export function AppProvider({ children }: { children: ReactNode }) {
     } else if (daysLeft <= 30) {
       checkAndSend('30_days')
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     user?.id,
     user?.plan,
     user?.planStartedAt,
     user?.wasFounder,
-    planExpiryNotifications,
     user?.suggestionMonthsCredited,
     user?.referralMonthsCredited,
   ])

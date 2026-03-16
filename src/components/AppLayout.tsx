@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { Outlet, Link, useLocation } from 'react-router-dom'
 import {
   LayoutDashboard,
@@ -34,6 +34,12 @@ export function AppLayout() {
   const location = useLocation()
   const { toast } = useToast()
 
+  const clearRef = useRef(clearNotifications)
+
+  useEffect(() => {
+    clearRef.current = clearNotifications
+  }, [clearNotifications])
+
   useEffect(() => {
     if (notifications.length > 0) {
       notifications.forEach((n) => {
@@ -43,9 +49,9 @@ export function AppLayout() {
           className: 'border-primary/50 bg-card text-white shadow-elevation',
         })
       })
-      clearNotifications()
+      clearRef.current()
     }
-  }, [notifications, toast, clearNotifications])
+  }, [notifications, toast])
 
   const unseenSuggestionsCount = suggestions.filter(
     (s) =>
