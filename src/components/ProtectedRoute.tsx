@@ -6,22 +6,30 @@ export function ProtectedRoute() {
   const location = useLocation()
 
   if (!user) {
-    return <Navigate to="/" replace />
+    return <Navigate to="/auth/confirm" replace state={{ from: location }} />
   }
 
-  if (user.status === 'pending' && location.pathname !== '/pending') {
-    return <Navigate to="/pending" replace />
-  }
-
-  if (user.status === 'approved' || user.status === 'admin') {
-    if (location.pathname === '/pending') {
-      return <Navigate to={user.onboarded ? '/dashboard' : '/onboarding'} replace />
+  // Admin routing logic
+  if (user.status === 'admin') {
+    if (!location.pathname.startsWith('/admin') && location.pathname !== '/dashboard') {
+      return <Navigate to="/admin" replace />
     }
+    return <Outlet />
+  }
 
+  // Pending user routing
+  if (user.status === 'pending') {
+    if (location.pathname !== '/pending') {
+      return <Navigate to="/pending" replace />
+    }
+    return <Outlet />
+  }
+
+  // Approved user routing
+  if (user.status === 'approved') {
     if (!user.onboarded && location.pathname !== '/onboarding') {
       return <Navigate to="/onboarding" replace />
     }
-
     if (user.onboarded && location.pathname === '/onboarding') {
       return <Navigate to="/dashboard" replace />
     }

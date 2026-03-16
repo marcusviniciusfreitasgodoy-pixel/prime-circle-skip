@@ -1,4 +1,3 @@
-/* Checkbox Component primitives - A component that displays a checkbox - from shadcn/ui (exposes Checkbox, CheckboxIndicator) */
 import * as React from 'react'
 import * as CheckboxPrimitive from '@radix-ui/react-checkbox'
 import { Check } from 'lucide-react'

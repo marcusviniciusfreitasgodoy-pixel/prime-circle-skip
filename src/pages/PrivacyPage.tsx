@@ -5,7 +5,7 @@ export default function PrivacyPage() {
         <h1 className="text-3xl font-bold text-white mb-8">Política de Privacidade</h1>
         <p>
           Suas informações de clientes, demandas e imóveis cadastrados como privados são protegidas
-          por criptografia de ponta a ponta.
+          e isoladas dentro do seu Chapter.
         </p>
         <p>
           O Prime Circle não vende leads. A infraestrutura atua apenas como facilitador de match

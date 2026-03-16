@@ -1,15 +1,21 @@
 import { createContext, createElement, useContext, useState, ReactNode } from 'react'
 
 export type UserStatus = 'pending' | 'approved' | 'admin' | null
-export type Tier = 'None' | 'Ambassador' | 'Silver' | 'Gold' | 'Elite'
+export type Tier = 'None' | 'Ambassador' | 'Silver' | 'Gold' | 'Elite' | 'Elite+'
+export type Plan = 'Free' | 'Founder' | 'Standard'
 export type User = {
   id: string
   name: string
+  email: string
   status: UserStatus
   avatar?: string
   tier: Tier
+  plan: Plan
+  chapter: string
   onboarded?: boolean
   lastLogin?: string
+  lastContributionAt?: string
+  referrals: number
 }
 
 export type Candidate = {
@@ -18,8 +24,10 @@ export type Candidate = {
   email: string
   phone: string
   creci: string
+  region: string
+  ticket: string
   referredBy?: string
-  status: 'approved' | 'waitlist'
+  status: 'approved' | 'waitlist' | 'pending'
 }
 
 export type Listing = {
@@ -31,6 +39,7 @@ export type Listing = {
   area: string
   beds: number
   neighborhood: string
+  chapter: string
   status: 'Disponível' | 'Reservado' | 'Vendido'
   image: string
   ownerId: string
@@ -41,6 +50,7 @@ export type Need = {
   type: string
   priceRange: string
   neighborhood: string
+  chapter: string
   urgency: 'Alta' | 'Média' | 'Baixa'
   ownerId: string
 }
@@ -50,6 +60,7 @@ export type Match = {
   listingId: string
   status: 'Novo' | 'Contato' | 'Visita' | 'Proposta' | 'Fechado'
   finalValue?: string
+  bilateralConfirmed?: boolean
 }
 export type BrokerMonitor = {
   id: string
@@ -69,19 +80,29 @@ interface AppState {
   candidates: Candidate[]
   pageViews: { path: string; timestamp: string }[]
   logs: { action: string; details: string; timestamp: string }[]
+  statusLogs: {
+    entity: string
+    entityId: string
+    oldStatus: string
+    newStatus: string
+    timestamp: string
+  }[]
   planLimitModalOpen: boolean
   setPlanLimitModalOpen: (open: boolean) => void
-  login: (status: UserStatus) => void
+  login: (email: string, method: 'magic_link' | 'password', status?: UserStatus) => void
   logout: () => void
   completeOnboarding: () => void
   addListing: (listing: Partial<Listing>) => boolean
   addNeed: (need: Partial<Need>) => boolean
   addMatch: (needId: string, listingId: string) => boolean
   updateMatchStatus: (matchId: string, status: Match['status']) => void
-  closeMatch: (matchId: string, finalValue: string) => void
+  closeMatch: (matchId: string, finalValue: string, bilateralConfirmed: boolean) => boolean
   addCandidate: (candidate: Omit<Candidate, 'id'>) => void
+  approveCandidate: (id: string) => void
+  rejectCandidate: (id: string) => void
   trackPageView: (path: string) => void
   logEvent: (action: string, details: string) => void
+  checkPlanLimits: (type: 'listings' | 'needs' | 'matches' | 'closing') => boolean
 }
 
 const initialListings: Listing[] = [
@@ -94,6 +115,7 @@ const initialListings: Listing[] = [
     area: '450m²',
     beds: 4,
     neighborhood: 'Lúcio Costa',
+    chapter: 'Barra da Tijuca',
     status: 'Disponível',
     image: 'https://img.usecurling.com/p/600/400?q=luxury%20penthouse',
     ownerId: 'user1',
@@ -107,39 +129,13 @@ const initialNeeds: Need[] = [
     type: 'Casa',
     priceRange: 'Até R$ 7M',
     neighborhood: 'Santa Mônica',
+    chapter: 'Barra da Tijuca',
     urgency: 'Alta',
     ownerId: 'other',
   },
 ]
 
-const initialMatches: Match[] = [{ id: '1', needId: '1', listingId: '1', status: 'Contato' }]
-
-const initialBrokerMonitoring: BrokerMonitor[] = [
-  {
-    id: '1',
-    name: 'João Corretor',
-    commitmentLevel: 'Alto',
-    toolAdoption: 'Alta',
-    lastActive: 'Hoje',
-    status: 'Ativo',
-  },
-  {
-    id: '2',
-    name: 'Maria Santos',
-    commitmentLevel: 'Médio',
-    toolAdoption: 'Média',
-    lastActive: 'Há 3 dias',
-    status: 'Ativo',
-  },
-  {
-    id: '3',
-    name: 'Pedro Almeida',
-    commitmentLevel: 'Baixo',
-    toolAdoption: 'Baixa',
-    lastActive: 'Há 25 dias',
-    status: 'Risco de Exclusão',
-  },
-]
+const initialMatches: Match[] = [{ id: '1', needId: '1', listingId: '1', status: 'Proposta' }]
 
 const AppContext = createContext<AppState | null>(null)
 
@@ -148,27 +144,53 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [listings, setListings] = useState<Listing[]>(initialListings)
   const [needs, setNeeds] = useState<Need[]>(initialNeeds)
   const [matches, setMatches] = useState<Match[]>(initialMatches)
-  const [brokerMonitoring] = useState<BrokerMonitor[]>(initialBrokerMonitoring)
-  const [candidates, setCandidates] = useState<Candidate[]>([])
+  const [brokerMonitoring] = useState<BrokerMonitor[]>([])
+  const [candidates, setCandidates] = useState<Candidate[]>([
+    {
+      id: 'c1',
+      name: 'Carlos Mendes',
+      email: 'carlos@mendes.com',
+      phone: '21999991111',
+      creci: '12345',
+      region: 'Barra',
+      ticket: '3M',
+      status: 'pending',
+    },
+  ])
   const [pageViews, setPageViews] = useState<{ path: string; timestamp: string }[]>([])
   const [logs, setLogs] = useState<{ action: string; details: string; timestamp: string }[]>([])
+  const [statusLogs, setStatusLogs] = useState<
+    { entity: string; entityId: string; oldStatus: string; newStatus: string; timestamp: string }[]
+  >([])
   const [planLimitModalOpen, setPlanLimitModalOpen] = useState(false)
 
-  const login = (status: UserStatus) =>
+  const login = (email: string, method: 'magic_link' | 'password', forcedStatus?: UserStatus) => {
+    // Mock session creation with appropriate permissions
+    const status = forcedStatus || (email.includes('admin') ? 'admin' : 'approved')
+    const isAdmin = status === 'admin'
+
     setUser({
-      id: 'user1',
-      name: 'João Corretor',
+      id: isAdmin ? 'admin-1' : 'user1',
+      name: isAdmin ? 'Admin Root' : 'João Corretor',
+      email,
       status,
-      tier: 'Elite',
-      avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=1',
-      onboarded: status === 'admin' ? true : false,
+      tier: 'Ambassador',
+      plan: isAdmin ? 'Founder' : 'Free',
+      chapter: 'Barra da Tijuca',
+      avatar: `https://img.usecurling.com/ppl/thumbnail?gender=${isAdmin ? 'female' : 'male'}&seed=1`,
+      onboarded: isAdmin,
       lastLogin: new Date().toISOString(),
+      lastContributionAt: new Date().toISOString(),
+      referrals: 2,
     })
+    logEvent('Login', `User logged in via ${method}`)
+  }
 
   const logout = () => setUser(null)
 
   const completeOnboarding = () => {
     setUser((prev) => (prev ? { ...prev, onboarded: true } : prev))
+    logEvent('Onboarding', 'Usuário completou onboarding')
   }
 
   const logEvent = (action: string, details: string) => {
@@ -179,11 +201,14 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setPageViews((prev) => [...prev, { path, timestamp: new Date().toISOString() }])
   }
 
-  const checkPlanLimits = (type: 'listings' | 'needs' | 'matches') => {
-    if (!user || user.tier !== 'None') return true
+  const checkPlanLimits = (type: 'listings' | 'needs' | 'matches' | 'closing') => {
+    if (!user) return false
+    if (user.plan === 'Founder' || user.plan === 'Standard') return true
 
     if (type === 'listings') {
-      const myListings = listings.filter((l) => l.ownerId === user.id).length
+      const myListings = listings.filter(
+        (l) => l.ownerId === user.id && l.status === 'Disponível',
+      ).length
       if (myListings >= 1) return false
     }
     if (type === 'needs') {
@@ -194,6 +219,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
       const myMatches = matches.length
       if (myMatches >= 3) return false
     }
+    if (type === 'closing') {
+      return false // Free plan cannot register closings directly
+    }
 
     return true
   }
@@ -203,13 +231,15 @@ export function AppProvider({ children }: { children: ReactNode }) {
       setPlanLimitModalOpen(true)
       return false
     }
+    const id = Date.now().toString()
     setListings((prev) => [
       ...prev,
       {
         ...listing,
-        id: Date.now().toString(),
+        id,
         ownerId: user?.id || 'unknown',
         status: 'Disponível',
+        chapter: user?.chapter || 'Barra da Tijuca',
       } as Listing,
     ])
     logEvent('Imóvel Cadastrado', `Imóvel adicionado: ${listing.title}`)
@@ -221,9 +251,15 @@ export function AppProvider({ children }: { children: ReactNode }) {
       setPlanLimitModalOpen(true)
       return false
     }
+    const id = Date.now().toString()
     setNeeds((prev) => [
       ...prev,
-      { ...need, id: Date.now().toString(), ownerId: user?.id || 'unknown' } as Need,
+      {
+        ...need,
+        id,
+        ownerId: user?.id || 'unknown',
+        chapter: user?.chapter || 'Barra da Tijuca',
+      } as Need,
     ])
     logEvent('Demanda Cadastrada', `Demanda adicionada: ${need.title}`)
     return true
@@ -234,29 +270,77 @@ export function AppProvider({ children }: { children: ReactNode }) {
       setPlanLimitModalOpen(true)
       return false
     }
-    setMatches((prev) => [
+    const id = Date.now().toString()
+    setMatches((prev) => [...prev, { id, needId, listingId, status: 'Novo' }])
+    setStatusLogs((prev) => [
       ...prev,
-      { id: Date.now().toString(), needId, listingId, status: 'Novo' },
+      {
+        entity: 'match',
+        entityId: id,
+        oldStatus: '',
+        newStatus: 'Novo',
+        timestamp: new Date().toISOString(),
+      },
     ])
     logEvent('Match Criado', `Need: ${needId}, Listing: ${listingId}`)
     return true
   }
 
   const updateMatchStatus = (id: string, status: Match['status']) => {
+    const match = matches.find((m) => m.id === id)
+    if (match) {
+      setStatusLogs((prev) => [
+        ...prev,
+        {
+          entity: 'match',
+          entityId: id,
+          oldStatus: match.status,
+          newStatus: status,
+          timestamp: new Date().toISOString(),
+        },
+      ])
+    }
     setMatches((prev) => prev.map((m) => (m.id === id ? { ...m, status } : m)))
     logEvent('Status do Match Atualizado', `Match: ${id}, Novo Status: ${status}`)
   }
 
-  const closeMatch = (matchId: string, finalValue: string) => {
+  const closeMatch = (matchId: string, finalValue: string, bilateralConfirmed: boolean) => {
+    if (!checkPlanLimits('closing')) {
+      setPlanLimitModalOpen(true)
+      return false
+    }
     setMatches((prev) =>
-      prev.map((m) => (m.id === matchId ? { ...m, status: 'Fechado', finalValue } : m)),
+      prev.map((m) =>
+        m.id === matchId ? { ...m, status: 'Fechado', finalValue, bilateralConfirmed } : m,
+      ),
     )
+    setStatusLogs((prev) => [
+      ...prev,
+      {
+        entity: 'match',
+        entityId: matchId,
+        oldStatus: 'Proposta',
+        newStatus: 'Fechado',
+        timestamp: new Date().toISOString(),
+      },
+    ])
     logEvent('Negócio Fechado', `Match: ${matchId}, Valor Final: ${finalValue}`)
+    return true
   }
 
   const addCandidate = (candidate: Omit<Candidate, 'id'>) => {
     setCandidates((prev) => [...prev, { ...candidate, id: Date.now().toString() }])
     logEvent('Nova Aplicação', `Candidato: ${candidate.name}, Status: ${candidate.status}`)
+  }
+
+  const approveCandidate = (id: string) => {
+    setCandidates((prev) => prev.map((c) => (c.id === id ? { ...c, status: 'approved' } : c)))
+    logEvent('Admin Action', `Candidato ${id} aprovado manualmente`)
+  }
+
+  const rejectCandidate = (id: string) => {
+    setCandidates((prev) => prev.filter((c) => c.id !== id))
+    logEvent('Admin Action', `Candidato ${id} rejeitado`)
   }
 
   return createElement(
@@ -271,6 +355,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
         candidates,
         pageViews,
         logs,
+        statusLogs,
         planLimitModalOpen,
         setPlanLimitModalOpen,
         login,
@@ -282,8 +367,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
         updateMatchStatus,
         closeMatch,
         addCandidate,
+        approveCandidate,
+        rejectCandidate,
         trackPageView,
         logEvent,
+        checkPlanLimits,
       },
     },
     children,

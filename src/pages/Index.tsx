@@ -1,12 +1,8 @@
 import { HeroSection } from '@/components/home/HeroSection'
 import { ProblemSection } from '@/components/home/ProblemSection'
-import { ComparisonSection } from '@/components/home/ComparisonSection'
 import { NetworkSection } from '@/components/home/NetworkSection'
 import { CriteriaSection } from '@/components/home/CriteriaSection'
 import { ReferralSection } from '@/components/home/ReferralSection'
-import { ProcessTimeline } from '@/components/home/ProcessTimeline'
-import { PersonaSection } from '@/components/home/PersonaSection'
-import { FAQSection } from '@/components/home/FAQSection'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
 
@@ -17,13 +13,9 @@ export default function Index() {
       <main className="flex-1">
         <HeroSection />
         <ProblemSection />
-        <ComparisonSection />
         <NetworkSection />
         <CriteriaSection />
         <ReferralSection />
-        <ProcessTimeline />
-        <PersonaSection />
-        <FAQSection />
       </main>
       <Footer />
     </div>

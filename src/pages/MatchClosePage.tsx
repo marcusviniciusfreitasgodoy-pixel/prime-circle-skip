@@ -4,33 +4,55 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Checkbox } from '@/components/ui/checkbox'
 import useAppStore from '@/stores/main'
 import { toast } from 'sonner'
-import { PartyPopper, ArrowLeft } from 'lucide-react'
+import { PartyPopper, ArrowLeft, ShieldAlert } from 'lucide-react'
+import { sendTransactionalEmail } from '@/lib/email'
 
 export default function MatchClosePage() {
   const { id } = useParams()
   const navigate = useNavigate()
-  const { matches, needs, listings, closeMatch } = useAppStore()
+  const { matches, needs, listings, closeMatch, user } = useAppStore()
   const [value, setValue] = useState('')
+  const [confirmed, setConfirmed] = useState(false)
 
   const match = matches.find((m) => m.id === id)
   const need = match ? needs.find((n) => n.id === match.needId) : null
   const listing = match ? listings.find((l) => l.id === match.listingId) : null
 
   if (!match || !need || !listing) {
-    return <div className="text-white">Conexão não encontrada.</div>
+    return <div className="text-white text-center py-12">Conexão não encontrada.</div>
   }
 
-  const handleClose = (e: React.FormEvent) => {
+  if (match.status !== 'Proposta' && match.status !== 'Fechado') {
+    return (
+      <div className="max-w-xl mx-auto pt-16 text-center space-y-4 animate-fade-in-up">
+        <ShieldAlert className="w-16 h-16 text-destructive mx-auto" />
+        <h2 className="text-2xl font-bold text-white">Ação não permitida</h2>
+        <p className="text-muted-foreground">
+          Apenas conexões que alcançaram a fase de "Proposta" podem ser registradas como fechadas.
+        </p>
+        <Button variant="outline" onClick={() => navigate('/dashboard')} className="mt-4">
+          Voltar
+        </Button>
+      </div>
+    )
+  }
+
+  const handleClose = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!value) {
-      toast.error('Informe o valor final da transação.')
-      return
+    if (!value) return toast.error('Informe o valor final da transação.')
+    if (!confirmed) return toast.error('Confirmação bilateral pendente.')
+    if (user?.plan === 'Free')
+      return toast.error('Seu plano Free não permite registrar fechamentos.')
+
+    const success = closeMatch(match.id, value, confirmed)
+    if (success) {
+      await sendTransactionalEmail('closing_confirmed', { matchId: match.id, value })
+      toast.success('Parabéns! Fechamento registrado com sucesso.')
+      navigate('/dashboard')
     }
-    closeMatch(match.id, value)
-    toast.success('Parabéns! Negócio fechado com sucesso na plataforma.')
-    navigate('/matches')
   }
 
   return (
@@ -38,9 +60,9 @@ export default function MatchClosePage() {
       <Button
         variant="ghost"
         className="text-muted-foreground hover:text-white"
-        onClick={() => navigate('/matches')}
+        onClick={() => navigate('/dashboard')}
       >
-        <ArrowLeft className="w-4 h-4 mr-2" /> Voltar ao Pipeline
+        <ArrowLeft className="w-4 h-4 mr-2" /> Voltar
       </Button>
 
       <Card className="bg-card border-primary/50 relative overflow-hidden shadow-elevation">
@@ -48,9 +70,9 @@ export default function MatchClosePage() {
           <PartyPopper className="w-32 h-32 text-primary" />
         </div>
         <CardHeader>
-          <CardTitle className="text-2xl text-white">Fechar Negócio</CardTitle>
+          <CardTitle className="text-2xl text-white">Registrar Fechamento</CardTitle>
           <CardDescription className="text-muted-foreground text-base">
-            Parabéns por chegar até aqui! Registre o valor final para validar a comissão 50/50.
+            Valide a comissão 50/50. Requer confirmação bilateral da outra parte.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -64,7 +86,6 @@ export default function MatchClosePage() {
               <span className="font-medium text-white">{listing.title}</span>
             </div>
           </div>
-
           <form onSubmit={handleClose} className="space-y-6">
             <div className="space-y-2">
               <Label htmlFor="value" className="text-white text-base">
@@ -76,11 +97,46 @@ export default function MatchClosePage() {
                 value={value}
                 onChange={(e) => setValue(e.target.value)}
                 className="bg-background border-border text-white text-lg h-12"
+                disabled={match.status === 'Fechado'}
               />
             </div>
-            <Button type="submit" className="w-full gold-gradient h-14 text-lg">
-              Confirmar Fechamento
-            </Button>
+
+            <div className="flex items-start space-x-3 p-4 border border-border rounded-lg bg-background">
+              <Checkbox
+                id="confirm"
+                checked={confirmed || match.status === 'Fechado'}
+                onCheckedChange={(c) => setConfirmed(!!c)}
+                disabled={match.status === 'Fechado'}
+                className="mt-0.5"
+              />
+              <div className="space-y-1">
+                <Label htmlFor="confirm" className="text-white text-sm">
+                  Confirmação Bilateral
+                </Label>
+                <p className="text-xs text-muted-foreground">
+                  Declaro que os honorários foram integralmente divididos (50/50) com o corretor
+                  parceiro.
+                </p>
+              </div>
+            </div>
+
+            {match.status !== 'Fechado' ? (
+              <Button
+                type="submit"
+                disabled={!confirmed}
+                className="w-full gold-gradient text-black h-14 text-lg font-semibold"
+              >
+                Confirmar Fechamento
+              </Button>
+            ) : (
+              <Button
+                type="button"
+                disabled
+                className="w-full bg-secondary text-muted-foreground h-14 text-lg font-semibold border border-border"
+              >
+                Negócio já fechado
+              </Button>
+            )}
           </form>
         </CardContent>
       </Card>

@@ -1,21 +1,24 @@
 import { BrowserRouter as Router, Routes, Route, Outlet, Navigate } from 'react-router-dom'
 import Index from './pages/Index'
-import Apply from './pages/Apply'
+import ApplyPage from './pages/ApplyPage'
 import WaitlistPage from './pages/WaitlistPage'
 import DashboardPage from './pages/DashboardPage'
+import AdminPage from './pages/AdminPage'
+import AuthConfirmPage from './pages/AuthConfirmPage'
+import OnboardingPage from './pages/OnboardingPage'
+import PendingPage from './pages/PendingPage'
+import MatchClosePage from './pages/MatchClosePage'
+import SuggestionsPage from './pages/SuggestionsPage'
+import PlansPage from './pages/PlansPage'
 import NotFound from './pages/NotFound'
 import { Toaster } from '@/components/ui/toaster'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import { Navbar } from '@/components/layout/Navbar'
+import { ProtectedRoute } from '@/components/ProtectedRoute'
+import { AnalyticsTracker } from '@/components/AnalyticsTracker'
 import useAppStore, { AppProvider } from '@/stores/main'
 
 function DashboardLayout() {
-  const { user } = useAppStore()
-
-  if (!user) {
-    return <Navigate to="/" replace />
-  }
-
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       <Navbar />
@@ -32,13 +35,26 @@ function App() {
       <TooltipProvider>
         <Toaster />
         <Router>
+          <AnalyticsTracker />
           <Routes>
             <Route path="/" element={<Index />} />
-            <Route path="/apply" element={<Apply />} />
+            <Route path="/apply" element={<ApplyPage />} />
+            <Route path="/apply/lista-de-espera" element={<WaitlistPage />} />
             <Route path="/waitlist" element={<WaitlistPage />} />
-            <Route element={<DashboardLayout />}>
-              <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/auth/confirm" element={<AuthConfirmPage />} />
+
+            <Route element={<ProtectedRoute />}>
+              <Route path="/pending" element={<PendingPage />} />
+              <Route path="/onboarding" element={<OnboardingPage />} />
+              <Route element={<DashboardLayout />}>
+                <Route path="/dashboard" element={<DashboardPage />} />
+                <Route path="/admin" element={<AdminPage />} />
+                <Route path="/plans" element={<PlansPage />} />
+                <Route path="/suggestions" element={<SuggestionsPage />} />
+                <Route path="/matches/:id/close" element={<MatchClosePage />} />
+              </Route>
             </Route>
+
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Router>

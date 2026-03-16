@@ -34,7 +34,7 @@ const formSchema = z.object({
 
 export default function ApplyPage() {
   const navigate = useNavigate()
-  const { login } = useAppStore()
+  const { login, addCandidate } = useAppStore()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -56,55 +56,32 @@ export default function ApplyPage() {
     const isBarra = values.region.toLowerCase().includes('barra')
     const hasValidPhone = values.phone.replace(/\D/g, '').length >= 10
     const hasValidCreci = values.creci.length >= 4
-    const isUniqueEmail = true // Mock verification
-    const noPreviousRejection = true // Mock verification
+    const isUniqueEmail = true // Mock: Not in users table
+    const noDuplicateActiveApp = true // Mock
     const acceptedTerms = values.agreement === true
 
-    if (
-      isBarra &&
-      ticketValue >= 1000000 &&
+    const passedAll =
+      isUniqueEmail &&
       hasValidPhone &&
       hasValidCreci &&
-      isUniqueEmail &&
-      noPreviousRejection &&
+      isBarra &&
+      ticketValue >= 1000000 &&
       acceptedTerms &&
+      noDuplicateActiveApp &&
       values.referral
-    ) {
-      await sendTransactionalEmail('Application Received', {
-        to: values.email,
-        candidate: values.name,
-      })
-      await sendTransactionalEmail('Referral Confirmation', {
-        to: 'contato@primecircle.app.br',
-        candidate: values.name,
-        code: values.referral,
-      })
-      await sendTransactionalEmail('Welcome Email', { to: values.email, candidate: values.name })
 
-      login('approved')
-      toast.success('Aprovado! Critérios validados e indicação confirmada.')
-      navigate('/auth/confirm')
-      return
+    if (passedAll) {
+      await sendTransactionalEmail('member_approved', { to: values.email, candidate: values.name })
+      login(values.email, 'password', 'approved')
+      toast.success('Aprovado! Bem-vindo ao Prime Circle.')
+      navigate('/onboarding')
+    } else {
+      // Manual review fallback
+      addCandidate({ ...values, status: 'pending' })
+      login(values.email, 'magic_link', 'pending')
+      toast.info('Solicitação em Análise. Redirecionando...')
+      navigate('/pending')
     }
-
-    if (!isBarra || ticketValue < 1000000) {
-      if (!values.referral) {
-        navigate('/apply/lista-de-espera')
-        return
-      }
-    }
-
-    // Trigger Application Received Email for manual review
-    await sendTransactionalEmail('Application Received', {
-      to: values.email,
-      candidate: values.name,
-    })
-
-    login('pending')
-    toast.success(
-      'Solicitação recebida com sucesso! Em caso de dúvidas, envie email para contato@primecircle.app.br',
-    )
-    navigate('/pending')
   }
 
   return (
@@ -117,7 +94,6 @@ export default function ApplyPage() {
             Junte-se ao círculo exclusivo da Barra da Tijuca.
           </p>
         </div>
-
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
@@ -127,7 +103,7 @@ export default function ApplyPage() {
                 <FormItem>
                   <FormLabel className="text-white">Nome Completo</FormLabel>
                   <FormControl>
-                    <Input placeholder="João Silva" {...field} className="bg-background" />
+                    <Input {...field} className="bg-background" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -140,11 +116,7 @@ export default function ApplyPage() {
                 <FormItem>
                   <FormLabel className="text-white">Email Profissional</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="joao@primecircle.app.br"
-                      {...field}
-                      className="bg-background"
-                    />
+                    <Input type="email" {...field} className="bg-background" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -158,7 +130,7 @@ export default function ApplyPage() {
                   <FormItem>
                     <FormLabel className="text-white">CRECI</FormLabel>
                     <FormControl>
-                      <Input placeholder="00000" {...field} className="bg-background" />
+                      <Input {...field} className="bg-background" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -171,7 +143,7 @@ export default function ApplyPage() {
                   <FormItem>
                     <FormLabel className="text-white">WhatsApp</FormLabel>
                     <FormControl>
-                      <Input placeholder="(21) 90000-0000" {...field} className="bg-background" />
+                      <Input {...field} className="bg-background" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -211,13 +183,11 @@ export default function ApplyPage() {
               name="referral"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-white">Código de Indicação (Opcional)</FormLabel>
+                  <FormLabel className="text-white">Código de Indicação</FormLabel>
                   <FormControl>
-                    <Input placeholder="Ex: CARLOS-123" {...field} className="bg-background" />
+                    <Input placeholder="Opcional" {...field} className="bg-background" />
                   </FormControl>
-                  <FormDescription className="text-xs">
-                    Acelera o processo de análise e auto-aprovação.
-                  </FormDescription>
+                  <FormDescription className="text-[10px]">Acelera auto-aprovação.</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -226,22 +196,14 @@ export default function ApplyPage() {
               control={form.control}
               name="agreement"
               render={({ field }) => (
-                <FormItem className="flex flex-row items-start space-x-3 space-y-0 p-4 border border-border rounded-lg bg-background mt-6">
+                <FormItem className="flex items-start space-x-3 space-y-0 p-4 border border-border rounded-lg bg-background mt-6">
                   <FormControl>
-                    <Checkbox
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                      className="data-[state=checked]:bg-primary data-[state=checked]:text-black mt-0.5"
-                    />
+                    <Checkbox checked={field.value} onCheckedChange={field.onChange} />
                   </FormControl>
                   <div className="space-y-1 leading-none">
                     <FormLabel className="text-white text-sm cursor-pointer">
                       Aceito a Política 50/50
                     </FormLabel>
-                    <p className="text-xs text-muted-foreground leading-relaxed">
-                      Concordo em praticar a divisão justa de honorários (50/50) em todas as
-                      parcerias geradas via Prime Circle.
-                    </p>
                   </div>
                 </FormItem>
               )}
@@ -252,16 +214,6 @@ export default function ApplyPage() {
             >
               Enviar Solicitação
             </Button>
-
-            <div className="mt-6 text-center pt-4 border-t border-border/50">
-              <a
-                href="mailto:contato@primecircle.app.br"
-                className="inline-flex items-center gap-2 text-xs text-muted-foreground hover:text-primary transition-colors"
-              >
-                <Mail className="w-3 h-3" />
-                contato@primecircle.app.br
-              </a>
-            </div>
           </form>
         </Form>
       </div>

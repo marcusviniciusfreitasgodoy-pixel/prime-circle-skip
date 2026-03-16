@@ -28,34 +28,19 @@ export function PlanLimitModal() {
         <DialogHeader>
           <DialogTitle className="text-white text-2xl flex items-center gap-2">
             <Sparkles className="w-6 h-6 text-primary" />
-            Limite de Plano Alcançado
+            Limite Alcançado
           </DialogTitle>
           <DialogDescription className="text-muted-foreground text-base pt-2">
-            Você atingiu o limite de atividades do plano Free. Para escalar suas conexões e fechar
-            mais negócios, eleve seu plano para <strong className="text-primary">
-              Standard
-            </strong>{' '}
-            ou torne-se <strong className="text-white">Ambassador</strong>.
+            Seu plano atual atingiu os limites operacionais permitidos. Para continuar criando
+            conexões ou registrando fechamentos, realize o upgrade.
           </DialogDescription>
         </DialogHeader>
 
-        <div className="bg-secondary/50 p-4 rounded-lg border border-border my-4 space-y-3 text-sm text-white">
-          <div className="flex justify-between items-center">
-            <span className="text-muted-foreground">Imóveis Ativos:</span>
-            <span className="text-primary font-medium">Ilimitado no Standard</span>
-          </div>
-          <div className="flex justify-between items-center">
-            <span className="text-muted-foreground">Demandas:</span>
-            <span className="text-primary font-medium">Ilimitado no Standard</span>
-          </div>
-          <div className="flex justify-between items-center">
-            <span className="text-muted-foreground">Matches/mês:</span>
-            <span className="text-primary font-medium">Ilimitado no Standard</span>
-          </div>
-        </div>
-
-        <div className="flex flex-col gap-3 pt-2">
-          <Button className="gold-gradient w-full h-12 text-lg font-bold" onClick={handleUpgrade}>
+        <div className="flex flex-col gap-3 pt-6">
+          <Button
+            className="gold-gradient text-black w-full h-12 text-lg font-bold"
+            onClick={handleUpgrade}
+          >
             Ver Planos e Fazer Upgrade
           </Button>
           <Button
@@ -63,7 +48,7 @@ export function PlanLimitModal() {
             onClick={() => setPlanLimitModalOpen(false)}
             className="text-muted-foreground hover:text-white"
           >
-            Talvez mais tarde
+            Cancelar
           </Button>
         </div>
       </DialogContent>

@@ -1,60 +1,52 @@
-import { XCircle, CheckCircle2 } from 'lucide-react'
+import { AlertCircle, EyeOff, Handshake } from 'lucide-react'
 
 export function ProblemSection() {
-  const points = [
-    {
-      pain: 'Falta de liquidez e inventário estagnado sem clientes qualificados.',
-      solution: 'Cruze ofertas e demandas com uma rede nacional conectada instantaneamente.',
-    },
-    {
-      pain: 'Isolamento profissional e custos operacionais altíssimos.',
-      solution: 'Acesse infraestrutura tecnológica de ponta compartilhada.',
-    },
-    {
-      pain: 'Parcerias informais (boca a boca) com alto risco de by-pass.',
-      solution: 'Segurança nas transações e fluxo financeiro garantidos em cada negociação.',
-    },
-  ]
-
   return (
-    <section className="py-24 bg-secondary/20 relative">
+    <section id="how-it-works" className="py-24 bg-background relative border-t border-border">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16 max-w-3xl mx-auto">
-          <h2 className="text-3xl md:text-5xl font-bold mb-6">
-            O mercado imobiliário tradicional{' '}
-            <span className="text-primary">precisa ser mudado</span>
+        <div className="text-center max-w-3xl mx-auto mb-16">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            O mercado de alto padrão está quebrado.
           </h2>
-          <p className="text-xl text-muted-foreground">
-            A forma como os corretores fazem parcerias hoje é ineficiente e arriscada. Nós mudamos
-            as regras do jogo para alta performance.
+          <p className="text-lg text-muted-foreground">
+            Grupos de WhatsApp lotados, informações perdidas, parcerias não honradas e falta de
+            privacidade para seus clientes exclusivos.
           </p>
         </div>
 
         <div className="grid md:grid-cols-3 gap-8">
-          {points.map((point, i) => (
-            <div
-              key={i}
-              className="bg-card border border-border/50 rounded-xl p-8 shadow-lg relative overflow-hidden group"
-            >
-              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-destructive/50 to-destructive" />
-              <div className="mb-8">
-                <div className="flex items-center gap-3 mb-4 text-destructive">
-                  <XCircle className="w-6 h-6 shrink-0" />
-                  <h3 className="font-semibold text-lg">Mercado Tradicional</h3>
-                </div>
-                <p className="text-muted-foreground">{point.pain}</p>
-              </div>
-
-              <div className="relative">
-                <div className="absolute -inset-4 bg-primary/5 rounded-xl -z-10" />
-                <div className="flex items-center gap-3 mb-4 text-primary">
-                  <CheckCircle2 className="w-6 h-6 shrink-0" />
-                  <h3 className="font-semibold text-lg">Prime Circle</h3>
-                </div>
-                <p className="text-foreground font-medium">{point.solution}</p>
-              </div>
+          <div className="bg-secondary/50 p-8 rounded-2xl border border-border">
+            <div className="w-12 h-12 rounded-full bg-destructive/10 flex items-center justify-center mb-6">
+              <EyeOff className="w-6 h-6 text-destructive" />
             </div>
-          ))}
+            <h3 className="text-xl font-semibold text-white mb-3">Exposição Desnecessária</h3>
+            <p className="text-muted-foreground">
+              Colocar imóveis de clientes premium em portais abertos desvaloriza o ativo e irrita o
+              proprietário.
+            </p>
+          </div>
+
+          <div className="bg-secondary/50 p-8 rounded-2xl border border-border">
+            <div className="w-12 h-12 rounded-full bg-destructive/10 flex items-center justify-center mb-6">
+              <AlertCircle className="w-6 h-6 text-destructive" />
+            </div>
+            <h3 className="text-xl font-semibold text-white mb-3">O Caos dos Grupos</h3>
+            <p className="text-muted-foreground">
+              Mensagens perdidas, demandas irrelevantes e a constante insegurança sobre a
+              procedência da informação.
+            </p>
+          </div>
+
+          <div className="bg-secondary/50 p-8 rounded-2xl border border-border">
+            <div className="w-12 h-12 rounded-full bg-destructive/10 flex items-center justify-center mb-6">
+              <Handshake className="w-6 h-6 text-destructive" />
+            </div>
+            <h3 className="text-xl font-semibold text-white mb-3">Ética Questionável</h3>
+            <p className="text-muted-foreground">
+              Acordos de 50/50 não honrados e "atravessamentos" que minam a confiança entre os
+              profissionais.
+            </p>
+          </div>
         </div>
       </div>
     </section>

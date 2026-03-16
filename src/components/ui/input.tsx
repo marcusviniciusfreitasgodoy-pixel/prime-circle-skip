@@ -1,4 +1,3 @@
-/* Input Component - A component that displays an input - from shadcn/ui (exposes Input) */
 import * as React from 'react'
 
 import { cn } from '@/lib/utils'

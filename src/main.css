@@ -4,29 +4,34 @@
 
 @layer base {
   :root {
-    /* Dark Theme Base #1A1A2E */
-    --background: 240 28% 14%;
+    --background: 240 10% 4%;
     --foreground: 0 0% 98%;
-    --card: 240 28% 16%;
+
+    --card: 240 10% 6%;
     --card-foreground: 0 0% 98%;
-    --popover: 240 28% 14%;
+
+    --popover: 240 10% 6%;
     --popover-foreground: 0 0% 98%;
 
-    /* Gold Accents #C9A84C */
-    --primary: 44 55% 54%;
-    --primary-foreground: 240 28% 14%;
+    --primary: 43 55% 54%; /* Golden color - c9a84c */
+    --primary-foreground: 0 0% 9%;
 
-    --secondary: 240 28% 20%;
+    --secondary: 240 10% 12%;
     --secondary-foreground: 0 0% 98%;
-    --muted: 240 28% 20%;
+
+    --muted: 240 10% 15%;
     --muted-foreground: 240 5% 65%;
-    --accent: 44 55% 54%;
-    --accent-foreground: 240 28% 14%;
+
+    --accent: 240 10% 15%;
+    --accent-foreground: 0 0% 98%;
+
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
-    --border: 240 28% 20%;
-    --input: 240 28% 20%;
-    --ring: 44 55% 54%;
+
+    --border: 240 10% 15%;
+    --input: 240 10% 15%;
+    --ring: 43 55% 54%;
+
     --radius: 0.5rem;
   }
 }
@@ -36,6 +41,79 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground antialiased;
+    @apply bg-background text-foreground antialiased selection:bg-primary selection:text-black;
+  }
+}
+
+@layer utilities {
+  .gold-gradient {
+    background: linear-gradient(135deg, #dfc678 0%, #c9a84c 50%, #b08d3a 100%);
+  }
+
+  .gold-text {
+    @apply text-transparent bg-clip-text;
+    background-image: linear-gradient(135deg, #dfc678 0%, #c9a84c 50%, #b08d3a 100%);
+  }
+
+  .gold-glow {
+    box-shadow: 0 0 20px rgba(201, 168, 76, 0.15);
+  }
+
+  .shadow-elevation {
+    box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.5);
+  }
+
+  /* Animations */
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
+  }
+  .animate-fade-in-up {
+    animation: fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  .animate-fade-in-down {
+    animation: fadeInDown 0.5s ease-out forwards;
+  }
+  .animate-slide-up {
+    animation: slideUp 0.4s ease-out forwards;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fadeInDown {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slideUp {
+    from {
+      transform: translateY(100%);
+    }
+    to {
+      transform: translateY(0);
+    }
   }
 }

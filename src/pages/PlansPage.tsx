@@ -7,48 +7,42 @@ import {
   CardDescription,
   CardFooter,
 } from '@/components/ui/card'
-import { Check } from 'lucide-react'
+import { Check, X } from 'lucide-react'
 
 export default function PlansPage() {
   const plans = [
     {
       name: 'Free',
       price: 'R$ 0',
-      desc: 'Para conhecer a dinâmica.',
-      features: [
-        'Acesso ao mural de Demandas',
-        'Máximo 2 imóveis ativos',
-        'Até 3 conexões/mês',
-        'Suporte comunitário',
-      ],
-      buttonText: 'Plano Atual',
+      desc: 'Limitado, para experimentação.',
+      features: ['1 Demanda Ativa', '1 Imóvel Ativo', 'Até 3 Conexões/mês', 'Acesso ao Mural'],
+      missing: ['Registrar Fechamentos', 'Destaque no Radar'],
       active: true,
+      btn: 'Plano Atual',
     },
     {
       name: 'Standard',
       price: 'R$ 297/mês',
       desc: 'Para corretores de alta performance.',
       features: [
-        'Imóveis ilimitados',
-        'Conexões ilimitadas',
-        'Destaque no mural',
-        'Suporte prioritário via WhatsApp',
+        'Imóveis Ilimitados',
+        'Demandas Ilimitadas',
+        'Conexões Ilimitadas',
+        'Registrar Fechamentos',
+        'Suporte Prioritário',
       ],
-      buttonText: 'Fazer Upgrade',
+      missing: [],
       active: false,
+      btn: 'Fazer Upgrade',
     },
     {
       name: 'Founder',
       price: 'Exclusivo',
       desc: 'Apenas para sócios fundadores.',
-      features: [
-        'Acesso vitalício',
-        'Voto no board do app',
-        'Tag Founder no perfil',
-        'Acesso a eventos presenciais',
-      ],
-      buttonText: 'Esgotado',
+      features: ['Acesso Vitalício', 'Limites Ilimitados', 'Voto no Board', 'Eventos Presenciais'],
+      missing: [],
       active: false,
+      btn: 'Esgotado',
     },
   ]
 
@@ -57,10 +51,9 @@ export default function PlansPage() {
       <div className="text-center space-y-2 mb-12">
         <h2 className="text-3xl font-bold text-white">Invista na sua Infraestrutura</h2>
         <p className="text-muted-foreground">
-          Escolha o plano que melhor atende o volume da sua carteira.
+          Evolua seu plano e destrave os limites operacionais.
         </p>
       </div>
-
       <div className="grid md:grid-cols-3 gap-6">
         {plans.map((plan, i) => (
           <Card
@@ -83,7 +76,16 @@ export default function PlansPage() {
               <ul className="space-y-3">
                 {plan.features.map((feat, j) => (
                   <li key={j} className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Check className="w-4 h-4 text-primary flex-shrink-0" />
+                    <Check className="w-4 h-4 text-primary shrink-0" />
+                    <span>{feat}</span>
+                  </li>
+                ))}
+                {plan.missing.map((feat, j) => (
+                  <li
+                    key={j}
+                    className="flex items-center gap-2 text-sm text-muted-foreground/50 line-through"
+                  >
+                    <X className="w-4 h-4 shrink-0" />
                     <span>{feat}</span>
                   </li>
                 ))}
@@ -92,10 +94,10 @@ export default function PlansPage() {
             <CardFooter>
               <Button
                 variant={plan.active ? 'outline' : 'default'}
-                className={`w-full ${plan.name === 'Standard' ? 'gold-gradient' : plan.active ? 'border-border text-muted-foreground' : 'bg-secondary text-white'}`}
                 disabled={plan.name === 'Founder'}
+                className={`w-full ${plan.name === 'Standard' ? 'gold-gradient text-black font-semibold' : plan.active ? 'border-border text-muted-foreground' : 'bg-secondary text-white'}`}
               >
-                {plan.buttonText}
+                {plan.btn}
               </Button>
             </CardFooter>
           </Card>

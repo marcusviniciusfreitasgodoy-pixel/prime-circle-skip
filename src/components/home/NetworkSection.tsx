@@ -1,69 +1,60 @@
-import circleImage from '@/assets/gemini_generated_image_7mhaio7mhaio7mha-efbfa.png'
-import { Shield, Globe, TrendingUp } from 'lucide-react'
+import { Shield, Target, Lock } from 'lucide-react'
 
 export function NetworkSection() {
   return (
-    <section id="how-it-works" className="py-24 bg-background border-t border-border/50 relative">
-      <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-primary/5 to-transparent pointer-events-none" />
-
+    <section className="py-24 bg-background relative border-t border-border overflow-hidden">
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/5 rounded-full blur-[120px] pointer-events-none" />
+      
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-5xl font-bold mb-4">
-            O Modelo <span className="text-primary">50/50</span>
-          </h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            No Prime Circle, o sucesso é compartilhado. Trabalhe com uma comunidade de elite e
-            maximize seus resultados juntos.
-          </p>
-        </div>
+        <div className="flex flex-col lg:flex-row gap-16 items-center">
+          <div className="flex-1 space-y-8">
+            <div>
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">Uma infraestrutura desenhada para liquidez e confiança.</h2>
+              <p className="text-lg text-muted-foreground">O Prime Circle não é um portal. É uma ferramenta operacional focada na garantia de negócios (50/50) através de Chapter Isolation e curadoria rigorosa.</p>
+            </div>
 
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
-          <div className="relative group mx-auto w-full max-w-md lg:max-w-none">
-            <div className="absolute -inset-1 bg-gradient-to-r from-primary/40 to-primary/10 rounded-xl blur-lg opacity-30 group-hover:opacity-60 transition duration-700"></div>
-            <img
-              src={circleImage}
-              alt="Prime Circle Network"
-              className="relative rounded-xl w-full object-cover shadow-2xl border border-primary/20 aspect-square lg:aspect-auto lg:h-[500px]"
-            />
+            <ul className="space-y-6">
+              <li className="flex gap-4">
+                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                  <Shield className="w-5 h-5 text-primary" />
+                </div>
+                <div>
+                  <h4 className="text-lg font-semibold text-white">Governança Rigorosa</h4>
+                  <p className="text-muted-foreground mt-1">Acesso exclusivo por convite. Verificação automática de 7 critérios e auditoria contínua de atividade.</p>
+                </div>
+              </li>
+              <li className="flex gap-4">
+                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                  <Target className="w-5 h-5 text-primary" />
+                </div>
+                <div>
+                  <h4 className="text-lg font-semibold text-white">Matches Precisos</h4>
+                  <p className="text-muted-foreground mt-1">Algoritmo liga diretamente suas demandas ativas aos imóveis da rede, gerando um pipeline estruturado até o fechamento.</p>
+                </div>
+              </li>
+              <li className="flex gap-4">
+                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                  <Lock className="w-5 h-5 text-primary" />
+                </div>
+                <div>
+                  <h4 className="text-lg font-semibold text-white">Chapter Isolation</h4>
+                  <p className="text-muted-foreground mt-1">Informações isoladas por região (Ex: Barra da Tijuca). Suas demandas não vazam para fora do seu círculo de atuação.</p>
+                </div>
+              </li>
+            </ul>
           </div>
-
-          <div className="space-y-10">
-            <div className="flex gap-6">
-              <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center shrink-0 border border-primary/30">
-                <Globe className="w-6 h-6 text-primary" />
-              </div>
-              <div>
-                <h3 className="text-xl font-bold mb-2">Rede Fechada e Exclusiva</h3>
-                <p className="text-muted-foreground leading-relaxed">
-                  Conecte-se exclusivamente com profissionais validados que operam imóveis de
-                  altíssimo padrão. Compartilhe portfólios confidenciais com total segurança.
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-6">
-              <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center shrink-0 border border-primary/30">
-                <Shield className="w-6 h-6 text-primary" />
-              </div>
-              <div>
-                <h3 className="text-xl font-bold mb-2">Parceria 50/50 Segura</h3>
-                <p className="text-muted-foreground leading-relaxed">
-                  Fluxos garantidos pela nossa plataforma. Divida comissões de forma transparente e
-                  elimine qualquer ruído nas negociações conjuntas.
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-6">
-              <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center shrink-0 border border-primary/30">
-                <TrendingUp className="w-6 h-6 text-primary" />
-              </div>
-              <div>
-                <h3 className="text-xl font-bold mb-2">Liquidez Imediata</h3>
-                <p className="text-muted-foreground leading-relaxed">
-                  Cruze seus clientes compradores com o inventário da rede. Multiplique suas chances
-                  de conversão aproveitando o poder da comunidade.
-                </p>
-              </div>
-            </div>
+          
+          <div className="flex-1 w-full max-w-md lg:max-w-none">
+             <div className="bg-card border border-primary/30 p-8 rounded-2xl shadow-[0_0_40px_rgba(201,168,76,0.15)] relative">
+                <div className="absolute -top-4 -right-4 bg-primary text-black font-bold text-xs px-3 py-1 rounded-full">AMBIENTE SEGURO</div>
+                <h3 className="text-xl font-bold text-white mb-6 border-b border-border pb-4">Política de Engajamento</h3>
+                <div className="space-y-4 text-sm text-muted-foreground">
+                   <p className="flex items-center gap-2"><div className="w-1.5 h-1.5 rounded-full bg-primary" /> Adesão mandatória à divisão 50/50 em comissões.</p>
+                   <p className="flex items-center gap-2"><div className="w-1.5 h-1.5 rounded-full bg-primary" /> Necessidade de confirmação bilateral para negócios fechados.</p>
+                   <p className="flex items-center gap-2"><div className="w-1.5 h-1.5 rounded-full bg-destructive" /> Inatividade prolongada (>60 dias) acarreta perda de benefícios.</p>
+                   <p className="flex items-center gap-2"><div className="w-1.5 h-1.5 rounded-full bg-destructive" /> Transgressão ética resulta em banimento sem recurso.</p>
+                </div>
+             </div>
           </div>
         </div>
       </div>
