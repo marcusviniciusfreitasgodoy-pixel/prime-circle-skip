@@ -19656,7 +19656,7 @@ function HeroSection() {
 						"data-uid": "src/components/home/HeroSection.tsx:23:11",
 						"data-prohibitions": "[]",
 						className: "text-lg md:text-xl text-muted-foreground mb-4 leading-relaxed",
-						children: "Uma rede privada para corretores selecionados da Barra — onde demandas reais circulam antes de qualquer portal ver."
+						children: "Uma rede privada para corretores selecionados da Barra da Tijuca — onde demandas reais circulam antes de qualquer portal ver."
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
 						"data-uid": "src/components/home/HeroSection.tsx:27:11",
@@ -26464,4 +26464,4 @@ function App() {
 }));
 //#endregion
 
-//# sourceMappingURL=index-QGSvW3hx.js.map
+//# sourceMappingURL=index-C5hujOaM.js.map

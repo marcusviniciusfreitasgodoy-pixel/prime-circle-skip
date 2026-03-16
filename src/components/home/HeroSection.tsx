@@ -21,8 +21,8 @@ export function HeroSection() {
             <span className="text-primary">está esperando.</span>
           </h1>
           <p className="text-lg md:text-xl text-muted-foreground mb-4 leading-relaxed">
-            Uma rede privada para corretores selecionados da Barra — onde demandas reais circulam
-            antes de qualquer portal ver.
+            Uma rede privada para corretores selecionados da Barra da Tijuca — onde demandas reais
+            circulam antes de qualquer portal ver.
           </p>
           <p className="text-base md:text-lg text-foreground/90 font-medium mb-8">
             Acesso por indicação e aprovação. Demandas e imóveis que não aparecem em nenhum outro
