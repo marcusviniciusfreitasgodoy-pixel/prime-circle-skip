@@ -20079,68 +20079,91 @@ function NetworkSection() {
 							})
 						]
 					})]
-				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 					"data-uid": "src/components/home/NetworkSection.tsx:63:11",
 					"data-prohibitions": "[]",
-					className: "flex-1 w-full max-w-md lg:max-w-none",
-					children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					className: "flex-1 w-full max-w-md lg:max-w-none relative mx-auto",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 						"data-uid": "src/components/home/NetworkSection.tsx:64:13",
 						"data-prohibitions": "[]",
-						className: "bg-card border border-primary/30 p-8 rounded-2xl shadow-[0_0_40px_rgba(201,168,76,0.15)] relative",
+						className: "relative w-full aspect-square lg:aspect-[4/5] rounded-2xl overflow-hidden border border-border",
+						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
+								"data-uid": "src/components/home/NetworkSection.tsx:65:15",
+								"data-prohibitions": "[editContent]",
+								src: "https://img.usecurling.com/p/800/1000?q=two%20business%20professionals%20office",
+								alt: "Match Algorithm e Inteligência de Mercado",
+								className: "w-full h-full object-cover object-center scale-110"
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+								"data-uid": "src/components/home/NetworkSection.tsx:70:15",
+								"data-prohibitions": "[editContent]",
+								className: "absolute inset-0 bg-black/30 mix-blend-multiply pointer-events-none"
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+								"data-uid": "src/components/home/NetworkSection.tsx:71:15",
+								"data-prohibitions": "[editContent]",
+								className: "absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-90 pointer-events-none"
+							})
+						]
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						"data-uid": "src/components/home/NetworkSection.tsx:74:13",
+						"data-prohibitions": "[]",
+						className: "bg-card border border-primary/30 p-6 sm:p-8 rounded-2xl shadow-[0_0_40px_rgba(201,168,76,0.15)] relative -mt-24 lg:mt-0 lg:absolute lg:-left-12 lg:bottom-12 lg:w-[calc(100%+3rem)] lg:max-w-md mx-4 lg:mx-0 z-10",
 						children: [
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-								"data-uid": "src/components/home/NetworkSection.tsx:65:15",
+								"data-uid": "src/components/home/NetworkSection.tsx:75:15",
 								"data-prohibitions": "[]",
 								className: "absolute -top-4 -right-4 bg-primary text-black font-bold text-xs px-3 py-1 rounded-full",
 								children: "AMBIENTE SEGURO"
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
-								"data-uid": "src/components/home/NetworkSection.tsx:68:15",
+								"data-uid": "src/components/home/NetworkSection.tsx:78:15",
 								"data-prohibitions": "[]",
 								className: "text-xl font-bold text-white mb-6 border-b border-border pb-4",
 								children: "O Padrão Prime Circle"
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								"data-uid": "src/components/home/NetworkSection.tsx:71:15",
+								"data-uid": "src/components/home/NetworkSection.tsx:81:15",
 								"data-prohibitions": "[]",
 								className: "space-y-4 text-sm text-muted-foreground",
 								children: [
 									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-										"data-uid": "src/components/home/NetworkSection.tsx:72:17",
+										"data-uid": "src/components/home/NetworkSection.tsx:82:17",
 										"data-prohibitions": "[]",
 										className: "flex items-center gap-2",
 										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-											"data-uid": "src/components/home/NetworkSection.tsx:73:19",
+											"data-uid": "src/components/home/NetworkSection.tsx:83:19",
 											"data-prohibitions": "[editContent]",
 											className: "w-1.5 h-1.5 rounded-full bg-primary shrink-0"
 										}), " Adesão mandatória à divisão 50/50 em comissões."]
 									}),
 									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-										"data-uid": "src/components/home/NetworkSection.tsx:76:17",
+										"data-uid": "src/components/home/NetworkSection.tsx:86:17",
 										"data-prohibitions": "[]",
 										className: "flex items-center gap-2",
 										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-											"data-uid": "src/components/home/NetworkSection.tsx:77:19",
+											"data-uid": "src/components/home/NetworkSection.tsx:87:19",
 											"data-prohibitions": "[editContent]",
 											className: "w-1.5 h-1.5 rounded-full bg-primary shrink-0"
 										}), " Sigilo absoluto sobre as operações e clientes envolvidos."]
 									}),
 									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-										"data-uid": "src/components/home/NetworkSection.tsx:80:17",
+										"data-uid": "src/components/home/NetworkSection.tsx:90:17",
 										"data-prohibitions": "[]",
 										className: "flex items-center gap-2",
 										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-											"data-uid": "src/components/home/NetworkSection.tsx:81:19",
+											"data-uid": "src/components/home/NetworkSection.tsx:91:19",
 											"data-prohibitions": "[editContent]",
 											className: "w-1.5 h-1.5 rounded-full bg-destructive shrink-0"
 										}), " Inatividade prolongada (>60 dias) acarreta perda de acesso."]
 									}),
 									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-										"data-uid": "src/components/home/NetworkSection.tsx:84:17",
+										"data-uid": "src/components/home/NetworkSection.tsx:94:17",
 										"data-prohibitions": "[]",
 										className: "flex items-center gap-2",
 										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-											"data-uid": "src/components/home/NetworkSection.tsx:85:19",
+											"data-uid": "src/components/home/NetworkSection.tsx:95:19",
 											"data-prohibitions": "[editContent]",
 											className: "w-1.5 h-1.5 rounded-full bg-destructive shrink-0"
 										}), " Quebra de governança ou ética resulta em banimento irreversível."]
@@ -20148,7 +20171,7 @@ function NetworkSection() {
 								]
 							})
 						]
-					})
+					})]
 				})]
 			})
 		})]
@@ -20167,81 +20190,113 @@ function CriteriaSection() {
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("section", {
 		"data-uid": "src/components/home/CriteriaSection.tsx:14:5",
 		"data-prohibitions": "[editContent]",
-		className: "py-24 bg-secondary/30 relative border-t border-border",
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+		className: "py-24 bg-secondary/30 relative border-t border-border overflow-hidden",
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 			"data-uid": "src/components/home/CriteriaSection.tsx:15:7",
 			"data-prohibitions": "[editContent]",
 			className: "container mx-auto px-4 sm:px-6 lg:px-8",
-			children: [
-				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					"data-uid": "src/components/home/CriteriaSection.tsx:16:9",
+			children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				"data-uid": "src/components/home/CriteriaSection.tsx:16:9",
+				"data-prohibitions": "[editContent]",
+				className: "grid lg:grid-cols-2 gap-12 lg:gap-16 items-center",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					"data-uid": "src/components/home/CriteriaSection.tsx:17:11",
 					"data-prohibitions": "[]",
-					className: "max-w-3xl mx-auto text-center mb-12",
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
-						"data-uid": "src/components/home/CriteriaSection.tsx:17:11",
-						"data-prohibitions": "[]",
-						className: "text-3xl md:text-4xl font-bold mb-4",
-						children: "Não é para todos. E esse é exatamente o ponto."
-					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-						"data-uid": "src/components/home/CriteriaSection.tsx:20:11",
-						"data-prohibitions": "[]",
-						className: "text-lg text-muted-foreground",
-						children: "Preservamos a integridade e a altíssima performance da nossa rede através de uma barreira de entrada rigorosa. O acesso é liberado apenas para quem cumpre integralmente nossos requisitos."
-					})]
-				}),
-				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-					"data-uid": "src/components/home/CriteriaSection.tsx:27:9",
+					className: "relative w-full aspect-[4/3] sm:aspect-square lg:aspect-auto lg:h-[700px] rounded-2xl overflow-hidden order-2 lg:order-1 border border-border shadow-elevation",
+					children: [
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
+							"data-uid": "src/components/home/CriteriaSection.tsx:18:13",
+							"data-prohibitions": "[editContent]",
+							src: "https://img.usecurling.com/p/800/1000?q=group%20rooftop%20city",
+							alt: "Elite Club Networking",
+							className: "w-full h-full object-cover object-center scale-110"
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+							"data-uid": "src/components/home/CriteriaSection.tsx:23:13",
+							"data-prohibitions": "[editContent]",
+							className: "absolute inset-0 bg-black/40 mix-blend-multiply pointer-events-none"
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+							"data-uid": "src/components/home/CriteriaSection.tsx:24:13",
+							"data-prohibitions": "[editContent]",
+							className: "absolute inset-0 bg-gradient-to-tr from-background/80 via-transparent to-transparent pointer-events-none"
+						})
+					]
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					"data-uid": "src/components/home/CriteriaSection.tsx:27:11",
 					"data-prohibitions": "[editContent]",
-					className: "max-w-xl mx-auto bg-card rounded-2xl border border-border p-8 shadow-elevation",
-					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ul", {
-						"data-uid": "src/components/home/CriteriaSection.tsx:28:11",
-						"data-prohibitions": "[editContent]",
-						className: "space-y-4",
-						children: criteria.map((c, i) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("li", {
-							"data-uid": "src/components/home/CriteriaSection.tsx:30:15",
-							"data-prohibitions": "[editContent]",
-							className: "flex items-center gap-3 text-white text-lg",
-							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-								"data-uid": "src/components/home/CriteriaSection.tsx:31:17",
+					className: "order-1 lg:order-2 space-y-10",
+					children: [
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							"data-uid": "src/components/home/CriteriaSection.tsx:28:13",
+							"data-prohibitions": "[]",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
+								"data-uid": "src/components/home/CriteriaSection.tsx:29:15",
 								"data-prohibitions": "[]",
-								className: "w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center shrink-0",
-								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Check, {
-									"data-uid": "src/components/home/CriteriaSection.tsx:32:19",
-									"data-prohibitions": "[editContent]",
-									className: "w-4 h-4 text-primary"
-								})
-							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-								"data-uid": "src/components/home/CriteriaSection.tsx:34:17",
-								"data-prohibitions": "[editContent]",
-								children: c
+								className: "text-3xl md:text-4xl font-bold mb-4",
+								children: "Não é para todos. E esse é exatamente o ponto."
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+								"data-uid": "src/components/home/CriteriaSection.tsx:32:15",
+								"data-prohibitions": "[]",
+								className: "text-lg text-muted-foreground",
+								children: "Preservamos a integridade e a altíssima performance da nossa rede através de uma barreira de entrada rigorosa. O acesso é liberado apenas para quem cumpre integralmente nossos requisitos."
 							})]
-						}, i))
-					})
-				}),
-				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					"data-uid": "src/components/home/CriteriaSection.tsx:40:9",
-					"data-prohibitions": "[]",
-					className: "mt-12 flex flex-col sm:flex-row gap-4 justify-center items-center",
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
-						"data-uid": "src/components/home/CriteriaSection.tsx:41:11",
-						"data-prohibitions": "[]",
-						size: "lg",
-						className: "h-14 px-8 text-base w-full sm:w-auto shadow-lg shadow-primary/25 hover:scale-105 transition-transform duration-300",
-						children: ["Quero fazer parte", /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ArrowRight, {
-							"data-uid": "src/components/home/CriteriaSection.tsx:46:13",
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+							"data-uid": "src/components/home/CriteriaSection.tsx:39:13",
 							"data-prohibitions": "[editContent]",
-							className: "ml-2 h-5 w-5"
-						})]
-					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-						"data-uid": "src/components/home/CriteriaSection.tsx:48:11",
-						"data-prohibitions": "[]",
-						size: "lg",
-						variant: "outline",
-						className: "h-14 px-8 text-base w-full sm:w-auto border-border text-white hover:bg-secondary transition-all duration-300",
-						children: "Ver requisitos"
-					})]
-				})
-			]
+							className: "bg-card rounded-2xl border border-border p-6 sm:p-8 shadow-elevation",
+							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ul", {
+								"data-uid": "src/components/home/CriteriaSection.tsx:40:15",
+								"data-prohibitions": "[editContent]",
+								className: "space-y-4",
+								children: criteria.map((c, i) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("li", {
+									"data-uid": "src/components/home/CriteriaSection.tsx:42:19",
+									"data-prohibitions": "[editContent]",
+									className: "flex items-center gap-3 text-white text-base sm:text-lg",
+									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+										"data-uid": "src/components/home/CriteriaSection.tsx:43:21",
+										"data-prohibitions": "[]",
+										className: "w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center shrink-0",
+										children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Check, {
+											"data-uid": "src/components/home/CriteriaSection.tsx:44:23",
+											"data-prohibitions": "[editContent]",
+											className: "w-4 h-4 text-primary"
+										})
+									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+										"data-uid": "src/components/home/CriteriaSection.tsx:46:21",
+										"data-prohibitions": "[editContent]",
+										children: c
+									})]
+								}, i))
+							})
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							"data-uid": "src/components/home/CriteriaSection.tsx:52:13",
+							"data-prohibitions": "[]",
+							className: "flex flex-col sm:flex-row gap-4 items-center",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
+								"data-uid": "src/components/home/CriteriaSection.tsx:53:15",
+								"data-prohibitions": "[]",
+								size: "lg",
+								className: "h-14 px-8 text-base w-full sm:w-auto shadow-lg shadow-primary/25 hover:scale-105 transition-transform duration-300",
+								children: ["Quero fazer parte", /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ArrowRight, {
+									"data-uid": "src/components/home/CriteriaSection.tsx:58:17",
+									"data-prohibitions": "[editContent]",
+									className: "ml-2 h-5 w-5"
+								})]
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+								"data-uid": "src/components/home/CriteriaSection.tsx:60:15",
+								"data-prohibitions": "[]",
+								size: "lg",
+								variant: "outline",
+								className: "h-14 px-8 text-base w-full sm:w-auto border-border text-white hover:bg-secondary transition-all duration-300",
+								children: "Ver requisitos"
+							})]
+						})
+					]
+				})]
+			})
 		})
 	});
 }
@@ -35620,4 +35675,4 @@ function App() {
 }));
 //#endregion
 
-//# sourceMappingURL=index-D1ix8z8Y.js.map
+//# sourceMappingURL=index-BHxY5502.js.map

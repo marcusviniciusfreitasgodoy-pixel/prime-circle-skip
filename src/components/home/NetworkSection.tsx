@@ -60,8 +60,18 @@ export function NetworkSection() {
             </ul>
           </div>
 
-          <div className="flex-1 w-full max-w-md lg:max-w-none">
-            <div className="bg-card border border-primary/30 p-8 rounded-2xl shadow-[0_0_40px_rgba(201,168,76,0.15)] relative">
+          <div className="flex-1 w-full max-w-md lg:max-w-none relative mx-auto">
+            <div className="relative w-full aspect-square lg:aspect-[4/5] rounded-2xl overflow-hidden border border-border">
+              <img
+                src="https://img.usecurling.com/p/800/1000?q=two%20business%20professionals%20office"
+                alt="Match Algorithm e Inteligência de Mercado"
+                className="w-full h-full object-cover object-center scale-110"
+              />
+              <div className="absolute inset-0 bg-black/30 mix-blend-multiply pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-90 pointer-events-none" />
+            </div>
+
+            <div className="bg-card border border-primary/30 p-6 sm:p-8 rounded-2xl shadow-[0_0_40px_rgba(201,168,76,0.15)] relative -mt-24 lg:mt-0 lg:absolute lg:-left-12 lg:bottom-12 lg:w-[calc(100%+3rem)] lg:max-w-md mx-4 lg:mx-0 z-10">
               <div className="absolute -top-4 -right-4 bg-primary text-black font-bold text-xs px-3 py-1 rounded-full">
                 AMBIENTE SEGURO
               </div>

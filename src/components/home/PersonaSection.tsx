@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { ChevronRight } from 'lucide-react'
-import personaImage from '@/assets/voce-tem-o-imovel-457ae.png'
 
 export function PersonaSection() {
   return (
@@ -50,11 +49,14 @@ export function PersonaSection() {
 
           <div className="order-1 lg:order-2 relative mx-auto w-full max-w-md lg:max-w-none">
             <div className="absolute inset-0 bg-primary/20 translate-x-4 translate-y-4 rounded-xl -z-10 blur-xl"></div>
-            <img
-              src={personaImage}
-              alt="Corretora Prime Circle"
-              className="rounded-xl w-full object-cover border border-primary/30 shadow-[0_0_30px_rgba(201,168,76,0.15)] h-[400px] lg:h-[600px] object-top"
-            />
+            <div className="rounded-xl overflow-hidden border border-primary/30 shadow-[0_0_30px_rgba(201,168,76,0.15)] h-[400px] lg:h-[600px] relative">
+              <img
+                src="https://img.usecurling.com/p/800/1200?q=professional%20modern%20building"
+                alt="Corretora Prime Circle"
+                className="w-full h-full object-cover object-top scale-110"
+              />
+              <div className="absolute inset-0 bg-black/10 mix-blend-multiply pointer-events-none" />
+            </div>
           </div>
         </div>
       </div>
