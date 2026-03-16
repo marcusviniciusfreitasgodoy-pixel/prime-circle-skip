@@ -47,8 +47,8 @@ export function NetworkSection() {
               <div>
                 <h3 className="text-xl font-bold mb-2">Parceria 50/50 Segura</h3>
                 <p className="text-muted-foreground leading-relaxed">
-                  Contratos e fluxos garantidos pela nossa plataforma. Divida comissões de forma
-                  transparente e elimine qualquer ruído nas negociações conjuntas.
+                  Fluxos garantidos pela nossa plataforma. Divida comissões de forma transparente e
+                  elimine qualquer ruído nas negociações conjuntas.
                 </p>
               </div>
             </div>

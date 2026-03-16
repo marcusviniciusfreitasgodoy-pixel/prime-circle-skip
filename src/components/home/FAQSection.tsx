@@ -20,8 +20,8 @@ export function FAQSection() {
       a: 'Não. O Prime Circle funciona sob um modelo de parceria. Nós cobramos apenas uma pequena taxa administrativa (success fee) sobre o sucesso das transações fechadas dentro da nossa infraestrutura. Não há mensalidades para ser membro da comunidade.',
     },
     {
-      q: 'Qual a segurança jurídica das parcerias?',
-      a: 'Nossa equipe de suporte jurídico cuida da elaboração de todos os contratos de parceria, acordos de confidencialidade (NDA) e termos de comissionamento, assegurando que não haja by-pass e que os recebimentos ocorram de forma clara e blindada.',
+      q: 'Qual a segurança das parcerias?',
+      a: 'A plataforma disponibiliza modelos de acordos de confidencialidade (NDA) e termos de comissionamento padrão, assegurando que não haja by-pass e que os recebimentos ocorram de forma clara e estruturada para todos os envolvidos.',
     },
     {
       q: 'Como funciona a tecnologia de matchmaking?',

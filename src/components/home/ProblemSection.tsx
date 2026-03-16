@@ -7,12 +7,12 @@ export function ProblemSection() {
       solution: 'Cruze ofertas e demandas com uma rede nacional conectada instantaneamente.',
     },
     {
-      pain: 'Isolamento profissional e custos operacionais e jurídicos altíssimos.',
-      solution: 'Acesse infraestrutura jurídica e tecnológica de ponta compartilhada.',
+      pain: 'Isolamento profissional e custos operacionais altíssimos.',
+      solution: 'Acesse infraestrutura tecnológica de ponta compartilhada.',
     },
     {
       pain: 'Parcerias informais (boca a boca) com alto risco de by-pass.',
-      solution: 'Segurança jurídica e fluxo financeiro garantidos em cada negociação.',
+      solution: 'Segurança nas transações e fluxo financeiro garantidos em cada negociação.',
     },
   ]
 

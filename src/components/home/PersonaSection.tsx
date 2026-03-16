@@ -33,7 +33,7 @@ export function PersonaSection() {
               </li>
               <li className="flex items-center gap-4 text-lg text-foreground/90">
                 <div className="w-2 h-2 rounded-full bg-primary shadow-[0_0_8px_rgba(201,168,76,0.8)]" />
-                Suporte jurídico e administrativo dedicado
+                Suporte administrativo e onboarding dedicado
               </li>
             </ul>
 

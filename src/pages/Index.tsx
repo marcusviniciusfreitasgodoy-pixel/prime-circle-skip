@@ -3,7 +3,7 @@ import { ProblemSection } from '@/components/home/ProblemSection'
 import { ComparisonSection } from '@/components/home/ComparisonSection'
 import { NetworkSection } from '@/components/home/NetworkSection'
 import { CriteriaSection } from '@/components/home/CriteriaSection'
-import { TiersSection } from '@/components/home/TiersSection'
+import { ReferralSection } from '@/components/home/ReferralSection'
 import { ProcessTimeline } from '@/components/home/ProcessTimeline'
 import { PersonaSection } from '@/components/home/PersonaSection'
 import { FAQSection } from '@/components/home/FAQSection'
@@ -20,7 +20,7 @@ export default function Index() {
         <ComparisonSection />
         <NetworkSection />
         <CriteriaSection />
-        <TiersSection />
+        <ReferralSection />
         <ProcessTimeline />
         <PersonaSection />
         <FAQSection />

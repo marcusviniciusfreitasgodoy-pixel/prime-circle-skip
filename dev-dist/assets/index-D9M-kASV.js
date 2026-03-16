@@ -19225,6 +19225,13 @@ var createLucideIcon = (iconName, iconNode) => {
 	Component.displayName = toPascalCase(iconName);
 	return Component;
 };
+var ArrowRight = createLucideIcon("arrow-right", [["path", {
+	d: "M5 12h14",
+	key: "1ays0h"
+}], ["path", {
+	d: "m12 5 7 7-7 7",
+	key: "xquz4c"
+}]]);
 var Award = createLucideIcon("award", [["path", {
 	d: "m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526",
 	key: "1yiouv"
@@ -19554,12 +19561,12 @@ function ProblemSection() {
 			solution: "Cruze ofertas e demandas com uma rede nacional conectada instantaneamente."
 		},
 		{
-			pain: "Isolamento profissional e custos operacionais e jurídicos altíssimos.",
-			solution: "Acesse infraestrutura jurídica e tecnológica de ponta compartilhada."
+			pain: "Isolamento profissional e custos operacionais altíssimos.",
+			solution: "Acesse infraestrutura tecnológica de ponta compartilhada."
 		},
 		{
 			pain: "Parcerias informais (boca a boca) com alto risco de by-pass.",
-			solution: "Segurança jurídica e fluxo financeiro garantidos em cada negociação."
+			solution: "Segurança nas transações e fluxo financeiro garantidos em cada negociação."
 		}
 	];
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("section", {
@@ -19992,7 +19999,7 @@ function NetworkSection() {
 									"data-uid": "src/components/home/NetworkSection.tsx:49:17",
 									"data-prohibitions": "[]",
 									className: "text-muted-foreground leading-relaxed",
-									children: "Contratos e fluxos garantidos pela nossa plataforma. Divida comissões de forma transparente e elimine qualquer ruído nas negociações conjuntas."
+									children: "Fluxos garantidos pela nossa plataforma. Divida comissões de forma transparente e elimine qualquer ruído nas negociações conjuntas."
 								})]
 							})]
 						}),
@@ -20209,144 +20216,66 @@ function CriteriaSection() {
 	});
 }
 //#endregion
-//#region src/components/home/TiersSection.tsx
-function TiersSection() {
-	const tiers = [
-		{
-			name: "Bronze",
-			target: "Membros Iniciais",
-			features: [
-				"Acesso à rede fechada",
-				"Suporte jurídico básico",
-				"Comissionamento padrão 50/50",
-				"Perfil no diretório nacional"
-			],
-			highlight: false
-		},
-		{
-			name: "Prata",
-			target: "Corretores em Ascensão",
-			features: [
-				"Destaque no matchmaking",
-				"Assessoria de marketing",
-				"Eventos e imersões exclusivas",
-				"Análise de dados de mercado"
-			],
-			highlight: true
-		},
-		{
-			name: "Ouro",
-			target: "Elite Prime Circle",
-			features: [
-				"Prioridade em leads prime",
-				"Account manager dedicado",
-				"Assento no comitê de diretoria",
-				"Benefícios premium de parceiros"
-			],
-			highlight: false
-		}
-	];
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("section", {
-		"data-uid": "src/components/home/TiersSection.tsx:44:5",
-		"data-prohibitions": "[editContent]",
-		className: "py-24 bg-background",
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-			"data-uid": "src/components/home/TiersSection.tsx:45:7",
+//#region src/components/home/ReferralSection.tsx
+function ReferralSection() {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
+		"data-uid": "src/components/home/ReferralSection.tsx:6:5",
+		"data-prohibitions": "[]",
+		className: "py-24 bg-background relative overflow-hidden border-t border-border/50",
+		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+			"data-uid": "src/components/home/ReferralSection.tsx:7:7",
 			"data-prohibitions": "[editContent]",
-			className: "container mx-auto px-4 sm:px-6 lg:px-8",
-			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				"data-uid": "src/components/home/TiersSection.tsx:46:9",
+			className: "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-2xl h-[400px] bg-primary/10 blur-[100px] rounded-full pointer-events-none"
+		}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+			"data-uid": "src/components/home/ReferralSection.tsx:9:7",
+			"data-prohibitions": "[]",
+			className: "container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 max-w-5xl",
+			children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				"data-uid": "src/components/home/ReferralSection.tsx:10:9",
 				"data-prohibitions": "[]",
-				className: "text-center mb-16",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h2", {
-					"data-uid": "src/components/home/TiersSection.tsx:47:11",
-					"data-prohibitions": "[]",
-					className: "text-3xl md:text-5xl font-bold mb-4",
-					children: ["Programa de ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-						"data-uid": "src/components/home/TiersSection.tsx:48:25",
+				className: "bg-card/80 backdrop-blur-md border border-primary/20 rounded-2xl p-8 md:p-14 shadow-[0_0_40px_rgba(201,168,76,0.1)] text-center flex flex-col items-center group hover:border-primary/40 transition-colors duration-500",
+				children: [
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+						"data-uid": "src/components/home/ReferralSection.tsx:11:11",
 						"data-prohibitions": "[]",
-						className: "text-primary",
-						children: "Embaixadores"
-					})]
-				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-					"data-uid": "src/components/home/TiersSection.tsx:50:11",
-					"data-prohibitions": "[]",
-					className: "text-xl text-muted-foreground max-w-2xl mx-auto",
-					children: "Uma jornada clara de crescimento. Quanto mais negócios você fecha na rede, maiores seus benefícios e prioridades."
-				})]
-			}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-				"data-uid": "src/components/home/TiersSection.tsx:56:9",
-				"data-prohibitions": "[editContent]",
-				className: "grid md:grid-cols-3 gap-8 max-w-6xl mx-auto items-center",
-				children: tiers.map((tier, index) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
-					"data-uid": "src/components/home/TiersSection.tsx:58:13",
-					"data-prohibitions": "[editContent]",
-					className: `relative ${tier.highlight ? "border-primary shadow-[0_0_30px_rgba(201,168,76,0.15)] md:-translate-y-4 bg-card/90 backdrop-blur" : "border-border/50 bg-card/50"}`,
-					children: [
-						tier.highlight && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-							"data-uid": "src/components/home/TiersSection.tsx:67:17",
-							"data-prohibitions": "[]",
-							className: "absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-primary text-primary-foreground px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest",
-							children: "Avançado"
-						}),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardHeader, {
-							"data-uid": "src/components/home/TiersSection.tsx:71:15",
+						className: "w-20 h-20 rounded-2xl bg-primary/10 flex items-center justify-center mb-8 border border-primary/30 group-hover:scale-110 transition-transform duration-500",
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Users, {
+							"data-uid": "src/components/home/ReferralSection.tsx:12:13",
 							"data-prohibitions": "[editContent]",
-							className: "text-center pb-8 pt-8",
-							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
-								"data-uid": "src/components/home/TiersSection.tsx:72:17",
-								"data-prohibitions": "[editContent]",
-								className: "text-3xl font-bold mb-2 text-foreground",
-								children: tier.name
-							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-								"data-uid": "src/components/home/TiersSection.tsx:73:17",
-								"data-prohibitions": "[editContent]",
-								className: "text-primary/80 font-medium",
-								children: tier.target
-							})]
-						}),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardContent, {
-							"data-uid": "src/components/home/TiersSection.tsx:75:15",
-							"data-prohibitions": "[editContent]",
-							className: "space-y-4",
-							children: tier.features.map((feature, i) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								"data-uid": "src/components/home/TiersSection.tsx:77:19",
-								"data-prohibitions": "[editContent]",
-								className: "flex items-start gap-3",
-								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Check, {
-									"data-uid": "src/components/home/TiersSection.tsx:78:21",
-									"data-prohibitions": "[editContent]",
-									className: "w-5 h-5 text-primary shrink-0 mt-0.5"
-								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-									"data-uid": "src/components/home/TiersSection.tsx:79:21",
-									"data-prohibitions": "[editContent]",
-									className: "text-sm text-foreground/90 leading-snug",
-									children: feature
-								})]
-							}, i))
-						}),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardFooter, {
-							"data-uid": "src/components/home/TiersSection.tsx:83:15",
-							"data-prohibitions": "[]",
-							className: "pt-8 pb-8",
-							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-								"data-uid": "src/components/home/TiersSection.tsx:84:17",
-								"data-prohibitions": "[]",
-								asChild: true,
-								className: "w-full h-12 font-semibold",
-								variant: tier.highlight ? "default" : "outline",
-								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link, {
-									"data-uid": "src/components/home/TiersSection.tsx:89:19",
-									"data-prohibitions": "[]",
-									to: "/apply",
-									children: "Aplicar Agora"
-								})
-							})
+							className: "w-10 h-10 text-primary"
 						})
-					]
-				}, index))
-			})]
-		})
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h2", {
+						"data-uid": "src/components/home/ReferralSection.tsx:14:11",
+						"data-prohibitions": "[]",
+						className: "text-3xl md:text-5xl font-bold mb-6 text-foreground",
+						children: ["Indicação de ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+							"data-uid": "src/components/home/ReferralSection.tsx:15:26",
+							"data-prohibitions": "[]",
+							className: "text-primary",
+							children: "Parceiros Qualificados"
+						})]
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+						"data-uid": "src/components/home/ReferralSection.tsx:17:11",
+						"data-prohibitions": "[]",
+						className: "text-xl text-muted-foreground max-w-2xl mb-10 leading-relaxed",
+						children: "Indique parceiros qualificados e fortaleça nossa rede. Uma comunidade de alto nível gera mais liquidez, segurança e oportunidades exclusivas para todos os membros."
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
+						"data-uid": "src/components/home/ReferralSection.tsx:21:11",
+						"data-prohibitions": "[]",
+						size: "lg",
+						className: "h-16 px-10 font-bold text-lg shadow-[0_0_20px_rgba(201,168,76,0.2)] hover:shadow-[0_0_40px_rgba(201,168,76,0.4)] hover:-translate-y-1 transition-all duration-300",
+						children: ["Indicar um Parceiro ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ArrowRight, {
+							"data-uid": "src/components/home/ReferralSection.tsx:25:33",
+							"data-prohibitions": "[editContent]",
+							className: "ml-3 w-6 h-6"
+						})]
+					})
+				]
+			})
+		})]
 	});
 }
 //#endregion
@@ -20572,7 +20501,7 @@ function PersonaSection() {
 										"data-uid": "src/components/home/PersonaSection.tsx:35:17",
 										"data-prohibitions": "[editContent]",
 										className: "w-2 h-2 rounded-full bg-primary shadow-[0_0_8px_rgba(201,168,76,0.8)]"
-									}), "Suporte jurídico e administrativo dedicado"]
+									}), "Suporte administrativo e onboarding dedicado"]
 								})
 							]
 						}),
@@ -21481,8 +21410,8 @@ function FAQSection() {
 			a: "Não. O Prime Circle funciona sob um modelo de parceria. Nós cobramos apenas uma pequena taxa administrativa (success fee) sobre o sucesso das transações fechadas dentro da nossa infraestrutura. Não há mensalidades para ser membro da comunidade."
 		},
 		{
-			q: "Qual a segurança jurídica das parcerias?",
-			a: "Nossa equipe de suporte jurídico cuida da elaboração de todos os contratos de parceria, acordos de confidencialidade (NDA) e termos de comissionamento, assegurando que não haja by-pass e que os recebimentos ocorram de forma clara e blindada."
+			q: "Qual a segurança das parcerias?",
+			a: "A plataforma disponibiliza modelos de acordos de confidencialidade (NDA) e termos de comissionamento padrão, assegurando que não haja by-pass e que os recebimentos ocorram de forma clara e estruturada para todos os envolvidos."
 		},
 		{
 			q: "Como funciona a tecnologia de matchmaking?",
@@ -21791,7 +21720,7 @@ function Index() {
 						"data-uid": "src/pages/Index.tsx:22:9",
 						"data-prohibitions": "[editContent]"
 					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TiersSection, {
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ReferralSection, {
 						"data-uid": "src/pages/Index.tsx:23:9",
 						"data-prohibitions": "[editContent]"
 					}),
@@ -25618,4 +25547,4 @@ function App() {
 }));
 //#endregion
 
-//# sourceMappingURL=index-BRCp23jB.js.map
+//# sourceMappingURL=index-D9M-kASV.js.map
