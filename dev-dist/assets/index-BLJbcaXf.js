@@ -19658,231 +19658,209 @@ function ProblemSection() {
 	});
 }
 //#endregion
-//#region src/components/ui/table.tsx
-var Table = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-	"data-uid": "src/components/ui/table.tsx:8:5",
-	"data-prohibitions": "[editContent]",
-	className: "relative w-full overflow-auto",
-	children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("table", {
-		"data-uid": "src/components/ui/table.tsx:9:7",
-		"data-prohibitions": "[editContent]",
-		ref,
-		className: cn("w-full caption-bottom text-sm", className),
-		...props
-	})
-}));
-Table.displayName = "Table";
-var TableHeader = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("thead", {
-	"data-uid": "src/components/ui/table.tsx:19:3",
-	"data-prohibitions": "[editContent]",
-	ref,
-	className: cn("[&_tr]:border-b", className),
-	...props
-}));
-TableHeader.displayName = "TableHeader";
-var TableBody = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("tbody", {
-	"data-uid": "src/components/ui/table.tsx:27:3",
-	"data-prohibitions": "[editContent]",
-	ref,
-	className: cn("[&_tr:last-child]:border-0", className),
-	...props
-}));
-TableBody.displayName = "TableBody";
-var TableFooter = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("tfoot", {
-	"data-uid": "src/components/ui/table.tsx:35:3",
-	"data-prohibitions": "[editContent]",
-	ref,
-	className: cn("border-t bg-muted/50 font-medium [&>tr]:last:border-b-0", className),
-	...props
-}));
-TableFooter.displayName = "TableFooter";
-var TableRow = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("tr", {
-	"data-uid": "src/components/ui/table.tsx:45:5",
-	"data-prohibitions": "[editContent]",
-	ref,
-	className: cn("border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted", className),
-	...props
-}));
-TableRow.displayName = "TableRow";
-var TableHead = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", {
-	"data-uid": "src/components/ui/table.tsx:61:3",
-	"data-prohibitions": "[editContent]",
-	ref,
-	className: cn("h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0", className),
-	...props
-}));
-TableHead.displayName = "TableHead";
-var TableCell = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
-	"data-uid": "src/components/ui/table.tsx:76:3",
-	"data-prohibitions": "[editContent]",
-	ref,
-	className: cn("p-4 align-middle [&:has([role=checkbox])]:pr-0", className),
-	...props
-}));
-TableCell.displayName = "TableCell";
-var TableCaption = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("caption", {
-	"data-uid": "src/components/ui/table.tsx:88:3",
-	"data-prohibitions": "[editContent]",
-	ref,
-	className: cn("mt-4 text-sm text-muted-foreground", className),
-	...props
-}));
-TableCaption.displayName = "TableCaption";
-//#endregion
 //#region src/components/home/ComparisonSection.tsx
 function ComparisonSection() {
 	const comparisons = [
 		{
-			feature: "Liquidez de Inventário",
-			traditional: "Baixa (Local)",
-			prime: "Altíssima (Nacional)"
+			feature: "Gestão de Dados",
+			traditional: "Informação Descentralizada",
+			prime: "Plataforma Centralizada"
 		},
 		{
-			feature: "Suporte Jurídico/Operacional",
-			traditional: "Por conta própria",
-			prime: "Incluso 100%"
+			feature: "Rastreabilidade",
+			traditional: "Perda de Histórico",
+			prime: "Histórico Completo de Negociações"
 		},
 		{
-			feature: "Modelo de Comissionamento (50/50)",
-			traditional: "Variável / Incerto",
-			prime: "Garantido via Contrato"
+			feature: "Comunicação",
+			traditional: "Ruído Excessivo",
+			prime: "Comunicação Assertiva"
 		},
 		{
-			feature: "Tecnologia de Matchmaking",
-			traditional: "Inexistente",
-			prime: "Algoritmo Avançado"
-		},
-		{
-			feature: "Networking Qualificado",
-			traditional: "Eventual",
-			prime: "Comunidade Curada"
+			feature: "Operação",
+			traditional: "Gestão Manual e Ineficiente",
+			prime: "Automação e Suporte 50/50"
 		}
 	];
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
-		"data-uid": "src/components/home/ComparisonSection.tsx:37:5",
+		"data-uid": "src/components/home/ComparisonSection.tsx:30:5",
 		"data-prohibitions": "[editContent]",
 		className: "py-24 bg-background relative overflow-hidden",
 		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-			"data-uid": "src/components/home/ComparisonSection.tsx:38:7",
+			"data-uid": "src/components/home/ComparisonSection.tsx:31:7",
 			"data-prohibitions": "[editContent]",
 			className: "absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 blur-[150px] rounded-full pointer-events-none"
 		}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-			"data-uid": "src/components/home/ComparisonSection.tsx:40:7",
+			"data-uid": "src/components/home/ComparisonSection.tsx:33:7",
 			"data-prohibitions": "[editContent]",
 			className: "container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl relative z-10",
-			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				"data-uid": "src/components/home/ComparisonSection.tsx:41:9",
-				"data-prohibitions": "[]",
-				className: "text-center mb-16",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h2", {
-					"data-uid": "src/components/home/ComparisonSection.tsx:42:11",
+			children: [
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					"data-uid": "src/components/home/ComparisonSection.tsx:34:9",
 					"data-prohibitions": "[]",
-					className: "text-3xl md:text-5xl font-bold mb-4",
-					children: ["A Diferença é ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-						"data-uid": "src/components/home/ComparisonSection.tsx:43:27",
+					className: "text-center mb-16",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h2", {
+						"data-uid": "src/components/home/ComparisonSection.tsx:35:11",
 						"data-prohibitions": "[]",
-						className: "text-primary",
-						children: "Clara"
-					})]
-				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-					"data-uid": "src/components/home/ComparisonSection.tsx:45:11",
-					"data-prohibitions": "[]",
-					className: "text-xl text-muted-foreground",
-					children: "Compare o modelo tradicional com o ecossistema fechado do Prime Circle."
-				})]
-			}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-				"data-uid": "src/components/home/ComparisonSection.tsx:50:9",
-				"data-prohibitions": "[editContent]",
-				className: "rounded-xl border border-primary/20 bg-card/50 overflow-hidden shadow-[0_0_40px_rgba(201,168,76,0.05)] backdrop-blur-sm",
-				children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Table, {
-					"data-uid": "src/components/home/ComparisonSection.tsx:51:11",
-					"data-prohibitions": "[editContent]",
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableHeader, {
-						"data-uid": "src/components/home/ComparisonSection.tsx:52:13",
-						"data-prohibitions": "[]",
-						className: "bg-secondary/50",
-						children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(TableRow, {
-							"data-uid": "src/components/home/ComparisonSection.tsx:53:15",
+						className: "text-3xl md:text-5xl font-bold mb-6 leading-tight",
+						children: ["A Evolução do ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+							"data-uid": "src/components/home/ComparisonSection.tsx:36:27",
 							"data-prohibitions": "[]",
-							className: "hover:bg-transparent border-primary/20",
-							children: [
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableHead, {
-									"data-uid": "src/components/home/ComparisonSection.tsx:54:17",
-									"data-prohibitions": "[]",
-									className: "w-1/3 py-6 text-lg font-semibold text-foreground",
-									children: "Recursos"
-								}),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableHead, {
-									"data-uid": "src/components/home/ComparisonSection.tsx:57:17",
-									"data-prohibitions": "[]",
-									className: "w-1/3 py-6 text-lg font-semibold text-muted-foreground text-center",
-									children: "Mercado Tradicional"
-								}),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableHead, {
-									"data-uid": "src/components/home/ComparisonSection.tsx:60:17",
-									"data-prohibitions": "[]",
-									className: "w-1/3 py-6 text-lg font-bold text-primary text-center",
-									children: "Prime Circle"
-								})
-							]
-						})
-					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableBody, {
-						"data-uid": "src/components/home/ComparisonSection.tsx:65:13",
+							className: "text-primary",
+							children: "Profissionalismo"
+						})]
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+						"data-uid": "src/components/home/ComparisonSection.tsx:38:11",
+						"data-prohibitions": "[]",
+						className: "text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed",
+						children: "Grupos de WhatsApp são ineficientes e descentralizados. O Prime Circle é a infraestrutura definitiva para profissionalizar sua carreira e escalar suas vendas com segurança."
+					})]
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					"data-uid": "src/components/home/ComparisonSection.tsx:45:9",
+					"data-prohibitions": "[editContent]",
+					className: "space-y-4 md:space-y-0 md:bg-card/50 md:backdrop-blur-sm md:border md:border-primary/20 md:rounded-xl md:shadow-[0_0_40px_rgba(201,168,76,0.05)] md:overflow-hidden",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						"data-uid": "src/components/home/ComparisonSection.tsx:47:11",
+						"data-prohibitions": "[]",
+						className: "hidden md:grid md:grid-cols-3 bg-secondary/50 border-b border-primary/20",
+						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+								"data-uid": "src/components/home/ComparisonSection.tsx:48:13",
+								"data-prohibitions": "[]",
+								className: "py-6 px-8 text-lg font-semibold text-foreground",
+								children: "Recurso"
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+								"data-uid": "src/components/home/ComparisonSection.tsx:49:13",
+								"data-prohibitions": "[]",
+								className: "py-6 px-8 text-lg font-semibold text-muted-foreground text-center",
+								children: "Grupos de WhatsApp"
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+								"data-uid": "src/components/home/ComparisonSection.tsx:52:13",
+								"data-prohibitions": "[]",
+								className: "py-6 px-8 text-lg font-bold text-primary text-center",
+								children: "Prime Circle"
+							})
+						]
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+						"data-uid": "src/components/home/ComparisonSection.tsx:56:11",
 						"data-prohibitions": "[editContent]",
-						children: comparisons.map((row, index) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(TableRow, {
-							"data-uid": "src/components/home/ComparisonSection.tsx:67:17",
+						className: "grid gap-6 md:gap-0",
+						children: comparisons.map((row, index) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							"data-uid": "src/components/home/ComparisonSection.tsx:58:15",
 							"data-prohibitions": "[editContent]",
-							className: "border-primary/10 hover:bg-primary/5 transition-colors",
+							className: "grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-0 p-6 md:p-0 bg-card/50 md:bg-transparent border border-primary/10 md:border-0 md:border-b md:last:border-0 rounded-xl md:rounded-none hover:bg-primary/5 transition-colors",
 							children: [
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableCell, {
-									"data-uid": "src/components/home/ComparisonSection.tsx:71:19",
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+									"data-uid": "src/components/home/ComparisonSection.tsx:63:17",
 									"data-prohibitions": "[editContent]",
-									className: "py-5 font-medium text-base",
+									className: "font-bold text-lg md:hidden text-foreground border-b border-border/50 pb-3 mb-2",
 									children: row.feature
 								}),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableCell, {
-									"data-uid": "src/components/home/ComparisonSection.tsx:72:19",
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+									"data-uid": "src/components/home/ComparisonSection.tsx:68:17",
 									"data-prohibitions": "[editContent]",
-									className: "py-5 text-center text-muted-foreground",
-									children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-										"data-uid": "src/components/home/ComparisonSection.tsx:73:21",
+									className: "hidden md:flex items-center px-8 py-6 font-medium text-base",
+									children: row.feature
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+									"data-uid": "src/components/home/ComparisonSection.tsx:73:17",
+									"data-prohibitions": "[editContent]",
+									className: "flex flex-col justify-center md:items-center md:px-8 md:py-6",
+									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+										"data-uid": "src/components/home/ComparisonSection.tsx:74:19",
+										"data-prohibitions": "[]",
+										className: "text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-2 md:hidden",
+										children: "Situação Atual (WhatsApp)"
+									}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+										"data-uid": "src/components/home/ComparisonSection.tsx:77:19",
 										"data-prohibitions": "[editContent]",
-										className: "flex items-center justify-center gap-2",
-										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(X, {
-											"data-uid": "src/components/home/ComparisonSection.tsx:74:23",
-											"data-prohibitions": "[editContent]",
-											className: "w-4 h-4 text-destructive"
+										className: "flex items-center gap-3 text-muted-foreground",
+										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+											"data-uid": "src/components/home/ComparisonSection.tsx:78:21",
+											"data-prohibitions": "[]",
+											className: "w-8 h-8 rounded-full bg-destructive/10 flex items-center justify-center shrink-0 md:w-auto md:h-auto md:bg-transparent",
+											children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(X, {
+												"data-uid": "src/components/home/ComparisonSection.tsx:79:23",
+												"data-prohibitions": "[editContent]",
+												className: "w-5 h-5 text-destructive"
+											})
 										}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-											"data-uid": "src/components/home/ComparisonSection.tsx:75:23",
+											"data-uid": "src/components/home/ComparisonSection.tsx:81:21",
 											"data-prohibitions": "[editContent]",
+											className: "font-medium md:font-normal",
 											children: row.traditional
 										})]
-									})
+									})]
 								}),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableCell, {
-									"data-uid": "src/components/home/ComparisonSection.tsx:78:19",
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+									"data-uid": "src/components/home/ComparisonSection.tsx:86:17",
 									"data-prohibitions": "[editContent]",
-									className: "py-5 text-center text-foreground font-semibold",
-									children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-										"data-uid": "src/components/home/ComparisonSection.tsx:79:21",
+									className: "flex flex-col justify-center md:items-center bg-primary/10 md:bg-transparent rounded-lg p-5 md:p-6 mt-2 md:mt-0 border border-primary/20 md:border-0",
+									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+										"data-uid": "src/components/home/ComparisonSection.tsx:87:19",
+										"data-prohibitions": "[]",
+										className: "text-[10px] font-bold text-primary uppercase tracking-wider mb-2 md:hidden",
+										children: "Solução Proposta"
+									}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+										"data-uid": "src/components/home/ComparisonSection.tsx:90:19",
 										"data-prohibitions": "[editContent]",
-										className: "flex items-center justify-center gap-2",
-										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Check, {
-											"data-uid": "src/components/home/ComparisonSection.tsx:80:23",
-											"data-prohibitions": "[editContent]",
-											className: "w-5 h-5 text-primary"
+										className: "flex items-center gap-3 text-foreground font-semibold",
+										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+											"data-uid": "src/components/home/ComparisonSection.tsx:91:21",
+											"data-prohibitions": "[]",
+											className: "w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center shrink-0 md:w-auto md:h-auto md:bg-transparent",
+											children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Check, {
+												"data-uid": "src/components/home/ComparisonSection.tsx:92:23",
+												"data-prohibitions": "[editContent]",
+												className: "w-6 h-6 text-primary"
+											})
 										}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-											"data-uid": "src/components/home/ComparisonSection.tsx:81:23",
+											"data-uid": "src/components/home/ComparisonSection.tsx:94:21",
 											"data-prohibitions": "[editContent]",
+											className: "text-[15px] md:text-base",
 											children: row.prime
 										})]
-									})
+									})]
 								})
 							]
 						}, index))
 					})]
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					"data-uid": "src/components/home/ComparisonSection.tsx:102:9",
+					"data-prohibitions": "[]",
+					className: "mt-20 text-center flex flex-col items-center",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+						"data-uid": "src/components/home/ComparisonSection.tsx:103:11",
+						"data-prohibitions": "[]",
+						size: "lg",
+						asChild: true,
+						className: "h-16 px-12 text-lg font-bold shadow-[0_0_30px_rgba(201,168,76,0.25)] hover:shadow-[0_0_50px_rgba(201,168,76,0.4)] transition-all duration-300 hover:-translate-y-1",
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Link, {
+							"data-uid": "src/components/home/ComparisonSection.tsx:108:13",
+							"data-prohibitions": "[]",
+							to: "/apply",
+							children: ["Fazer Minha Aplicação ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ChevronRight, {
+								"data-uid": "src/components/home/ComparisonSection.tsx:109:37",
+								"data-prohibitions": "[editContent]",
+								className: "ml-2 w-6 h-6"
+							})]
+						})
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
+						"data-uid": "src/components/home/ComparisonSection.tsx:112:11",
+						"data-prohibitions": "[]",
+						className: "mt-6 text-sm text-muted-foreground font-medium flex items-center gap-2",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+							"data-uid": "src/components/home/ComparisonSection.tsx:113:13",
+							"data-prohibitions": "[editContent]",
+							className: "w-2 h-2 rounded-full bg-primary animate-pulse"
+						}), "Vagas limitadas para manter a exclusividade da rede."]
+					})]
 				})
-			})]
+			]
 		})]
 	});
 }
@@ -25518,4 +25496,4 @@ function App() {
 }));
 //#endregion
 
-//# sourceMappingURL=index-CDvK1dfQ.js.map
+//# sourceMappingURL=index-BLJbcaXf.js.map
