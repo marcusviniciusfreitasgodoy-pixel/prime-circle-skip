@@ -19635,59 +19635,79 @@ function HeroSection() {
 			children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 				"data-uid": "src/components/home/HeroSection.tsx:18:9",
 				"data-prohibitions": "[]",
-				className: "max-w-2xl",
+				className: "max-w-3xl",
 				children: [
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h1", {
 						"data-uid": "src/components/home/HeroSection.tsx:19:11",
 						"data-prohibitions": "[]",
 						className: "text-4xl md:text-6xl font-bold tracking-tight mb-6 leading-tight",
-						children: ["A infraestrutura privada de ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-							"data-uid": "src/components/home/HeroSection.tsx:20:41",
-							"data-prohibitions": "[]",
-							className: "text-primary",
-							children: "liquidez imobiliária"
-						})]
+						children: [
+							"Aqui, o outro lado do seu negócio já",
+							" ",
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+								"data-uid": "src/components/home/HeroSection.tsx:21:13",
+								"data-prohibitions": "[]",
+								className: "text-primary",
+								children: "está esperando."
+							})
+						]
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-						"data-uid": "src/components/home/HeroSection.tsx:22:11",
+						"data-uid": "src/components/home/HeroSection.tsx:23:11",
 						"data-prohibitions": "[]",
-						className: "text-lg md:text-xl text-muted-foreground mb-8 leading-relaxed",
-						children: "Exclusivo para corretores de alto padrão. Acesse uma rede fechada, tecnologia de ponta e feche negócios no modelo 50/50 de maneira segura e imediata."
+						className: "text-lg md:text-xl text-muted-foreground mb-4 leading-relaxed",
+						children: "Uma rede privada para corretores selecionados da Barra — onde demandas reais circulam antes de qualquer portal ver."
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+						"data-uid": "src/components/home/HeroSection.tsx:27:11",
+						"data-prohibitions": "[]",
+						className: "text-base md:text-lg text-foreground/90 font-medium mb-8",
+						children: "Acesso por indicação e aprovação. Demandas e imóveis que não aparecem em nenhum outro lugar."
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-						"data-uid": "src/components/home/HeroSection.tsx:26:11",
+						"data-uid": "src/components/home/HeroSection.tsx:31:11",
 						"data-prohibitions": "[]",
 						className: "flex flex-col sm:flex-row gap-4",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-							"data-uid": "src/components/home/HeroSection.tsx:27:13",
+							"data-uid": "src/components/home/HeroSection.tsx:32:13",
 							"data-prohibitions": "[]",
 							size: "lg",
 							asChild: true,
 							className: "font-semibold text-lg h-14 px-8",
 							children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Link, {
-								"data-uid": "src/components/home/HeroSection.tsx:28:15",
+								"data-uid": "src/components/home/HeroSection.tsx:33:15",
 								"data-prohibitions": "[]",
 								to: "/apply",
 								children: ["Aplique para o Prime Circle ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ChevronRight, {
-									"data-uid": "src/components/home/HeroSection.tsx:29:45",
+									"data-uid": "src/components/home/HeroSection.tsx:34:45",
 									"data-prohibitions": "[editContent]",
 									className: "ml-2 w-5 h-5"
 								})]
 							})
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-							"data-uid": "src/components/home/HeroSection.tsx:32:13",
+							"data-uid": "src/components/home/HeroSection.tsx:37:13",
 							"data-prohibitions": "[]",
 							size: "lg",
 							variant: "outline",
 							asChild: true,
 							className: "border-primary text-primary hover:bg-primary/10 h-14 px-8",
 							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("a", {
-								"data-uid": "src/components/home/HeroSection.tsx:38:15",
+								"data-uid": "src/components/home/HeroSection.tsx:43:15",
 								"data-prohibitions": "[]",
 								href: "#how-it-works",
 								children: "Saiba mais"
 							})
 						})]
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
+						"data-uid": "src/components/home/HeroSection.tsx:46:11",
+						"data-prohibitions": "[]",
+						className: "mt-8 text-sm text-muted-foreground font-medium flex items-center gap-2",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+							"data-uid": "src/components/home/HeroSection.tsx:47:13",
+							"data-prohibitions": "[editContent]",
+							className: "w-2 h-2 rounded-full bg-primary animate-pulse shrink-0"
+						}), "Acesso inicial restrito a corretores convidados por membros do núcleo."]
 					})
 				]
 			})
@@ -26444,4 +26464,4 @@ function App() {
 }));
 //#endregion
 
-//# sourceMappingURL=index-t7P4AegC.js.map
+//# sourceMappingURL=index-QGSvW3hx.js.map
