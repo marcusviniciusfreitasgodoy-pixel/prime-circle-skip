@@ -12,9 +12,10 @@ import { Plus, Search, Link as LinkIcon } from 'lucide-react'
 import { NeedCard } from '@/components/NeedCard'
 import { MatchModal } from '@/components/MatchModal'
 import useAppStore, { Need } from '@/stores/main'
+import { toast } from 'sonner'
 
 export default function NeedsListPage() {
-  const { needs, user } = useAppStore()
+  const { needs, user, addNeed } = useAppStore()
   const [selectedNeed, setSelectedNeed] = useState<Need | null>(null)
   const [bairro, setBairro] = useState('all')
 
@@ -22,6 +23,19 @@ export default function NeedsListPage() {
     if (bairro !== 'all' && !n.neighborhood.includes(bairro)) return false
     return true
   })
+
+  const handleAddMockNeed = () => {
+    const success = addNeed({
+      title: 'Cliente Investidor Gringo',
+      type: 'Cobertura',
+      priceRange: 'Até R$ 12M',
+      neighborhood: 'Lúcio Costa',
+      urgency: 'Alta',
+    })
+    if (success) {
+      toast.success('Demanda adicionada com sucesso!')
+    }
+  }
 
   return (
     <div className="space-y-6 animate-fade-in-up">
@@ -32,9 +46,9 @@ export default function NeedsListPage() {
             Descubra o que os clientes dos parceiros estão buscando.
           </p>
         </div>
-        <Button className="gold-gradient w-full sm:w-auto">
-          <Plus className="w-4 h-4 mr-2 text-black" />
-          <span className="text-black font-medium">Nova Demanda</span>
+        <Button className="gold-gradient text-black w-full sm:w-auto" onClick={handleAddMockNeed}>
+          <Plus className="w-4 h-4 mr-2" />
+          <span className="font-medium">Nova Demanda</span>
         </Button>
       </div>
 
@@ -76,14 +90,18 @@ export default function NeedsListPage() {
                 action={
                   need.ownerId !== user?.id ? (
                     <Button
-                      className="w-full bg-background hover:bg-primary hover:text-black text-white border border-primary/50 transition-colors mt-4"
+                      className="w-full gold-outline mt-4 font-semibold"
                       onClick={() => setSelectedNeed(need)}
                     >
                       <LinkIcon className="w-4 h-4 mr-2" />
                       Vincular Imóvel
                     </Button>
                   ) : (
-                    <Button variant="secondary" className="w-full mt-4" disabled>
+                    <Button
+                      variant="secondary"
+                      className="w-full mt-4 bg-secondary/50 text-muted-foreground cursor-not-allowed"
+                      disabled
+                    >
                       Sua Demanda
                     </Button>
                   )

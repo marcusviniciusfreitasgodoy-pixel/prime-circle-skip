@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
-import { Check, X, Send, Activity, Zap } from 'lucide-react'
+import { Check, X, Send, Activity, Zap, Mail, Trophy } from 'lucide-react'
 import { toast } from 'sonner'
 import useAppStore from '@/stores/main'
 import {
@@ -24,66 +24,65 @@ export default function AdminPage() {
       ticket: '3M',
       phone: '(21) 99999-1111',
     },
+  ]
+
+  const waitlist = [
     {
-      id: 2,
-      name: 'Ana Souza',
-      email: 'ana@souza.com',
-      creci: '54321-RJ',
-      ticket: '5M',
-      phone: '(21) 98888-2222',
+      id: 3,
+      name: 'Lucas Pereira',
+      email: 'lucas@pereira.com',
+      ticket: '800k',
+      region: 'Zona Sul',
+    },
+    {
+      id: 4,
+      name: 'Fernanda Costa',
+      email: 'fernanda@costa.com',
+      ticket: '900k',
+      region: 'Recreio',
     },
   ]
 
-  const mockComms = [
+  const suggestionsMock = [
     {
       id: 1,
-      to: 'João Corretor',
-      type: 'Lembrete de Inatividade (14 dias)',
-      status: 'Enviado',
-      time: '10 min atrás',
+      title: 'Filtro por Condomínio',
+      author: 'João Corretor',
+      votes: 12,
+      status: 'Planejado',
     },
     {
       id: 2,
-      to: 'Maria Santos',
-      type: 'Report Quinzenal',
-      status: 'Lido',
-      time: '1 hora atrás',
-    },
-    {
-      id: 3,
-      to: 'Carlos Mendes',
-      type: 'Boas-vindas',
-      status: 'Pendente',
-      time: '2 horas atrás',
+      title: 'Integração RD Station',
+      author: 'Maria Santos',
+      votes: 8,
+      status: 'Em Análise',
     },
   ]
 
   const handleAction = async (name: string, email: string, action: 'approved' | 'rejected') => {
     if (action === 'approved') {
-      toast.success(`Solicitação de ${name} aprovada. Enviando link mágico...`)
-      await sendTransactionalEmail('Magic Link Email', { to: email, name })
+      toast.success(`Solicitação de ${name} aprovada. Enviando e-mails...`)
+      await sendTransactionalEmail('Welcome Email', { to: email, name })
       logEvent('Aprovação de Usuário', `O candidato ${name} foi aprovado.`)
     } else {
-      toast.error(`Solicitação de ${name} rejeitada. E-mail de feedback enviado.`)
-      await sendTransactionalEmail('Rejection Feedback', { to: email, name })
+      toast.error(`Solicitação de ${name} rejeitada.`)
       logEvent('Rejeição de Usuário', `O candidato ${name} foi rejeitado.`)
     }
   }
 
-  const handleTriggerInactivity = () => {
-    simulateInactivityReminders()
-    toast.success('Job de inatividade executado. Notificações na fila.')
-    logEvent('Cron Job', 'Verificação de inatividade de 14 dias disparada manualmente.')
+  const handleBulkInvite = () => {
+    toast.success('Convites em massa enviados para a lista de espera!')
+    logEvent('Admin Action', 'Bulk invite enviado para waitlist.')
   }
 
-  const handleTriggerReport = () => {
-    simulateBiWeeklyReport()
-    toast.success('Report Quinzenal gerado e enviado aos membros ativos.')
-    logEvent('Cron Job', 'Report quinzenal de inteligência de mercado disparado manualmente.')
+  const handleReward = (member: string) => {
+    toast.success(`Recompensa (1 mês grátis) creditada para ${member}!`)
+    logEvent('Admin Action', `Recompensa de sugestão concedida a ${member}.`)
   }
 
   return (
-    <div className="space-y-6 animate-fade-in-up">
+    <div className="space-y-6 animate-fade-in-up pb-8">
       <div>
         <h2 className="text-2xl font-bold text-white">Painel Administrativo</h2>
         <p className="text-muted-foreground text-sm">
@@ -92,28 +91,40 @@ export default function AdminPage() {
       </div>
 
       <Tabs defaultValue="requests" className="w-full">
-        <TabsList className="bg-card border border-border w-full justify-start rounded-none sm:rounded-lg overflow-x-auto h-auto p-1">
+        <TabsList className="bg-card border border-border w-full flex-wrap justify-start rounded-none sm:rounded-lg h-auto p-1 gap-1">
           <TabsTrigger
             value="requests"
-            className="data-[state=active]:bg-secondary data-[state=active]:text-primary py-2 px-4"
+            className="data-[state=active]:bg-secondary data-[state=active]:text-primary"
           >
             Solicitações
           </TabsTrigger>
           <TabsTrigger
-            value="comms"
-            className="data-[state=active]:bg-secondary data-[state=active]:text-primary py-2 px-4"
+            value="waitlist"
+            className="data-[state=active]:bg-secondary data-[state=active]:text-primary"
           >
-            Comunicações
+            Lista de Espera
           </TabsTrigger>
           <TabsTrigger
-            value="automations"
-            className="data-[state=active]:bg-secondary data-[state=active]:text-primary py-2 px-4"
+            value="suggestions"
+            className="data-[state=active]:bg-secondary data-[state=active]:text-primary"
           >
-            Automações
+            Sugestões
+          </TabsTrigger>
+          <TabsTrigger
+            value="reviews"
+            className="data-[state=active]:bg-secondary data-[state=active]:text-primary"
+          >
+            Review Quinzenal
+          </TabsTrigger>
+          <TabsTrigger
+            value="comms"
+            className="data-[state=active]:bg-secondary data-[state=active]:text-primary"
+          >
+            Comms
           </TabsTrigger>
           <TabsTrigger
             value="logs"
-            className="data-[state=active]:bg-secondary data-[state=active]:text-primary py-2 px-4"
+            className="data-[state=active]:bg-secondary data-[state=active]:text-primary"
           >
             Logs
           </TabsTrigger>
@@ -163,92 +174,126 @@ export default function AdminPage() {
           ))}
         </TabsContent>
 
-        <TabsContent value="comms" className="mt-6">
+        <TabsContent value="waitlist" className="mt-6 space-y-4">
+          <div className="flex justify-between items-center bg-card p-4 rounded-lg border border-border mb-4">
+            <div>
+              <h3 className="text-white font-medium">Fila de Espera</h3>
+              <p className="text-sm text-muted-foreground">
+                {waitlist.length} corretores aguardando liberação regional.
+              </p>
+            </div>
+            <Button onClick={handleBulkInvite} className="gold-gradient text-black">
+              <Mail className="w-4 h-4 mr-2" /> Disparar Convites
+            </Button>
+          </div>
+          {waitlist.map((req) => (
+            <Card
+              key={req.id}
+              className="bg-secondary border-border opacity-80 hover:opacity-100 transition-opacity"
+            >
+              <CardContent className="p-4 flex items-center justify-between">
+                <div>
+                  <h3 className="font-medium text-white">{req.name}</h3>
+                  <p className="text-sm text-muted-foreground">
+                    {req.email} • {req.region}
+                  </p>
+                </div>
+                <Badge variant="outline" className="border-border text-muted-foreground">
+                  Ticket: {req.ticket}
+                </Badge>
+              </CardContent>
+            </Card>
+          ))}
+        </TabsContent>
+
+        <TabsContent value="suggestions" className="mt-6 space-y-4">
+          {suggestionsMock.map((sug) => (
+            <Card key={sug.id} className="bg-secondary border-border">
+              <CardContent className="p-4 flex items-center justify-between gap-4">
+                <div className="flex flex-col">
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-semibold text-white">{sug.title}</h3>
+                    <Badge variant="outline" className="border-primary/30 text-primary text-[10px]">
+                      {sug.status}
+                    </Badge>
+                  </div>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Por: {sug.author} • {sug.votes} Votos
+                  </p>
+                </div>
+                <Button
+                  variant="outline"
+                  className="border-primary/50 text-primary hover:bg-primary/10 shrink-0"
+                  onClick={() => handleReward(sug.author)}
+                >
+                  <Trophy className="w-4 h-4 mr-2" /> Recompensar
+                </Button>
+              </CardContent>
+            </Card>
+          ))}
+        </TabsContent>
+
+        <TabsContent value="reviews" className="mt-6">
           <Card className="bg-card border-border">
             <CardHeader>
               <CardTitle className="text-lg text-white flex items-center gap-2">
-                <Send className="w-5 h-5 text-primary" /> Monitor de Transacionais
+                <Activity className="w-5 h-5 text-primary" /> Saúde da Plataforma
               </CardTitle>
-              <CardDescription>
-                Status dos e-mails e notificações automatizadas do sistema.
-              </CardDescription>
+              <CardDescription>Métricas quinzenais de adoção e liquidez.</CardDescription>
             </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {mockComms.map((comm) => (
-                  <div
-                    key={comm.id}
-                    className="flex justify-between items-center p-3 rounded-lg bg-background border border-border"
-                  >
-                    <div>
-                      <p className="text-white font-medium">{comm.type}</p>
-                      <p className="text-sm text-muted-foreground">Para: {comm.to}</p>
-                    </div>
-                    <div className="text-right">
-                      <Badge
-                        variant="outline"
-                        className={
-                          comm.status === 'Lido'
-                            ? 'border-green-500 text-green-500'
-                            : comm.status === 'Enviado'
-                              ? 'border-primary text-primary'
-                              : 'border-gray-500 text-gray-500'
-                        }
-                      >
-                        {comm.status}
-                      </Badge>
-                      <p className="text-xs text-muted-foreground mt-1">{comm.time}</p>
-                    </div>
-                  </div>
-                ))}
+            <CardContent className="space-y-6">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="bg-secondary p-4 rounded-lg border border-border">
+                  <p className="text-sm text-muted-foreground">Novos Membros</p>
+                  <p className="text-2xl font-bold text-white">+12</p>
+                </div>
+                <div className="bg-secondary p-4 rounded-lg border border-border">
+                  <p className="text-sm text-muted-foreground">Matches Ativos</p>
+                  <p className="text-2xl font-bold text-primary">45</p>
+                </div>
+                <div className="bg-secondary p-4 rounded-lg border border-border">
+                  <p className="text-sm text-muted-foreground">VGV Fechado</p>
+                  <p className="text-2xl font-bold text-white">R$ 15M</p>
+                </div>
+                <div className="bg-secondary p-4 rounded-lg border border-border">
+                  <p className="text-sm text-muted-foreground">Conversão</p>
+                  <p className="text-2xl font-bold text-white">18%</p>
+                </div>
               </div>
+              <Button
+                className="w-full sm:w-auto mt-4 border-border text-muted-foreground bg-background"
+                variant="outline"
+                onClick={() => {
+                  simulateBiWeeklyReport()
+                  toast.success('Report Gerado')
+                }}
+              >
+                Gerar Report e Enviar Lembretes
+              </Button>
             </CardContent>
           </Card>
         </TabsContent>
 
-        <TabsContent value="automations" className="mt-6">
+        <TabsContent value="comms" className="mt-6">
           <Card className="bg-card border-border">
             <CardHeader>
               <CardTitle className="text-lg text-white flex items-center gap-2">
-                <Zap className="w-5 h-5 text-primary" /> Disparos Manuais (Cron Jobs)
+                <Send className="w-5 h-5 text-primary" /> Transacionais Recentes
               </CardTitle>
-              <CardDescription>
-                Simule o comportamento dos cron jobs de engajamento do ecossistema.
-              </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="flex flex-col md:flex-row items-start md:items-center justify-between p-4 bg-secondary rounded-lg border border-border gap-4">
-                <div>
-                  <h4 className="text-white font-medium">Lembretes de Inatividade</h4>
-                  <p className="text-sm text-muted-foreground mt-1">
-                    Gatilho automático de e-mail para membros que não logaram ou atualizaram
-                    demandas nos últimos 14 dias.
-                  </p>
+            <CardContent>
+              <div className="space-y-3">
+                <div className="flex justify-between items-center p-3 rounded-lg bg-background border border-border">
+                  <div>
+                    <p className="text-white font-medium text-sm">
+                      Lembrete de Inatividade (14 dias)
+                    </p>
+                    <p className="text-xs text-muted-foreground">Para: João Corretor</p>
+                  </div>
+                  <Badge variant="outline" className="border-primary text-primary">
+                    Enviado
+                  </Badge>
                 </div>
-                <Button
-                  onClick={handleTriggerInactivity}
-                  variant="outline"
-                  className="border-primary text-primary hover:bg-primary/10 shrink-0"
-                >
-                  Disparar Verificação
-                </Button>
-              </div>
-
-              <div className="flex flex-col md:flex-row items-start md:items-center justify-between p-4 bg-secondary rounded-lg border border-border gap-4">
-                <div>
-                  <h4 className="text-white font-medium">Report Quinzenal (Newsletter)</h4>
-                  <p className="text-sm text-muted-foreground mt-1">
-                    Dispara o e-mail de resumo de mercado para todos os membros ativos com os
-                    últimos imóveis e demandas curadas.
-                  </p>
-                </div>
-                <Button
-                  onClick={handleTriggerReport}
-                  variant="outline"
-                  className="border-primary text-primary hover:bg-primary/10 shrink-0"
-                >
-                  Gerar Report
-                </Button>
               </div>
             </CardContent>
           </Card>
@@ -262,26 +307,20 @@ export default function AdminPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              {logs.length === 0 ? (
-                <p className="text-muted-foreground text-center py-8">
-                  Nenhum evento registrado nesta sessão.
-                </p>
-              ) : (
-                <div className="space-y-4">
-                  {[...logs].reverse().map((log, i) => (
-                    <div
-                      key={i}
-                      className="flex flex-col p-3 rounded-lg bg-background border border-border"
-                    >
-                      <span className="text-primary text-sm font-semibold">{log.action}</span>
-                      <span className="text-white text-sm mt-1">{log.details}</span>
-                      <span className="text-xs text-muted-foreground mt-2">
-                        {new Date(log.timestamp).toLocaleTimeString()}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              )}
+              <div className="space-y-3">
+                {[...logs].reverse().map((log, i) => (
+                  <div
+                    key={i}
+                    className="flex flex-col p-3 rounded-lg bg-background border border-border"
+                  >
+                    <span className="text-primary text-sm font-semibold">{log.action}</span>
+                    <span className="text-white text-sm mt-1">{log.details}</span>
+                    <span className="text-xs text-muted-foreground mt-1">
+                      {new Date(log.timestamp).toLocaleTimeString()}
+                    </span>
+                  </div>
+                ))}
+              </div>
             </CardContent>
           </Card>
         </TabsContent>

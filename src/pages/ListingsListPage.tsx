@@ -8,12 +8,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Plus, Search, Filter } from 'lucide-react'
+import { Plus, Search } from 'lucide-react'
 import { ListingCard } from '@/components/ListingCard'
 import useAppStore from '@/stores/main'
+import { toast } from 'sonner'
 
 export default function ListingsListPage() {
-  const { listings } = useAppStore()
+  const { listings, addListing } = useAppStore()
   const [bairro, setBairro] = useState('all')
   const [tipo, setTipo] = useState('all')
 
@@ -22,6 +23,22 @@ export default function ListingsListPage() {
     if (tipo !== 'all' && l.type !== tipo) return false
     return true
   })
+
+  const handleAddMockListing = () => {
+    const success = addListing({
+      title: 'Casa Mansão Nova',
+      type: 'Casa',
+      price: 'R$ 10.000.000',
+      priceValue: 10000000,
+      area: '800m²',
+      beds: 5,
+      neighborhood: 'Jardim Oceânico',
+      image: 'https://img.usecurling.com/p/600/400?q=luxury%20mansion',
+    })
+    if (success) {
+      toast.success('Imóvel adicionado com sucesso!')
+    }
+  }
 
   return (
     <div className="space-y-6 animate-fade-in-up">
@@ -32,9 +49,12 @@ export default function ListingsListPage() {
             Explore o inventário exclusivo do círculo.
           </p>
         </div>
-        <Button className="gold-gradient w-full sm:w-auto">
-          <Plus className="w-4 h-4 mr-2 text-black" />
-          <span className="text-black font-medium">Novo Imóvel</span>
+        <Button
+          className="gold-gradient text-black w-full sm:w-auto"
+          onClick={handleAddMockListing}
+        >
+          <Plus className="w-4 h-4 mr-2" />
+          <span className="font-medium">Novo Imóvel</span>
         </Button>
       </div>
 

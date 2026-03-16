@@ -18138,7 +18138,7 @@ function handleAndDispatchCustomEvent$1(name, handler, detail, { discrete }) {
 	if (discrete) dispatchDiscreteCustomEvent(target, event);
 	else target.dispatchEvent(event);
 }
-var Root$9 = DismissableLayer;
+var Root$8 = DismissableLayer;
 var Branch = DismissableLayerBranch;
 //#endregion
 //#region ../../cache/modules/prime-circle-migration-fd549/node_modules/.pnpm/@radix-ui+react-use-layout-effect@1.1.1_@types+react@19.2.14_react@19.2.4/node_modules/@radix-ui/react-use-layout-effect/dist/index.mjs
@@ -18159,7 +18159,7 @@ var Portal$2 = import_react.forwardRef((props, forwardedRef) => {
 Portal$2.displayName = PORTAL_NAME$3;
 //#endregion
 //#region ../../cache/modules/prime-circle-migration-fd549/node_modules/.pnpm/@radix-ui+react-presence@1.1.5_@types+react-dom@19.2.3_@types+react@19.2.14__@types+rea_c01c26c80b5ab5e3ecefbda6eca51ad1/node_modules/@radix-ui/react-presence/dist/index.mjs
-function useStateMachine$1(initialState, machine) {
+function useStateMachine(initialState, machine) {
 	return import_react.useReducer((state, event) => {
 		return machine[state][event] ?? state;
 	}, initialState);
@@ -18177,7 +18177,7 @@ function usePresence(present) {
 	const stylesRef = import_react.useRef(null);
 	const prevPresentRef = import_react.useRef(present);
 	const prevAnimationNameRef = import_react.useRef("none");
-	const [state, send] = useStateMachine$1(present ? "mounted" : "unmounted", {
+	const [state, send] = useStateMachine(present ? "mounted" : "unmounted", {
 		mounted: {
 			UNMOUNT: "unmounted",
 			ANIMATION_OUT: "unmountSuspended"
@@ -18338,7 +18338,7 @@ var VisuallyHidden = import_react.forwardRef((props, forwardedRef) => {
 	});
 });
 VisuallyHidden.displayName = NAME$3;
-var Root$8 = VisuallyHidden;
+var Root$7 = VisuallyHidden;
 //#endregion
 //#region ../../cache/modules/prime-circle-migration-fd549/node_modules/.pnpm/@radix-ui+react-toast@1.2.15_@types+react-dom@19.2.3_@types+react@19.2.14__@types+react_4581e89c6ba13e4159ce65546c8b2a16/node_modules/@radix-ui/react-toast/dist/index.mjs
 var PROVIDER_NAME$1 = "ToastProvider";
@@ -18372,13 +18372,13 @@ var ToastProvider$1 = (props) => {
 	});
 };
 ToastProvider$1.displayName = PROVIDER_NAME$1;
-var VIEWPORT_NAME$2 = "ToastViewport";
+var VIEWPORT_NAME$1 = "ToastViewport";
 var VIEWPORT_DEFAULT_HOTKEY = ["F8"];
 var VIEWPORT_PAUSE = "toast.viewportPause";
 var VIEWPORT_RESUME = "toast.viewportResume";
 var ToastViewport$1 = import_react.forwardRef((props, forwardedRef) => {
 	const { __scopeToast, hotkey = VIEWPORT_DEFAULT_HOTKEY, label = "Notifications ({hotkey})", ...viewportProps } = props;
-	const context = useToastProviderContext(VIEWPORT_NAME$2, __scopeToast);
+	const context = useToastProviderContext(VIEWPORT_NAME$1, __scopeToast);
 	const getItems = useCollection$2(__scopeToast);
 	const wrapperRef = import_react.useRef(null);
 	const headFocusProxyRef = import_react.useRef(null);
@@ -18494,7 +18494,7 @@ var ToastViewport$1 = import_react.forwardRef((props, forwardedRef) => {
 		]
 	});
 });
-ToastViewport$1.displayName = VIEWPORT_NAME$2;
+ToastViewport$1.displayName = VIEWPORT_NAME$1;
 var FOCUS_PROXY_NAME = "ToastFocusProxy";
 var FocusProxy = import_react.forwardRef((props, forwardedRef) => {
 	const { __scopeToast, onFocusFromOutsideViewport, ...proxyProps } = props;
@@ -18638,7 +18638,7 @@ var ToastImpl = import_react.forwardRef((props, forwardedRef) => {
 		onClose: handleClose,
 		children: import_react_dom.createPortal(/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Collection$2.ItemSlot, {
 			scope: __scopeToast,
-			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$9, {
+			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$8, {
 				asChild: true,
 				onEscapeKeyDown: composeEventHandlers(onEscapeKeyDown, () => {
 					if (!context.isFocusedToastEscapeKeyDownRef.current) handleClose();
@@ -18867,7 +18867,7 @@ function focusFirst$2(candidates) {
 	});
 }
 var Provider$1 = ToastProvider$1;
-var Viewport$2 = ToastViewport$1;
+var Viewport$1 = ToastViewport$1;
 var Root2$3 = Toast$2;
 var Title$1 = ToastTitle$1;
 var Description$1 = ToastDescription$1;
@@ -19093,28 +19093,6 @@ var Bell = createLucideIcon("bell", [["path", {
 	d: "M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326",
 	key: "11g9vi"
 }]]);
-var Building2 = createLucideIcon("building-2", [
-	["path", {
-		d: "M10 12h4",
-		key: "a56b0p"
-	}],
-	["path", {
-		d: "M10 8h4",
-		key: "1sr2af"
-	}],
-	["path", {
-		d: "M14 21v-3a2 2 0 0 0-4 0v3",
-		key: "1rgiei"
-	}],
-	["path", {
-		d: "M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2",
-		key: "secmi2"
-	}],
-	["path", {
-		d: "M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16",
-		key: "16ra0t"
-	}]
-]);
 var Check = createLucideIcon("check", [["path", {
 	d: "M20 6 9 17l-5-5",
 	key: "1gmf2c"
@@ -19135,6 +19113,28 @@ var ChevronUp = createLucideIcon("chevron-up", [["path", {
 	d: "m18 15-6-6-6 6",
 	key: "153udz"
 }]]);
+var CircleAlert = createLucideIcon("circle-alert", [
+	["circle", {
+		cx: "12",
+		cy: "12",
+		r: "10",
+		key: "1mglay"
+	}],
+	["line", {
+		x1: "12",
+		x2: "12",
+		y1: "8",
+		y2: "12",
+		key: "1pkeuh"
+	}],
+	["line", {
+		x1: "12",
+		x2: "12.01",
+		y1: "16",
+		y2: "16",
+		key: "4dfq90"
+	}]
+]);
 var CircleCheck = createLucideIcon("circle-check", [["circle", {
 	cx: "12",
 	cy: "12",
@@ -19296,6 +19296,17 @@ var LogOut = createLucideIcon("log-out", [
 		key: "1uf3rs"
 	}]
 ]);
+var Mail = createLucideIcon("mail", [["path", {
+	d: "m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7",
+	key: "132q7q"
+}], ["rect", {
+	x: "2",
+	y: "4",
+	width: "20",
+	height: "16",
+	rx: "2",
+	key: "izxlao"
+}]]);
 var MapPin = createLucideIcon("map-pin", [["path", {
 	d: "M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0",
 	key: "1r0f0z"
@@ -19404,44 +19415,30 @@ var Settings = createLucideIcon("settings", [["path", {
 	r: "3",
 	key: "1v7zrd"
 }]]);
-var Share2 = createLucideIcon("share-2", [
-	["circle", {
-		cx: "18",
-		cy: "5",
-		r: "3",
-		key: "gq8acd"
-	}],
-	["circle", {
-		cx: "6",
-		cy: "12",
-		r: "3",
-		key: "w7nqdw"
-	}],
-	["circle", {
-		cx: "18",
-		cy: "19",
-		r: "3",
-		key: "1xt0gg"
-	}],
-	["line", {
-		x1: "8.59",
-		x2: "15.42",
-		y1: "13.51",
-		y2: "17.49",
-		key: "47mynk"
-	}],
-	["line", {
-		x1: "15.41",
-		x2: "8.59",
-		y1: "6.51",
-		y2: "10.49",
-		key: "1n3mei"
-	}]
-]);
 var Shield = createLucideIcon("shield", [["path", {
 	d: "M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z",
 	key: "oel41y"
 }]]);
+var Sparkles = createLucideIcon("sparkles", [
+	["path", {
+		d: "M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z",
+		key: "1s2grr"
+	}],
+	["path", {
+		d: "M20 2v4",
+		key: "1rf3ol"
+	}],
+	["path", {
+		d: "M22 4h-4",
+		key: "gwowj6"
+	}],
+	["circle", {
+		cx: "4",
+		cy: "20",
+		r: "2",
+		key: "6kqj1y"
+	}]
+]);
 var Star = createLucideIcon("star", [["path", {
 	d: "M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z",
 	key: "r04s7s"
@@ -19528,23 +19525,12 @@ var Users = createLucideIcon("users", [
 		key: "nufk8"
 	}]
 ]);
-var Wallet = createLucideIcon("wallet", [["path", {
-	d: "M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1",
-	key: "18etb6"
-}], ["path", {
-	d: "M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4",
-	key: "xoc0q4"
-}]]);
 var X = createLucideIcon("x", [["path", {
 	d: "M18 6 6 18",
 	key: "1bl5f8"
 }], ["path", {
 	d: "m6 6 12 12",
 	key: "d8bk6v"
-}]]);
-var Zap = createLucideIcon("zap", [["path", {
-	d: "M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z",
-	key: "1xq2db"
 }]]);
 //#endregion
 //#region ../../cache/modules/prime-circle-migration-fd549/node_modules/.pnpm/tailwind-merge@2.6.1/node_modules/tailwind-merge/dist/bundle-mjs.mjs
@@ -20970,14 +20956,14 @@ function cn$1(...inputs) {
 //#endregion
 //#region src/components/ui/toast.tsx
 var ToastProvider = Provider$1;
-var ToastViewport = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Viewport$2, {
+var ToastViewport = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Viewport$1, {
 	"data-uid": "src/components/ui/toast.tsx:15:3",
 	"data-prohibitions": "[editContent]",
 	ref,
 	className: cn$1("fixed top-0 z-[100] flex max-h-screen w-full flex-col-reverse p-4 sm:bottom-0 sm:right-0 sm:top-auto sm:flex-col md:max-w-[420px]", className),
 	...props
 }));
-ToastViewport.displayName = Viewport$2.displayName;
+ToastViewport.displayName = Viewport$1.displayName;
 var toastVariants = cva("group pointer-events-auto relative flex w-full items-center justify-between space-x-4 overflow-hidden rounded-md border p-6 pr-8 shadow-lg transition-all data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)] data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=move]:transition-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[swipe=end]:animate-out data-[state=closed]:fade-out-80 data-[state=closed]:slide-out-to-right-full data-[state=open]:slide-in-from-top-full data-[state=open]:sm:slide-in-from-bottom-full", {
 	variants: { variant: {
 		default: "border bg-background text-foreground",
@@ -23720,7 +23706,7 @@ var Arrow$1 = import_react.forwardRef((props, forwardedRef) => {
 	});
 });
 Arrow$1.displayName = NAME$2;
-var Root$7 = Arrow$1;
+var Root$6 = Arrow$1;
 //#endregion
 //#region ../../cache/modules/prime-circle-migration-fd549/node_modules/.pnpm/@radix-ui+react-use-size@1.1.1_@types+react@19.2.14_react@19.2.4/node_modules/@radix-ui/react-use-size/dist/index.mjs
 function useSize(element) {
@@ -23941,7 +23927,7 @@ var PopperArrow = import_react.forwardRef(function PopperArrow2(props, forwarded
 			}[contentContext.placedSide],
 			visibility: contentContext.shouldHideArrow ? "hidden" : void 0
 		},
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$7, {
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$6, {
 			...arrowProps,
 			ref: forwardedRef,
 			style: {
@@ -24325,7 +24311,7 @@ var TooltipContentImpl = import_react.forwardRef((props, forwardedRef) => {
 			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Slottable, { children }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(VisuallyHiddenContentContextProvider, {
 				scope: __scopeTooltip,
 				isInside: true,
-				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$8, {
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$7, {
 					id: context.contentId,
 					role: "tooltip",
 					children: ariaLabel || children
@@ -24532,11 +24518,12 @@ function AppProvider({ children }) {
 	const [matches, setMatches] = (0, import_react.useState)(initialMatches);
 	const [pageViews, setPageViews] = (0, import_react.useState)([]);
 	const [logs, setLogs] = (0, import_react.useState)([]);
+	const [planLimitModalOpen, setPlanLimitModalOpen] = (0, import_react.useState)(false);
 	const login = (status) => setUser({
 		id: "user1",
 		name: "João Corretor",
 		status,
-		tier: "Gold",
+		tier: "None",
 		avatar: "https://img.usecurling.com/ppl/thumbnail?gender=male&seed=1",
 		onboarded: status === "admin" ? true : false,
 		lastLogin: (/* @__PURE__ */ new Date()).toISOString()
@@ -24561,7 +24548,51 @@ function AppProvider({ children }) {
 			timestamp: (/* @__PURE__ */ new Date()).toISOString()
 		}]);
 	};
+	const checkPlanLimits = (type) => {
+		if (!user || user.tier !== "None") return true;
+		if (type === "listings") {
+			if (listings.filter((l) => l.ownerId === user.id).length >= 1) return false;
+		}
+		if (type === "needs") {
+			if (needs.filter((n) => n.ownerId === user.id).length >= 1) return false;
+		}
+		if (type === "matches") {
+			if (matches.length >= 3) return false;
+		}
+		return true;
+	};
+	const addListing = (listing) => {
+		if (!checkPlanLimits("listings")) {
+			setPlanLimitModalOpen(true);
+			return false;
+		}
+		setListings((prev) => [...prev, {
+			...listing,
+			id: Date.now().toString(),
+			ownerId: user?.id || "unknown",
+			status: "Disponível"
+		}]);
+		logEvent("Imóvel Cadastrado", `Imóvel adicionado: ${listing.title}`);
+		return true;
+	};
+	const addNeed = (need) => {
+		if (!checkPlanLimits("needs")) {
+			setPlanLimitModalOpen(true);
+			return false;
+		}
+		setNeeds((prev) => [...prev, {
+			...need,
+			id: Date.now().toString(),
+			ownerId: user?.id || "unknown"
+		}]);
+		logEvent("Demanda Cadastrada", `Demanda adicionada: ${need.title}`);
+		return true;
+	};
 	const addMatch = (needId, listingId) => {
+		if (!checkPlanLimits("matches")) {
+			setPlanLimitModalOpen(true);
+			return false;
+		}
 		setMatches((prev) => [...prev, {
 			id: Date.now().toString(),
 			needId,
@@ -24569,6 +24600,7 @@ function AppProvider({ children }) {
 			status: "Novo"
 		}]);
 		logEvent("Match Criado", `Need: ${needId}, Listing: ${listingId}`);
+		return true;
 	};
 	const updateMatchStatus = (id, status) => {
 		setMatches((prev) => prev.map((m) => m.id === id ? {
@@ -24592,9 +24624,13 @@ function AppProvider({ children }) {
 		matches,
 		pageViews,
 		logs,
+		planLimitModalOpen,
+		setPlanLimitModalOpen,
 		login,
 		logout,
 		completeOnboarding,
+		addListing,
+		addNeed,
 		addMatch,
 		updateMatchStatus,
 		closeMatch,
@@ -24842,10 +24878,10 @@ Separator$2.displayName = NAME$1;
 function isValidOrientation(orientation) {
 	return ORIENTATIONS.includes(orientation);
 }
-var Root$6 = Separator$2;
+var Root$5 = Separator$2;
 //#endregion
 //#region src/components/ui/separator.tsx
-var Separator$1 = import_react.forwardRef(({ className, orientation = "horizontal", decorative = true, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$6, {
+var Separator$1 = import_react.forwardRef(({ className, orientation = "horizontal", decorative = true, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$5, {
 	"data-uid": "src/components/ui/separator.tsx:11:3",
 	"data-prohibitions": "[editContent]",
 	ref,
@@ -24854,7 +24890,7 @@ var Separator$1 = import_react.forwardRef(({ className, orientation = "horizonta
 	className: cn$1("shrink-0 bg-border", orientation === "horizontal" ? "h-[1px] w-full" : "h-full w-[1px]", className),
 	...props
 }));
-Separator$1.displayName = Root$6.displayName;
+Separator$1.displayName = Root$5.displayName;
 //#endregion
 //#region ../../cache/modules/prime-circle-migration-fd549/node_modules/.pnpm/@radix-ui+react-focus-scope@1.1.7_@types+react-dom@19.2.3_@types+react@19.2.14__@types+_f62f3af4ca2ba305a7aecf04c8534604/node_modules/@radix-ui/react-focus-scope/dist/index.mjs
 var AUTOFOCUS_ON_MOUNT = "focusScope.autoFocusOnMount";
@@ -26158,7 +26194,7 @@ var DescriptionWarning = ({ contentRef, descriptionId }) => {
 	]);
 	return null;
 };
-var Root$5 = Dialog$1;
+var Root$4 = Dialog$1;
 var Portal$1 = DialogPortal$1;
 var Overlay = DialogOverlay$1;
 var Content$1 = DialogContent$1;
@@ -26167,7 +26203,7 @@ var Description = DialogDescription$1;
 var Close = DialogClose$1;
 //#endregion
 //#region src/components/ui/sheet.tsx
-var Sheet = Root$5;
+var Sheet = Root$4;
 var SheetPortal = Portal$1;
 var SheetOverlay = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Overlay, {
 	"data-uid": "src/components/ui/sheet.tsx:21:3",
@@ -26952,19 +26988,19 @@ function useImageLoadingStatus(src, { referrerPolicy, crossOrigin }) {
 	]);
 	return loadingStatus;
 }
-var Root$4 = Avatar$1;
+var Root$3 = Avatar$1;
 var Image = AvatarImage$1;
 var Fallback = AvatarFallback$1;
 //#endregion
 //#region src/components/ui/avatar.tsx
-var Avatar = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$4, {
+var Avatar = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$3, {
 	"data-uid": "src/components/ui/avatar.tsx:11:3",
 	"data-prohibitions": "[editContent]",
 	ref,
 	className: cn$1("relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full", className),
 	...props
 }));
-Avatar.displayName = Root$4.displayName;
+Avatar.displayName = Root$3.displayName;
 var AvatarImage = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Image, {
 	"data-uid": "src/components/ui/avatar.tsx:23:3",
 	"data-prohibitions": "[editContent]",
@@ -26981,6 +27017,221 @@ var AvatarFallback = import_react.forwardRef(({ className, ...props }, ref) => /
 	...props
 }));
 AvatarFallback.displayName = Fallback.displayName;
+//#endregion
+//#region src/components/ui/dialog.tsx
+var Dialog = Root$4;
+var DialogPortal = Portal$1;
+var DialogOverlay = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Overlay, {
+	"data-uid": "src/components/ui/dialog.tsx:20:3",
+	"data-prohibitions": "[editContent]",
+	ref,
+	className: cn$1("fixed inset-0 z-50 bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0", className),
+	...props
+}));
+DialogOverlay.displayName = Overlay.displayName;
+var DialogContent = import_react.forwardRef(({ className, children, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(DialogPortal, {
+	"data-uid": "src/components/ui/dialog.tsx:35:3",
+	"data-prohibitions": "[editContent]",
+	children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(DialogOverlay, {
+		"data-uid": "src/components/ui/dialog.tsx:36:5",
+		"data-prohibitions": "[editContent]"
+	}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Content$1, {
+		"data-uid": "src/components/ui/dialog.tsx:37:5",
+		"data-prohibitions": "[editContent]",
+		ref,
+		className: cn$1("fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg overflow-y-auto max-h-screen", className),
+		...props,
+		children: [children, /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Close, {
+			"data-uid": "src/components/ui/dialog.tsx:46:7",
+			"data-prohibitions": "[]",
+			className: "absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground",
+			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(X, {
+				"data-uid": "src/components/ui/dialog.tsx:47:9",
+				"data-prohibitions": "[editContent]",
+				className: "h-4 w-4"
+			}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+				"data-uid": "src/components/ui/dialog.tsx:48:9",
+				"data-prohibitions": "[]",
+				className: "sr-only",
+				children: "Close"
+			})]
+		})]
+	})]
+}));
+DialogContent.displayName = Content$1.displayName;
+var DialogHeader = ({ className, ...props }) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+	"data-uid": "src/components/ui/dialog.tsx:56:3",
+	"data-prohibitions": "[editContent]",
+	className: cn$1("flex flex-col space-y-1.5 text-center sm:text-left", className),
+	...props
+});
+DialogHeader.displayName = "DialogHeader";
+var DialogFooter = ({ className, ...props }) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+	"data-uid": "src/components/ui/dialog.tsx:61:3",
+	"data-prohibitions": "[editContent]",
+	className: cn$1("flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2", className),
+	...props
+});
+DialogFooter.displayName = "DialogFooter";
+var DialogTitle = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Title, {
+	"data-uid": "src/components/ui/dialog.tsx:72:3",
+	"data-prohibitions": "[editContent]",
+	ref,
+	className: cn$1("text-lg font-semibold leading-none tracking-tight", className),
+	...props
+}));
+DialogTitle.displayName = Title.displayName;
+var DialogDescription = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Description, {
+	"data-uid": "src/components/ui/dialog.tsx:84:3",
+	"data-prohibitions": "[editContent]",
+	ref,
+	className: cn$1("text-sm text-muted-foreground", className),
+	...props
+}));
+DialogDescription.displayName = Description.displayName;
+//#endregion
+//#region src/components/PlanLimitModal.tsx
+function PlanLimitModal() {
+	const { planLimitModalOpen, setPlanLimitModalOpen } = useAppStore();
+	const navigate = useNavigate();
+	const handleUpgrade = () => {
+		setPlanLimitModalOpen(false);
+		navigate("/plans");
+	};
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Dialog, {
+		"data-uid": "src/components/PlanLimitModal.tsx:23:5",
+		"data-prohibitions": "[]",
+		open: planLimitModalOpen,
+		onOpenChange: setPlanLimitModalOpen,
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(DialogContent, {
+			"data-uid": "src/components/PlanLimitModal.tsx:24:7",
+			"data-prohibitions": "[]",
+			className: "bg-card border-primary/50 sm:max-w-[425px] shadow-elevation overflow-hidden",
+			children: [
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+					"data-uid": "src/components/PlanLimitModal.tsx:25:9",
+					"data-prohibitions": "[]",
+					className: "absolute top-0 right-0 p-6 opacity-10 pointer-events-none",
+					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Crown, {
+						"data-uid": "src/components/PlanLimitModal.tsx:26:11",
+						"data-prohibitions": "[editContent]",
+						className: "w-32 h-32 text-primary rotate-12"
+					})
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(DialogHeader, {
+					"data-uid": "src/components/PlanLimitModal.tsx:28:9",
+					"data-prohibitions": "[]",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(DialogTitle, {
+						"data-uid": "src/components/PlanLimitModal.tsx:29:11",
+						"data-prohibitions": "[]",
+						className: "text-white text-2xl flex items-center gap-2",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Sparkles, {
+							"data-uid": "src/components/PlanLimitModal.tsx:30:13",
+							"data-prohibitions": "[editContent]",
+							className: "w-6 h-6 text-primary"
+						}), "Limite de Plano Alcançado"]
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(DialogDescription, {
+						"data-uid": "src/components/PlanLimitModal.tsx:33:11",
+						"data-prohibitions": "[]",
+						className: "text-muted-foreground text-base pt-2",
+						children: [
+							"Você atingiu o limite de atividades do plano Free. Para escalar suas conexões e fechar mais negócios, eleve seu plano para ",
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", {
+								"data-uid": "src/components/PlanLimitModal.tsx:35:49",
+								"data-prohibitions": "[]",
+								className: "text-primary",
+								children: "Standard"
+							}),
+							" ",
+							"ou torne-se ",
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", {
+								"data-uid": "src/components/PlanLimitModal.tsx:38:25",
+								"data-prohibitions": "[]",
+								className: "text-white",
+								children: "Ambassador"
+							}),
+							"."
+						]
+					})]
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					"data-uid": "src/components/PlanLimitModal.tsx:42:9",
+					"data-prohibitions": "[]",
+					className: "bg-secondary/50 p-4 rounded-lg border border-border my-4 space-y-3 text-sm text-white",
+					children: [
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							"data-uid": "src/components/PlanLimitModal.tsx:43:11",
+							"data-prohibitions": "[]",
+							className: "flex justify-between items-center",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+								"data-uid": "src/components/PlanLimitModal.tsx:44:13",
+								"data-prohibitions": "[]",
+								className: "text-muted-foreground",
+								children: "Imóveis Ativos:"
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+								"data-uid": "src/components/PlanLimitModal.tsx:45:13",
+								"data-prohibitions": "[]",
+								className: "text-primary font-medium",
+								children: "Ilimitado no Standard"
+							})]
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							"data-uid": "src/components/PlanLimitModal.tsx:47:11",
+							"data-prohibitions": "[]",
+							className: "flex justify-between items-center",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+								"data-uid": "src/components/PlanLimitModal.tsx:48:13",
+								"data-prohibitions": "[]",
+								className: "text-muted-foreground",
+								children: "Demandas:"
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+								"data-uid": "src/components/PlanLimitModal.tsx:49:13",
+								"data-prohibitions": "[]",
+								className: "text-primary font-medium",
+								children: "Ilimitado no Standard"
+							})]
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							"data-uid": "src/components/PlanLimitModal.tsx:51:11",
+							"data-prohibitions": "[]",
+							className: "flex justify-between items-center",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+								"data-uid": "src/components/PlanLimitModal.tsx:52:13",
+								"data-prohibitions": "[]",
+								className: "text-muted-foreground",
+								children: "Matches/mês:"
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+								"data-uid": "src/components/PlanLimitModal.tsx:53:13",
+								"data-prohibitions": "[]",
+								className: "text-primary font-medium",
+								children: "Ilimitado no Standard"
+							})]
+						})
+					]
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					"data-uid": "src/components/PlanLimitModal.tsx:57:9",
+					"data-prohibitions": "[]",
+					className: "flex flex-col gap-3 pt-2",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+						"data-uid": "src/components/PlanLimitModal.tsx:58:11",
+						"data-prohibitions": "[]",
+						className: "gold-gradient w-full h-12 text-lg font-bold",
+						onClick: handleUpgrade,
+						children: "Ver Planos e Fazer Upgrade"
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+						"data-uid": "src/components/PlanLimitModal.tsx:61:11",
+						"data-prohibitions": "[]",
+						variant: "ghost",
+						onClick: () => setPlanLimitModalOpen(false),
+						className: "text-muted-foreground hover:text-white",
+						children: "Talvez mais tarde"
+					})]
+				})
+			]
+		})
+	});
+}
 //#endregion
 //#region src/components/AppLayout.tsx
 function AppLayout() {
@@ -27028,64 +27279,64 @@ function AppLayout() {
 		icon: Settings,
 		url: "/admin"
 	});
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SidebarProvider, {
-		"data-uid": "src/components/AppLayout.tsx:47:5",
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(SidebarProvider, {
+		"data-uid": "src/components/AppLayout.tsx:48:5",
 		"data-prohibitions": "[editContent]",
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-			"data-uid": "src/components/AppLayout.tsx:48:7",
+		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+			"data-uid": "src/components/AppLayout.tsx:49:7",
 			"data-prohibitions": "[editContent]",
 			className: "flex min-h-screen w-full bg-background selection:bg-primary/30",
 			children: [
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Sidebar, {
-					"data-uid": "src/components/AppLayout.tsx:49:9",
+					"data-uid": "src/components/AppLayout.tsx:50:9",
 					"data-prohibitions": "[editContent]",
 					className: "border-r border-border hidden sm:flex bg-card",
 					children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(SidebarContent, {
-						"data-uid": "src/components/AppLayout.tsx:50:11",
+						"data-uid": "src/components/AppLayout.tsx:51:11",
 						"data-prohibitions": "[editContent]",
 						children: [
 							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								"data-uid": "src/components/AppLayout.tsx:51:13",
+								"data-uid": "src/components/AppLayout.tsx:52:13",
 								"data-prohibitions": "[]",
 								className: "p-6 flex items-center gap-2",
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Crown, {
-									"data-uid": "src/components/AppLayout.tsx:52:15",
+									"data-uid": "src/components/AppLayout.tsx:53:15",
 									"data-prohibitions": "[editContent]",
 									className: "text-primary w-8 h-8 drop-shadow-[0_0_8px_rgba(201,168,76,0.5)]"
 								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-									"data-uid": "src/components/AppLayout.tsx:53:15",
+									"data-uid": "src/components/AppLayout.tsx:54:15",
 									"data-prohibitions": "[]",
 									className: "font-bold text-xl tracking-tight text-white",
 									children: "Prime Circle"
 								})]
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SidebarGroup, {
-								"data-uid": "src/components/AppLayout.tsx:55:13",
+								"data-uid": "src/components/AppLayout.tsx:56:13",
 								"data-prohibitions": "[editContent]",
 								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SidebarMenu, {
-									"data-uid": "src/components/AppLayout.tsx:56:15",
+									"data-uid": "src/components/AppLayout.tsx:57:15",
 									"data-prohibitions": "[editContent]",
 									children: navItems.map((item) => {
 										const isActive = location.pathname === item.url;
 										return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SidebarMenuItem, {
-											"data-uid": "src/components/AppLayout.tsx:60:21",
+											"data-uid": "src/components/AppLayout.tsx:61:21",
 											"data-prohibitions": "[editContent]",
 											children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SidebarMenuButton, {
-												"data-uid": "src/components/AppLayout.tsx:61:23",
+												"data-uid": "src/components/AppLayout.tsx:62:23",
 												"data-prohibitions": "[editContent]",
 												asChild: true,
 												isActive,
 												children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Link$1, {
-													"data-uid": "src/components/AppLayout.tsx:62:25",
+													"data-uid": "src/components/AppLayout.tsx:63:25",
 													"data-prohibitions": "[editContent]",
 													to: item.url,
 													className: cn$1("flex items-center gap-3 px-4 py-3 transition-colors rounded-lg", isActive ? "text-primary bg-primary/5" : "text-muted-foreground hover:text-white hover:bg-secondary/50"),
 													children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(item.icon, {
-														"data-uid": "src/components/AppLayout.tsx:71:27",
+														"data-uid": "src/components/AppLayout.tsx:72:27",
 														"data-prohibitions": "[editContent]",
 														className: "w-5 h-5"
 													}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-														"data-uid": "src/components/AppLayout.tsx:72:27",
+														"data-uid": "src/components/AppLayout.tsx:73:27",
 														"data-prohibitions": "[editContent]",
 														children: item.title
 													})]
@@ -27096,52 +27347,52 @@ function AppLayout() {
 								})
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								"data-uid": "src/components/AppLayout.tsx:80:13",
+								"data-uid": "src/components/AppLayout.tsx:81:13",
 								"data-prohibitions": "[editContent]",
 								className: "mt-auto p-4 border-t border-border",
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Link$1, {
-									"data-uid": "src/components/AppLayout.tsx:81:15",
+									"data-uid": "src/components/AppLayout.tsx:82:15",
 									"data-prohibitions": "[editContent]",
 									to: "/profile",
 									className: "flex items-center gap-3 mb-4 px-2 hover:bg-secondary/50 p-2 rounded-lg transition-colors",
 									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Avatar, {
-										"data-uid": "src/components/AppLayout.tsx:85:17",
+										"data-uid": "src/components/AppLayout.tsx:86:17",
 										"data-prohibitions": "[]",
 										className: "ring-2 ring-primary/20",
 										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(AvatarImage, {
-											"data-uid": "src/components/AppLayout.tsx:86:19",
+											"data-uid": "src/components/AppLayout.tsx:87:19",
 											"data-prohibitions": "[editContent]",
 											src: user?.avatar
 										}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(AvatarFallback, {
-											"data-uid": "src/components/AppLayout.tsx:87:19",
+											"data-uid": "src/components/AppLayout.tsx:88:19",
 											"data-prohibitions": "[]",
 											className: "bg-secondary text-primary",
 											children: "JC"
 										})]
 									}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-										"data-uid": "src/components/AppLayout.tsx:89:17",
+										"data-uid": "src/components/AppLayout.tsx:90:17",
 										"data-prohibitions": "[editContent]",
 										className: "flex flex-col min-w-0",
 										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-											"data-uid": "src/components/AppLayout.tsx:90:19",
+											"data-uid": "src/components/AppLayout.tsx:91:19",
 											"data-prohibitions": "[editContent]",
 											className: "text-sm font-medium text-white truncate",
 											children: user?.name
 										}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
-											"data-uid": "src/components/AppLayout.tsx:91:19",
+											"data-uid": "src/components/AppLayout.tsx:92:19",
 											"data-prohibitions": "[editContent]",
 											className: "text-xs text-primary truncate",
 											children: ["Tier ", user?.tier]
 										})]
 									})]
 								}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
-									"data-uid": "src/components/AppLayout.tsx:94:15",
+									"data-uid": "src/components/AppLayout.tsx:95:15",
 									"data-prohibitions": "[]",
 									variant: "ghost",
 									className: "w-full justify-start text-muted-foreground hover:text-red-400 hover:bg-red-400/10",
 									onClick: logout,
 									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(LogOut, {
-										"data-uid": "src/components/AppLayout.tsx:99:17",
+										"data-uid": "src/components/AppLayout.tsx:100:17",
 										"data-prohibitions": "[editContent]",
 										className: "w-4 h-4 mr-2"
 									}), "Sair"]
@@ -27151,46 +27402,46 @@ function AppLayout() {
 					})
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					"data-uid": "src/components/AppLayout.tsx:106:9",
+					"data-uid": "src/components/AppLayout.tsx:107:9",
 					"data-prohibitions": "[editContent]",
 					className: "flex-1 flex flex-col min-w-0 overflow-hidden pb-safe sm:pb-0",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("header", {
-						"data-uid": "src/components/AppLayout.tsx:107:11",
+						"data-uid": "src/components/AppLayout.tsx:108:11",
 						"data-prohibitions": "[editContent]",
 						className: "h-16 glass-header flex items-center justify-between px-6 sticky top-0 z-40",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", {
-							"data-uid": "src/components/AppLayout.tsx:108:13",
+							"data-uid": "src/components/AppLayout.tsx:109:13",
 							"data-prohibitions": "[editContent]",
 							className: "text-lg font-medium text-white drop-shadow-sm",
 							children: navItems.find((i) => i.url === location.pathname)?.title || "Prime Circle"
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
-							"data-uid": "src/components/AppLayout.tsx:111:13",
+							"data-uid": "src/components/AppLayout.tsx:112:13",
 							"data-prohibitions": "[]",
 							variant: "ghost",
 							size: "icon",
 							className: "text-muted-foreground hover:text-primary relative",
 							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Bell, {
-								"data-uid": "src/components/AppLayout.tsx:116:15",
+								"data-uid": "src/components/AppLayout.tsx:117:15",
 								"data-prohibitions": "[editContent]",
 								className: "w-5 h-5"
 							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-								"data-uid": "src/components/AppLayout.tsx:117:15",
+								"data-uid": "src/components/AppLayout.tsx:118:15",
 								"data-prohibitions": "[editContent]",
 								className: "absolute top-2 right-2 w-2 h-2 bg-primary rounded-full animate-pulse"
 							})]
 						})]
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("main", {
-						"data-uid": "src/components/AppLayout.tsx:120:11",
+						"data-uid": "src/components/AppLayout.tsx:121:11",
 						"data-prohibitions": "[]",
 						className: "flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 pb-20 sm:pb-8",
 						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Outlet, {
-							"data-uid": "src/components/AppLayout.tsx:121:13",
+							"data-uid": "src/components/AppLayout.tsx:122:13",
 							"data-prohibitions": "[editContent]"
 						})
 					})]
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-					"data-uid": "src/components/AppLayout.tsx:126:9",
+					"data-uid": "src/components/AppLayout.tsx:127:9",
 					"data-prohibitions": "[editContent]",
 					className: "fixed bottom-0 w-full bg-card/90 backdrop-blur-md border-t border-border flex justify-around items-center h-16 sm:hidden z-50 pb-safe",
 					children: [
@@ -27201,23 +27452,23 @@ function AppLayout() {
 					].map((item) => {
 						const isActive = location.pathname.startsWith(item.url);
 						return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Link$1, {
-							"data-uid": "src/components/AppLayout.tsx:130:15",
+							"data-uid": "src/components/AppLayout.tsx:131:15",
 							"data-prohibitions": "[editContent]",
 							to: item.url,
 							className: cn$1("flex flex-col items-center justify-center w-full h-full relative transition-colors", isActive ? "text-primary" : "text-muted-foreground hover:text-white"),
 							children: [
 								isActive && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-									"data-uid": "src/components/AppLayout.tsx:139:19",
+									"data-uid": "src/components/AppLayout.tsx:140:19",
 									"data-prohibitions": "[editContent]",
 									className: "absolute top-0 left-1/2 -translate-x-1/2 w-8 h-1 bg-primary rounded-b-full shadow-[0_0_8px_rgba(201,168,76,0.8)]"
 								}),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(item.icon, {
-									"data-uid": "src/components/AppLayout.tsx:141:17",
+									"data-uid": "src/components/AppLayout.tsx:142:17",
 									"data-prohibitions": "[editContent]",
 									className: cn$1("w-5 h-5 mb-1", isActive && "drop-shadow-[0_0_8px_rgba(201,168,76,0.5)]")
 								}),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-									"data-uid": "src/components/AppLayout.tsx:147:17",
+									"data-uid": "src/components/AppLayout.tsx:148:17",
 									"data-prohibitions": "[editContent]",
 									className: "text-[10px] font-medium",
 									children: item.title
@@ -27227,7 +27478,10 @@ function AppLayout() {
 					})
 				})
 			]
-		})
+		}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(PlanLimitModal, {
+			"data-uid": "src/components/AppLayout.tsx:154:7",
+			"data-prohibitions": "[editContent]"
+		})]
 	});
 }
 //#endregion
@@ -27273,13 +27527,18 @@ function ProtectedRoute() {
 	});
 }
 //#endregion
-//#region src/components/AnalyticsTracker.tsx
-function AnalyticsTracker() {
+//#region src/hooks/use-page-tracking.ts
+function usePageTracking() {
 	const location = useLocation();
 	const { trackPageView } = useAppStore();
 	(0, import_react.useEffect)(() => {
 		trackPageView(location.pathname);
 	}, [location.pathname, trackPageView]);
+}
+//#endregion
+//#region src/components/AnalyticsTracker.tsx
+function AnalyticsTracker() {
+	usePageTracking();
 	return null;
 }
 //#endregion
@@ -33386,18 +33645,18 @@ var Label$2 = import_react.forwardRef((props, forwardedRef) => {
 	});
 });
 Label$2.displayName = NAME;
-var Root$3 = Label$2;
+var Root$2 = Label$2;
 //#endregion
 //#region src/components/ui/label.tsx
 var labelVariants = cva("text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70");
-var Label$1 = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$3, {
+var Label$1 = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$2, {
 	"data-uid": "src/components/ui/label.tsx:16:3",
 	"data-prohibitions": "[editContent]",
 	ref,
 	className: cn$1(labelVariants(), className),
 	...props
 }));
-Label$1.displayName = Root$3.displayName;
+Label$1.displayName = Root$2.displayName;
 //#endregion
 //#region src/components/ui/form.tsx
 var Form = FormProvider;
@@ -33472,7 +33731,7 @@ var FormControl = import_react.forwardRef(({ ...props }, ref) => {
 	});
 });
 FormControl.displayName = "FormControl";
-var FormDescription$1 = import_react.forwardRef(({ className, ...props }, ref) => {
+var FormDescription = import_react.forwardRef(({ className, ...props }, ref) => {
 	const { formDescriptionId } = useFormField();
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
 		"data-uid": "src/components/ui/form.tsx:125:5",
@@ -33483,7 +33742,7 @@ var FormDescription$1 = import_react.forwardRef(({ className, ...props }, ref) =
 		...props
 	});
 });
-FormDescription$1.displayName = "FormDescription";
+FormDescription.displayName = "FormDescription";
 var FormMessage = import_react.forwardRef(({ className, children, ...props }, ref) => {
 	const { error, formMessageId } = useFormField();
 	const body = error ? String(error?.message ?? "") : children;
@@ -33717,10 +33976,6 @@ async function sendTransactionalEmail(type, payload) {
 		id: `mock_email_${Date.now()}`
 	};
 }
-function simulateInactivityReminders() {
-	console.log("[CRON MOCK] Checking for 14-day inactivity...");
-	console.log("[CRON MOCK] Triggered Inactivity Reminders for members who have not updated needs recently.");
-}
 function simulateBiWeeklyReport() {
 	console.log("[CRON MOCK] Generating Bi-weekly Market Report...");
 	console.log("[CRON MOCK] Emails sent to all active members with latest matches and listings.");
@@ -33755,17 +34010,35 @@ function ApplyPage() {
 	});
 	async function onSubmit(values) {
 		const ticketValue = parseInt(values.ticket.replace(/\D/g, "")) || 0;
-		if (!values.region.toLowerCase().includes("barra") || ticketValue < 1e6) {
+		const isBarra = values.region.toLowerCase().includes("barra");
+		const hasValidPhone = values.phone.replace(/\D/g, "").length >= 10;
+		const hasValidCreci = values.creci.length >= 4;
+		const acceptedTerms = values.agreement === true;
+		if (isBarra && ticketValue >= 1e6 && hasValidPhone && hasValidCreci && acceptedTerms && values.referral) {
+			await sendTransactionalEmail("Application Received", {
+				to: values.email,
+				candidate: values.name
+			});
+			await sendTransactionalEmail("Referral Confirmation", {
+				to: "admin@primecircle.com",
+				candidate: values.name,
+				code: values.referral
+			});
+			await sendTransactionalEmail("Welcome Email", {
+				to: values.email,
+				candidate: values.name
+			});
+			login("approved");
+			toast.success("Aprovado! Critérios validados e indicação confirmada.");
+			navigate("/auth/confirm");
+			return;
+		}
+		if (!isBarra || ticketValue < 1e6) {
 			if (!values.referral) {
 				navigate("/apply/lista-de-espera");
 				return;
 			}
 		}
-		if (values.referral) await sendTransactionalEmail("Indicator Notification", {
-			to: "admin@primecircle.com",
-			candidate: values.name,
-			code: values.referral
-		});
 		await sendTransactionalEmail("Application Received", {
 			to: values.email,
 			candidate: values.name
@@ -33775,66 +34048,66 @@ function ApplyPage() {
 		navigate("/pending");
 	}
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-		"data-uid": "src/pages/ApplyPage.tsx:85:5",
+		"data-uid": "src/pages/ApplyPage.tsx:109:5",
 		"data-prohibitions": "[]",
 		className: "min-h-screen bg-background flex flex-col items-center justify-center p-4 py-12",
 		children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-			"data-uid": "src/pages/ApplyPage.tsx:86:7",
+			"data-uid": "src/pages/ApplyPage.tsx:110:7",
 			"data-prohibitions": "[]",
-			className: "w-full max-w-md bg-card p-8 rounded-2xl border border-border shadow-2xl",
+			className: "w-full max-w-md bg-card p-8 rounded-2xl border border-border shadow-elevation",
 			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				"data-uid": "src/pages/ApplyPage.tsx:87:9",
+				"data-uid": "src/pages/ApplyPage.tsx:111:9",
 				"data-prohibitions": "[]",
 				className: "flex flex-col items-center mb-8",
 				children: [
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Crown, {
-						"data-uid": "src/pages/ApplyPage.tsx:88:11",
+						"data-uid": "src/pages/ApplyPage.tsx:112:11",
 						"data-prohibitions": "[editContent]",
 						className: "w-10 h-10 text-primary mb-4"
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", {
-						"data-uid": "src/pages/ApplyPage.tsx:89:11",
+						"data-uid": "src/pages/ApplyPage.tsx:113:11",
 						"data-prohibitions": "[]",
 						className: "text-2xl font-bold text-white text-center",
 						children: "Solicitar Acesso"
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-						"data-uid": "src/pages/ApplyPage.tsx:90:11",
+						"data-uid": "src/pages/ApplyPage.tsx:114:11",
 						"data-prohibitions": "[]",
 						className: "text-muted-foreground text-center text-sm mt-2",
 						children: "Junte-se ao círculo exclusivo da Barra da Tijuca."
 					})
 				]
 			}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Form, {
-				"data-uid": "src/pages/ApplyPage.tsx:95:9",
+				"data-uid": "src/pages/ApplyPage.tsx:119:9",
 				"data-prohibitions": "[]",
 				...form,
 				children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("form", {
-					"data-uid": "src/pages/ApplyPage.tsx:96:11",
+					"data-uid": "src/pages/ApplyPage.tsx:120:11",
 					"data-prohibitions": "[]",
 					onSubmit: form.handleSubmit(onSubmit),
 					className: "space-y-4",
 					children: [
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FormField, {
-							"data-uid": "src/pages/ApplyPage.tsx:97:13",
+							"data-uid": "src/pages/ApplyPage.tsx:121:13",
 							"data-prohibitions": "[editContent]",
 							control: form.control,
 							name: "name",
 							render: ({ field }) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(FormItem, {
-								"data-uid": "src/pages/ApplyPage.tsx:101:17",
+								"data-uid": "src/pages/ApplyPage.tsx:125:17",
 								"data-prohibitions": "[]",
 								children: [
 									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FormLabel, {
-										"data-uid": "src/pages/ApplyPage.tsx:102:19",
+										"data-uid": "src/pages/ApplyPage.tsx:126:19",
 										"data-prohibitions": "[]",
 										className: "text-white",
 										children: "Nome Completo"
 									}),
 									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FormControl, {
-										"data-uid": "src/pages/ApplyPage.tsx:103:19",
+										"data-uid": "src/pages/ApplyPage.tsx:127:19",
 										"data-prohibitions": "[]",
 										children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
-											"data-uid": "src/pages/ApplyPage.tsx:104:21",
+											"data-uid": "src/pages/ApplyPage.tsx:128:21",
 											"data-prohibitions": "[editContent]",
 											placeholder: "João Silva",
 											...field,
@@ -33842,32 +34115,32 @@ function ApplyPage() {
 										})
 									}),
 									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FormMessage, {
-										"data-uid": "src/pages/ApplyPage.tsx:106:19",
+										"data-uid": "src/pages/ApplyPage.tsx:130:19",
 										"data-prohibitions": "[editContent]"
 									})
 								]
 							})
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FormField, {
-							"data-uid": "src/pages/ApplyPage.tsx:110:13",
+							"data-uid": "src/pages/ApplyPage.tsx:134:13",
 							"data-prohibitions": "[editContent]",
 							control: form.control,
 							name: "email",
 							render: ({ field }) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(FormItem, {
-								"data-uid": "src/pages/ApplyPage.tsx:114:17",
+								"data-uid": "src/pages/ApplyPage.tsx:138:17",
 								"data-prohibitions": "[]",
 								children: [
 									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FormLabel, {
-										"data-uid": "src/pages/ApplyPage.tsx:115:19",
+										"data-uid": "src/pages/ApplyPage.tsx:139:19",
 										"data-prohibitions": "[]",
 										className: "text-white",
 										children: "Email Profissional"
 									}),
 									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FormControl, {
-										"data-uid": "src/pages/ApplyPage.tsx:116:19",
+										"data-uid": "src/pages/ApplyPage.tsx:140:19",
 										"data-prohibitions": "[]",
 										children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
-											"data-uid": "src/pages/ApplyPage.tsx:117:21",
+											"data-uid": "src/pages/ApplyPage.tsx:141:21",
 											"data-prohibitions": "[editContent]",
 											placeholder: "joao@prime.com",
 											...field,
@@ -33875,36 +34148,36 @@ function ApplyPage() {
 										})
 									}),
 									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FormMessage, {
-										"data-uid": "src/pages/ApplyPage.tsx:119:19",
+										"data-uid": "src/pages/ApplyPage.tsx:143:19",
 										"data-prohibitions": "[editContent]"
 									})
 								]
 							})
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-							"data-uid": "src/pages/ApplyPage.tsx:123:13",
+							"data-uid": "src/pages/ApplyPage.tsx:147:13",
 							"data-prohibitions": "[]",
 							className: "grid grid-cols-2 gap-4",
 							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FormField, {
-								"data-uid": "src/pages/ApplyPage.tsx:124:15",
+								"data-uid": "src/pages/ApplyPage.tsx:148:15",
 								"data-prohibitions": "[editContent]",
 								control: form.control,
 								name: "creci",
 								render: ({ field }) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(FormItem, {
-									"data-uid": "src/pages/ApplyPage.tsx:128:19",
+									"data-uid": "src/pages/ApplyPage.tsx:152:19",
 									"data-prohibitions": "[]",
 									children: [
 										/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FormLabel, {
-											"data-uid": "src/pages/ApplyPage.tsx:129:21",
+											"data-uid": "src/pages/ApplyPage.tsx:153:21",
 											"data-prohibitions": "[]",
 											className: "text-white",
 											children: "CRECI"
 										}),
 										/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FormControl, {
-											"data-uid": "src/pages/ApplyPage.tsx:130:21",
+											"data-uid": "src/pages/ApplyPage.tsx:154:21",
 											"data-prohibitions": "[]",
 											children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
-												"data-uid": "src/pages/ApplyPage.tsx:131:23",
+												"data-uid": "src/pages/ApplyPage.tsx:155:23",
 												"data-prohibitions": "[editContent]",
 												placeholder: "00000",
 												...field,
@@ -33912,31 +34185,31 @@ function ApplyPage() {
 											})
 										}),
 										/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FormMessage, {
-											"data-uid": "src/pages/ApplyPage.tsx:133:21",
+											"data-uid": "src/pages/ApplyPage.tsx:157:21",
 											"data-prohibitions": "[editContent]"
 										})
 									]
 								})
 							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(FormField, {
-								"data-uid": "src/pages/ApplyPage.tsx:137:15",
+								"data-uid": "src/pages/ApplyPage.tsx:161:15",
 								"data-prohibitions": "[editContent]",
 								control: form.control,
 								name: "phone",
 								render: ({ field }) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(FormItem, {
-									"data-uid": "src/pages/ApplyPage.tsx:141:19",
+									"data-uid": "src/pages/ApplyPage.tsx:165:19",
 									"data-prohibitions": "[]",
 									children: [
 										/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FormLabel, {
-											"data-uid": "src/pages/ApplyPage.tsx:142:21",
+											"data-uid": "src/pages/ApplyPage.tsx:166:21",
 											"data-prohibitions": "[]",
 											className: "text-white",
 											children: "WhatsApp"
 										}),
 										/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FormControl, {
-											"data-uid": "src/pages/ApplyPage.tsx:143:21",
+											"data-uid": "src/pages/ApplyPage.tsx:167:21",
 											"data-prohibitions": "[]",
 											children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
-												"data-uid": "src/pages/ApplyPage.tsx:144:23",
+												"data-uid": "src/pages/ApplyPage.tsx:168:23",
 												"data-prohibitions": "[editContent]",
 												placeholder: "(21) 90000-0000",
 												...field,
@@ -33944,7 +34217,7 @@ function ApplyPage() {
 											})
 										}),
 										/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FormMessage, {
-											"data-uid": "src/pages/ApplyPage.tsx:146:21",
+											"data-uid": "src/pages/ApplyPage.tsx:170:21",
 											"data-prohibitions": "[editContent]"
 										})
 									]
@@ -33952,60 +34225,60 @@ function ApplyPage() {
 							})]
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-							"data-uid": "src/pages/ApplyPage.tsx:151:13",
+							"data-uid": "src/pages/ApplyPage.tsx:175:13",
 							"data-prohibitions": "[]",
 							className: "grid grid-cols-2 gap-4",
 							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FormField, {
-								"data-uid": "src/pages/ApplyPage.tsx:152:15",
+								"data-uid": "src/pages/ApplyPage.tsx:176:15",
 								"data-prohibitions": "[editContent]",
 								control: form.control,
 								name: "region",
 								render: ({ field }) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(FormItem, {
-									"data-uid": "src/pages/ApplyPage.tsx:156:19",
+									"data-uid": "src/pages/ApplyPage.tsx:180:19",
 									"data-prohibitions": "[]",
 									children: [
 										/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FormLabel, {
-											"data-uid": "src/pages/ApplyPage.tsx:157:21",
+											"data-uid": "src/pages/ApplyPage.tsx:181:21",
 											"data-prohibitions": "[]",
 											className: "text-white",
 											children: "Região de Atuação"
 										}),
 										/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FormControl, {
-											"data-uid": "src/pages/ApplyPage.tsx:158:21",
+											"data-uid": "src/pages/ApplyPage.tsx:182:21",
 											"data-prohibitions": "[]",
 											children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
-												"data-uid": "src/pages/ApplyPage.tsx:159:23",
+												"data-uid": "src/pages/ApplyPage.tsx:183:23",
 												"data-prohibitions": "[editContent]",
 												...field,
 												className: "bg-background"
 											})
 										}),
 										/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FormMessage, {
-											"data-uid": "src/pages/ApplyPage.tsx:161:21",
+											"data-uid": "src/pages/ApplyPage.tsx:185:21",
 											"data-prohibitions": "[editContent]"
 										})
 									]
 								})
 							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(FormField, {
-								"data-uid": "src/pages/ApplyPage.tsx:165:15",
+								"data-uid": "src/pages/ApplyPage.tsx:189:15",
 								"data-prohibitions": "[editContent]",
 								control: form.control,
 								name: "ticket",
 								render: ({ field }) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(FormItem, {
-									"data-uid": "src/pages/ApplyPage.tsx:169:19",
+									"data-uid": "src/pages/ApplyPage.tsx:193:19",
 									"data-prohibitions": "[]",
 									children: [
 										/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FormLabel, {
-											"data-uid": "src/pages/ApplyPage.tsx:170:21",
+											"data-uid": "src/pages/ApplyPage.tsx:194:21",
 											"data-prohibitions": "[]",
 											className: "text-white",
 											children: "Ticket Médio (R$)"
 										}),
 										/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FormControl, {
-											"data-uid": "src/pages/ApplyPage.tsx:171:21",
+											"data-uid": "src/pages/ApplyPage.tsx:195:21",
 											"data-prohibitions": "[]",
 											children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
-												"data-uid": "src/pages/ApplyPage.tsx:172:23",
+												"data-uid": "src/pages/ApplyPage.tsx:196:23",
 												"data-prohibitions": "[editContent]",
 												placeholder: "Ex: 2.500.000",
 												...field,
@@ -34013,7 +34286,7 @@ function ApplyPage() {
 											})
 										}),
 										/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FormMessage, {
-											"data-uid": "src/pages/ApplyPage.tsx:174:21",
+											"data-uid": "src/pages/ApplyPage.tsx:198:21",
 											"data-prohibitions": "[editContent]"
 										})
 									]
@@ -34021,25 +34294,25 @@ function ApplyPage() {
 							})]
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FormField, {
-							"data-uid": "src/pages/ApplyPage.tsx:179:13",
+							"data-uid": "src/pages/ApplyPage.tsx:203:13",
 							"data-prohibitions": "[editContent]",
 							control: form.control,
 							name: "referral",
 							render: ({ field }) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(FormItem, {
-								"data-uid": "src/pages/ApplyPage.tsx:183:17",
+								"data-uid": "src/pages/ApplyPage.tsx:207:17",
 								"data-prohibitions": "[]",
 								children: [
 									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FormLabel, {
-										"data-uid": "src/pages/ApplyPage.tsx:184:19",
+										"data-uid": "src/pages/ApplyPage.tsx:208:19",
 										"data-prohibitions": "[]",
 										className: "text-white",
 										children: "Código de Indicação (Opcional)"
 									}),
 									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FormControl, {
-										"data-uid": "src/pages/ApplyPage.tsx:185:19",
+										"data-uid": "src/pages/ApplyPage.tsx:209:19",
 										"data-prohibitions": "[]",
 										children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
-											"data-uid": "src/pages/ApplyPage.tsx:186:21",
+											"data-uid": "src/pages/ApplyPage.tsx:210:21",
 											"data-prohibitions": "[editContent]",
 											placeholder: "Ex: CARLOS-123",
 											...field,
@@ -34047,48 +34320,48 @@ function ApplyPage() {
 										})
 									}),
 									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FormDescription, {
-										"data-uid": "src/pages/ApplyPage.tsx:188:19",
+										"data-uid": "src/pages/ApplyPage.tsx:212:19",
 										"data-prohibitions": "[]",
 										className: "text-xs",
-										children: "Acelera o processo de análise."
+										children: "Acelera o processo de análise e auto-aprovação."
 									}),
 									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FormMessage, {
-										"data-uid": "src/pages/ApplyPage.tsx:191:19",
+										"data-uid": "src/pages/ApplyPage.tsx:215:19",
 										"data-prohibitions": "[editContent]"
 									})
 								]
 							})
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FormField, {
-							"data-uid": "src/pages/ApplyPage.tsx:195:13",
+							"data-uid": "src/pages/ApplyPage.tsx:219:13",
 							"data-prohibitions": "[editContent]",
 							control: form.control,
 							name: "agreement",
 							render: ({ field }) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(FormItem, {
-								"data-uid": "src/pages/ApplyPage.tsx:199:17",
+								"data-uid": "src/pages/ApplyPage.tsx:223:17",
 								"data-prohibitions": "[]",
 								className: "flex flex-row items-start space-x-3 space-y-0 p-4 border border-border rounded-lg bg-background mt-6",
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FormControl, {
-									"data-uid": "src/pages/ApplyPage.tsx:200:19",
+									"data-uid": "src/pages/ApplyPage.tsx:224:19",
 									"data-prohibitions": "[]",
 									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Checkbox, {
-										"data-uid": "src/pages/ApplyPage.tsx:201:21",
+										"data-uid": "src/pages/ApplyPage.tsx:225:21",
 										"data-prohibitions": "[editContent]",
 										checked: field.value,
 										onCheckedChange: field.onChange,
 										className: "data-[state=checked]:bg-primary data-[state=checked]:text-black mt-0.5"
 									})
 								}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-									"data-uid": "src/pages/ApplyPage.tsx:207:19",
+									"data-uid": "src/pages/ApplyPage.tsx:231:19",
 									"data-prohibitions": "[]",
 									className: "space-y-1 leading-none",
 									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FormLabel, {
-										"data-uid": "src/pages/ApplyPage.tsx:208:21",
+										"data-uid": "src/pages/ApplyPage.tsx:232:21",
 										"data-prohibitions": "[]",
 										className: "text-white text-sm cursor-pointer",
 										children: "Aceito a Política 50/50"
 									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-										"data-uid": "src/pages/ApplyPage.tsx:211:21",
+										"data-uid": "src/pages/ApplyPage.tsx:235:21",
 										"data-prohibitions": "[]",
 										className: "text-xs text-muted-foreground leading-relaxed",
 										children: "Concordo em praticar a divisão justa de honorários (50/50) em todas as parcerias geradas via Prime Circle."
@@ -34097,10 +34370,10 @@ function ApplyPage() {
 							})
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-							"data-uid": "src/pages/ApplyPage.tsx:219:13",
+							"data-uid": "src/pages/ApplyPage.tsx:243:13",
 							"data-prohibitions": "[]",
 							type: "submit",
-							className: "w-full gold-gradient gold-glow h-12 text-lg mt-6 font-semibold",
+							className: "w-full gold-gradient gold-glow h-12 text-lg mt-6 font-semibold text-black",
 							children: "Enviar Solicitação"
 						})
 					]
@@ -35302,11 +35575,11 @@ var SelectPopperPosition = import_react.forwardRef((props, forwardedRef) => {
 });
 SelectPopperPosition.displayName = POPPER_POSITION_NAME;
 var [SelectViewportProvider, useSelectViewportContext] = createSelectContext(CONTENT_NAME$1, {});
-var VIEWPORT_NAME$1 = "SelectViewport";
+var VIEWPORT_NAME = "SelectViewport";
 var SelectViewport = import_react.forwardRef((props, forwardedRef) => {
 	const { __scopeSelect, nonce, ...viewportProps } = props;
-	const contentContext = useSelectContentContext(VIEWPORT_NAME$1, __scopeSelect);
-	const viewportContext = useSelectViewportContext(VIEWPORT_NAME$1, __scopeSelect);
+	const contentContext = useSelectContentContext(VIEWPORT_NAME, __scopeSelect);
+	const viewportContext = useSelectViewportContext(VIEWPORT_NAME, __scopeSelect);
 	const composedRefs = useComposedRefs(forwardedRef, contentContext.onViewportChange);
 	const prevScrollTopRef = import_react.useRef(0);
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("style", {
@@ -35352,7 +35625,7 @@ var SelectViewport = import_react.forwardRef((props, forwardedRef) => {
 		})
 	})] });
 });
-SelectViewport.displayName = VIEWPORT_NAME$1;
+SelectViewport.displayName = VIEWPORT_NAME;
 var GROUP_NAME$1 = "SelectGroup";
 var [SelectGroupContextProvider, useSelectGroupContext] = createSelectContext(GROUP_NAME$1);
 var SelectGroup$1 = import_react.forwardRef((props, forwardedRef) => {
@@ -35687,7 +35960,7 @@ var Value = SelectValue$1;
 var Icon = SelectIcon;
 var Portal = SelectPortal;
 var Content2 = SelectContent$1;
-var Viewport$1 = SelectViewport;
+var Viewport = SelectViewport;
 var Label = SelectLabel$1;
 var Item$1 = SelectItem$1;
 var ItemText = SelectItemText;
@@ -35758,7 +36031,7 @@ var SelectContent = import_react.forwardRef(({ className, children, position = "
 				"data-uid": "src/components/ui/select.tsx:78:7",
 				"data-prohibitions": "[editContent]"
 			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Viewport$1, {
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Viewport, {
 				"data-uid": "src/components/ui/select.tsx:79:7",
 				"data-prohibitions": "[editContent]",
 				className: cn$1("p-1", position === "popper" && "h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)]"),
@@ -35837,108 +36110,110 @@ function Badge({ className, variant, ...props }) {
 //#region src/components/ListingCard.tsx
 function ListingCard({ listing }) {
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
-		"data-uid": "src/components/ListingCard.tsx:9:5",
+		"data-uid": "src/components/ListingCard.tsx:8:5",
 		"data-prohibitions": "[editContent]",
-		className: "overflow-hidden group border-border bg-secondary hover:border-primary/50 transition-all duration-300",
+		className: "bg-card border-border overflow-hidden hover:border-primary/50 transition-colors group",
 		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-			"data-uid": "src/components/ListingCard.tsx:10:7",
+			"data-uid": "src/components/ListingCard.tsx:9:7",
 			"data-prohibitions": "[editContent]",
 			className: "relative aspect-[4/3] overflow-hidden",
 			children: [
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
-					"data-uid": "src/components/ListingCard.tsx:11:9",
+					"data-uid": "src/components/ListingCard.tsx:10:9",
 					"data-prohibitions": "[editContent]",
 					src: listing.image,
 					alt: listing.title,
-					className: "object-cover w-full h-full group-hover:scale-105 transition-transform duration-500"
+					className: "w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
 				}),
-				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-					"data-uid": "src/components/ListingCard.tsx:16:9",
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Badge, {
+					"data-uid": "src/components/ListingCard.tsx:15:9",
 					"data-prohibitions": "[editContent]",
-					className: "absolute top-3 left-3",
-					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Badge, {
-						"data-uid": "src/components/ListingCard.tsx:17:11",
-						"data-prohibitions": "[editContent]",
-						variant: listing.status === "Disponível" ? "default" : "secondary",
-						className: "bg-background/80 backdrop-blur text-white border-none",
-						children: listing.status
-					})
+					className: "absolute top-3 left-3 bg-background/80 backdrop-blur-md text-white border-border",
+					children: listing.status
 				}),
-				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-					"data-uid": "src/components/ListingCard.tsx:24:9",
-					"data-prohibitions": "[]",
-					className: "absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity",
-					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-						"data-uid": "src/components/ListingCard.tsx:25:11",
-						"data-prohibitions": "[]",
-						size: "icon",
-						variant: "secondary",
-						className: "w-8 h-8 rounded-full bg-background/80 backdrop-blur hover:bg-primary hover:text-black",
-						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Share2, {
-							"data-uid": "src/components/ListingCard.tsx:30:13",
-							"data-prohibitions": "[editContent]",
-							className: "w-4 h-4"
-						})
-					})
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Badge, {
+					"data-uid": "src/components/ListingCard.tsx:18:9",
+					"data-prohibitions": "[editContent]",
+					className: "absolute top-3 right-3 gold-gradient",
+					children: listing.type
 				})
 			]
 		}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardContent, {
-			"data-uid": "src/components/ListingCard.tsx:34:7",
+			"data-uid": "src/components/ListingCard.tsx:20:7",
 			"data-prohibitions": "[editContent]",
-			className: "p-4",
-			children: [
-				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
-					"data-uid": "src/components/ListingCard.tsx:35:9",
+			className: "p-4 space-y-4",
+			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				"data-uid": "src/components/ListingCard.tsx:21:9",
+				"data-prohibitions": "[editContent]",
+				className: "space-y-1",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
+					"data-uid": "src/components/ListingCard.tsx:22:11",
 					"data-prohibitions": "[editContent]",
-					className: "font-semibold text-lg text-white mb-1 line-clamp-1",
+					className: "font-semibold text-white truncate text-lg",
 					children: listing.title
-				}),
-				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-					"data-uid": "src/components/ListingCard.tsx:36:9",
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+					"data-uid": "src/components/ListingCard.tsx:23:11",
 					"data-prohibitions": "[editContent]",
-					className: "text-xl font-bold text-primary mb-4",
+					className: "text-primary font-bold text-xl",
 					children: listing.price
-				}),
-				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					"data-uid": "src/components/ListingCard.tsx:37:9",
-					"data-prohibitions": "[editContent]",
-					className: "flex items-center gap-4 text-sm text-muted-foreground",
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-						"data-uid": "src/components/ListingCard.tsx:38:11",
+				})]
+			}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				"data-uid": "src/components/ListingCard.tsx:25:9",
+				"data-prohibitions": "[editContent]",
+				className: "flex items-center gap-4 text-sm text-muted-foreground border-t border-border pt-4",
+				children: [
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						"data-uid": "src/components/ListingCard.tsx:26:11",
 						"data-prohibitions": "[editContent]",
-						className: "flex items-center gap-1",
-						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Maximize, {
-							"data-uid": "src/components/ListingCard.tsx:39:13",
+						className: "flex items-center gap-1 min-w-0",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(MapPin, {
+							"data-uid": "src/components/ListingCard.tsx:27:13",
 							"data-prohibitions": "[editContent]",
-							className: "w-4 h-4"
+							className: "w-4 h-4 shrink-0"
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-							"data-uid": "src/components/ListingCard.tsx:40:13",
+							"data-uid": "src/components/ListingCard.tsx:28:13",
 							"data-prohibitions": "[editContent]",
-							children: listing.area
+							className: "truncate",
+							children: listing.neighborhood
 						})]
-					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-						"data-uid": "src/components/ListingCard.tsx:42:11",
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						"data-uid": "src/components/ListingCard.tsx:30:11",
 						"data-prohibitions": "[editContent]",
-						className: "flex items-center gap-1",
-						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Bed, {
-							"data-uid": "src/components/ListingCard.tsx:43:13",
-							"data-prohibitions": "[editContent]",
-							className: "w-4 h-4"
-						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
-							"data-uid": "src/components/ListingCard.tsx:44:13",
-							"data-prohibitions": "[editContent]",
-							children: [listing.beds, " Suítes"]
-						})]
-					})]
-				})
-			]
+						className: "flex items-center gap-1 shrink-0",
+						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Maximize, {
+								"data-uid": "src/components/ListingCard.tsx:31:13",
+								"data-prohibitions": "[editContent]",
+								className: "w-4 h-4"
+							}),
+							" ",
+							listing.area
+						]
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						"data-uid": "src/components/ListingCard.tsx:33:11",
+						"data-prohibitions": "[editContent]",
+						className: "flex items-center gap-1 shrink-0",
+						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Bed, {
+								"data-uid": "src/components/ListingCard.tsx:34:13",
+								"data-prohibitions": "[editContent]",
+								className: "w-4 h-4"
+							}),
+							" ",
+							listing.beds
+						]
+					})
+				]
+			})]
 		})]
 	});
 }
 //#endregion
 //#region src/pages/ListingsListPage.tsx
 function ListingsListPage() {
-	const { listings } = useAppStore();
+	const { listings, addListing } = useAppStore();
 	const [bairro, setBairro] = (0, import_react.useState)("all");
 	const [tipo, setTipo] = (0, import_react.useState)("all");
 	const filteredListings = listings.filter((l) => {
@@ -35946,109 +36221,122 @@ function ListingsListPage() {
 		if (tipo !== "all" && l.type !== tipo) return false;
 		return true;
 	});
+	const handleAddMockListing = () => {
+		if (addListing({
+			title: "Casa Mansão Nova",
+			type: "Casa",
+			price: "R$ 10.000.000",
+			priceValue: 1e7,
+			area: "800m²",
+			beds: 5,
+			neighborhood: "Jardim Oceânico",
+			image: "https://img.usecurling.com/p/600/400?q=luxury%20mansion"
+		})) toast.success("Imóvel adicionado com sucesso!");
+	};
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-		"data-uid": "src/pages/ListingsListPage.tsx:27:5",
+		"data-uid": "src/pages/ListingsListPage.tsx:44:5",
 		"data-prohibitions": "[editContent]",
 		className: "space-y-6 animate-fade-in-up",
 		children: [
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				"data-uid": "src/pages/ListingsListPage.tsx:28:7",
+				"data-uid": "src/pages/ListingsListPage.tsx:45:7",
 				"data-prohibitions": "[]",
 				className: "flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4",
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					"data-uid": "src/pages/ListingsListPage.tsx:29:9",
+					"data-uid": "src/pages/ListingsListPage.tsx:46:9",
 					"data-prohibitions": "[]",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
-						"data-uid": "src/pages/ListingsListPage.tsx:30:11",
+						"data-uid": "src/pages/ListingsListPage.tsx:47:11",
 						"data-prohibitions": "[]",
 						className: "text-2xl font-bold text-white",
 						children: "Catálogo de Imóveis"
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-						"data-uid": "src/pages/ListingsListPage.tsx:31:11",
+						"data-uid": "src/pages/ListingsListPage.tsx:48:11",
 						"data-prohibitions": "[]",
 						className: "text-muted-foreground text-sm",
 						children: "Explore o inventário exclusivo do círculo."
 					})]
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
-					"data-uid": "src/pages/ListingsListPage.tsx:35:9",
+					"data-uid": "src/pages/ListingsListPage.tsx:52:9",
 					"data-prohibitions": "[]",
-					className: "gold-gradient w-full sm:w-auto",
+					className: "gold-gradient text-black w-full sm:w-auto",
+					onClick: handleAddMockListing,
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Plus, {
-						"data-uid": "src/pages/ListingsListPage.tsx:36:11",
+						"data-uid": "src/pages/ListingsListPage.tsx:56:11",
 						"data-prohibitions": "[editContent]",
-						className: "w-4 h-4 mr-2 text-black"
+						className: "w-4 h-4 mr-2"
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-						"data-uid": "src/pages/ListingsListPage.tsx:37:11",
+						"data-uid": "src/pages/ListingsListPage.tsx:57:11",
 						"data-prohibitions": "[]",
-						className: "text-black font-medium",
+						className: "font-medium",
 						children: "Novo Imóvel"
 					})]
 				})]
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				"data-uid": "src/pages/ListingsListPage.tsx:41:7",
+				"data-uid": "src/pages/ListingsListPage.tsx:61:7",
 				"data-prohibitions": "[]",
 				className: "flex flex-col sm:flex-row gap-4 p-4 bg-card rounded-lg border border-border",
 				children: [
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-						"data-uid": "src/pages/ListingsListPage.tsx:42:9",
+						"data-uid": "src/pages/ListingsListPage.tsx:62:9",
 						"data-prohibitions": "[]",
 						className: "relative flex-1",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Search, {
-							"data-uid": "src/pages/ListingsListPage.tsx:43:11",
+							"data-uid": "src/pages/ListingsListPage.tsx:63:11",
 							"data-prohibitions": "[editContent]",
 							className: "absolute left-3 top-3 h-4 w-4 text-muted-foreground"
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
-							"data-uid": "src/pages/ListingsListPage.tsx:44:11",
+							"data-uid": "src/pages/ListingsListPage.tsx:64:11",
 							"data-prohibitions": "[editContent]",
 							placeholder: "Buscar palavra-chave...",
 							className: "pl-9 bg-background border-border text-white h-10"
 						})]
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Select, {
-						"data-uid": "src/pages/ListingsListPage.tsx:49:9",
+						"data-uid": "src/pages/ListingsListPage.tsx:69:9",
 						"data-prohibitions": "[]",
 						value: bairro,
 						onValueChange: setBairro,
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectTrigger, {
-							"data-uid": "src/pages/ListingsListPage.tsx:50:11",
+							"data-uid": "src/pages/ListingsListPage.tsx:70:11",
 							"data-prohibitions": "[]",
 							className: "w-full sm:w-[180px] bg-background border-border",
 							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectValue, {
-								"data-uid": "src/pages/ListingsListPage.tsx:51:13",
+								"data-uid": "src/pages/ListingsListPage.tsx:71:13",
 								"data-prohibitions": "[editContent]",
 								placeholder: "Bairro"
 							})
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(SelectContent, {
-							"data-uid": "src/pages/ListingsListPage.tsx:53:11",
+							"data-uid": "src/pages/ListingsListPage.tsx:73:11",
 							"data-prohibitions": "[]",
 							children: [
 								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectItem, {
-									"data-uid": "src/pages/ListingsListPage.tsx:54:13",
+									"data-uid": "src/pages/ListingsListPage.tsx:74:13",
 									"data-prohibitions": "[]",
 									value: "all",
 									children: "Todos os Bairros"
 								}),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectItem, {
-									"data-uid": "src/pages/ListingsListPage.tsx:55:13",
+									"data-uid": "src/pages/ListingsListPage.tsx:75:13",
 									"data-prohibitions": "[]",
 									value: "Barra da Tijuca",
 									children: "Barra da Tijuca"
 								}),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectItem, {
-									"data-uid": "src/pages/ListingsListPage.tsx:56:13",
+									"data-uid": "src/pages/ListingsListPage.tsx:76:13",
 									"data-prohibitions": "[]",
 									value: "Jardim Oceânico",
 									children: "Jardim Oceânico"
 								}),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectItem, {
-									"data-uid": "src/pages/ListingsListPage.tsx:57:13",
+									"data-uid": "src/pages/ListingsListPage.tsx:77:13",
 									"data-prohibitions": "[]",
 									value: "Santa Mônica",
 									children: "Santa Mônica"
 								}),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectItem, {
-									"data-uid": "src/pages/ListingsListPage.tsx:58:13",
+									"data-uid": "src/pages/ListingsListPage.tsx:78:13",
 									"data-prohibitions": "[]",
 									value: "Lúcio Costa",
 									children: "Lúcio Costa"
@@ -36057,43 +36345,43 @@ function ListingsListPage() {
 						})]
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Select, {
-						"data-uid": "src/pages/ListingsListPage.tsx:61:9",
+						"data-uid": "src/pages/ListingsListPage.tsx:81:9",
 						"data-prohibitions": "[]",
 						value: tipo,
 						onValueChange: setTipo,
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectTrigger, {
-							"data-uid": "src/pages/ListingsListPage.tsx:62:11",
+							"data-uid": "src/pages/ListingsListPage.tsx:82:11",
 							"data-prohibitions": "[]",
 							className: "w-full sm:w-[180px] bg-background border-border",
 							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectValue, {
-								"data-uid": "src/pages/ListingsListPage.tsx:63:13",
+								"data-uid": "src/pages/ListingsListPage.tsx:83:13",
 								"data-prohibitions": "[editContent]",
 								placeholder: "Tipo"
 							})
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(SelectContent, {
-							"data-uid": "src/pages/ListingsListPage.tsx:65:11",
+							"data-uid": "src/pages/ListingsListPage.tsx:85:11",
 							"data-prohibitions": "[]",
 							children: [
 								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectItem, {
-									"data-uid": "src/pages/ListingsListPage.tsx:66:13",
+									"data-uid": "src/pages/ListingsListPage.tsx:86:13",
 									"data-prohibitions": "[]",
 									value: "all",
 									children: "Todos os Tipos"
 								}),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectItem, {
-									"data-uid": "src/pages/ListingsListPage.tsx:67:13",
+									"data-uid": "src/pages/ListingsListPage.tsx:87:13",
 									"data-prohibitions": "[]",
 									value: "Casa",
 									children: "Casa"
 								}),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectItem, {
-									"data-uid": "src/pages/ListingsListPage.tsx:68:13",
+									"data-uid": "src/pages/ListingsListPage.tsx:88:13",
 									"data-prohibitions": "[]",
 									value: "Apartamento",
 									children: "Apartamento"
 								}),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectItem, {
-									"data-uid": "src/pages/ListingsListPage.tsx:69:13",
+									"data-uid": "src/pages/ListingsListPage.tsx:89:13",
 									"data-prohibitions": "[]",
 									value: "Cobertura",
 									children: "Cobertura"
@@ -36104,21 +36392,21 @@ function ListingsListPage() {
 				]
 			}),
 			filteredListings.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-				"data-uid": "src/pages/ListingsListPage.tsx:75:9",
+				"data-uid": "src/pages/ListingsListPage.tsx:95:9",
 				"data-prohibitions": "[]",
 				className: "text-center py-12 text-muted-foreground bg-card border border-border rounded-xl",
 				children: "Nenhum imóvel encontrado com estes filtros."
 			}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-				"data-uid": "src/pages/ListingsListPage.tsx:79:9",
+				"data-uid": "src/pages/ListingsListPage.tsx:99:9",
 				"data-prohibitions": "[editContent]",
 				className: "grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6",
 				children: filteredListings.map((listing, i) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-					"data-uid": "src/pages/ListingsListPage.tsx:81:13",
+					"data-uid": "src/pages/ListingsListPage.tsx:101:13",
 					"data-prohibitions": "[]",
 					className: "animate-fade-in-up",
 					style: { animationDelay: `${i * 100}ms` },
 					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ListingCard, {
-						"data-uid": "src/pages/ListingsListPage.tsx:86:15",
+						"data-uid": "src/pages/ListingsListPage.tsx:106:15",
 						"data-prohibitions": "[editContent]",
 						listing
 					})
@@ -36130,967 +36418,182 @@ function ListingsListPage() {
 //#endregion
 //#region src/components/NeedCard.tsx
 function NeedCard({ need, action }) {
-	const urgencyColor = {
-		Alta: "text-red-400 border-red-400/20 bg-red-400/10",
-		Média: "text-orange-400 border-orange-400/20 bg-orange-400/10",
-		Baixa: "text-green-400 border-green-400/20 bg-green-400/10"
-	};
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
-		"data-uid": "src/components/NeedCard.tsx:14:5",
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Card, {
+		"data-uid": "src/components/NeedCard.tsx:8:5",
 		"data-prohibitions": "[editContent]",
-		className: "border-border bg-secondary",
-		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardHeader, {
-			"data-uid": "src/components/NeedCard.tsx:15:7",
+		className: "bg-card border-border hover:border-primary/50 transition-colors group h-full flex flex-col",
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardContent, {
+			"data-uid": "src/components/NeedCard.tsx:9:7",
 			"data-prohibitions": "[editContent]",
-			className: "p-4 pb-2 flex flex-row items-start justify-between space-y-0",
-			children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				"data-uid": "src/components/NeedCard.tsx:16:9",
-				"data-prohibitions": "[editContent]",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
-					"data-uid": "src/components/NeedCard.tsx:17:11",
+			className: "p-5 flex flex-col flex-1 space-y-4",
+			children: [
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					"data-uid": "src/components/NeedCard.tsx:10:9",
 					"data-prohibitions": "[editContent]",
-					className: "font-semibold text-white mb-1",
-					children: need.title
-				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Badge, {
-					"data-uid": "src/components/NeedCard.tsx:18:11",
-					"data-prohibitions": "[editContent]",
-					variant: "outline",
-					className: urgencyColor[need.urgency],
-					children: ["Urgência ", need.urgency]
-				})]
-			})
-		}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardContent, {
-			"data-uid": "src/components/NeedCard.tsx:23:7",
-			"data-prohibitions": "[editContent]",
-			className: "p-4 pt-2",
-			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				"data-uid": "src/components/NeedCard.tsx:24:9",
-				"data-prohibitions": "[editContent]",
-				className: "space-y-2 text-sm text-muted-foreground mb-4",
-				children: [
-					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-						"data-uid": "src/components/NeedCard.tsx:25:11",
+					className: "flex justify-between items-start gap-2",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Badge, {
+						"data-uid": "src/components/NeedCard.tsx:11:11",
 						"data-prohibitions": "[editContent]",
-						className: "flex items-center gap-2",
-						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Building2, {
-							"data-uid": "src/components/NeedCard.tsx:26:13",
-							"data-prohibitions": "[editContent]",
-							className: "w-4 h-4 text-primary"
-						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-							"data-uid": "src/components/NeedCard.tsx:27:13",
-							"data-prohibitions": "[editContent]",
-							children: need.type
-						})]
-					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						variant: "outline",
+						className: "border-primary/30 text-primary bg-primary/5",
+						children: need.type
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Badge, {
+						"data-uid": "src/components/NeedCard.tsx:14:11",
+						"data-prohibitions": "[editContent]",
+						variant: "outline",
+						className: "border-border text-muted-foreground flex items-center gap-1 bg-background",
+						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CircleAlert, {
+								"data-uid": "src/components/NeedCard.tsx:18:13",
+								"data-prohibitions": "[editContent]",
+								className: "w-3 h-3"
+							}),
+							" Urgência ",
+							need.urgency
+						]
+					})]
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					"data-uid": "src/components/NeedCard.tsx:22:9",
+					"data-prohibitions": "[editContent]",
+					className: "space-y-1 flex-1",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
+						"data-uid": "src/components/NeedCard.tsx:23:11",
+						"data-prohibitions": "[editContent]",
+						className: "font-semibold text-white text-lg leading-tight",
+						children: need.title
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+						"data-uid": "src/components/NeedCard.tsx:24:11",
+						"data-prohibitions": "[editContent]",
+						className: "text-xl font-bold text-primary",
+						children: need.priceRange
+					})]
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					"data-uid": "src/components/NeedCard.tsx:27:9",
+					"data-prohibitions": "[editContent]",
+					className: "flex items-center gap-2 text-sm text-muted-foreground bg-secondary/50 p-2.5 rounded-lg border border-border",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(MapPin, {
+						"data-uid": "src/components/NeedCard.tsx:28:11",
+						"data-prohibitions": "[editContent]",
+						className: "w-4 h-4 text-primary/70 shrink-0"
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
 						"data-uid": "src/components/NeedCard.tsx:29:11",
 						"data-prohibitions": "[editContent]",
-						className: "flex items-center gap-2",
-						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(MapPin, {
-							"data-uid": "src/components/NeedCard.tsx:30:13",
-							"data-prohibitions": "[editContent]",
-							className: "w-4 h-4 text-primary"
-						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-							"data-uid": "src/components/NeedCard.tsx:31:13",
-							"data-prohibitions": "[editContent]",
-							children: need.neighborhood
-						})]
-					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-						"data-uid": "src/components/NeedCard.tsx:33:11",
-						"data-prohibitions": "[editContent]",
-						className: "flex items-center gap-2",
-						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Wallet, {
-							"data-uid": "src/components/NeedCard.tsx:34:13",
-							"data-prohibitions": "[editContent]",
-							className: "w-4 h-4 text-primary"
-						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-							"data-uid": "src/components/NeedCard.tsx:35:13",
-							"data-prohibitions": "[editContent]",
-							children: need.priceRange
-						})]
-					})
-				]
-			}), action]
-		})]
-	});
-}
-//#endregion
-//#region src/components/ui/dialog.tsx
-var Dialog = Root$5;
-var DialogPortal = Portal$1;
-var DialogOverlay = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Overlay, {
-	"data-uid": "src/components/ui/dialog.tsx:20:3",
-	"data-prohibitions": "[editContent]",
-	ref,
-	className: cn$1("fixed inset-0 z-50 bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0", className),
-	...props
-}));
-DialogOverlay.displayName = Overlay.displayName;
-var DialogContent = import_react.forwardRef(({ className, children, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(DialogPortal, {
-	"data-uid": "src/components/ui/dialog.tsx:35:3",
-	"data-prohibitions": "[editContent]",
-	children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(DialogOverlay, {
-		"data-uid": "src/components/ui/dialog.tsx:36:5",
-		"data-prohibitions": "[editContent]"
-	}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Content$1, {
-		"data-uid": "src/components/ui/dialog.tsx:37:5",
-		"data-prohibitions": "[editContent]",
-		ref,
-		className: cn$1("fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg overflow-y-auto max-h-screen", className),
-		...props,
-		children: [children, /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Close, {
-			"data-uid": "src/components/ui/dialog.tsx:46:7",
-			"data-prohibitions": "[]",
-			className: "absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground",
-			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(X, {
-				"data-uid": "src/components/ui/dialog.tsx:47:9",
-				"data-prohibitions": "[editContent]",
-				className: "h-4 w-4"
-			}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-				"data-uid": "src/components/ui/dialog.tsx:48:9",
-				"data-prohibitions": "[]",
-				className: "sr-only",
-				children: "Close"
-			})]
-		})]
-	})]
-}));
-DialogContent.displayName = Content$1.displayName;
-var DialogHeader = ({ className, ...props }) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-	"data-uid": "src/components/ui/dialog.tsx:56:3",
-	"data-prohibitions": "[editContent]",
-	className: cn$1("flex flex-col space-y-1.5 text-center sm:text-left", className),
-	...props
-});
-DialogHeader.displayName = "DialogHeader";
-var DialogFooter = ({ className, ...props }) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-	"data-uid": "src/components/ui/dialog.tsx:61:3",
-	"data-prohibitions": "[editContent]",
-	className: cn$1("flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2", className),
-	...props
-});
-DialogFooter.displayName = "DialogFooter";
-var DialogTitle = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Title, {
-	"data-uid": "src/components/ui/dialog.tsx:72:3",
-	"data-prohibitions": "[editContent]",
-	ref,
-	className: cn$1("text-lg font-semibold leading-none tracking-tight", className),
-	...props
-}));
-DialogTitle.displayName = Title.displayName;
-var DialogDescription = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Description, {
-	"data-uid": "src/components/ui/dialog.tsx:84:3",
-	"data-prohibitions": "[editContent]",
-	ref,
-	className: cn$1("text-sm text-muted-foreground", className),
-	...props
-}));
-DialogDescription.displayName = Description.displayName;
-//#endregion
-//#region ../../cache/modules/prime-circle-migration-fd549/node_modules/.pnpm/@radix-ui+react-scroll-area@1.2.10_@types+react-dom@19.2.3_@types+react@19.2.14__@types_155614c2fe5222bb9b221068b09efefc/node_modules/@radix-ui/react-scroll-area/dist/index.mjs
-function useStateMachine(initialState, machine) {
-	return import_react.useReducer((state, event) => {
-		return machine[state][event] ?? state;
-	}, initialState);
-}
-var SCROLL_AREA_NAME = "ScrollArea";
-var [createScrollAreaContext, createScrollAreaScope] = createContextScope$1(SCROLL_AREA_NAME);
-var [ScrollAreaProvider, useScrollAreaContext] = createScrollAreaContext(SCROLL_AREA_NAME);
-var ScrollArea$1 = import_react.forwardRef((props, forwardedRef) => {
-	const { __scopeScrollArea, type = "hover", dir, scrollHideDelay = 600, ...scrollAreaProps } = props;
-	const [scrollArea, setScrollArea] = import_react.useState(null);
-	const [viewport, setViewport] = import_react.useState(null);
-	const [content, setContent] = import_react.useState(null);
-	const [scrollbarX, setScrollbarX] = import_react.useState(null);
-	const [scrollbarY, setScrollbarY] = import_react.useState(null);
-	const [cornerWidth, setCornerWidth] = import_react.useState(0);
-	const [cornerHeight, setCornerHeight] = import_react.useState(0);
-	const [scrollbarXEnabled, setScrollbarXEnabled] = import_react.useState(false);
-	const [scrollbarYEnabled, setScrollbarYEnabled] = import_react.useState(false);
-	const composedRefs = useComposedRefs(forwardedRef, (node) => setScrollArea(node));
-	const direction = useDirection(dir);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ScrollAreaProvider, {
-		scope: __scopeScrollArea,
-		type,
-		dir: direction,
-		scrollHideDelay,
-		scrollArea,
-		viewport,
-		onViewportChange: setViewport,
-		content,
-		onContentChange: setContent,
-		scrollbarX,
-		onScrollbarXChange: setScrollbarX,
-		scrollbarXEnabled,
-		onScrollbarXEnabledChange: setScrollbarXEnabled,
-		scrollbarY,
-		onScrollbarYChange: setScrollbarY,
-		scrollbarYEnabled,
-		onScrollbarYEnabledChange: setScrollbarYEnabled,
-		onCornerWidthChange: setCornerWidth,
-		onCornerHeightChange: setCornerHeight,
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.div, {
-			dir: direction,
-			...scrollAreaProps,
-			ref: composedRefs,
-			style: {
-				position: "relative",
-				["--radix-scroll-area-corner-width"]: cornerWidth + "px",
-				["--radix-scroll-area-corner-height"]: cornerHeight + "px",
-				...props.style
-			}
+						className: "truncate",
+						children: need.neighborhood
+					})]
+				}),
+				action
+			]
 		})
 	});
-});
-ScrollArea$1.displayName = SCROLL_AREA_NAME;
-var VIEWPORT_NAME = "ScrollAreaViewport";
-var ScrollAreaViewport = import_react.forwardRef((props, forwardedRef) => {
-	const { __scopeScrollArea, children, nonce, ...viewportProps } = props;
-	const context = useScrollAreaContext(VIEWPORT_NAME, __scopeScrollArea);
-	const composedRefs = useComposedRefs(forwardedRef, import_react.useRef(null), context.onViewportChange);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("style", {
-		dangerouslySetInnerHTML: { __html: `[data-radix-scroll-area-viewport]{scrollbar-width:none;-ms-overflow-style:none;-webkit-overflow-scrolling:touch;}[data-radix-scroll-area-viewport]::-webkit-scrollbar{display:none}` },
-		nonce
-	}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.div, {
-		"data-radix-scroll-area-viewport": "",
-		...viewportProps,
-		ref: composedRefs,
-		style: {
-			overflowX: context.scrollbarXEnabled ? "scroll" : "hidden",
-			overflowY: context.scrollbarYEnabled ? "scroll" : "hidden",
-			...props.style
-		},
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-			ref: context.onContentChange,
-			style: {
-				minWidth: "100%",
-				display: "table"
-			},
-			children
-		})
-	})] });
-});
-ScrollAreaViewport.displayName = VIEWPORT_NAME;
-var SCROLLBAR_NAME = "ScrollAreaScrollbar";
-var ScrollAreaScrollbar = import_react.forwardRef((props, forwardedRef) => {
-	const { forceMount, ...scrollbarProps } = props;
-	const context = useScrollAreaContext(SCROLLBAR_NAME, props.__scopeScrollArea);
-	const { onScrollbarXEnabledChange, onScrollbarYEnabledChange } = context;
-	const isHorizontal = props.orientation === "horizontal";
-	import_react.useEffect(() => {
-		isHorizontal ? onScrollbarXEnabledChange(true) : onScrollbarYEnabledChange(true);
-		return () => {
-			isHorizontal ? onScrollbarXEnabledChange(false) : onScrollbarYEnabledChange(false);
-		};
-	}, [
-		isHorizontal,
-		onScrollbarXEnabledChange,
-		onScrollbarYEnabledChange
-	]);
-	return context.type === "hover" ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ScrollAreaScrollbarHover, {
-		...scrollbarProps,
-		ref: forwardedRef,
-		forceMount
-	}) : context.type === "scroll" ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ScrollAreaScrollbarScroll, {
-		...scrollbarProps,
-		ref: forwardedRef,
-		forceMount
-	}) : context.type === "auto" ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ScrollAreaScrollbarAuto, {
-		...scrollbarProps,
-		ref: forwardedRef,
-		forceMount
-	}) : context.type === "always" ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ScrollAreaScrollbarVisible, {
-		...scrollbarProps,
-		ref: forwardedRef
-	}) : null;
-});
-ScrollAreaScrollbar.displayName = SCROLLBAR_NAME;
-var ScrollAreaScrollbarHover = import_react.forwardRef((props, forwardedRef) => {
-	const { forceMount, ...scrollbarProps } = props;
-	const context = useScrollAreaContext(SCROLLBAR_NAME, props.__scopeScrollArea);
-	const [visible, setVisible] = import_react.useState(false);
-	import_react.useEffect(() => {
-		const scrollArea = context.scrollArea;
-		let hideTimer = 0;
-		if (scrollArea) {
-			const handlePointerEnter = () => {
-				window.clearTimeout(hideTimer);
-				setVisible(true);
-			};
-			const handlePointerLeave = () => {
-				hideTimer = window.setTimeout(() => setVisible(false), context.scrollHideDelay);
-			};
-			scrollArea.addEventListener("pointerenter", handlePointerEnter);
-			scrollArea.addEventListener("pointerleave", handlePointerLeave);
-			return () => {
-				window.clearTimeout(hideTimer);
-				scrollArea.removeEventListener("pointerenter", handlePointerEnter);
-				scrollArea.removeEventListener("pointerleave", handlePointerLeave);
-			};
-		}
-	}, [context.scrollArea, context.scrollHideDelay]);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Presence, {
-		present: forceMount || visible,
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ScrollAreaScrollbarAuto, {
-			"data-state": visible ? "visible" : "hidden",
-			...scrollbarProps,
-			ref: forwardedRef
-		})
-	});
-});
-var ScrollAreaScrollbarScroll = import_react.forwardRef((props, forwardedRef) => {
-	const { forceMount, ...scrollbarProps } = props;
-	const context = useScrollAreaContext(SCROLLBAR_NAME, props.__scopeScrollArea);
-	const isHorizontal = props.orientation === "horizontal";
-	const debounceScrollEnd = useDebounceCallback(() => send("SCROLL_END"), 100);
-	const [state, send] = useStateMachine("hidden", {
-		hidden: { SCROLL: "scrolling" },
-		scrolling: {
-			SCROLL_END: "idle",
-			POINTER_ENTER: "interacting"
-		},
-		interacting: {
-			SCROLL: "interacting",
-			POINTER_LEAVE: "idle"
-		},
-		idle: {
-			HIDE: "hidden",
-			SCROLL: "scrolling",
-			POINTER_ENTER: "interacting"
-		}
-	});
-	import_react.useEffect(() => {
-		if (state === "idle") {
-			const hideTimer = window.setTimeout(() => send("HIDE"), context.scrollHideDelay);
-			return () => window.clearTimeout(hideTimer);
-		}
-	}, [
-		state,
-		context.scrollHideDelay,
-		send
-	]);
-	import_react.useEffect(() => {
-		const viewport = context.viewport;
-		const scrollDirection = isHorizontal ? "scrollLeft" : "scrollTop";
-		if (viewport) {
-			let prevScrollPos = viewport[scrollDirection];
-			const handleScroll = () => {
-				const scrollPos = viewport[scrollDirection];
-				if (prevScrollPos !== scrollPos) {
-					send("SCROLL");
-					debounceScrollEnd();
-				}
-				prevScrollPos = scrollPos;
-			};
-			viewport.addEventListener("scroll", handleScroll);
-			return () => viewport.removeEventListener("scroll", handleScroll);
-		}
-	}, [
-		context.viewport,
-		isHorizontal,
-		send,
-		debounceScrollEnd
-	]);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Presence, {
-		present: forceMount || state !== "hidden",
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ScrollAreaScrollbarVisible, {
-			"data-state": state === "hidden" ? "hidden" : "visible",
-			...scrollbarProps,
-			ref: forwardedRef,
-			onPointerEnter: composeEventHandlers(props.onPointerEnter, () => send("POINTER_ENTER")),
-			onPointerLeave: composeEventHandlers(props.onPointerLeave, () => send("POINTER_LEAVE"))
-		})
-	});
-});
-var ScrollAreaScrollbarAuto = import_react.forwardRef((props, forwardedRef) => {
-	const context = useScrollAreaContext(SCROLLBAR_NAME, props.__scopeScrollArea);
-	const { forceMount, ...scrollbarProps } = props;
-	const [visible, setVisible] = import_react.useState(false);
-	const isHorizontal = props.orientation === "horizontal";
-	const handleResize = useDebounceCallback(() => {
-		if (context.viewport) {
-			const isOverflowX = context.viewport.offsetWidth < context.viewport.scrollWidth;
-			const isOverflowY = context.viewport.offsetHeight < context.viewport.scrollHeight;
-			setVisible(isHorizontal ? isOverflowX : isOverflowY);
-		}
-	}, 10);
-	useResizeObserver(context.viewport, handleResize);
-	useResizeObserver(context.content, handleResize);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Presence, {
-		present: forceMount || visible,
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ScrollAreaScrollbarVisible, {
-			"data-state": visible ? "visible" : "hidden",
-			...scrollbarProps,
-			ref: forwardedRef
-		})
-	});
-});
-var ScrollAreaScrollbarVisible = import_react.forwardRef((props, forwardedRef) => {
-	const { orientation = "vertical", ...scrollbarProps } = props;
-	const context = useScrollAreaContext(SCROLLBAR_NAME, props.__scopeScrollArea);
-	const thumbRef = import_react.useRef(null);
-	const pointerOffsetRef = import_react.useRef(0);
-	const [sizes, setSizes] = import_react.useState({
-		content: 0,
-		viewport: 0,
-		scrollbar: {
-			size: 0,
-			paddingStart: 0,
-			paddingEnd: 0
-		}
-	});
-	const thumbRatio = getThumbRatio(sizes.viewport, sizes.content);
-	const commonProps = {
-		...scrollbarProps,
-		sizes,
-		onSizesChange: setSizes,
-		hasThumb: Boolean(thumbRatio > 0 && thumbRatio < 1),
-		onThumbChange: (thumb) => thumbRef.current = thumb,
-		onThumbPointerUp: () => pointerOffsetRef.current = 0,
-		onThumbPointerDown: (pointerPos) => pointerOffsetRef.current = pointerPos
-	};
-	function getScrollPosition(pointerPos, dir) {
-		return getScrollPositionFromPointer(pointerPos, pointerOffsetRef.current, sizes, dir);
-	}
-	if (orientation === "horizontal") return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ScrollAreaScrollbarX, {
-		...commonProps,
-		ref: forwardedRef,
-		onThumbPositionChange: () => {
-			if (context.viewport && thumbRef.current) {
-				const scrollPos = context.viewport.scrollLeft;
-				const offset = getThumbOffsetFromScroll(scrollPos, sizes, context.dir);
-				thumbRef.current.style.transform = `translate3d(${offset}px, 0, 0)`;
-			}
-		},
-		onWheelScroll: (scrollPos) => {
-			if (context.viewport) context.viewport.scrollLeft = scrollPos;
-		},
-		onDragScroll: (pointerPos) => {
-			if (context.viewport) context.viewport.scrollLeft = getScrollPosition(pointerPos, context.dir);
-		}
-	});
-	if (orientation === "vertical") return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ScrollAreaScrollbarY, {
-		...commonProps,
-		ref: forwardedRef,
-		onThumbPositionChange: () => {
-			if (context.viewport && thumbRef.current) {
-				const scrollPos = context.viewport.scrollTop;
-				const offset = getThumbOffsetFromScroll(scrollPos, sizes);
-				thumbRef.current.style.transform = `translate3d(0, ${offset}px, 0)`;
-			}
-		},
-		onWheelScroll: (scrollPos) => {
-			if (context.viewport) context.viewport.scrollTop = scrollPos;
-		},
-		onDragScroll: (pointerPos) => {
-			if (context.viewport) context.viewport.scrollTop = getScrollPosition(pointerPos);
-		}
-	});
-	return null;
-});
-var ScrollAreaScrollbarX = import_react.forwardRef((props, forwardedRef) => {
-	const { sizes, onSizesChange, ...scrollbarProps } = props;
-	const context = useScrollAreaContext(SCROLLBAR_NAME, props.__scopeScrollArea);
-	const [computedStyle, setComputedStyle] = import_react.useState();
-	const ref = import_react.useRef(null);
-	const composeRefs = useComposedRefs(forwardedRef, ref, context.onScrollbarXChange);
-	import_react.useEffect(() => {
-		if (ref.current) setComputedStyle(getComputedStyle(ref.current));
-	}, [ref]);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ScrollAreaScrollbarImpl, {
-		"data-orientation": "horizontal",
-		...scrollbarProps,
-		ref: composeRefs,
-		sizes,
-		style: {
-			bottom: 0,
-			left: context.dir === "rtl" ? "var(--radix-scroll-area-corner-width)" : 0,
-			right: context.dir === "ltr" ? "var(--radix-scroll-area-corner-width)" : 0,
-			["--radix-scroll-area-thumb-width"]: getThumbSize(sizes) + "px",
-			...props.style
-		},
-		onThumbPointerDown: (pointerPos) => props.onThumbPointerDown(pointerPos.x),
-		onDragScroll: (pointerPos) => props.onDragScroll(pointerPos.x),
-		onWheelScroll: (event, maxScrollPos) => {
-			if (context.viewport) {
-				const scrollPos = context.viewport.scrollLeft + event.deltaX;
-				props.onWheelScroll(scrollPos);
-				if (isScrollingWithinScrollbarBounds(scrollPos, maxScrollPos)) event.preventDefault();
-			}
-		},
-		onResize: () => {
-			if (ref.current && context.viewport && computedStyle) onSizesChange({
-				content: context.viewport.scrollWidth,
-				viewport: context.viewport.offsetWidth,
-				scrollbar: {
-					size: ref.current.clientWidth,
-					paddingStart: toInt(computedStyle.paddingLeft),
-					paddingEnd: toInt(computedStyle.paddingRight)
-				}
-			});
-		}
-	});
-});
-var ScrollAreaScrollbarY = import_react.forwardRef((props, forwardedRef) => {
-	const { sizes, onSizesChange, ...scrollbarProps } = props;
-	const context = useScrollAreaContext(SCROLLBAR_NAME, props.__scopeScrollArea);
-	const [computedStyle, setComputedStyle] = import_react.useState();
-	const ref = import_react.useRef(null);
-	const composeRefs = useComposedRefs(forwardedRef, ref, context.onScrollbarYChange);
-	import_react.useEffect(() => {
-		if (ref.current) setComputedStyle(getComputedStyle(ref.current));
-	}, [ref]);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ScrollAreaScrollbarImpl, {
-		"data-orientation": "vertical",
-		...scrollbarProps,
-		ref: composeRefs,
-		sizes,
-		style: {
-			top: 0,
-			right: context.dir === "ltr" ? 0 : void 0,
-			left: context.dir === "rtl" ? 0 : void 0,
-			bottom: "var(--radix-scroll-area-corner-height)",
-			["--radix-scroll-area-thumb-height"]: getThumbSize(sizes) + "px",
-			...props.style
-		},
-		onThumbPointerDown: (pointerPos) => props.onThumbPointerDown(pointerPos.y),
-		onDragScroll: (pointerPos) => props.onDragScroll(pointerPos.y),
-		onWheelScroll: (event, maxScrollPos) => {
-			if (context.viewport) {
-				const scrollPos = context.viewport.scrollTop + event.deltaY;
-				props.onWheelScroll(scrollPos);
-				if (isScrollingWithinScrollbarBounds(scrollPos, maxScrollPos)) event.preventDefault();
-			}
-		},
-		onResize: () => {
-			if (ref.current && context.viewport && computedStyle) onSizesChange({
-				content: context.viewport.scrollHeight,
-				viewport: context.viewport.offsetHeight,
-				scrollbar: {
-					size: ref.current.clientHeight,
-					paddingStart: toInt(computedStyle.paddingTop),
-					paddingEnd: toInt(computedStyle.paddingBottom)
-				}
-			});
-		}
-	});
-});
-var [ScrollbarProvider, useScrollbarContext] = createScrollAreaContext(SCROLLBAR_NAME);
-var ScrollAreaScrollbarImpl = import_react.forwardRef((props, forwardedRef) => {
-	const { __scopeScrollArea, sizes, hasThumb, onThumbChange, onThumbPointerUp, onThumbPointerDown, onThumbPositionChange, onDragScroll, onWheelScroll, onResize, ...scrollbarProps } = props;
-	const context = useScrollAreaContext(SCROLLBAR_NAME, __scopeScrollArea);
-	const [scrollbar, setScrollbar] = import_react.useState(null);
-	const composeRefs = useComposedRefs(forwardedRef, (node) => setScrollbar(node));
-	const rectRef = import_react.useRef(null);
-	const prevWebkitUserSelectRef = import_react.useRef("");
-	const viewport = context.viewport;
-	const maxScrollPos = sizes.content - sizes.viewport;
-	const handleWheelScroll = useCallbackRef$1(onWheelScroll);
-	const handleThumbPositionChange = useCallbackRef$1(onThumbPositionChange);
-	const handleResize = useDebounceCallback(onResize, 10);
-	function handleDragScroll(event) {
-		if (rectRef.current) onDragScroll({
-			x: event.clientX - rectRef.current.left,
-			y: event.clientY - rectRef.current.top
-		});
-	}
-	import_react.useEffect(() => {
-		const handleWheel = (event) => {
-			const element = event.target;
-			if (scrollbar?.contains(element)) handleWheelScroll(event, maxScrollPos);
-		};
-		document.addEventListener("wheel", handleWheel, { passive: false });
-		return () => document.removeEventListener("wheel", handleWheel, { passive: false });
-	}, [
-		viewport,
-		scrollbar,
-		maxScrollPos,
-		handleWheelScroll
-	]);
-	import_react.useEffect(handleThumbPositionChange, [sizes, handleThumbPositionChange]);
-	useResizeObserver(scrollbar, handleResize);
-	useResizeObserver(context.content, handleResize);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ScrollbarProvider, {
-		scope: __scopeScrollArea,
-		scrollbar,
-		hasThumb,
-		onThumbChange: useCallbackRef$1(onThumbChange),
-		onThumbPointerUp: useCallbackRef$1(onThumbPointerUp),
-		onThumbPositionChange: handleThumbPositionChange,
-		onThumbPointerDown: useCallbackRef$1(onThumbPointerDown),
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.div, {
-			...scrollbarProps,
-			ref: composeRefs,
-			style: {
-				position: "absolute",
-				...scrollbarProps.style
-			},
-			onPointerDown: composeEventHandlers(props.onPointerDown, (event) => {
-				if (event.button === 0) {
-					event.target.setPointerCapture(event.pointerId);
-					rectRef.current = scrollbar.getBoundingClientRect();
-					prevWebkitUserSelectRef.current = document.body.style.webkitUserSelect;
-					document.body.style.webkitUserSelect = "none";
-					if (context.viewport) context.viewport.style.scrollBehavior = "auto";
-					handleDragScroll(event);
-				}
-			}),
-			onPointerMove: composeEventHandlers(props.onPointerMove, handleDragScroll),
-			onPointerUp: composeEventHandlers(props.onPointerUp, (event) => {
-				const element = event.target;
-				if (element.hasPointerCapture(event.pointerId)) element.releasePointerCapture(event.pointerId);
-				document.body.style.webkitUserSelect = prevWebkitUserSelectRef.current;
-				if (context.viewport) context.viewport.style.scrollBehavior = "";
-				rectRef.current = null;
-			})
-		})
-	});
-});
-var THUMB_NAME = "ScrollAreaThumb";
-var ScrollAreaThumb = import_react.forwardRef((props, forwardedRef) => {
-	const { forceMount, ...thumbProps } = props;
-	const scrollbarContext = useScrollbarContext(THUMB_NAME, props.__scopeScrollArea);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Presence, {
-		present: forceMount || scrollbarContext.hasThumb,
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ScrollAreaThumbImpl, {
-			ref: forwardedRef,
-			...thumbProps
-		})
-	});
-});
-var ScrollAreaThumbImpl = import_react.forwardRef((props, forwardedRef) => {
-	const { __scopeScrollArea, style, ...thumbProps } = props;
-	const scrollAreaContext = useScrollAreaContext(THUMB_NAME, __scopeScrollArea);
-	const scrollbarContext = useScrollbarContext(THUMB_NAME, __scopeScrollArea);
-	const { onThumbPositionChange } = scrollbarContext;
-	const composedRef = useComposedRefs(forwardedRef, (node) => scrollbarContext.onThumbChange(node));
-	const removeUnlinkedScrollListenerRef = import_react.useRef(void 0);
-	const debounceScrollEnd = useDebounceCallback(() => {
-		if (removeUnlinkedScrollListenerRef.current) {
-			removeUnlinkedScrollListenerRef.current();
-			removeUnlinkedScrollListenerRef.current = void 0;
-		}
-	}, 100);
-	import_react.useEffect(() => {
-		const viewport = scrollAreaContext.viewport;
-		if (viewport) {
-			const handleScroll = () => {
-				debounceScrollEnd();
-				if (!removeUnlinkedScrollListenerRef.current) {
-					removeUnlinkedScrollListenerRef.current = addUnlinkedScrollListener(viewport, onThumbPositionChange);
-					onThumbPositionChange();
-				}
-			};
-			onThumbPositionChange();
-			viewport.addEventListener("scroll", handleScroll);
-			return () => viewport.removeEventListener("scroll", handleScroll);
-		}
-	}, [
-		scrollAreaContext.viewport,
-		debounceScrollEnd,
-		onThumbPositionChange
-	]);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.div, {
-		"data-state": scrollbarContext.hasThumb ? "visible" : "hidden",
-		...thumbProps,
-		ref: composedRef,
-		style: {
-			width: "var(--radix-scroll-area-thumb-width)",
-			height: "var(--radix-scroll-area-thumb-height)",
-			...style
-		},
-		onPointerDownCapture: composeEventHandlers(props.onPointerDownCapture, (event) => {
-			const thumbRect = event.target.getBoundingClientRect();
-			const x = event.clientX - thumbRect.left;
-			const y = event.clientY - thumbRect.top;
-			scrollbarContext.onThumbPointerDown({
-				x,
-				y
-			});
-		}),
-		onPointerUp: composeEventHandlers(props.onPointerUp, scrollbarContext.onThumbPointerUp)
-	});
-});
-ScrollAreaThumb.displayName = THUMB_NAME;
-var CORNER_NAME = "ScrollAreaCorner";
-var ScrollAreaCorner = import_react.forwardRef((props, forwardedRef) => {
-	const context = useScrollAreaContext(CORNER_NAME, props.__scopeScrollArea);
-	const hasBothScrollbarsVisible = Boolean(context.scrollbarX && context.scrollbarY);
-	return context.type !== "scroll" && hasBothScrollbarsVisible ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ScrollAreaCornerImpl, {
-		...props,
-		ref: forwardedRef
-	}) : null;
-});
-ScrollAreaCorner.displayName = CORNER_NAME;
-var ScrollAreaCornerImpl = import_react.forwardRef((props, forwardedRef) => {
-	const { __scopeScrollArea, ...cornerProps } = props;
-	const context = useScrollAreaContext(CORNER_NAME, __scopeScrollArea);
-	const [width, setWidth] = import_react.useState(0);
-	const [height, setHeight] = import_react.useState(0);
-	const hasSize = Boolean(width && height);
-	useResizeObserver(context.scrollbarX, () => {
-		const height2 = context.scrollbarX?.offsetHeight || 0;
-		context.onCornerHeightChange(height2);
-		setHeight(height2);
-	});
-	useResizeObserver(context.scrollbarY, () => {
-		const width2 = context.scrollbarY?.offsetWidth || 0;
-		context.onCornerWidthChange(width2);
-		setWidth(width2);
-	});
-	return hasSize ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.div, {
-		...cornerProps,
-		ref: forwardedRef,
-		style: {
-			width,
-			height,
-			position: "absolute",
-			right: context.dir === "ltr" ? 0 : void 0,
-			left: context.dir === "rtl" ? 0 : void 0,
-			bottom: 0,
-			...props.style
-		}
-	}) : null;
-});
-function toInt(value) {
-	return value ? parseInt(value, 10) : 0;
 }
-function getThumbRatio(viewportSize, contentSize) {
-	const ratio = viewportSize / contentSize;
-	return isNaN(ratio) ? 0 : ratio;
-}
-function getThumbSize(sizes) {
-	const ratio = getThumbRatio(sizes.viewport, sizes.content);
-	const scrollbarPadding = sizes.scrollbar.paddingStart + sizes.scrollbar.paddingEnd;
-	const thumbSize = (sizes.scrollbar.size - scrollbarPadding) * ratio;
-	return Math.max(thumbSize, 18);
-}
-function getScrollPositionFromPointer(pointerPos, pointerOffset, sizes, dir = "ltr") {
-	const thumbSizePx = getThumbSize(sizes);
-	const thumbCenter = thumbSizePx / 2;
-	const offset = pointerOffset || thumbCenter;
-	const thumbOffsetFromEnd = thumbSizePx - offset;
-	const minPointerPos = sizes.scrollbar.paddingStart + offset;
-	const maxPointerPos = sizes.scrollbar.size - sizes.scrollbar.paddingEnd - thumbOffsetFromEnd;
-	const maxScrollPos = sizes.content - sizes.viewport;
-	const scrollRange = dir === "ltr" ? [0, maxScrollPos] : [maxScrollPos * -1, 0];
-	return linearScale([minPointerPos, maxPointerPos], scrollRange)(pointerPos);
-}
-function getThumbOffsetFromScroll(scrollPos, sizes, dir = "ltr") {
-	const thumbSizePx = getThumbSize(sizes);
-	const scrollbarPadding = sizes.scrollbar.paddingStart + sizes.scrollbar.paddingEnd;
-	const scrollbar = sizes.scrollbar.size - scrollbarPadding;
-	const maxScrollPos = sizes.content - sizes.viewport;
-	const maxThumbPos = scrollbar - thumbSizePx;
-	const scrollWithoutMomentum = clamp(scrollPos, dir === "ltr" ? [0, maxScrollPos] : [maxScrollPos * -1, 0]);
-	return linearScale([0, maxScrollPos], [0, maxThumbPos])(scrollWithoutMomentum);
-}
-function linearScale(input, output) {
-	return (value) => {
-		if (input[0] === input[1] || output[0] === output[1]) return output[0];
-		const ratio = (output[1] - output[0]) / (input[1] - input[0]);
-		return output[0] + ratio * (value - input[0]);
-	};
-}
-function isScrollingWithinScrollbarBounds(scrollPos, maxScrollPos) {
-	return scrollPos > 0 && scrollPos < maxScrollPos;
-}
-var addUnlinkedScrollListener = (node, handler = () => {}) => {
-	let prevPosition = {
-		left: node.scrollLeft,
-		top: node.scrollTop
-	};
-	let rAF = 0;
-	(function loop() {
-		const position = {
-			left: node.scrollLeft,
-			top: node.scrollTop
-		};
-		const isHorizontalScroll = prevPosition.left !== position.left;
-		const isVerticalScroll = prevPosition.top !== position.top;
-		if (isHorizontalScroll || isVerticalScroll) handler();
-		prevPosition = position;
-		rAF = window.requestAnimationFrame(loop);
-	})();
-	return () => window.cancelAnimationFrame(rAF);
-};
-function useDebounceCallback(callback, delay) {
-	const handleCallback = useCallbackRef$1(callback);
-	const debounceTimerRef = import_react.useRef(0);
-	import_react.useEffect(() => () => window.clearTimeout(debounceTimerRef.current), []);
-	return import_react.useCallback(() => {
-		window.clearTimeout(debounceTimerRef.current);
-		debounceTimerRef.current = window.setTimeout(handleCallback, delay);
-	}, [handleCallback, delay]);
-}
-function useResizeObserver(element, onResize) {
-	const handleResize = useCallbackRef$1(onResize);
-	useLayoutEffect2(() => {
-		let rAF = 0;
-		if (element) {
-			const resizeObserver = new ResizeObserver(() => {
-				cancelAnimationFrame(rAF);
-				rAF = window.requestAnimationFrame(handleResize);
-			});
-			resizeObserver.observe(element);
-			return () => {
-				window.cancelAnimationFrame(rAF);
-				resizeObserver.unobserve(element);
-			};
-		}
-	}, [element, handleResize]);
-}
-var Root$2 = ScrollArea$1;
-var Viewport = ScrollAreaViewport;
-var Corner = ScrollAreaCorner;
-//#endregion
-//#region src/components/ui/scroll-area.tsx
-var ScrollArea = import_react.forwardRef(({ className, children, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Root$2, {
-	"data-uid": "src/components/ui/scroll-area.tsx:11:3",
-	"data-prohibitions": "[editContent]",
-	ref,
-	className: cn$1("relative overflow-hidden", className),
-	...props,
-	children: [
-		/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Viewport, {
-			"data-uid": "src/components/ui/scroll-area.tsx:16:5",
-			"data-prohibitions": "[editContent]",
-			className: "h-full w-full rounded-[inherit]",
-			children
-		}),
-		/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ScrollBar, {
-			"data-uid": "src/components/ui/scroll-area.tsx:19:5",
-			"data-prohibitions": "[editContent]"
-		}),
-		/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Corner, {
-			"data-uid": "src/components/ui/scroll-area.tsx:20:5",
-			"data-prohibitions": "[editContent]"
-		})
-	]
-}));
-ScrollArea.displayName = Root$2.displayName;
-var ScrollBar = import_react.forwardRef(({ className, orientation = "vertical", ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ScrollAreaScrollbar, {
-	"data-uid": "src/components/ui/scroll-area.tsx:29:3",
-	"data-prohibitions": "[editContent]",
-	ref,
-	orientation,
-	className: cn$1("flex touch-none select-none transition-colors", orientation === "vertical" && "h-full w-2.5 border-l border-l-transparent p-[1px]", orientation === "horizontal" && "h-2.5 flex-col border-t border-t-transparent p-[1px]", className),
-	...props,
-	children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ScrollAreaThumb, {
-		"data-uid": "src/components/ui/scroll-area.tsx:40:5",
-		"data-prohibitions": "[editContent]",
-		className: "relative flex-1 rounded-full bg-border"
-	})
-}));
-ScrollBar.displayName = ScrollAreaScrollbar.displayName;
 //#endregion
 //#region src/components/MatchModal.tsx
 function MatchModal({ need, isOpen, onClose }) {
 	const { listings, user, addMatch } = useAppStore();
-	const [selectedListing, setSelectedListing] = (0, import_react.useState)(null);
+	const [selectedListing, setSelectedListing] = (0, import_react.useState)("");
 	const myListings = listings.filter((l) => l.ownerId === user?.id);
 	const handleConfirm = () => {
-		if (need && selectedListing) {
-			addMatch(need.id, selectedListing);
-			toast.success("Imóvel vinculado com sucesso! O corretor parceiro será notificado.");
+		if (!selectedListing || !need) return;
+		if (addMatch(need.id, selectedListing)) {
+			toast.success("Parceria proposta! O negócio foi adicionado ao seu pipeline.");
 			onClose();
-			setSelectedListing(null);
-		}
+			setSelectedListing("");
+		} else onClose();
 	};
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Dialog, {
-		"data-uid": "src/components/MatchModal.tsx:37:5",
+		"data-uid": "src/components/MatchModal.tsx:48:5",
 		"data-prohibitions": "[editContent]",
 		open: isOpen,
-		onOpenChange: onClose,
+		onOpenChange: (open) => !open && onClose(),
 		children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(DialogContent, {
-			"data-uid": "src/components/MatchModal.tsx:38:7",
+			"data-uid": "src/components/MatchModal.tsx:49:7",
 			"data-prohibitions": "[editContent]",
-			className: "sm:max-w-md bg-card border-border text-white",
+			className: "bg-card border-border sm:max-w-[425px]",
 			children: [
 				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(DialogHeader, {
-					"data-uid": "src/components/MatchModal.tsx:39:9",
-					"data-prohibitions": "[]",
+					"data-uid": "src/components/MatchModal.tsx:50:9",
+					"data-prohibitions": "[editContent]",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(DialogTitle, {
-						"data-uid": "src/components/MatchModal.tsx:40:11",
+						"data-uid": "src/components/MatchModal.tsx:51:11",
 						"data-prohibitions": "[]",
-						children: "Vincular Imóvel"
-					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(DialogDescription, {
-						"data-uid": "src/components/MatchModal.tsx:41:11",
-						"data-prohibitions": "[]",
+						className: "text-white text-xl",
+						children: "Vincular Imóvel à Demanda"
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(DialogDescription, {
+						"data-uid": "src/components/MatchModal.tsx:52:11",
+						"data-prohibitions": "[editContent]",
 						className: "text-muted-foreground",
-						children: "Selecione um dos seus imóveis para apresentar a esta demanda."
+						children: [
+							"Escolha um dos seus imóveis disponíveis para propor parceria (50/50) nesta demanda:",
+							" ",
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+								"data-uid": "src/components/MatchModal.tsx:54:13",
+								"data-prohibitions": "[editContent]",
+								className: "text-white font-medium",
+								children: need?.title
+							})
+						]
 					})]
 				}),
-				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ScrollArea, {
-					"data-uid": "src/components/MatchModal.tsx:45:9",
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+					"data-uid": "src/components/MatchModal.tsx:58:9",
 					"data-prohibitions": "[editContent]",
-					className: "h-[300px] mt-4 pr-4",
-					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-						"data-uid": "src/components/MatchModal.tsx:46:11",
+					className: "space-y-4 py-4",
+					children: myListings.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+						"data-uid": "src/components/MatchModal.tsx:60:13",
+						"data-prohibitions": "[]",
+						className: "text-sm text-red-400 bg-red-400/10 p-3 rounded-lg border border-red-400/20",
+						children: "Você não tem imóveis cadastrados para vincular."
+					}) : /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Select, {
+						"data-uid": "src/components/MatchModal.tsx:64:13",
 						"data-prohibitions": "[editContent]",
-						className: "space-y-3",
-						children: myListings.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-							"data-uid": "src/components/MatchModal.tsx:48:15",
+						value: selectedListing,
+						onValueChange: setSelectedListing,
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectTrigger, {
+							"data-uid": "src/components/MatchModal.tsx:65:15",
 							"data-prohibitions": "[]",
-							className: "text-center text-muted-foreground py-8",
-							children: "Você não possui imóveis cadastrados."
-						}) : myListings.map((listing) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-							"data-uid": "src/components/MatchModal.tsx:53:17",
+							className: "w-full bg-background border-border text-white",
+							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectValue, {
+								"data-uid": "src/components/MatchModal.tsx:66:17",
+								"data-prohibitions": "[editContent]",
+								placeholder: "Selecione um imóvel"
+							})
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectContent, {
+							"data-uid": "src/components/MatchModal.tsx:68:15",
 							"data-prohibitions": "[editContent]",
-							onClick: () => setSelectedListing(listing.id),
-							className: cn$1("flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors", selectedListing === listing.id ? "border-primary bg-primary/10" : "border-border hover:border-primary/50"),
-							children: [
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
-									"data-uid": "src/components/MatchModal.tsx:63:19",
-									"data-prohibitions": "[editContent]",
-									src: listing.image,
-									alt: "",
-									className: "w-16 h-16 rounded object-cover"
-								}),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-									"data-uid": "src/components/MatchModal.tsx:64:19",
-									"data-prohibitions": "[editContent]",
-									className: "flex-1 min-w-0",
-									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-										"data-uid": "src/components/MatchModal.tsx:65:21",
-										"data-prohibitions": "[editContent]",
-										className: "font-medium text-sm truncate",
-										children: listing.title
-									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-										"data-uid": "src/components/MatchModal.tsx:66:21",
-										"data-prohibitions": "[editContent]",
-										className: "text-xs text-primary",
-										children: listing.price
-									})]
-								}),
-								selectedListing === listing.id && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CircleCheck, {
-									"data-uid": "src/components/MatchModal.tsx:69:21",
-									"data-prohibitions": "[editContent]",
-									className: "text-primary w-5 h-5"
-								})
-							]
-						}, listing.id))
+							children: myListings.map((l) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(SelectItem, {
+								"data-uid": "src/components/MatchModal.tsx:70:19",
+								"data-prohibitions": "[editContent]",
+								value: l.id,
+								children: [
+									l.title,
+									" - ",
+									l.price
+								]
+							}, l.id))
+						})]
 					})
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					"data-uid": "src/components/MatchModal.tsx:76:9",
+					"data-uid": "src/components/MatchModal.tsx:79:9",
 					"data-prohibitions": "[]",
-					className: "flex justify-end gap-3 mt-4",
+					className: "flex justify-end gap-3 pt-2",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-						"data-uid": "src/components/MatchModal.tsx:77:11",
+						"data-uid": "src/components/MatchModal.tsx:80:11",
 						"data-prohibitions": "[]",
-						variant: "outline",
+						variant: "ghost",
 						onClick: onClose,
-						className: "border-border text-white hover:bg-secondary",
+						className: "text-muted-foreground hover:text-white",
 						children: "Cancelar"
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-						"data-uid": "src/components/MatchModal.tsx:84:11",
+						"data-uid": "src/components/MatchModal.tsx:87:11",
 						"data-prohibitions": "[]",
 						onClick: handleConfirm,
 						disabled: !selectedListing,
-						className: "gold-gradient",
-						children: "Confirmar Vínculo"
+						className: "gold-gradient text-black",
+						children: "Confirmar Match"
 					})]
 				})
 			]
@@ -37100,108 +36603,118 @@ function MatchModal({ need, isOpen, onClose }) {
 //#endregion
 //#region src/pages/NeedsListPage.tsx
 function NeedsListPage() {
-	const { needs, user } = useAppStore();
+	const { needs, user, addNeed } = useAppStore();
 	const [selectedNeed, setSelectedNeed] = (0, import_react.useState)(null);
 	const [bairro, setBairro] = (0, import_react.useState)("all");
 	const filteredNeeds = needs.filter((n) => {
 		if (bairro !== "all" && !n.neighborhood.includes(bairro)) return false;
 		return true;
 	});
+	const handleAddMockNeed = () => {
+		if (addNeed({
+			title: "Cliente Investidor Gringo",
+			type: "Cobertura",
+			priceRange: "Até R$ 12M",
+			neighborhood: "Lúcio Costa",
+			urgency: "Alta"
+		})) toast.success("Demanda adicionada com sucesso!");
+	};
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-		"data-uid": "src/pages/NeedsListPage.tsx:27:5",
+		"data-uid": "src/pages/NeedsListPage.tsx:41:5",
 		"data-prohibitions": "[editContent]",
 		className: "space-y-6 animate-fade-in-up",
 		children: [
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				"data-uid": "src/pages/NeedsListPage.tsx:28:7",
+				"data-uid": "src/pages/NeedsListPage.tsx:42:7",
 				"data-prohibitions": "[]",
 				className: "flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4",
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					"data-uid": "src/pages/NeedsListPage.tsx:29:9",
+					"data-uid": "src/pages/NeedsListPage.tsx:43:9",
 					"data-prohibitions": "[]",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
-						"data-uid": "src/pages/NeedsListPage.tsx:30:11",
+						"data-uid": "src/pages/NeedsListPage.tsx:44:11",
 						"data-prohibitions": "[]",
 						className: "text-2xl font-bold text-white",
 						children: "Demandas Ativas"
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-						"data-uid": "src/pages/NeedsListPage.tsx:31:11",
+						"data-uid": "src/pages/NeedsListPage.tsx:45:11",
 						"data-prohibitions": "[]",
 						className: "text-muted-foreground text-sm",
 						children: "Descubra o que os clientes dos parceiros estão buscando."
 					})]
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
-					"data-uid": "src/pages/NeedsListPage.tsx:35:9",
+					"data-uid": "src/pages/NeedsListPage.tsx:49:9",
 					"data-prohibitions": "[]",
-					className: "gold-gradient w-full sm:w-auto",
+					className: "gold-gradient text-black w-full sm:w-auto",
+					onClick: handleAddMockNeed,
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Plus, {
-						"data-uid": "src/pages/NeedsListPage.tsx:36:11",
+						"data-uid": "src/pages/NeedsListPage.tsx:50:11",
 						"data-prohibitions": "[editContent]",
-						className: "w-4 h-4 mr-2 text-black"
+						className: "w-4 h-4 mr-2"
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-						"data-uid": "src/pages/NeedsListPage.tsx:37:11",
+						"data-uid": "src/pages/NeedsListPage.tsx:51:11",
 						"data-prohibitions": "[]",
-						className: "text-black font-medium",
+						className: "font-medium",
 						children: "Nova Demanda"
 					})]
 				})]
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				"data-uid": "src/pages/NeedsListPage.tsx:41:7",
+				"data-uid": "src/pages/NeedsListPage.tsx:55:7",
 				"data-prohibitions": "[]",
 				className: "flex flex-col sm:flex-row gap-4 p-4 bg-card rounded-lg border border-border",
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					"data-uid": "src/pages/NeedsListPage.tsx:42:9",
+					"data-uid": "src/pages/NeedsListPage.tsx:56:9",
 					"data-prohibitions": "[]",
 					className: "relative flex-1",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Search, {
-						"data-uid": "src/pages/NeedsListPage.tsx:43:11",
+						"data-uid": "src/pages/NeedsListPage.tsx:57:11",
 						"data-prohibitions": "[editContent]",
 						className: "absolute left-3 top-3 h-4 w-4 text-muted-foreground"
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
-						"data-uid": "src/pages/NeedsListPage.tsx:44:11",
+						"data-uid": "src/pages/NeedsListPage.tsx:58:11",
 						"data-prohibitions": "[editContent]",
 						placeholder: "Buscar demandas...",
 						className: "pl-9 bg-background border-border text-white h-10"
 					})]
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Select, {
-					"data-uid": "src/pages/NeedsListPage.tsx:49:9",
+					"data-uid": "src/pages/NeedsListPage.tsx:63:9",
 					"data-prohibitions": "[]",
 					value: bairro,
 					onValueChange: setBairro,
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectTrigger, {
-						"data-uid": "src/pages/NeedsListPage.tsx:50:11",
+						"data-uid": "src/pages/NeedsListPage.tsx:64:11",
 						"data-prohibitions": "[]",
 						className: "w-full sm:w-[200px] bg-background border-border",
 						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectValue, {
-							"data-uid": "src/pages/NeedsListPage.tsx:51:13",
+							"data-uid": "src/pages/NeedsListPage.tsx:65:13",
 							"data-prohibitions": "[editContent]",
 							placeholder: "Bairro / Região"
 						})
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(SelectContent, {
-						"data-uid": "src/pages/NeedsListPage.tsx:53:11",
+						"data-uid": "src/pages/NeedsListPage.tsx:67:11",
 						"data-prohibitions": "[]",
 						children: [
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectItem, {
-								"data-uid": "src/pages/NeedsListPage.tsx:54:13",
+								"data-uid": "src/pages/NeedsListPage.tsx:68:13",
 								"data-prohibitions": "[]",
 								value: "all",
 								children: "Todas as Regiões"
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectItem, {
-								"data-uid": "src/pages/NeedsListPage.tsx:55:13",
+								"data-uid": "src/pages/NeedsListPage.tsx:69:13",
 								"data-prohibitions": "[]",
 								value: "Barra da Tijuca",
 								children: "Barra da Tijuca"
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectItem, {
-								"data-uid": "src/pages/NeedsListPage.tsx:56:13",
+								"data-uid": "src/pages/NeedsListPage.tsx:70:13",
 								"data-prohibitions": "[]",
 								value: "Jardim Oceânico",
 								children: "Jardim Oceânico"
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectItem, {
-								"data-uid": "src/pages/NeedsListPage.tsx:57:13",
+								"data-uid": "src/pages/NeedsListPage.tsx:71:13",
 								"data-prohibitions": "[]",
 								value: "Santa Mônica",
 								children: "Santa Mônica"
@@ -37211,38 +36724,38 @@ function NeedsListPage() {
 				})]
 			}),
 			filteredNeeds.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-				"data-uid": "src/pages/NeedsListPage.tsx:63:9",
+				"data-uid": "src/pages/NeedsListPage.tsx:77:9",
 				"data-prohibitions": "[]",
 				className: "text-center py-12 text-muted-foreground bg-card border border-border rounded-xl",
 				children: "Nenhuma demanda encontrada."
 			}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-				"data-uid": "src/pages/NeedsListPage.tsx:67:9",
+				"data-uid": "src/pages/NeedsListPage.tsx:81:9",
 				"data-prohibitions": "[editContent]",
 				className: "grid sm:grid-cols-2 lg:grid-cols-3 gap-6",
 				children: filteredNeeds.map((need, i) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-					"data-uid": "src/pages/NeedsListPage.tsx:69:13",
+					"data-uid": "src/pages/NeedsListPage.tsx:83:13",
 					"data-prohibitions": "[]",
 					className: "animate-fade-in-up",
 					style: { animationDelay: `${i * 100}ms` },
 					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(NeedCard, {
-						"data-uid": "src/pages/NeedsListPage.tsx:74:15",
+						"data-uid": "src/pages/NeedsListPage.tsx:88:15",
 						"data-prohibitions": "[editContent]",
 						need,
 						action: need.ownerId !== user?.id ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
-							"data-uid": "src/pages/NeedsListPage.tsx:78:21",
+							"data-uid": "src/pages/NeedsListPage.tsx:92:21",
 							"data-prohibitions": "[]",
-							className: "w-full bg-background hover:bg-primary hover:text-black text-white border border-primary/50 transition-colors mt-4",
+							className: "w-full gold-outline mt-4 font-semibold",
 							onClick: () => setSelectedNeed(need),
 							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link, {
-								"data-uid": "src/pages/NeedsListPage.tsx:82:23",
+								"data-uid": "src/pages/NeedsListPage.tsx:96:23",
 								"data-prohibitions": "[editContent]",
 								className: "w-4 h-4 mr-2"
 							}), "Vincular Imóvel"]
 						}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-							"data-uid": "src/pages/NeedsListPage.tsx:86:21",
+							"data-uid": "src/pages/NeedsListPage.tsx:100:21",
 							"data-prohibitions": "[]",
 							variant: "secondary",
-							className: "w-full mt-4",
+							className: "w-full mt-4 bg-secondary/50 text-muted-foreground cursor-not-allowed",
 							disabled: true,
 							children: "Sua Demanda"
 						})
@@ -37250,7 +36763,7 @@ function NeedsListPage() {
 				}, need.id))
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(MatchModal, {
-				"data-uid": "src/pages/NeedsListPage.tsx:97:7",
+				"data-uid": "src/pages/NeedsListPage.tsx:115:7",
 				"data-prohibitions": "[editContent]",
 				need: selectedNeed,
 				isOpen: !!selectedNeed,
@@ -37301,17 +36814,17 @@ function MatchesListPage() {
 		}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 			"data-uid": "src/pages/MatchesListPage.tsx:39:7",
 			"data-prohibitions": "[editContent]",
-			className: "flex-1 flex gap-6 overflow-x-auto pb-4",
+			className: "flex-1 flex gap-6 overflow-x-auto pb-4 px-2 snap-x",
 			children: COLUMNS.map((col) => {
 				const colMatches = matches.filter((m) => m.status === col);
 				return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 					"data-uid": "src/pages/MatchesListPage.tsx:44:13",
 					"data-prohibitions": "[editContent]",
-					className: `flex-shrink-0 w-80 flex flex-col bg-card rounded-xl border ${col === "Fechado" ? "border-primary/50" : "border-border"}`,
+					className: `snap-center flex-shrink-0 w-80 flex flex-col bg-card rounded-2xl border ${col === "Fechado" ? "border-primary shadow-[0_0_15px_rgba(201,168,76,0.15)]" : "border-border/50 shadow-sm"} overflow-hidden transition-all duration-300`,
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 						"data-uid": "src/pages/MatchesListPage.tsx:48:15",
 						"data-prohibitions": "[editContent]",
-						className: "p-4 border-b border-border flex justify-between items-center bg-black/20 rounded-t-xl",
+						className: "p-4 border-b border-border/50 flex justify-between items-center bg-secondary/30",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
 							"data-uid": "src/pages/MatchesListPage.tsx:49:17",
 							"data-prohibitions": "[editContent]",
@@ -37321,13 +36834,13 @@ function MatchesListPage() {
 							"data-uid": "src/pages/MatchesListPage.tsx:54:17",
 							"data-prohibitions": "[editContent]",
 							variant: "secondary",
-							className: "bg-secondary text-muted-foreground",
+							className: "bg-background/50 text-muted-foreground",
 							children: colMatches.length
 						})]
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 						"data-uid": "src/pages/MatchesListPage.tsx:58:15",
 						"data-prohibitions": "[editContent]",
-						className: "flex-1 p-3 space-y-3 overflow-y-auto",
+						className: "flex-1 p-3 space-y-3 overflow-y-auto min-h-[300px]",
 						children: [colMatches.map((match) => {
 							const need = needs.find((n) => n.id === match.needId);
 							const listing = listings.find((l) => l.id === match.listingId);
@@ -37335,7 +36848,7 @@ function MatchesListPage() {
 							return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Card, {
 								"data-uid": "src/pages/MatchesListPage.tsx:65:21",
 								"data-prohibitions": "[editContent]",
-								className: "bg-secondary border-border hover:border-primary/50 transition-colors",
+								className: "bg-background border-border hover:border-primary/40 hover:shadow-md transition-all group",
 								children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardContent, {
 									"data-uid": "src/pages/MatchesListPage.tsx:69:23",
 									"data-prohibitions": "[editContent]",
@@ -37348,73 +36861,73 @@ function MatchesListPage() {
 											children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
 												"data-uid": "src/pages/MatchesListPage.tsx:71:27",
 												"data-prohibitions": "[]",
-												className: "text-xs text-primary font-medium",
+												className: "text-xs text-primary font-medium flex items-center gap-1",
 												children: "Demanda"
 											}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-												"data-uid": "src/pages/MatchesListPage.tsx:72:27",
+												"data-uid": "src/pages/MatchesListPage.tsx:74:27",
 												"data-prohibitions": "[editContent]",
 												className: "text-sm text-white line-clamp-1",
 												children: need.title
 											})]
 										}),
 										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-											"data-uid": "src/pages/MatchesListPage.tsx:74:25",
+											"data-uid": "src/pages/MatchesListPage.tsx:76:25",
 											"data-prohibitions": "[editContent]",
 											className: "w-full h-px bg-border"
 										}),
 										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-											"data-uid": "src/pages/MatchesListPage.tsx:75:25",
+											"data-uid": "src/pages/MatchesListPage.tsx:77:25",
 											"data-prohibitions": "[editContent]",
 											className: "space-y-1",
 											children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-												"data-uid": "src/pages/MatchesListPage.tsx:76:27",
+												"data-uid": "src/pages/MatchesListPage.tsx:78:27",
 												"data-prohibitions": "[]",
-												className: "text-xs text-primary font-medium",
+												className: "text-xs text-primary font-medium flex items-center gap-1",
 												children: "Imóvel"
 											}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-												"data-uid": "src/pages/MatchesListPage.tsx:77:27",
+												"data-uid": "src/pages/MatchesListPage.tsx:81:27",
 												"data-prohibitions": "[editContent]",
 												className: "text-sm text-white line-clamp-1",
 												children: listing.title
 											})]
 										}),
 										col === "Fechado" && match.finalValue && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-											"data-uid": "src/pages/MatchesListPage.tsx:80:27",
+											"data-uid": "src/pages/MatchesListPage.tsx:85:27",
 											"data-prohibitions": "[editContent]",
-											className: "pt-2",
+											className: "pt-2 animate-fade-in-up",
 											children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Badge, {
-												"data-uid": "src/pages/MatchesListPage.tsx:81:29",
+												"data-uid": "src/pages/MatchesListPage.tsx:86:29",
 												"data-prohibitions": "[editContent]",
-												className: "w-full justify-center bg-primary/20 text-primary hover:bg-primary/30",
+												className: "w-full justify-center bg-primary/20 text-primary hover:bg-primary/30 py-1.5",
 												children: ["VGV: R$ ", match.finalValue]
 											})
 										}),
 										col !== "Fechado" && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-											"data-uid": "src/pages/MatchesListPage.tsx:87:27",
+											"data-uid": "src/pages/MatchesListPage.tsx:93:27",
 											"data-prohibitions": "[editContent]",
 											className: "flex justify-between items-center pt-2 gap-2",
 											children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-												"data-uid": "src/pages/MatchesListPage.tsx:88:29",
+												"data-uid": "src/pages/MatchesListPage.tsx:94:29",
 												"data-prohibitions": "[]",
 												variant: "outline",
 												size: "sm",
-												className: "flex-1 h-8 border-border bg-background hover:bg-muted text-muted-foreground",
+												className: "flex-1 h-8 border-border bg-transparent hover:bg-secondary text-muted-foreground transition-colors",
 												onClick: () => handleRegress(match.id, match.status),
 												disabled: col === "Novo",
 												children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ChevronLeft, {
-													"data-uid": "src/pages/MatchesListPage.tsx:95:31",
+													"data-uid": "src/pages/MatchesListPage.tsx:101:31",
 													"data-prohibitions": "[editContent]",
 													className: "w-4 h-4"
 												})
 											}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-												"data-uid": "src/pages/MatchesListPage.tsx:97:29",
+												"data-uid": "src/pages/MatchesListPage.tsx:103:29",
 												"data-prohibitions": "[editContent]",
 												variant: "default",
 												size: "sm",
-												className: "flex-1 h-8 bg-primary/20 text-primary hover:bg-primary/30",
+												className: `flex-1 h-8 transition-all ${col === "Proposta" ? "gold-gradient text-black" : "bg-primary/10 text-primary hover:bg-primary/20"}`,
 												onClick: () => handleAdvance(match.id, match.status),
 												children: col === "Proposta" ? "Fechar" : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ChevronRight, {
-													"data-uid": "src/pages/MatchesListPage.tsx:103:64",
+													"data-uid": "src/pages/MatchesListPage.tsx:109:64",
 													"data-prohibitions": "[editContent]",
 													className: "w-4 h-4"
 												})
@@ -37423,11 +36936,20 @@ function MatchesListPage() {
 									]
 								})
 							}, match.id);
-						}), colMatches.length === 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-							"data-uid": "src/pages/MatchesListPage.tsx:112:19",
+						}), colMatches.length === 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							"data-uid": "src/pages/MatchesListPage.tsx:118:19",
 							"data-prohibitions": "[]",
-							className: "h-full flex items-center justify-center text-muted-foreground text-sm p-4 text-center border-2 border-dashed border-border rounded-lg",
-							children: "Nenhum negócio nesta etapa"
+							className: "h-full flex flex-col items-center justify-center text-muted-foreground text-sm p-4 text-center border-2 border-dashed border-border/50 rounded-lg opacity-50",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+								"data-uid": "src/pages/MatchesListPage.tsx:119:21",
+								"data-prohibitions": "[]",
+								children: "Nenhum negócio"
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+								"data-uid": "src/pages/MatchesListPage.tsx:120:21",
+								"data-prohibitions": "[]",
+								className: "text-xs",
+								children: "nesta etapa"
+							})]
 						})]
 					})]
 				}, col);
@@ -38079,165 +37601,169 @@ function AdminPage() {
 		creci: "12345-RJ",
 		ticket: "3M",
 		phone: "(21) 99999-1111"
+	}];
+	const waitlist = [{
+		id: 3,
+		name: "Lucas Pereira",
+		email: "lucas@pereira.com",
+		ticket: "800k",
+		region: "Zona Sul"
+	}, {
+		id: 4,
+		name: "Fernanda Costa",
+		email: "fernanda@costa.com",
+		ticket: "900k",
+		region: "Recreio"
+	}];
+	const suggestionsMock = [{
+		id: 1,
+		title: "Filtro por Condomínio",
+		author: "João Corretor",
+		votes: 12,
+		status: "Planejado"
 	}, {
 		id: 2,
-		name: "Ana Souza",
-		email: "ana@souza.com",
-		creci: "54321-RJ",
-		ticket: "5M",
-		phone: "(21) 98888-2222"
+		title: "Integração RD Station",
+		author: "Maria Santos",
+		votes: 8,
+		status: "Em Análise"
 	}];
-	const mockComms = [
-		{
-			id: 1,
-			to: "João Corretor",
-			type: "Lembrete de Inatividade (14 dias)",
-			status: "Enviado",
-			time: "10 min atrás"
-		},
-		{
-			id: 2,
-			to: "Maria Santos",
-			type: "Report Quinzenal",
-			status: "Lido",
-			time: "1 hora atrás"
-		},
-		{
-			id: 3,
-			to: "Carlos Mendes",
-			type: "Boas-vindas",
-			status: "Pendente",
-			time: "2 horas atrás"
-		}
-	];
 	const handleAction = async (name, email, action) => {
 		if (action === "approved") {
-			toast.success(`Solicitação de ${name} aprovada. Enviando link mágico...`);
-			await sendTransactionalEmail("Magic Link Email", {
+			toast.success(`Solicitação de ${name} aprovada. Enviando e-mails...`);
+			await sendTransactionalEmail("Welcome Email", {
 				to: email,
 				name
 			});
 			logEvent("Aprovação de Usuário", `O candidato ${name} foi aprovado.`);
 		} else {
-			toast.error(`Solicitação de ${name} rejeitada. E-mail de feedback enviado.`);
-			await sendTransactionalEmail("Rejection Feedback", {
-				to: email,
-				name
-			});
+			toast.error(`Solicitação de ${name} rejeitada.`);
 			logEvent("Rejeição de Usuário", `O candidato ${name} foi rejeitado.`);
 		}
 	};
-	const handleTriggerInactivity = () => {
-		simulateInactivityReminders();
-		toast.success("Job de inatividade executado. Notificações na fila.");
-		logEvent("Cron Job", "Verificação de inatividade de 14 dias disparada manualmente.");
+	const handleBulkInvite = () => {
+		toast.success("Convites em massa enviados para a lista de espera!");
+		logEvent("Admin Action", "Bulk invite enviado para waitlist.");
 	};
-	const handleTriggerReport = () => {
-		simulateBiWeeklyReport();
-		toast.success("Report Quinzenal gerado e enviado aos membros ativos.");
-		logEvent("Cron Job", "Report quinzenal de inteligência de mercado disparado manualmente.");
+	const handleReward = (member) => {
+		toast.success(`Recompensa (1 mês grátis) creditada para ${member}!`);
+		logEvent("Admin Action", `Recompensa de sugestão concedida a ${member}.`);
 	};
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-		"data-uid": "src/pages/AdminPage.tsx:86:5",
+		"data-uid": "src/pages/AdminPage.tsx:85:5",
 		"data-prohibitions": "[editContent]",
-		className: "space-y-6 animate-fade-in-up",
+		className: "space-y-6 animate-fade-in-up pb-8",
 		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-			"data-uid": "src/pages/AdminPage.tsx:87:7",
+			"data-uid": "src/pages/AdminPage.tsx:86:7",
 			"data-prohibitions": "[]",
 			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
-				"data-uid": "src/pages/AdminPage.tsx:88:9",
+				"data-uid": "src/pages/AdminPage.tsx:87:9",
 				"data-prohibitions": "[]",
 				className: "text-2xl font-bold text-white",
 				children: "Painel Administrativo"
 			}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-				"data-uid": "src/pages/AdminPage.tsx:89:9",
+				"data-uid": "src/pages/AdminPage.tsx:88:9",
 				"data-prohibitions": "[]",
 				className: "text-muted-foreground text-sm",
 				children: "Gerencie o acesso e acompanhe a saúde do ecossistema."
 			})]
 		}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Tabs, {
-			"data-uid": "src/pages/AdminPage.tsx:94:7",
+			"data-uid": "src/pages/AdminPage.tsx:93:7",
 			"data-prohibitions": "[editContent]",
 			defaultValue: "requests",
 			className: "w-full",
 			children: [
 				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(TabsList, {
-					"data-uid": "src/pages/AdminPage.tsx:95:9",
+					"data-uid": "src/pages/AdminPage.tsx:94:9",
 					"data-prohibitions": "[]",
-					className: "bg-card border border-border w-full justify-start rounded-none sm:rounded-lg overflow-x-auto h-auto p-1",
+					className: "bg-card border border-border w-full flex-wrap justify-start rounded-none sm:rounded-lg h-auto p-1 gap-1",
 					children: [
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TabsTrigger, {
-							"data-uid": "src/pages/AdminPage.tsx:96:11",
+							"data-uid": "src/pages/AdminPage.tsx:95:11",
 							"data-prohibitions": "[]",
 							value: "requests",
-							className: "data-[state=active]:bg-secondary data-[state=active]:text-primary py-2 px-4",
+							className: "data-[state=active]:bg-secondary data-[state=active]:text-primary",
 							children: "Solicitações"
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TabsTrigger, {
-							"data-uid": "src/pages/AdminPage.tsx:102:11",
+							"data-uid": "src/pages/AdminPage.tsx:101:11",
+							"data-prohibitions": "[]",
+							value: "waitlist",
+							className: "data-[state=active]:bg-secondary data-[state=active]:text-primary",
+							children: "Lista de Espera"
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TabsTrigger, {
+							"data-uid": "src/pages/AdminPage.tsx:107:11",
+							"data-prohibitions": "[]",
+							value: "suggestions",
+							className: "data-[state=active]:bg-secondary data-[state=active]:text-primary",
+							children: "Sugestões"
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TabsTrigger, {
+							"data-uid": "src/pages/AdminPage.tsx:113:11",
+							"data-prohibitions": "[]",
+							value: "reviews",
+							className: "data-[state=active]:bg-secondary data-[state=active]:text-primary",
+							children: "Review Quinzenal"
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TabsTrigger, {
+							"data-uid": "src/pages/AdminPage.tsx:119:11",
 							"data-prohibitions": "[]",
 							value: "comms",
-							className: "data-[state=active]:bg-secondary data-[state=active]:text-primary py-2 px-4",
-							children: "Comunicações"
+							className: "data-[state=active]:bg-secondary data-[state=active]:text-primary",
+							children: "Comms"
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TabsTrigger, {
-							"data-uid": "src/pages/AdminPage.tsx:108:11",
-							"data-prohibitions": "[]",
-							value: "automations",
-							className: "data-[state=active]:bg-secondary data-[state=active]:text-primary py-2 px-4",
-							children: "Automações"
-						}),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TabsTrigger, {
-							"data-uid": "src/pages/AdminPage.tsx:114:11",
+							"data-uid": "src/pages/AdminPage.tsx:125:11",
 							"data-prohibitions": "[]",
 							value: "logs",
-							className: "data-[state=active]:bg-secondary data-[state=active]:text-primary py-2 px-4",
+							className: "data-[state=active]:bg-secondary data-[state=active]:text-primary",
 							children: "Logs"
 						})
 					]
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TabsContent, {
-					"data-uid": "src/pages/AdminPage.tsx:122:9",
+					"data-uid": "src/pages/AdminPage.tsx:133:9",
 					"data-prohibitions": "[editContent]",
 					value: "requests",
 					className: "mt-6 space-y-4",
 					children: requests.map((req) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Card, {
-						"data-uid": "src/pages/AdminPage.tsx:124:13",
+						"data-uid": "src/pages/AdminPage.tsx:135:13",
 						"data-prohibitions": "[editContent]",
 						className: "bg-secondary border-border",
 						children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardContent, {
-							"data-uid": "src/pages/AdminPage.tsx:125:15",
+							"data-uid": "src/pages/AdminPage.tsx:136:15",
 							"data-prohibitions": "[editContent]",
 							className: "p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4",
 							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								"data-uid": "src/pages/AdminPage.tsx:126:17",
+								"data-uid": "src/pages/AdminPage.tsx:137:17",
 								"data-prohibitions": "[editContent]",
 								className: "flex items-center gap-4",
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Avatar, {
-									"data-uid": "src/pages/AdminPage.tsx:127:19",
+									"data-uid": "src/pages/AdminPage.tsx:138:19",
 									"data-prohibitions": "[editContent]",
 									className: "h-12 w-12",
 									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(AvatarImage, {
-										"data-uid": "src/pages/AdminPage.tsx:128:21",
+										"data-uid": "src/pages/AdminPage.tsx:139:21",
 										"data-prohibitions": "[editContent]",
 										src: `https://img.usecurling.com/ppl/thumbnail?seed=${req.id}`
 									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(AvatarFallback, {
-										"data-uid": "src/pages/AdminPage.tsx:129:21",
+										"data-uid": "src/pages/AdminPage.tsx:140:21",
 										"data-prohibitions": "[editContent]",
 										children: req.name[0]
 									})]
 								}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-									"data-uid": "src/pages/AdminPage.tsx:131:19",
+									"data-uid": "src/pages/AdminPage.tsx:142:19",
 									"data-prohibitions": "[editContent]",
 									children: [
 										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
-											"data-uid": "src/pages/AdminPage.tsx:132:21",
+											"data-uid": "src/pages/AdminPage.tsx:143:21",
 											"data-prohibitions": "[editContent]",
 											className: "font-semibold text-white text-lg",
 											children: req.name
 										}),
 										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
-											"data-uid": "src/pages/AdminPage.tsx:133:21",
+											"data-uid": "src/pages/AdminPage.tsx:144:21",
 											"data-prohibitions": "[editContent]",
 											className: "text-sm text-muted-foreground",
 											children: [
@@ -38247,17 +37773,17 @@ function AdminPage() {
 											]
 										}),
 										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-											"data-uid": "src/pages/AdminPage.tsx:136:21",
+											"data-uid": "src/pages/AdminPage.tsx:147:21",
 											"data-prohibitions": "[editContent]",
 											className: "flex gap-3 mt-2",
 											children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Badge, {
-												"data-uid": "src/pages/AdminPage.tsx:137:23",
+												"data-uid": "src/pages/AdminPage.tsx:148:23",
 												"data-prohibitions": "[editContent]",
 												variant: "outline",
 												className: "border-primary/50 text-primary",
 												children: ["CRECI: ", req.creci]
 											}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Badge, {
-												"data-uid": "src/pages/AdminPage.tsx:140:23",
+												"data-uid": "src/pages/AdminPage.tsx:151:23",
 												"data-prohibitions": "[editContent]",
 												variant: "outline",
 												className: "border-border text-white",
@@ -38267,27 +37793,27 @@ function AdminPage() {
 									]
 								})]
 							}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								"data-uid": "src/pages/AdminPage.tsx:146:17",
+								"data-uid": "src/pages/AdminPage.tsx:157:17",
 								"data-prohibitions": "[]",
 								className: "flex gap-2 w-full md:w-auto mt-4 md:mt-0",
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
-									"data-uid": "src/pages/AdminPage.tsx:147:19",
+									"data-uid": "src/pages/AdminPage.tsx:158:19",
 									"data-prohibitions": "[]",
 									variant: "outline",
 									className: "flex-1 md:flex-none border-red-500/50 text-red-500 hover:bg-red-500/10",
 									onClick: () => handleAction(req.name, req.email, "rejected"),
 									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(X, {
-										"data-uid": "src/pages/AdminPage.tsx:152:21",
+										"data-uid": "src/pages/AdminPage.tsx:163:21",
 										"data-prohibitions": "[editContent]",
 										className: "w-4 h-4 mr-2"
 									}), " Rejeitar"]
 								}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
-									"data-uid": "src/pages/AdminPage.tsx:154:19",
+									"data-uid": "src/pages/AdminPage.tsx:165:19",
 									"data-prohibitions": "[]",
 									className: "flex-1 md:flex-none bg-green-500/20 text-green-500 hover:bg-green-500/30 border-none",
 									onClick: () => handleAction(req.name, req.email, "approved"),
 									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Check, {
-										"data-uid": "src/pages/AdminPage.tsx:158:21",
+										"data-uid": "src/pages/AdminPage.tsx:169:21",
 										"data-prohibitions": "[editContent]",
 										className: "w-4 h-4 mr-2"
 									}), " Aprovar"]
@@ -38296,220 +37822,359 @@ function AdminPage() {
 						})
 					}, req.id))
 				}),
-				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TabsContent, {
-					"data-uid": "src/pages/AdminPage.tsx:166:9",
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(TabsContent, {
+					"data-uid": "src/pages/AdminPage.tsx:177:9",
 					"data-prohibitions": "[editContent]",
+					value: "waitlist",
+					className: "mt-6 space-y-4",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						"data-uid": "src/pages/AdminPage.tsx:178:11",
+						"data-prohibitions": "[editContent]",
+						className: "flex justify-between items-center bg-card p-4 rounded-lg border border-border mb-4",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							"data-uid": "src/pages/AdminPage.tsx:179:13",
+							"data-prohibitions": "[editContent]",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
+								"data-uid": "src/pages/AdminPage.tsx:180:15",
+								"data-prohibitions": "[]",
+								className: "text-white font-medium",
+								children: "Fila de Espera"
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
+								"data-uid": "src/pages/AdminPage.tsx:181:15",
+								"data-prohibitions": "[editContent]",
+								className: "text-sm text-muted-foreground",
+								children: [waitlist.length, " corretores aguardando liberação regional."]
+							})]
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
+							"data-uid": "src/pages/AdminPage.tsx:185:13",
+							"data-prohibitions": "[]",
+							onClick: handleBulkInvite,
+							className: "gold-gradient text-black",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Mail, {
+								"data-uid": "src/pages/AdminPage.tsx:186:15",
+								"data-prohibitions": "[editContent]",
+								className: "w-4 h-4 mr-2"
+							}), " Disparar Convites"]
+						})]
+					}), waitlist.map((req) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Card, {
+						"data-uid": "src/pages/AdminPage.tsx:190:13",
+						"data-prohibitions": "[editContent]",
+						className: "bg-secondary border-border opacity-80 hover:opacity-100 transition-opacity",
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardContent, {
+							"data-uid": "src/pages/AdminPage.tsx:194:15",
+							"data-prohibitions": "[editContent]",
+							className: "p-4 flex items-center justify-between",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								"data-uid": "src/pages/AdminPage.tsx:195:17",
+								"data-prohibitions": "[editContent]",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
+									"data-uid": "src/pages/AdminPage.tsx:196:19",
+									"data-prohibitions": "[editContent]",
+									className: "font-medium text-white",
+									children: req.name
+								}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
+									"data-uid": "src/pages/AdminPage.tsx:197:19",
+									"data-prohibitions": "[editContent]",
+									className: "text-sm text-muted-foreground",
+									children: [
+										req.email,
+										" • ",
+										req.region
+									]
+								})]
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Badge, {
+								"data-uid": "src/pages/AdminPage.tsx:201:17",
+								"data-prohibitions": "[editContent]",
+								variant: "outline",
+								className: "border-border text-muted-foreground",
+								children: ["Ticket: ", req.ticket]
+							})]
+						})
+					}, req.id))]
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TabsContent, {
+					"data-uid": "src/pages/AdminPage.tsx:209:9",
+					"data-prohibitions": "[editContent]",
+					value: "suggestions",
+					className: "mt-6 space-y-4",
+					children: suggestionsMock.map((sug) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Card, {
+						"data-uid": "src/pages/AdminPage.tsx:211:13",
+						"data-prohibitions": "[editContent]",
+						className: "bg-secondary border-border",
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardContent, {
+							"data-uid": "src/pages/AdminPage.tsx:212:15",
+							"data-prohibitions": "[editContent]",
+							className: "p-4 flex items-center justify-between gap-4",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								"data-uid": "src/pages/AdminPage.tsx:213:17",
+								"data-prohibitions": "[editContent]",
+								className: "flex flex-col",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+									"data-uid": "src/pages/AdminPage.tsx:214:19",
+									"data-prohibitions": "[editContent]",
+									className: "flex items-center gap-2",
+									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
+										"data-uid": "src/pages/AdminPage.tsx:215:21",
+										"data-prohibitions": "[editContent]",
+										className: "font-semibold text-white",
+										children: sug.title
+									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Badge, {
+										"data-uid": "src/pages/AdminPage.tsx:216:21",
+										"data-prohibitions": "[editContent]",
+										variant: "outline",
+										className: "border-primary/30 text-primary text-[10px]",
+										children: sug.status
+									})]
+								}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
+									"data-uid": "src/pages/AdminPage.tsx:220:19",
+									"data-prohibitions": "[editContent]",
+									className: "text-sm text-muted-foreground mt-1",
+									children: [
+										"Por: ",
+										sug.author,
+										" • ",
+										sug.votes,
+										" Votos"
+									]
+								})]
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
+								"data-uid": "src/pages/AdminPage.tsx:224:17",
+								"data-prohibitions": "[]",
+								variant: "outline",
+								className: "border-primary/50 text-primary hover:bg-primary/10 shrink-0",
+								onClick: () => handleReward(sug.author),
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Trophy, {
+									"data-uid": "src/pages/AdminPage.tsx:229:19",
+									"data-prohibitions": "[editContent]",
+									className: "w-4 h-4 mr-2"
+								}), " Recompensar"]
+							})]
+						})
+					}, sug.id))
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TabsContent, {
+					"data-uid": "src/pages/AdminPage.tsx:236:9",
+					"data-prohibitions": "[]",
+					value: "reviews",
+					className: "mt-6",
+					children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
+						"data-uid": "src/pages/AdminPage.tsx:237:11",
+						"data-prohibitions": "[]",
+						className: "bg-card border-border",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardHeader, {
+							"data-uid": "src/pages/AdminPage.tsx:238:13",
+							"data-prohibitions": "[]",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardTitle, {
+								"data-uid": "src/pages/AdminPage.tsx:239:15",
+								"data-prohibitions": "[]",
+								className: "text-lg text-white flex items-center gap-2",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Activity, {
+									"data-uid": "src/pages/AdminPage.tsx:240:17",
+									"data-prohibitions": "[editContent]",
+									className: "w-5 h-5 text-primary"
+								}), " Saúde da Plataforma"]
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardDescription, {
+								"data-uid": "src/pages/AdminPage.tsx:242:15",
+								"data-prohibitions": "[]",
+								children: "Métricas quinzenais de adoção e liquidez."
+							})]
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardContent, {
+							"data-uid": "src/pages/AdminPage.tsx:244:13",
+							"data-prohibitions": "[]",
+							className: "space-y-6",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								"data-uid": "src/pages/AdminPage.tsx:245:15",
+								"data-prohibitions": "[]",
+								className: "grid grid-cols-2 md:grid-cols-4 gap-4",
+								children: [
+									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+										"data-uid": "src/pages/AdminPage.tsx:246:17",
+										"data-prohibitions": "[]",
+										className: "bg-secondary p-4 rounded-lg border border-border",
+										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+											"data-uid": "src/pages/AdminPage.tsx:247:19",
+											"data-prohibitions": "[]",
+											className: "text-sm text-muted-foreground",
+											children: "Novos Membros"
+										}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+											"data-uid": "src/pages/AdminPage.tsx:248:19",
+											"data-prohibitions": "[]",
+											className: "text-2xl font-bold text-white",
+											children: "+12"
+										})]
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+										"data-uid": "src/pages/AdminPage.tsx:250:17",
+										"data-prohibitions": "[]",
+										className: "bg-secondary p-4 rounded-lg border border-border",
+										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+											"data-uid": "src/pages/AdminPage.tsx:251:19",
+											"data-prohibitions": "[]",
+											className: "text-sm text-muted-foreground",
+											children: "Matches Ativos"
+										}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+											"data-uid": "src/pages/AdminPage.tsx:252:19",
+											"data-prohibitions": "[]",
+											className: "text-2xl font-bold text-primary",
+											children: "45"
+										})]
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+										"data-uid": "src/pages/AdminPage.tsx:254:17",
+										"data-prohibitions": "[]",
+										className: "bg-secondary p-4 rounded-lg border border-border",
+										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+											"data-uid": "src/pages/AdminPage.tsx:255:19",
+											"data-prohibitions": "[]",
+											className: "text-sm text-muted-foreground",
+											children: "VGV Fechado"
+										}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+											"data-uid": "src/pages/AdminPage.tsx:256:19",
+											"data-prohibitions": "[]",
+											className: "text-2xl font-bold text-white",
+											children: "R$ 15M"
+										})]
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+										"data-uid": "src/pages/AdminPage.tsx:258:17",
+										"data-prohibitions": "[]",
+										className: "bg-secondary p-4 rounded-lg border border-border",
+										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+											"data-uid": "src/pages/AdminPage.tsx:259:19",
+											"data-prohibitions": "[]",
+											className: "text-sm text-muted-foreground",
+											children: "Conversão"
+										}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+											"data-uid": "src/pages/AdminPage.tsx:260:19",
+											"data-prohibitions": "[]",
+											className: "text-2xl font-bold text-white",
+											children: "18%"
+										})]
+									})
+								]
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+								"data-uid": "src/pages/AdminPage.tsx:263:15",
+								"data-prohibitions": "[]",
+								className: "w-full sm:w-auto mt-4 border-border text-muted-foreground bg-background",
+								variant: "outline",
+								onClick: () => {
+									simulateBiWeeklyReport();
+									toast.success("Report Gerado");
+								},
+								children: "Gerar Report e Enviar Lembretes"
+							})]
+						})]
+					})
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TabsContent, {
+					"data-uid": "src/pages/AdminPage.tsx:277:9",
+					"data-prohibitions": "[]",
 					value: "comms",
 					className: "mt-6",
 					children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
-						"data-uid": "src/pages/AdminPage.tsx:167:11",
-						"data-prohibitions": "[editContent]",
+						"data-uid": "src/pages/AdminPage.tsx:278:11",
+						"data-prohibitions": "[]",
 						className: "bg-card border-border",
-						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardHeader, {
-							"data-uid": "src/pages/AdminPage.tsx:168:13",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardHeader, {
+							"data-uid": "src/pages/AdminPage.tsx:279:13",
 							"data-prohibitions": "[]",
-							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardTitle, {
-								"data-uid": "src/pages/AdminPage.tsx:169:15",
+							children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardTitle, {
+								"data-uid": "src/pages/AdminPage.tsx:280:15",
 								"data-prohibitions": "[]",
 								className: "text-lg text-white flex items-center gap-2",
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Send, {
-									"data-uid": "src/pages/AdminPage.tsx:170:17",
+									"data-uid": "src/pages/AdminPage.tsx:281:17",
 									"data-prohibitions": "[editContent]",
 									className: "w-5 h-5 text-primary"
-								}), " Monitor de Transacionais"]
-							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardDescription, {
-								"data-uid": "src/pages/AdminPage.tsx:172:15",
-								"data-prohibitions": "[]",
-								children: "Status dos e-mails e notificações automatizadas do sistema."
-							})]
+								}), " Transacionais Recentes"]
+							})
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardContent, {
-							"data-uid": "src/pages/AdminPage.tsx:176:13",
-							"data-prohibitions": "[editContent]",
+							"data-uid": "src/pages/AdminPage.tsx:284:13",
+							"data-prohibitions": "[]",
 							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-								"data-uid": "src/pages/AdminPage.tsx:177:15",
-								"data-prohibitions": "[editContent]",
-								className: "space-y-4",
-								children: mockComms.map((comm) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-									"data-uid": "src/pages/AdminPage.tsx:179:19",
-									"data-prohibitions": "[editContent]",
+								"data-uid": "src/pages/AdminPage.tsx:285:15",
+								"data-prohibitions": "[]",
+								className: "space-y-3",
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+									"data-uid": "src/pages/AdminPage.tsx:286:17",
+									"data-prohibitions": "[]",
 									className: "flex justify-between items-center p-3 rounded-lg bg-background border border-border",
 									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-										"data-uid": "src/pages/AdminPage.tsx:183:21",
-										"data-prohibitions": "[editContent]",
+										"data-uid": "src/pages/AdminPage.tsx:287:19",
+										"data-prohibitions": "[]",
 										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-											"data-uid": "src/pages/AdminPage.tsx:184:23",
-											"data-prohibitions": "[editContent]",
-											className: "text-white font-medium",
-											children: comm.type
-										}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
-											"data-uid": "src/pages/AdminPage.tsx:185:23",
-											"data-prohibitions": "[editContent]",
-											className: "text-sm text-muted-foreground",
-											children: ["Para: ", comm.to]
-										})]
-									}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-										"data-uid": "src/pages/AdminPage.tsx:187:21",
-										"data-prohibitions": "[editContent]",
-										className: "text-right",
-										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Badge, {
-											"data-uid": "src/pages/AdminPage.tsx:188:23",
-											"data-prohibitions": "[editContent]",
-											variant: "outline",
-											className: comm.status === "Lido" ? "border-green-500 text-green-500" : comm.status === "Enviado" ? "border-primary text-primary" : "border-gray-500 text-gray-500",
-											children: comm.status
+											"data-uid": "src/pages/AdminPage.tsx:288:21",
+											"data-prohibitions": "[]",
+											className: "text-white font-medium text-sm",
+											children: "Lembrete de Inatividade (14 dias)"
 										}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-											"data-uid": "src/pages/AdminPage.tsx:200:23",
-											"data-prohibitions": "[editContent]",
-											className: "text-xs text-muted-foreground mt-1",
-											children: comm.time
+											"data-uid": "src/pages/AdminPage.tsx:291:21",
+											"data-prohibitions": "[]",
+											className: "text-xs text-muted-foreground",
+											children: "Para: João Corretor"
 										})]
+									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Badge, {
+										"data-uid": "src/pages/AdminPage.tsx:293:19",
+										"data-prohibitions": "[]",
+										variant: "outline",
+										className: "border-primary text-primary",
+										children: "Enviado"
 									})]
-								}, comm.id))
+								})
 							})
 						})]
 					})
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TabsContent, {
-					"data-uid": "src/pages/AdminPage.tsx:209:9",
-					"data-prohibitions": "[]",
-					value: "automations",
-					className: "mt-6",
-					children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
-						"data-uid": "src/pages/AdminPage.tsx:210:11",
-						"data-prohibitions": "[]",
-						className: "bg-card border-border",
-						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardHeader, {
-							"data-uid": "src/pages/AdminPage.tsx:211:13",
-							"data-prohibitions": "[]",
-							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardTitle, {
-								"data-uid": "src/pages/AdminPage.tsx:212:15",
-								"data-prohibitions": "[]",
-								className: "text-lg text-white flex items-center gap-2",
-								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Zap, {
-									"data-uid": "src/pages/AdminPage.tsx:213:17",
-									"data-prohibitions": "[editContent]",
-									className: "w-5 h-5 text-primary"
-								}), " Disparos Manuais (Cron Jobs)"]
-							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardDescription, {
-								"data-uid": "src/pages/AdminPage.tsx:215:15",
-								"data-prohibitions": "[]",
-								children: "Simule o comportamento dos cron jobs de engajamento do ecossistema."
-							})]
-						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardContent, {
-							"data-uid": "src/pages/AdminPage.tsx:219:13",
-							"data-prohibitions": "[]",
-							className: "space-y-6",
-							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								"data-uid": "src/pages/AdminPage.tsx:220:15",
-								"data-prohibitions": "[]",
-								className: "flex flex-col md:flex-row items-start md:items-center justify-between p-4 bg-secondary rounded-lg border border-border gap-4",
-								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-									"data-uid": "src/pages/AdminPage.tsx:221:17",
-									"data-prohibitions": "[]",
-									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h4", {
-										"data-uid": "src/pages/AdminPage.tsx:222:19",
-										"data-prohibitions": "[]",
-										className: "text-white font-medium",
-										children: "Lembretes de Inatividade"
-									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-										"data-uid": "src/pages/AdminPage.tsx:223:19",
-										"data-prohibitions": "[]",
-										className: "text-sm text-muted-foreground mt-1",
-										children: "Gatilho automático de e-mail para membros que não logaram ou atualizaram demandas nos últimos 14 dias."
-									})]
-								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-									"data-uid": "src/pages/AdminPage.tsx:228:17",
-									"data-prohibitions": "[]",
-									onClick: handleTriggerInactivity,
-									variant: "outline",
-									className: "border-primary text-primary hover:bg-primary/10 shrink-0",
-									children: "Disparar Verificação"
-								})]
-							}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								"data-uid": "src/pages/AdminPage.tsx:237:15",
-								"data-prohibitions": "[]",
-								className: "flex flex-col md:flex-row items-start md:items-center justify-between p-4 bg-secondary rounded-lg border border-border gap-4",
-								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-									"data-uid": "src/pages/AdminPage.tsx:238:17",
-									"data-prohibitions": "[]",
-									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h4", {
-										"data-uid": "src/pages/AdminPage.tsx:239:19",
-										"data-prohibitions": "[]",
-										className: "text-white font-medium",
-										children: "Report Quinzenal (Newsletter)"
-									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-										"data-uid": "src/pages/AdminPage.tsx:240:19",
-										"data-prohibitions": "[]",
-										className: "text-sm text-muted-foreground mt-1",
-										children: "Dispara o e-mail de resumo de mercado para todos os membros ativos com os últimos imóveis e demandas curadas."
-									})]
-								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-									"data-uid": "src/pages/AdminPage.tsx:245:17",
-									"data-prohibitions": "[]",
-									onClick: handleTriggerReport,
-									variant: "outline",
-									className: "border-primary text-primary hover:bg-primary/10 shrink-0",
-									children: "Gerar Report"
-								})]
-							})]
-						})]
-					})
-				}),
-				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TabsContent, {
-					"data-uid": "src/pages/AdminPage.tsx:257:9",
+					"data-uid": "src/pages/AdminPage.tsx:302:9",
 					"data-prohibitions": "[editContent]",
 					value: "logs",
 					className: "mt-6",
 					children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
-						"data-uid": "src/pages/AdminPage.tsx:258:11",
+						"data-uid": "src/pages/AdminPage.tsx:303:11",
 						"data-prohibitions": "[editContent]",
 						className: "bg-card border-border",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardHeader, {
-							"data-uid": "src/pages/AdminPage.tsx:259:13",
+							"data-uid": "src/pages/AdminPage.tsx:304:13",
 							"data-prohibitions": "[]",
 							children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardTitle, {
-								"data-uid": "src/pages/AdminPage.tsx:260:15",
+								"data-uid": "src/pages/AdminPage.tsx:305:15",
 								"data-prohibitions": "[]",
 								className: "text-lg text-white flex items-center gap-2",
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Activity, {
-									"data-uid": "src/pages/AdminPage.tsx:261:17",
+									"data-uid": "src/pages/AdminPage.tsx:306:17",
 									"data-prohibitions": "[editContent]",
 									className: "w-5 h-5 text-primary"
 								}), " Eventos do Sistema"]
 							})
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardContent, {
-							"data-uid": "src/pages/AdminPage.tsx:264:13",
+							"data-uid": "src/pages/AdminPage.tsx:309:13",
 							"data-prohibitions": "[editContent]",
-							children: logs.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-								"data-uid": "src/pages/AdminPage.tsx:266:17",
-								"data-prohibitions": "[]",
-								className: "text-muted-foreground text-center py-8",
-								children: "Nenhum evento registrado nesta sessão."
-							}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-								"data-uid": "src/pages/AdminPage.tsx:270:17",
+							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+								"data-uid": "src/pages/AdminPage.tsx:310:15",
 								"data-prohibitions": "[editContent]",
-								className: "space-y-4",
+								className: "space-y-3",
 								children: [...logs].reverse().map((log, i) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-									"data-uid": "src/pages/AdminPage.tsx:272:21",
+									"data-uid": "src/pages/AdminPage.tsx:312:19",
 									"data-prohibitions": "[editContent]",
 									className: "flex flex-col p-3 rounded-lg bg-background border border-border",
 									children: [
 										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-											"data-uid": "src/pages/AdminPage.tsx:276:23",
+											"data-uid": "src/pages/AdminPage.tsx:316:21",
 											"data-prohibitions": "[editContent]",
 											className: "text-primary text-sm font-semibold",
 											children: log.action
 										}),
 										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-											"data-uid": "src/pages/AdminPage.tsx:277:23",
+											"data-uid": "src/pages/AdminPage.tsx:317:21",
 											"data-prohibitions": "[editContent]",
 											className: "text-white text-sm mt-1",
 											children: log.details
 										}),
 										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-											"data-uid": "src/pages/AdminPage.tsx:278:23",
+											"data-uid": "src/pages/AdminPage.tsx:318:21",
 											"data-prohibitions": "[editContent]",
-											className: "text-xs text-muted-foreground mt-2",
+											className: "text-xs text-muted-foreground mt-1",
 											children: new Date(log.timestamp).toLocaleTimeString()
 										})
 									]
@@ -38619,21 +38284,25 @@ var TIER_DATA = {
 		color: "text-gray-400",
 		next: "Ambassador",
 		progress: 20,
-		benefits: ["Acesso ao Mural"]
+		benefits: [
+			"1 Imóvel, 1 Demanda",
+			"3 Matches por mês",
+			"Mural Público"
+		]
 	},
 	Ambassador: {
 		icon: Star,
 		color: "text-blue-400",
 		next: "Silver",
 		progress: 50,
-		benefits: ["Conexões ilimitadas", "Suporte VIP"]
+		benefits: ["Conexões ilimitadas", "Membros extras grátis"]
 	},
 	Silver: {
 		icon: Shield,
 		color: "text-gray-300",
 		next: "Gold",
 		progress: 80,
-		benefits: ["Destaque de imóveis", "Desconto em planos"]
+		benefits: ["Destaque de imóveis", "Desconto em planos (10%)"]
 	},
 	Gold: {
 		icon: Crown,
@@ -39321,4 +38990,4 @@ var App = () => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(AppProvider, {
 }));
 //#endregion
 
-//# sourceMappingURL=index-PUkuQY_G.js.map
+//# sourceMappingURL=index-B51FD98Z.js.map

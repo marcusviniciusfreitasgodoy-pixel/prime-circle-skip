@@ -49,10 +49,14 @@ interface AppState {
   matches: Match[]
   pageViews: { path: string; timestamp: string }[]
   logs: { action: string; details: string; timestamp: string }[]
+  planLimitModalOpen: boolean
+  setPlanLimitModalOpen: (open: boolean) => void
   login: (status: UserStatus) => void
   logout: () => void
   completeOnboarding: () => void
-  addMatch: (needId: string, listingId: string) => void
+  addListing: (listing: Partial<Listing>) => boolean
+  addNeed: (need: Partial<Need>) => boolean
+  addMatch: (needId: string, listingId: string) => boolean
   updateMatchStatus: (matchId: string, status: Match['status']) => void
   closeMatch: (matchId: string, finalValue: string) => void
   trackPageView: (path: string) => void
@@ -98,13 +102,14 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [matches, setMatches] = useState<Match[]>(initialMatches)
   const [pageViews, setPageViews] = useState<{ path: string; timestamp: string }[]>([])
   const [logs, setLogs] = useState<{ action: string; details: string; timestamp: string }[]>([])
+  const [planLimitModalOpen, setPlanLimitModalOpen] = useState(false)
 
   const login = (status: UserStatus) =>
     setUser({
       id: 'user1',
       name: 'João Corretor',
       status,
-      tier: 'Gold',
+      tier: 'None', // Simulating free tier by default to test limits
       avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=1',
       onboarded: status === 'admin' ? true : false,
       lastLogin: new Date().toISOString(),
@@ -124,12 +129,67 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setPageViews((prev) => [...prev, { path, timestamp: new Date().toISOString() }])
   }
 
+  const checkPlanLimits = (type: 'listings' | 'needs' | 'matches') => {
+    if (!user || user.tier !== 'None') return true // Ambassadors and paid plans have unlimited
+
+    if (type === 'listings') {
+      const myListings = listings.filter((l) => l.ownerId === user.id).length
+      if (myListings >= 1) return false
+    }
+    if (type === 'needs') {
+      const myNeeds = needs.filter((n) => n.ownerId === user.id).length
+      if (myNeeds >= 1) return false
+    }
+    if (type === 'matches') {
+      const myMatches = matches.length
+      if (myMatches >= 3) return false
+    }
+
+    return true
+  }
+
+  const addListing = (listing: Partial<Listing>) => {
+    if (!checkPlanLimits('listings')) {
+      setPlanLimitModalOpen(true)
+      return false
+    }
+    setListings((prev) => [
+      ...prev,
+      {
+        ...listing,
+        id: Date.now().toString(),
+        ownerId: user?.id || 'unknown',
+        status: 'Disponível',
+      } as Listing,
+    ])
+    logEvent('Imóvel Cadastrado', `Imóvel adicionado: ${listing.title}`)
+    return true
+  }
+
+  const addNeed = (need: Partial<Need>) => {
+    if (!checkPlanLimits('needs')) {
+      setPlanLimitModalOpen(true)
+      return false
+    }
+    setNeeds((prev) => [
+      ...prev,
+      { ...need, id: Date.now().toString(), ownerId: user?.id || 'unknown' } as Need,
+    ])
+    logEvent('Demanda Cadastrada', `Demanda adicionada: ${need.title}`)
+    return true
+  }
+
   const addMatch = (needId: string, listingId: string) => {
+    if (!checkPlanLimits('matches')) {
+      setPlanLimitModalOpen(true)
+      return false
+    }
     setMatches((prev) => [
       ...prev,
       { id: Date.now().toString(), needId, listingId, status: 'Novo' },
     ])
     logEvent('Match Criado', `Need: ${needId}, Listing: ${listingId}`)
+    return true
   }
 
   const updateMatchStatus = (id: string, status: Match['status']) => {
@@ -154,9 +214,13 @@ export function AppProvider({ children }: { children: ReactNode }) {
         matches,
         pageViews,
         logs,
+        planLimitModalOpen,
+        setPlanLimitModalOpen,
         login,
         logout,
         completeOnboarding,
+        addListing,
+        addNeed,
         addMatch,
         updateMatchStatus,
         closeMatch,

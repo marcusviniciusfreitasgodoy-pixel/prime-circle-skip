@@ -10,6 +10,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  FormDescription,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -50,10 +51,42 @@ export default function ApplyPage() {
   })
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    // 7-Point Auto-Approval Logic Validation
     const ticketValue = parseInt(values.ticket.replace(/\D/g, '')) || 0
     const isBarra = values.region.toLowerCase().includes('barra')
+    const hasValidPhone = values.phone.replace(/\D/g, '').length >= 10
+    const hasValidCreci = values.creci.length >= 4
+    const isUniqueEmail = true // Mock verification
+    const noPreviousRejection = true // Mock verification
+    const acceptedTerms = values.agreement === true
 
-    // Waitlist Logic based on minimum criteria
+    if (
+      isBarra &&
+      ticketValue >= 1000000 &&
+      hasValidPhone &&
+      hasValidCreci &&
+      isUniqueEmail &&
+      noPreviousRejection &&
+      acceptedTerms &&
+      values.referral
+    ) {
+      await sendTransactionalEmail('Application Received', {
+        to: values.email,
+        candidate: values.name,
+      })
+      await sendTransactionalEmail('Referral Confirmation', {
+        to: 'admin@primecircle.com',
+        candidate: values.name,
+        code: values.referral,
+      })
+      await sendTransactionalEmail('Welcome Email', { to: values.email, candidate: values.name })
+
+      login('approved')
+      toast.success('Aprovado! Critérios validados e indicação confirmada.')
+      navigate('/auth/confirm')
+      return
+    }
+
     if (!isBarra || ticketValue < 1000000) {
       if (!values.referral) {
         navigate('/apply/lista-de-espera')
@@ -61,16 +94,7 @@ export default function ApplyPage() {
       }
     }
 
-    // Trigger Referral Notification
-    if (values.referral) {
-      await sendTransactionalEmail('Indicator Notification', {
-        to: 'admin@primecircle.com',
-        candidate: values.name,
-        code: values.referral,
-      })
-    }
-
-    // Trigger Application Received Email
+    // Trigger Application Received Email for manual review
     await sendTransactionalEmail('Application Received', {
       to: values.email,
       candidate: values.name,
@@ -83,7 +107,7 @@ export default function ApplyPage() {
 
   return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4 py-12">
-      <div className="w-full max-w-md bg-card p-8 rounded-2xl border border-border shadow-2xl">
+      <div className="w-full max-w-md bg-card p-8 rounded-2xl border border-border shadow-elevation">
         <div className="flex flex-col items-center mb-8">
           <Crown className="w-10 h-10 text-primary mb-4" />
           <h1 className="text-2xl font-bold text-white text-center">Solicitar Acesso</h1>
@@ -186,7 +210,7 @@ export default function ApplyPage() {
                     <Input placeholder="Ex: CARLOS-123" {...field} className="bg-background" />
                   </FormControl>
                   <FormDescription className="text-xs">
-                    Acelera o processo de análise.
+                    Acelera o processo de análise e auto-aprovação.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -218,7 +242,7 @@ export default function ApplyPage() {
             />
             <Button
               type="submit"
-              className="w-full gold-gradient gold-glow h-12 text-lg mt-6 font-semibold"
+              className="w-full gold-gradient gold-glow h-12 text-lg mt-6 font-semibold text-black"
             >
               Enviar Solicitação
             </Button>

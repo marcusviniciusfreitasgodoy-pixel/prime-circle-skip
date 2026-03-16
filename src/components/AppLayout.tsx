@@ -24,6 +24,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import useAppStore from '@/stores/main'
 import { cn } from '@/lib/utils'
+import { PlanLimitModal } from '@/components/PlanLimitModal'
 
 export function AppLayout() {
   const { user, logout } = useAppStore()
@@ -150,6 +151,7 @@ export function AppLayout() {
           })}
         </div>
       </div>
+      <PlanLimitModal />
     </SidebarProvider>
   )
 }
