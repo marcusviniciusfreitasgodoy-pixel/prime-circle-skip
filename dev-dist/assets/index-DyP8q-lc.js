@@ -19585,84 +19585,88 @@ function ProblemSection() {
 					"data-uid": "src/components/home/ProblemSection.tsx:23:11",
 					"data-prohibitions": "[]",
 					className: "text-3xl md:text-5xl font-bold mb-6",
-					children: ["O mercado imobiliário tradicional ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-						"data-uid": "src/components/home/ProblemSection.tsx:24:47",
-						"data-prohibitions": "[]",
-						className: "text-primary",
-						children: "está quebrado"
-					})]
+					children: [
+						"O mercado imobiliário tradicional",
+						" ",
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+							"data-uid": "src/components/home/ProblemSection.tsx:25:13",
+							"data-prohibitions": "[]",
+							className: "text-primary",
+							children: "precisa ser mudado"
+						})
+					]
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-					"data-uid": "src/components/home/ProblemSection.tsx:26:11",
+					"data-uid": "src/components/home/ProblemSection.tsx:27:11",
 					"data-prohibitions": "[]",
 					className: "text-xl text-muted-foreground",
 					children: "A forma como os corretores fazem parcerias hoje é ineficiente e arriscada. Nós mudamos as regras do jogo para alta performance."
 				})]
 			}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-				"data-uid": "src/components/home/ProblemSection.tsx:32:9",
+				"data-uid": "src/components/home/ProblemSection.tsx:33:9",
 				"data-prohibitions": "[editContent]",
 				className: "grid md:grid-cols-3 gap-8",
 				children: points.map((point, i) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					"data-uid": "src/components/home/ProblemSection.tsx:34:13",
+					"data-uid": "src/components/home/ProblemSection.tsx:35:13",
 					"data-prohibitions": "[editContent]",
 					className: "bg-card border border-border/50 rounded-xl p-8 shadow-lg relative overflow-hidden group",
 					children: [
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-							"data-uid": "src/components/home/ProblemSection.tsx:38:15",
+							"data-uid": "src/components/home/ProblemSection.tsx:39:15",
 							"data-prohibitions": "[editContent]",
 							className: "absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-destructive/50 to-destructive"
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-							"data-uid": "src/components/home/ProblemSection.tsx:39:15",
+							"data-uid": "src/components/home/ProblemSection.tsx:40:15",
 							"data-prohibitions": "[editContent]",
 							className: "mb-8",
 							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								"data-uid": "src/components/home/ProblemSection.tsx:40:17",
+								"data-uid": "src/components/home/ProblemSection.tsx:41:17",
 								"data-prohibitions": "[]",
 								className: "flex items-center gap-3 mb-4 text-destructive",
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CircleX, {
-									"data-uid": "src/components/home/ProblemSection.tsx:41:19",
+									"data-uid": "src/components/home/ProblemSection.tsx:42:19",
 									"data-prohibitions": "[editContent]",
 									className: "w-6 h-6 shrink-0"
 								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
-									"data-uid": "src/components/home/ProblemSection.tsx:42:19",
+									"data-uid": "src/components/home/ProblemSection.tsx:43:19",
 									"data-prohibitions": "[]",
 									className: "font-semibold text-lg",
 									children: "Mercado Tradicional"
 								})]
 							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-								"data-uid": "src/components/home/ProblemSection.tsx:44:17",
+								"data-uid": "src/components/home/ProblemSection.tsx:45:17",
 								"data-prohibitions": "[editContent]",
 								className: "text-muted-foreground",
 								children: point.pain
 							})]
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-							"data-uid": "src/components/home/ProblemSection.tsx:47:15",
+							"data-uid": "src/components/home/ProblemSection.tsx:48:15",
 							"data-prohibitions": "[editContent]",
 							className: "relative",
 							children: [
 								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-									"data-uid": "src/components/home/ProblemSection.tsx:48:17",
+									"data-uid": "src/components/home/ProblemSection.tsx:49:17",
 									"data-prohibitions": "[editContent]",
 									className: "absolute -inset-4 bg-primary/5 rounded-xl -z-10"
 								}),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-									"data-uid": "src/components/home/ProblemSection.tsx:49:17",
+									"data-uid": "src/components/home/ProblemSection.tsx:50:17",
 									"data-prohibitions": "[]",
 									className: "flex items-center gap-3 mb-4 text-primary",
 									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CircleCheck, {
-										"data-uid": "src/components/home/ProblemSection.tsx:50:19",
+										"data-uid": "src/components/home/ProblemSection.tsx:51:19",
 										"data-prohibitions": "[editContent]",
 										className: "w-6 h-6 shrink-0"
 									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
-										"data-uid": "src/components/home/ProblemSection.tsx:51:19",
+										"data-uid": "src/components/home/ProblemSection.tsx:52:19",
 										"data-prohibitions": "[]",
 										className: "font-semibold text-lg",
 										children: "Prime Circle"
 									})]
 								}),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-									"data-uid": "src/components/home/ProblemSection.tsx:53:17",
+									"data-uid": "src/components/home/ProblemSection.tsx:54:17",
 									"data-prohibitions": "[editContent]",
 									className: "text-foreground font-medium",
 									children: point.solution
@@ -25547,4 +25551,4 @@ function App() {
 }));
 //#endregion
 
-//# sourceMappingURL=index-D9M-kASV.js.map
+//# sourceMappingURL=index-DyP8q-lc.js.map

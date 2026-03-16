@@ -21,7 +21,8 @@ export function ProblemSection() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16 max-w-3xl mx-auto">
           <h2 className="text-3xl md:text-5xl font-bold mb-6">
-            O mercado imobiliário tradicional <span className="text-primary">está quebrado</span>
+            O mercado imobiliário tradicional{' '}
+            <span className="text-primary">precisa ser mudado</span>
           </h2>
           <p className="text-xl text-muted-foreground">
             A forma como os corretores fazem parcerias hoje é ineficiente e arriscada. Nós mudamos
