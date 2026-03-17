@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react'
 import { BrowserRouter as Router, Routes, Route, Outlet, Navigate } from 'react-router-dom'
 import Index from './pages/Index'
 import ApplyPage from './pages/ApplyPage'
@@ -9,6 +10,7 @@ import OnboardingPage from './pages/OnboardingPage'
 import PendingPage from './pages/PendingPage'
 import MatchClosePage from './pages/MatchClosePage'
 import SuggestionsPage from './pages/SuggestionsPage'
+import RoadmapPage from './pages/RoadmapPage'
 import PublicSuggestionsPage from './pages/PublicSuggestionsPage'
 import PlansPage from './pages/PlansPage'
 import TermsPage from './pages/TermsPage'
@@ -21,8 +23,30 @@ import { Footer } from '@/components/layout/Footer'
 import { ProtectedRoute } from '@/components/ProtectedRoute'
 import { AnalyticsTracker } from '@/components/AnalyticsTracker'
 import useAppStore, { AppProvider } from '@/stores/main'
+import { useToast } from '@/hooks/use-toast'
 
 function DashboardLayout() {
+  const { notifications, clearNotifications } = useAppStore()
+  const { toast } = useToast()
+  const clearRef = useRef(clearNotifications)
+
+  useEffect(() => {
+    clearRef.current = clearNotifications
+  }, [clearNotifications])
+
+  useEffect(() => {
+    if (notifications.length > 0) {
+      notifications.forEach((n) => {
+        toast({
+          title: n.title,
+          description: n.description,
+          className: 'border-primary/50 bg-card text-white shadow-elevation',
+        })
+      })
+      clearRef.current()
+    }
+  }, [notifications, toast])
+
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       <Navbar />
@@ -59,6 +83,7 @@ function App() {
                 <Route path="/admin" element={<AdminPage />} />
                 <Route path="/plans" element={<PlansPage />} />
                 <Route path="/suggestions" element={<SuggestionsPage />} />
+                <Route path="/roadmap" element={<RoadmapPage />} />
                 <Route path="/matches/:id/close" element={<MatchClosePage />} />
               </Route>
             </Route>

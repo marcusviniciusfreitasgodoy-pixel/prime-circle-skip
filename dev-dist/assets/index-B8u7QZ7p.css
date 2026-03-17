@@ -906,6 +906,12 @@ video {
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 1;
 }
+.line-clamp-3 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
 .block {
   display: block;
 }
@@ -1181,6 +1187,9 @@ video {
 .w-\[100px\] {
   width: 100px;
 }
+.w-\[160px\] {
+  width: 160px;
+}
 .w-\[1px\] {
   width: 1px;
 }
@@ -1251,6 +1260,9 @@ video {
 }
 .max-w-6xl {
   max-width: 72rem;
+}
+.max-w-7xl {
+  max-width: 80rem;
 }
 .max-w-\[--skeleton-width\] {
   max-width: var(--skeleton-width);
@@ -1666,6 +1678,9 @@ video {
 .border-t {
   border-top-width: 1px;
 }
+.border-t-2 {
+  border-top-width: 2px;
+}
 .border-dashed {
   border-style: dashed;
 }
@@ -1677,6 +1692,10 @@ video {
 }
 .border-blue-400\/30 {
   border-color: rgb(96 165 250 / 0.3);
+}
+.border-blue-500 {
+  --tw-border-opacity: 1;
+  border-color: rgb(59 130 246 / var(--tw-border-opacity, 1));
 }
 .border-blue-500\/20 {
   border-color: rgb(59 130 246 / 0.2);
@@ -1698,9 +1717,6 @@ video {
 }
 .border-green-500\/20 {
   border-color: rgb(34 197 94 / 0.2);
-}
-.border-green-500\/50 {
-  border-color: rgb(34 197 94 / 0.5);
 }
 .border-input {
   border-color: hsl(var(--input));
@@ -1737,6 +1753,10 @@ video {
 }
 .border-zinc-200\/50 {
   border-color: rgb(228 228 231 / 0.5);
+}
+.border-zinc-500 {
+  --tw-border-opacity: 1;
+  border-color: rgb(113 113 122 / var(--tw-border-opacity, 1));
 }
 .border-zinc-800 {
   --tw-border-opacity: 1;
@@ -1869,6 +1889,9 @@ video {
 .bg-zinc-50 {
   --tw-bg-opacity: 1;
   background-color: rgb(250 250 250 / var(--tw-bg-opacity, 1));
+}
+.bg-zinc-500\/10 {
+  background-color: rgb(113 113 122 / 0.1);
 }
 .bg-zinc-900\/50 {
   background-color: rgb(24 24 27 / 0.5);
@@ -2282,6 +2305,9 @@ video {
 }
 .leading-relaxed {
   line-height: 1.625;
+}
+.leading-snug {
+  line-height: 1.375;
 }
 .leading-tight {
   line-height: 1.25;
@@ -3042,6 +3068,9 @@ video {
   --tw-shadow-colored: 0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
+.hover\:shadow-elevation:hover {
+    box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.5);
+  }
 .focus\:bg-accent:focus {
   background-color: hsl(var(--accent));
 }

@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
-import { LogOut, Settings, Lightbulb, Zap } from 'lucide-react'
+import { LogOut, Settings, Lightbulb, Zap, Map } from 'lucide-react'
 import useAppStore from '@/stores/main'
 
 export function Navbar() {
@@ -59,6 +59,12 @@ export function Navbar() {
                         className="text-sm font-medium text-muted-foreground hover:text-white transition-colors flex items-center gap-1"
                       >
                         <Lightbulb className="w-4 h-4" /> Comunidade
+                      </Link>
+                      <Link
+                        to="/roadmap"
+                        className="text-sm font-medium text-muted-foreground hover:text-white transition-colors flex items-center gap-1"
+                      >
+                        <Map className="w-4 h-4" /> Roadmap
                       </Link>
                     </>
                   )}

@@ -6,6 +6,13 @@ import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import {
   Table,
   TableBody,
   TableCell,
@@ -13,7 +20,8 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { ThumbsUp, ArrowRight, Trophy } from 'lucide-react'
+import { ThumbsUp, ArrowRight, Trophy, Map } from 'lucide-react'
+import { Link } from 'react-router-dom'
 import { toast } from 'sonner'
 import { sendTransactionalEmail } from '@/lib/email'
 import useAppStore from '@/stores/main'
@@ -30,6 +38,7 @@ export default function SuggestionsPage() {
   } = useAppStore()
   const [newTitle, setNewTitle] = useState('')
   const [newDesc, setNewDesc] = useState('')
+  const [newCategory, setNewCategory] = useState('')
 
   const markRef = useRef(markSuggestionsAsViewed)
 
@@ -47,17 +56,19 @@ export default function SuggestionsPage() {
   }
 
   const handleSubmit = async () => {
-    if (!newTitle || !newDesc) return toast.error('Preencha título e descrição.')
+    if (!newTitle || !newDesc || !newCategory)
+      return toast.error('Preencha título, descrição e categoria.')
     await sendTransactionalEmail('new_suggestion', { subject: 'Nova Ideia Submetida' })
-    addSuggestion(newTitle, newDesc)
+    addSuggestion(newTitle, newDesc, newCategory)
     setNewTitle('')
     setNewDesc('')
+    setNewCategory('')
     toast.success('Sugestão enviada para análise.')
   }
 
   const getStatusColor = (status: string) => {
-    if (status === 'Implementado') return 'bg-green-500/10 text-green-500 border-green-500/20'
-    if (status === 'Planejado') return 'bg-blue-500/10 text-blue-400 border-blue-500/20'
+    if (status === 'Entregue') return 'bg-green-500/10 text-green-500 border-green-500/20'
+    if (status === 'Em Desenvolvimento') return 'bg-blue-500/10 text-blue-400 border-blue-500/20'
     return 'bg-secondary text-muted-foreground border-border'
   }
 
@@ -70,13 +81,23 @@ export default function SuggestionsPage() {
 
   return (
     <div className="max-w-4xl mx-auto space-y-8 animate-fade-in-up">
-      <div>
-        <h2 className="text-3xl font-bold text-white mb-2">Comunidade e Sugestões</h2>
-        <p className="text-muted-foreground text-base">
-          Ajudou a implementar? Ganhe{' '}
-          <strong className="text-primary">1 mês de crédito extra</strong> na sua assinatura do
-          Prime Circle.
-        </p>
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+        <div>
+          <h2 className="text-3xl font-bold text-white mb-2">Comunidade e Sugestões</h2>
+          <p className="text-muted-foreground text-base">
+            Ajudou a implementar? Ganhe{' '}
+            <strong className="text-primary">1 mês de crédito extra</strong> na sua assinatura do
+            Prime Circle.
+          </p>
+        </div>
+        <Button
+          asChild
+          className="gold-gradient text-black font-semibold h-11 px-6 shadow-[0_0_15px_rgba(201,168,76,0.2)]"
+        >
+          <Link to="/roadmap">
+            <Map className="w-4 h-4 mr-2" /> Ver Roadmap Real-Time
+          </Link>
+        </Button>
       </div>
 
       <div className="grid lg:grid-cols-3 gap-8">
@@ -92,13 +113,28 @@ export default function SuggestionsPage() {
                 value={newTitle}
                 onChange={(e) => setNewTitle(e.target.value)}
               />
+              <Select value={newCategory} onValueChange={setNewCategory}>
+                <SelectTrigger className="bg-background border-border text-muted-foreground mb-2">
+                  <SelectValue placeholder="Selecione uma categoria" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Nova Funcionalidade">Nova Funcionalidade</SelectItem>
+                  <SelectItem value="Experiência (UX)">Experiência (UX)</SelectItem>
+                  <SelectItem value="Integrações">Integrações</SelectItem>
+                  <SelectItem value="Melhoria de Performance">Melhoria de Performance</SelectItem>
+                  <SelectItem value="Outro">Outro</SelectItem>
+                </SelectContent>
+              </Select>
               <Textarea
                 placeholder="Descreva sua ideia em detalhes..."
                 className="bg-background border-border text-white min-h-[100px]"
                 value={newDesc}
                 onChange={(e) => setNewDesc(e.target.value)}
               />
-              <Button onClick={handleSubmit} className="gold-gradient text-black font-semibold">
+              <Button
+                onClick={handleSubmit}
+                className="gold-gradient text-black font-semibold mt-2"
+              >
                 Enviar para Votação
               </Button>
             </CardContent>
@@ -123,7 +159,17 @@ export default function SuggestionsPage() {
                     </div>
                     <div className="flex-1 p-4 space-y-3">
                       <div className="flex justify-between items-start gap-4">
-                        <h3 className="font-semibold text-white text-lg">{sug.title}</h3>
+                        <div>
+                          <Badge
+                            variant="outline"
+                            className="bg-background border-border text-[10px] uppercase text-muted-foreground mb-1"
+                          >
+                            {sug.category || 'Geral'}
+                          </Badge>
+                          <h3 className="font-semibold text-white text-lg leading-tight">
+                            {sug.title}
+                          </h3>
+                        </div>
                         <Badge
                           variant="outline"
                           className={`whitespace-nowrap ${getStatusColor(sug.status)}`}
@@ -132,7 +178,7 @@ export default function SuggestionsPage() {
                         </Badge>
                       </div>
                       <p className="text-sm text-muted-foreground leading-relaxed">{sug.desc}</p>
-                      {sug.status === 'Implementado' && (
+                      {sug.status === 'Entregue' && (
                         <div className="text-xs text-primary font-medium flex items-center mt-2 bg-primary/10 p-2 rounded-md border border-primary/20 w-fit">
                           <ArrowRight className="w-3 h-3 mr-1" /> Autor recompensado com +1 mês de
                           acesso

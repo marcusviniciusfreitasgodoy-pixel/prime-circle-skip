@@ -10,6 +10,7 @@ import {
   Settings,
   LogOut,
   Bell,
+  Map,
   User as UserIcon,
 } from 'lucide-react'
 import {
@@ -55,7 +56,7 @@ export function AppLayout() {
 
   const unseenSuggestionsCount = suggestions.filter(
     (s) =>
-      ['Planejado', 'Implementado'].includes(s.status) &&
+      ['Em Desenvolvimento', 'Entregue'].includes(s.status) &&
       (!user?.lastViewedSuggestionsAt ||
         new Date(s.updatedAt) > new Date(user.lastViewedSuggestionsAt)),
   ).length
@@ -67,6 +68,7 @@ export function AppLayout() {
     { title: 'Imóveis', icon: Home, url: '/listings' },
     { title: 'Conexões', icon: GitMerge, url: '/matches' },
     { title: 'Sugestões', icon: Lightbulb, url: '/suggestions' },
+    { title: 'Roadmap', icon: Map, url: '/roadmap' },
     { title: 'Planos', icon: Crown, url: '/plans' },
   ]
 
@@ -101,7 +103,7 @@ export function AppLayout() {
                         >
                           <item.icon className="w-5 h-5" />
                           <span className="flex-1">{item.title}</span>
-                          {item.title === 'Sugestões' && unseenSuggestionsCount > 0 && (
+                          {item.title === 'Roadmap' && unseenSuggestionsCount > 0 && (
                             <Badge
                               variant="destructive"
                               className="ml-auto h-5 min-w-5 px-1.5 flex items-center justify-center text-[10px]"

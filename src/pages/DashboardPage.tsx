@@ -34,10 +34,10 @@ export default function DashboardPage() {
 
   // Demo: Automatically approve a specific pending suggestion to show the notification AC working end-to-end
   useEffect(() => {
-    const pendingSug = suggestions.find((s) => s.id === '2' && s.status === 'Pendente')
+    const pendingSug = suggestions.find((s) => s.id === '2' && s.status === 'Em Análise')
     if (pendingSug && user?.id === 'user1') {
       const timer = setTimeout(() => {
-        updateSugRef.current('2', 'Implementado')
+        updateSugRef.current('2', 'Em Desenvolvimento')
       }, 5000)
       return () => clearTimeout(timer)
     }

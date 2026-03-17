@@ -3,9 +3,16 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { Check, X } from 'lucide-react'
 import { toast } from 'sonner'
-import useAppStore from '@/stores/main'
+import useAppStore, { SuggestionStatus } from '@/stores/main'
 import { sendTransactionalEmail, simulateBiWeeklyReview } from '@/lib/email'
 
 export default function AdminPage() {
@@ -130,24 +137,37 @@ export default function AdminPage() {
             <Card key={sug.id} className="bg-secondary border-border">
               <CardContent className="p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                 <div>
-                  <h3 className="font-semibold text-white">{sug.title}</h3>
+                  <div className="flex items-center gap-2 mb-1">
+                    <Badge
+                      variant="outline"
+                      className="bg-background border-border text-[10px] text-muted-foreground"
+                    >
+                      {sug.category || 'Geral'}
+                    </Badge>
+                    <h3 className="font-semibold text-white">{sug.title}</h3>
+                  </div>
                   <p className="text-sm text-muted-foreground">{sug.desc}</p>
-                  <Badge variant="outline" className="mt-2 border-primary text-primary">
-                    {sug.status}
-                  </Badge>
                 </div>
-                {sug.status !== 'Implementado' && (
-                  <Button
-                    size="sm"
-                    className="bg-green-500/20 text-green-500 hover:bg-green-500/30 border border-green-500/50"
-                    onClick={() => {
-                      updateSuggestionStatus(sug.id, 'Implementado')
-                      toast.success('Sugestão implementada! Autor recompensado com 1 mês extra.')
+                <div className="flex items-center gap-3 w-full md:w-auto mt-2 md:mt-0">
+                  <Select
+                    value={sug.status}
+                    onValueChange={(val) => {
+                      updateSuggestionStatus(sug.id, val as SuggestionStatus)
+                      if (val === 'Entregue')
+                        toast.success('Sugestão implementada! Autor recompensado com 1 mês extra.')
+                      else toast.success(`Status alterado para ${val}.`)
                     }}
                   >
-                    <Check className="w-4 h-4 mr-2" /> Marcar Implementado
-                  </Button>
-                )}
+                    <SelectTrigger className="w-[160px] bg-background border-border text-xs text-white h-9">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Em Análise">Em Análise</SelectItem>
+                      <SelectItem value="Em Desenvolvimento">Em Desenvolvimento</SelectItem>
+                      <SelectItem value="Entregue">Entregue</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </CardContent>
             </Card>
           ))}

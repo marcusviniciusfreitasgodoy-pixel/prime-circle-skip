@@ -91,11 +91,14 @@ export type BrokerMonitor = {
   status: 'Ativo' | 'Risco de Exclusão'
 }
 
+export type SuggestionStatus = 'Em Análise' | 'Em Desenvolvimento' | 'Entregue'
+
 export type Suggestion = {
   id: string
   title: string
   desc: string
-  status: 'Planejado' | 'Pendente' | 'Implementado'
+  category: string
+  status: SuggestionStatus
   votes: number
   authorId: string
   updatedAt: string
@@ -153,7 +156,7 @@ interface AppState {
   logEvent: (action: string, details: string) => void
   checkPlanLimits: (type: 'listings' | 'needs' | 'matches' | 'closing') => boolean
   getExpirationInfo: () => ExpirationInfo | null
-  addSuggestion: (title: string, desc: string) => void
+  addSuggestion: (title: string, desc: string, category: string) => void
   voteSuggestion: (id: string) => void
   updateSuggestionStatus: (id: string, status: Suggestion['status']) => void
   markSuggestionsAsViewed: () => void
@@ -198,7 +201,8 @@ const initialSuggestions: Suggestion[] = [
     id: '1',
     title: 'Filtro por Condomínio',
     desc: 'Seria ótimo poder filtrar demandas pelo nome do condomínio.',
-    status: 'Planejado',
+    category: 'Nova Funcionalidade',
+    status: 'Em Desenvolvimento',
     votes: 12,
     authorId: 'other',
     updatedAt: new Date(Date.now() - 86400000).toISOString(),
@@ -207,7 +211,8 @@ const initialSuggestions: Suggestion[] = [
     id: '2',
     title: 'Integração CRM',
     desc: 'Conectar com RD Station para puxar os leads automaticamente.',
-    status: 'Pendente',
+    category: 'Integrações',
+    status: 'Em Análise',
     votes: 8,
     authorId: 'user1',
     updatedAt: new Date(Date.now() - 172800000).toISOString(),
@@ -216,7 +221,8 @@ const initialSuggestions: Suggestion[] = [
     id: '3',
     title: 'Chat Interno',
     desc: 'Comunicação direta sem precisar ir pro WhatsApp.',
-    status: 'Implementado',
+    category: 'Experiência (UX)',
+    status: 'Entregue',
     votes: 45,
     authorId: 'other',
     updatedAt: new Date(Date.now() - 259200000).toISOString(),
@@ -549,7 +555,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     logEvent('Admin Action', `Candidato ${id} rejeitado`)
   }
 
-  const addSuggestion = (title: string, desc: string) => {
+  const addSuggestion = (title: string, desc: string, category: string) => {
     const id = Date.now().toString()
     setSuggestions((prev) => [
       ...prev,
@@ -557,7 +563,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
         id,
         title,
         desc,
-        status: 'Pendente',
+        category,
+        status: 'Em Análise',
         votes: 1,
         authorId: user?.id || 'unknown',
         updatedAt: new Date().toISOString(),
@@ -581,7 +588,20 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const updateSuggestionStatus = (id: string, status: Suggestion['status']) => {
     setSuggestions((prev) => {
       const suggestion = prev.find((s) => s.id === id)
-      if (suggestion && status === 'Implementado' && suggestion.status !== 'Implementado') {
+      if (!suggestion) return prev
+
+      if (suggestion.status !== status) {
+        setNotifications((n) => [
+          ...n,
+          {
+            id: Date.now().toString(),
+            title: '📧 Atualização de Roadmap',
+            description: `Sua sugestão "${suggestion.title}" avançou para o status "${status}".`,
+          },
+        ])
+      }
+
+      if (status === 'Entregue' && suggestion.status !== 'Entregue') {
         if (user && user.id === suggestion.authorId) {
           setUser((u) =>
             u
@@ -595,9 +615,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
           setNotifications((n) => [
             ...n,
             {
-              id: Date.now().toString(),
-              title: '🚀 Novidades!',
-              description: `Sua sugestão '${suggestion.title}' foi marcada como Implementada. +1 mês de crédito adicionado à sua conta!`,
+              id: Date.now().toString() + '-bonus',
+              title: '🚀 Bônus Especial!',
+              description: `Sua sugestão foi Implementada. +1 mês de crédito adicionado à sua conta.`,
             },
           ])
         }
