@@ -50,7 +50,7 @@ export default function WelcomePage() {
           asChild
           className="w-full gold-gradient gold-glow text-black font-bold h-14 text-lg relative z-10"
         >
-          <Link to="/">Acessar meu Dashboard</Link>
+          <Link to="/dashboard">Acessar meu Dashboard</Link>
         </Button>
       </div>
     </div>
