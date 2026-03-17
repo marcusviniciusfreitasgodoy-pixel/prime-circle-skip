@@ -36,7 +36,6 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { useToast } from '@/hooks/use-toast'
 import { useAuth } from '@/hooks/use-auth'
 import { cn } from '@/lib/utils'
-import { sendWelcomeNotifications } from '@/services/notifications'
 import useAppStore from '@/stores/main'
 import { supabase } from '@/lib/supabase/client'
 
@@ -211,18 +210,6 @@ export default function ApplyPage() {
             console.error('Failed to process avatar:', err)
             uploadErrorMsg = ' Erro ao configurar a foto de perfil.'
           }
-        }
-
-        // Send notifications
-        try {
-          await sendWelcomeNotifications({
-            userId: userId,
-            fullName: values.name,
-            recipientPhone: values.phone,
-            recipientEmail: values.email,
-          })
-        } catch (err) {
-          console.error('Failed to send welcome notifications:', err)
         }
       }
 

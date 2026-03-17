@@ -14,7 +14,9 @@ Deno.serve(async (req: Request) => {
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     const supabase = createClient(supabaseUrl, supabaseKey)
 
-    await new Promise((res) => setTimeout(res, 2000))
+    // Minimal delay to ensure trigger transactions are fully visible
+    // before querying related template data
+    await new Promise((res) => setTimeout(res, 300))
 
     const { data: userData } = await supabase.auth.admin.getUserById(profile.id)
     const email = userData?.user?.email
@@ -65,12 +67,6 @@ Deno.serve(async (req: Request) => {
     const waMessage = buildMessage(waTemplate ? waTemplate.content : defaultWaContent)
     const emailMessage = buildMessage(emailTemplate ? emailTemplate.content : defaultEmailContent)
 
-    if (recipientPhone) {
-      await supabase.functions.invoke('send-whatsapp', {
-        body: { number: recipientPhone, text: waMessage, user_id: profile.id },
-      })
-    }
-
     let subject = 'Bem-vindo à Prime Circle! 🏠'
     let bodyText = emailMessage
     const match = bodyText.match(/^Assunto:\s*(.+)\n+([\s\S]*)$/i)
@@ -79,15 +75,38 @@ Deno.serve(async (req: Request) => {
       bodyText = match[2].trim()
     }
 
-    await supabase.functions.invoke('send-email', {
-      body: { to: recipientEmail, subject, text: bodyText, user_id: profile.id },
+    const notificationPromises = []
+
+    if (recipientPhone) {
+      notificationPromises.push(
+        supabase.functions.invoke('send-whatsapp', {
+          body: { number: recipientPhone, text: waMessage, user_id: profile.id },
+        }),
+      )
+    }
+
+    notificationPromises.push(
+      supabase.functions.invoke('send-email', {
+        body: { to: recipientEmail, subject, text: bodyText, user_id: profile.id },
+      }),
+    )
+
+    // Execute notifications in parallel to prevent slow APIs from blocking each other
+    const results = await Promise.allSettled(notificationPromises)
+
+    // Log failures, though send-whatsapp and send-email individually insert into notification_logs
+    results.forEach((res, index) => {
+      if (res.status === 'rejected') {
+        console.error(`Notification payload ${index} failed:`, res.reason)
+      }
     })
 
-    return new Response(JSON.stringify({ success: true }), {
+    return new Response(JSON.stringify({ success: true, parallelExecution: true }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' },
     })
   } catch (err: any) {
+    console.error('Welcome webhook execution error:', err)
     return new Response(JSON.stringify({ error: err.message }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' },
