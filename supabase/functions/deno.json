@@ -3,6 +3,6 @@
     "send-whatsapp": 10,
     "send-email": 8,
     "functions": 9,
-    "welcome-webhook": 2
+    "welcome-webhook": 3
   }
 }

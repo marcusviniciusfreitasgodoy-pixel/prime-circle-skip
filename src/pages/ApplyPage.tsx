@@ -160,6 +160,20 @@ export default function ApplyPage() {
         }
 
         if (
+          authError.status === 504 ||
+          authError.code === 'timeout' ||
+          (authError.message && authError.message.toLowerCase().includes('timeout'))
+        ) {
+          toast({
+            title: 'Aviso de Conexão',
+            description:
+              'A solicitação demorou mais que o normal. Sua conta pode ter sido criada. Tente fazer login ou redefina a senha.',
+          })
+          navigate('/auth/confirm')
+          return
+        }
+
+        if (
           authError.status === 500 ||
           authError.code === 'unexpected_failure' ||
           (authError.message && authError.message.includes('Error sending confirmation email'))
@@ -605,7 +619,7 @@ export default function ApplyPage() {
             <Button
               type="submit"
               disabled={isLoading}
-              className="w-full gold-gradient gold-glow h-12 text-lg mt-6 font-semibold text-black"
+              className="w-full gold-gradient gold-glow h-12 text-lg mt-6 font-semibold text-black transition-all"
             >
               {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Enviar Solicitação'}
             </Button>
