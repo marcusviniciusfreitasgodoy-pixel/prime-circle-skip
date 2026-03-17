@@ -30,6 +30,82 @@ export type Database = {
         }
         Relationships: []
       }
+      notification_logs: {
+        Row: {
+          channel: string
+          created_at: string
+          error_details: string | null
+          id: string
+          message_body: string
+          recipient: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          channel: string
+          created_at?: string
+          error_details?: string | null
+          id?: string
+          message_body: string
+          recipient: string
+          status: string
+          user_id: string
+        }
+        Update: {
+          channel?: string
+          created_at?: string
+          error_details?: string | null
+          id?: string
+          message_body?: string
+          recipient?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'notification_logs_user_id_fkey'
+            columns: ['user_id']
+            isOneToOne: false
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
+          },
+        ]
+      }
+      notification_templates: {
+        Row: {
+          channel: string
+          content: string
+          created_at: string
+          id: string
+          name: string
+          user_id: string
+        }
+        Insert: {
+          channel: string
+          content: string
+          created_at?: string
+          id?: string
+          name: string
+          user_id: string
+        }
+        Update: {
+          channel?: string
+          content?: string
+          created_at?: string
+          id?: string
+          name?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'notification_templates_user_id_fkey'
+            columns: ['user_id']
+            isOneToOne: false
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
+          },
+        ]
+      }
       objections_sofia: {
         Row: {
           argumentos: Json
@@ -241,6 +317,22 @@ export const Constants = {
 //   content: text (nullable)
 //   metadata: jsonb (nullable)
 //   embedding: vector (nullable)
+// Table: notification_logs
+//   id: uuid (not null, default: gen_random_uuid())
+//   user_id: uuid (not null)
+//   recipient: text (not null)
+//   channel: text (not null)
+//   status: text (not null)
+//   message_body: text (not null)
+//   error_details: text (nullable)
+//   created_at: timestamp with time zone (not null, default: now())
+// Table: notification_templates
+//   id: uuid (not null, default: gen_random_uuid())
+//   user_id: uuid (not null)
+//   name: text (not null)
+//   content: text (not null)
+//   channel: text (not null)
+//   created_at: timestamp with time zone (not null, default: now())
 // Table: objections_sofia
 //   id: text (not null)
 //   titulo: text (not null)
@@ -258,6 +350,15 @@ export const Constants = {
 // --- CONSTRAINTS ---
 // Table: documents
 //   PRIMARY KEY documents_pkey: PRIMARY KEY (id)
+// Table: notification_logs
+//   CHECK notification_logs_channel_check: CHECK ((channel = ANY (ARRAY['whatsapp'::text, 'email'::text])))
+//   PRIMARY KEY notification_logs_pkey: PRIMARY KEY (id)
+//   CHECK notification_logs_status_check: CHECK ((status = ANY (ARRAY['success'::text, 'failed'::text])))
+//   FOREIGN KEY notification_logs_user_id_fkey: FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE CASCADE
+// Table: notification_templates
+//   CHECK notification_templates_channel_check: CHECK ((channel = ANY (ARRAY['whatsapp'::text, 'email'::text])))
+//   PRIMARY KEY notification_templates_pkey: PRIMARY KEY (id)
+//   FOREIGN KEY notification_templates_user_id_fkey: FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE CASCADE
 // Table: objections_sofia
 //   PRIMARY KEY objections_sofia_pkey: PRIMARY KEY (id)
 // Table: profiles
@@ -265,6 +366,14 @@ export const Constants = {
 //   PRIMARY KEY profiles_pkey: PRIMARY KEY (id)
 
 // --- ROW LEVEL SECURITY POLICIES ---
+// Table: notification_logs
+//   Policy "Users can manage their own logs" (ALL, PERMISSIVE) roles={authenticated}
+//     USING: (auth.uid() = user_id)
+//     WITH CHECK: (auth.uid() = user_id)
+// Table: notification_templates
+//   Policy "Users can manage their own templates" (ALL, PERMISSIVE) roles={authenticated}
+//     USING: (auth.uid() = user_id)
+//     WITH CHECK: (auth.uid() = user_id)
 // Table: profiles
 //   Policy "Users can insert own profile" (INSERT, PERMISSIVE) roles={authenticated}
 //     WITH CHECK: (auth.uid() = id)

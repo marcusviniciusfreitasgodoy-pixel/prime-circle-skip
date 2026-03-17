@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
@@ -71,6 +71,15 @@ export function TemplatesTab() {
     }
   }
 
+  const isPredefined = (name: string) => {
+    return [
+      'Notificação de Match - WhatsApp',
+      'Notificação de Match - Email',
+      'Solicitação de Parceria - WhatsApp',
+      'Solicitação de Parceria - Email',
+    ].includes(name)
+  }
+
   if (isLoading)
     return <div className="text-muted-foreground py-8 text-center">Carregando templates...</div>
 
@@ -115,14 +124,16 @@ export function TemplatesTab() {
                 >
                   <Pencil className="w-4 h-4" />
                 </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-8 w-8 text-red-400 hover:text-red-300 hover:bg-red-400/10"
-                  onClick={() => handleDelete(tpl.id)}
-                >
-                  <Trash2 className="w-4 h-4" />
-                </Button>
+                {!isPredefined(tpl.name) && (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 text-red-400 hover:text-red-300 hover:bg-red-400/10"
+                    onClick={() => handleDelete(tpl.id)}
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                )}
               </div>
             </CardHeader>
             <CardContent>
@@ -152,8 +163,9 @@ export function TemplatesTab() {
               <Input
                 value={editingTemplate?.name || ''}
                 onChange={(e) => setEditingTemplate((prev) => ({ ...prev, name: e.target.value }))}
-                className="bg-background"
+                className="bg-background text-white"
                 placeholder="Ex: Confirmação de Match (WhatsApp)"
+                disabled={isPredefined(editingTemplate?.name || '')}
               />
             </div>
             <div className="space-y-2">
@@ -163,8 +175,9 @@ export function TemplatesTab() {
                 onValueChange={(val: 'whatsapp' | 'email') =>
                   setEditingTemplate((prev) => ({ ...prev, channel: val }))
                 }
+                disabled={isPredefined(editingTemplate?.name || '')}
               >
-                <SelectTrigger className="bg-background">
+                <SelectTrigger className="bg-background text-white">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -180,7 +193,7 @@ export function TemplatesTab() {
                 onChange={(e) =>
                   setEditingTemplate((prev) => ({ ...prev, content: e.target.value }))
                 }
-                className="bg-background min-h-[150px]"
+                className="bg-background text-white min-h-[150px]"
                 placeholder={`Olá {{partner_name}}, tenho interesse na sua demanda: {{property_details}}...`}
               />
               <p className="text-xs text-muted-foreground mt-1">

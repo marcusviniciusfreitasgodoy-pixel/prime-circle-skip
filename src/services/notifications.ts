@@ -45,9 +45,9 @@ export const saveTemplate = async (userId: string, template: Partial<Notificatio
   } else {
     return supabase.from('notification_templates').insert({
       user_id: userId,
-      name: template.name,
-      content: template.content,
-      channel: template.channel,
+      name: template.name!,
+      content: template.content!,
+      channel: template.channel!,
     })
   }
 }
@@ -65,14 +65,16 @@ export const fetchLogs = async (userId: string) => {
   return { data: data as NotificationLog[] | null, error }
 }
 
-export const processMatchNotification = async ({
+export const processNotification = async ({
   userId,
+  type,
   partnerName,
   propertyDetails,
   recipientPhone,
   recipientEmail,
 }: {
   userId: string
+  type: 'match' | 'partnership'
   partnerName: string
   propertyDetails: string
   recipientPhone: string
@@ -83,13 +85,23 @@ export const processMatchNotification = async ({
     .select('*')
     .eq('user_id', userId)
 
-  const waTemplate = templates?.find((t) => t.channel === 'whatsapp')
-  const emailTemplate = templates?.find((t) => t.channel === 'email')
+  const waTemplateName =
+    type === 'match' ? 'Notificação de Match - WhatsApp' : 'Solicitação de Parceria - WhatsApp'
+  const emailTemplateName =
+    type === 'match' ? 'Notificação de Match - Email' : 'Solicitação de Parceria - Email'
+
+  const waTemplate = templates?.find((t) => t.name === waTemplateName)
+  const emailTemplate = templates?.find((t) => t.name === emailTemplateName)
 
   const defaultWaContent =
-    'Olá {{partner_name}}, tenho um imóvel ideal para sua demanda: {{property_details}}. Vamos fechar parceria?'
+    type === 'match'
+      ? 'Olá {{partner_name}}! 🚀 Acabamos de encontrar um novo match para o imóvel {{property_details}}. Confira agora mesmo no seu painel da Prime Circle!'
+      : 'Olá {{partner_name}}! Você recebeu uma nova solicitação de parceria na Prime Circle. Acesse a plataforma para responder e iniciar essa nova colaboração. 🤝'
+
   const defaultEmailContent =
-    'Olá {{partner_name}},\n\nGostaria de propor uma parceria 50/50 para o imóvel: {{property_details}}.'
+    type === 'match'
+      ? 'Assunto: Novo Match Identificado! 🏠 \n\nOlá {{partner_name}},\n\nIdentificamos uma nova oportunidade de negócio! Um novo match foi gerado para o imóvel {{property_details}}.\n\nClique no link abaixo para ver os detalhes e entrar em contato:\n[Link do Sistema]\n\nBoas vendas,\nEquipe Prime Circle'
+      : 'Assunto: Você tem uma nova solicitação de parceria 🤝\n\nOlá {{partner_name}},\n\nUm colega de profissão enviou uma solicitação de parceria para você através da Prime Circle.\n\nParcerias aumentam suas chances de fechamento! Acesse seu dashboard para revisar a solicitação.\n\nAtenciosamente,\nEquipe Prime Circle'
 
   const buildMessage = (content: string) => {
     return content
@@ -125,7 +137,7 @@ export const processMatchNotification = async ({
     let emailError = ''
 
     try {
-      await sendTransactionalEmail('match_fallback', {
+      await sendTransactionalEmail(type === 'match' ? 'match_fallback' : 'partnership_fallback', {
         to: recipientEmail,
         body: emailMessage,
       })
