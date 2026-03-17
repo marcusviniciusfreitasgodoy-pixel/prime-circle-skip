@@ -1,9 +1,7 @@
 {
   "_versions": {
-    "send-whatsapp": 1,
-    "send-email": 1
-  }
-}
-functions": 1
+    "send-whatsapp": 3,
+    "send-email": 1,
+    "functions": 1
   }
 }
