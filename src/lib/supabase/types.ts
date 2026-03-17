@@ -465,13 +465,14 @@ export const Constants = {
 //    SECURITY DEFINER
 //   AS $function$
 //   DECLARE
-//     user_count INT;
+//     is_first_user BOOLEAN;
 //     assigned_role TEXT := 'user';
 //     assigned_plan TEXT := 'Free';
 //   BEGIN
-//     SELECT count(*) INTO user_count FROM auth.users;
+//     -- Use a fast check on public.profiles instead of a full scan count(*) on auth.users
+//     SELECT NOT EXISTS (SELECT 1 FROM public.profiles LIMIT 1) INTO is_first_user;
 //
-//     IF user_count <= 1 THEN
+//     IF is_first_user THEN
 //       assigned_role := 'admin';
 //       assigned_plan := 'Founder';
 //     END IF;
@@ -504,8 +505,8 @@ export const Constants = {
 //         NEW.raw_user_meta_data->>'company_name'
 //       )
 //       ON CONFLICT (id) DO UPDATE SET
-//         whatsapp_number = COALESCE(public.profiles.whatsapp_number, EXCLUDED.whatsapp_number),
-//         creci = COALESCE(public.profiles.creci, EXCLUDED.creci);
+//         role = EXCLUDED.role,
+//         plan = EXCLUDED.plan;
 //     EXCEPTION WHEN OTHERS THEN
 //       RAISE LOG 'Error in handle_new_user trigger: %', SQLERRM;
 //     END;
