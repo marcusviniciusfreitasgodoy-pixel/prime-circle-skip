@@ -183,6 +183,18 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_user_id_by_email: { Args: { p_email: string }; Returns: string }
+      log_notification: {
+        Args: {
+          p_channel: string
+          p_error_details?: string
+          p_message_body: string
+          p_recipient: string
+          p_status: string
+          p_user_id: string
+        }
+        Returns: undefined
+      }
       match_documents: {
         Args: { filter?: Json; match_count?: number; query_embedding: string }
         Returns: {
@@ -421,6 +433,20 @@ export const Constants = {
 //   - documents
 
 // --- DATABASE FUNCTIONS ---
+// FUNCTION get_user_id_by_email(text)
+//   CREATE OR REPLACE FUNCTION public.get_user_id_by_email(p_email text)
+//    RETURNS uuid
+//    LANGUAGE plpgsql
+//    SECURITY DEFINER
+//   AS $function$
+//   DECLARE
+//     v_user_id UUID;
+//   BEGIN
+//     SELECT id INTO v_user_id FROM auth.users WHERE email = p_email LIMIT 1;
+//     RETURN v_user_id;
+//   END;
+//   $function$
+//
 // FUNCTION handle_new_user()
 //   CREATE OR REPLACE FUNCTION public.handle_new_user()
 //    RETURNS trigger
@@ -516,6 +542,21 @@ export const Constants = {
 //   Equipe Prime Circle');
 //
 //     RETURN NEW;
+//   END;
+//   $function$
+//
+// FUNCTION log_notification(uuid, text, text, text, text, text)
+//   CREATE OR REPLACE FUNCTION public.log_notification(p_user_id uuid, p_recipient text, p_channel text, p_status text, p_message_body text, p_error_details text DEFAULT NULL::text)
+//    RETURNS void
+//    LANGUAGE plpgsql
+//    SECURITY DEFINER
+//   AS $function$
+//   BEGIN
+//     INSERT INTO public.notification_logs (
+//       user_id, recipient, channel, status, message_body, error_details
+//     ) VALUES (
+//       p_user_id, p_recipient, p_channel, p_status, p_message_body, p_error_details
+//     );
 //   END;
 //   $function$
 //
