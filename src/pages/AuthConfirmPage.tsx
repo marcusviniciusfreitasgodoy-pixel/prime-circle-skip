@@ -6,13 +6,15 @@ import { Label } from '@/components/ui/label'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Crown, Mail, KeyRound, Loader2 } from 'lucide-react'
 import useAppStore from '@/stores/main'
-import { sendTransactionalEmail } from '@/lib/email'
+import { useAuth } from '@/hooks/use-auth'
+import { supabase } from '@/lib/supabase/client'
 import { toast } from 'sonner'
 
 export default function AuthConfirmPage() {
   const navigate = useNavigate()
   const location = useLocation()
   const { login } = useAppStore()
+  const { signIn, signInWithOtp } = useAuth()
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -32,10 +34,50 @@ export default function AuthConfirmPage() {
     if (!email) return toast.error('Informe seu e-mail')
 
     setIsLoading(true)
-    await sendTransactionalEmail('magic_link_otp', { to: email })
-    setIsLoading(false)
-    setCooldown(60)
-    toast.success('Link mágico enviado! Verifique sua caixa de entrada.')
+    const dest = location.state?.from?.pathname || '/dashboard'
+    const redirectTo = `${window.location.origin}${dest}`
+
+    try {
+      const { error } = await signInWithOtp(email, redirectTo)
+
+      let userId: string | null = null
+      try {
+        const { data } = await supabase.rpc('get_user_id_by_email', { p_email: email })
+        if (data) userId = data
+      } catch (err) {
+        console.error('Failed to resolve user ID:', err)
+      }
+
+      if (error) {
+        toast.error(`Falha ao enviar link: ${error.message}`)
+        if (userId) {
+          await supabase.rpc('log_notification', {
+            p_user_id: userId,
+            p_recipient: email,
+            p_channel: 'email',
+            p_status: 'failed',
+            p_message_body: `Solicitação de Magic Link para ${redirectTo}`,
+            p_error_details: error.message,
+          })
+        }
+      } else {
+        toast.success('Link de acesso enviado! Verifique sua caixa de entrada e spam.')
+        setCooldown(60)
+        if (userId) {
+          await supabase.rpc('log_notification', {
+            p_user_id: userId,
+            p_recipient: email,
+            p_channel: 'email',
+            p_status: 'success',
+            p_message_body: `Solicitação de Magic Link para ${redirectTo}`,
+          })
+        }
+      }
+    } catch (err) {
+      toast.error('Ocorreu um erro inesperado ao processar sua solicitação.')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const handlePasswordLogin = async (e: React.FormEvent) => {
@@ -43,12 +85,18 @@ export default function AuthConfirmPage() {
     if (!email || !password) return toast.error('Preencha todos os campos')
 
     setIsLoading(true)
-    setTimeout(() => {
-      login(email, 'password')
-      const dest = location.state?.from?.pathname || '/dashboard'
-      navigate(dest)
+    const { error } = await signIn(email, password)
+
+    if (error) {
+      toast.error('Credenciais inválidas.')
       setIsLoading(false)
-    }, 1000)
+      return
+    }
+
+    login(email, 'password')
+    const dest = location.state?.from?.pathname || '/dashboard'
+    navigate(dest)
+    setIsLoading(false)
   }
 
   return (

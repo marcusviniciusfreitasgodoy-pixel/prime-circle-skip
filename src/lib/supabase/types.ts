@@ -504,8 +504,8 @@ export const Constants = {
 //         NEW.raw_user_meta_data->>'company_name'
 //       )
 //       ON CONFLICT (id) DO UPDATE SET
-//         role = EXCLUDED.role,
-//         plan = EXCLUDED.plan;
+//         whatsapp_number = COALESCE(public.profiles.whatsapp_number, EXCLUDED.whatsapp_number),
+//         creci = COALESCE(public.profiles.creci, EXCLUDED.creci);
 //     EXCEPTION WHEN OTHERS THEN
 //       RAISE LOG 'Error in handle_new_user trigger: %', SQLERRM;
 //     END;
