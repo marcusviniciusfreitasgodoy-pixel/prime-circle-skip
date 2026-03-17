@@ -32,6 +32,7 @@ export default function OnboardingPage() {
         return
       }
       try {
+        // Fetch whatsapp_number and creci to pre-fill the form
         const { data, error } = await supabase
           .from('profiles')
           .select('whatsapp_number, creci')
@@ -74,7 +75,6 @@ export default function OnboardingPage() {
 
         if (error) throw error
 
-        // Synchronous Persistence: Mark as onboarded locally to prevent flash
         localStorage.setItem(`terms_accepted_${authUser.id}`, 'true')
         completeOnboarding()
 
@@ -85,6 +85,7 @@ export default function OnboardingPage() {
           .single()
 
         try {
+          // Trigger automated email and WhatsApp messages using Edge Functions
           await sendWelcomeNotifications({
             userId: authUser.id,
             fullName: profile?.full_name || authUser.email?.split('@')[0] || 'Corretor',
