@@ -56,7 +56,7 @@ export function NetworkDetailsSection() {
               <span className="text-primary text-xs font-bold tracking-widest uppercase mb-3 block">
                 Pilar 2
               </span>
-              <h3 className="text-xl font-bold text-zinc-100 mb-4">Busca Assertiva Off-Market</h3>
+              <h3 className="text-xl font-bold text-zinc-100 mb-4">Busca Off-Market</h3>
               <p className="text-zinc-400 text-sm leading-relaxed">
                 Facilitamos a busca de imóveis que não estão disponíveis nas imobiliárias
                 tradicionais ou portais públicos, atendendo com precisão cirúrgica às exigências dos

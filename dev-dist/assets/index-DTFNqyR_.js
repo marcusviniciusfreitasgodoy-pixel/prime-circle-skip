@@ -20388,7 +20388,7 @@ function NetworkDetailsSection() {
 									"data-uid": "src/components/home/NetworkDetailsSection.tsx:59:15",
 									"data-prohibitions": "[]",
 									className: "text-xl font-bold text-zinc-100 mb-4",
-									children: "Busca Assertiva Off-Market"
+									children: "Busca Off-Market"
 								}),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
 									"data-uid": "src/components/home/NetworkDetailsSection.tsx:60:15",
@@ -38967,4 +38967,4 @@ function App() {
 }));
 //#endregion
 
-//# sourceMappingURL=index-DDeT8BBY.js.map
+//# sourceMappingURL=index-DTFNqyR_.js.map
