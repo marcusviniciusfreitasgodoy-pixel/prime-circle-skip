@@ -1,0 +1,2 @@
+ALTER TABLE public.profiles 
+ADD COLUMN IF NOT EXISTS accepted_terms BOOLEAN NOT NULL DEFAULT false;

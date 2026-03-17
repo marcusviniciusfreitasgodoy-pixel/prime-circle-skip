@@ -2,22 +2,45 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
-import { Crown, Sparkles } from 'lucide-react'
+import { Crown, Sparkles, Loader2 } from 'lucide-react'
 import useAppStore from '@/stores/main'
+import { useAuth } from '@/hooks/use-auth'
+import { supabase } from '@/lib/supabase/client'
+import { toast } from 'sonner'
 
 export default function OnboardingPage() {
   const navigate = useNavigate()
-  const { user, completeOnboarding } = useAppStore()
+  const { user: mockUser, completeOnboarding } = useAppStore()
+  const { user: authUser } = useAuth()
+
   const [step, setStep] = useState(1)
   const [terms, setTerms] = useState(false)
   const [privacy, setPrivacy] = useState(false)
   const [model5050, setModel5050] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const canProceed = terms && privacy && model5050
 
-  const handleComplete = (path: string) => {
-    completeOnboarding()
-    navigate(path)
+  const handleComplete = async (path: string) => {
+    setIsSubmitting(true)
+
+    try {
+      if (authUser) {
+        const { error } = await supabase
+          .from('profiles')
+          .update({ accepted_terms: true })
+          .eq('id', authUser.id)
+
+        if (error) throw error
+      }
+
+      completeOnboarding()
+      navigate(path)
+    } catch (error: any) {
+      console.error(error)
+      toast.error('Erro ao salvar suas preferências. Tente novamente.')
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -28,7 +51,7 @@ export default function OnboardingPage() {
             <div className="text-center mb-8">
               <Crown className="w-12 h-12 text-primary mx-auto mb-4" />
               <h1 className="text-2xl font-bold text-white">
-                Bem-vindo, {user?.name?.split(' ')[0]}
+                Bem-vindo, {mockUser?.name?.split(' ')[0] || 'Corretor'}
               </h1>
               <p className="text-muted-foreground text-sm mt-2">
                 Antes de acessar o painel, confirme sua adesão às regras do ecossistema.
@@ -136,15 +159,21 @@ export default function OnboardingPage() {
               <Button
                 variant="outline"
                 onClick={() => handleComplete('/dashboard')}
+                disabled={isSubmitting}
                 className="flex-1 h-14 font-semibold border-border hover:bg-secondary text-white"
               >
-                Ir para Dashboard
+                {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Ir para Dashboard'}
               </Button>
               <Button
                 onClick={() => handleComplete('/suggestions')}
+                disabled={isSubmitting}
                 className="gold-gradient text-black flex-1 h-14 font-bold text-lg"
               >
-                Ver Sugestões
+                {isSubmitting ? (
+                  <Loader2 className="w-5 h-5 animate-spin text-black" />
+                ) : (
+                  'Ver Sugestões'
+                )}
               </Button>
             </div>
           </div>
