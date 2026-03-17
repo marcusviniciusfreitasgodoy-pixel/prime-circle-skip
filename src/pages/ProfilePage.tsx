@@ -16,24 +16,26 @@ export default function ProfilePage() {
   const { toast } = useToast()
 
   const [whatsapp, setWhatsapp] = useState('')
+  const [fullName, setFullName] = useState('')
   const [isSaving, setIsSaving] = useState(false)
 
   useEffect(() => {
     if (authUser) {
       supabase
         .from('profiles')
-        .select('whatsapp_number')
+        .select('whatsapp_number, full_name')
         .eq('id', authUser.id)
         .single()
         .then(({ data }) => {
-          if (data && data.whatsapp_number) {
-            setWhatsapp(data.whatsapp_number)
+          if (data) {
+            if (data.whatsapp_number) setWhatsapp(data.whatsapp_number)
+            if (data.full_name) setFullName(data.full_name)
           }
         })
     }
   }, [authUser])
 
-  const handleSaveWhatsapp = async () => {
+  const handleSaveProfile = async () => {
     if (!authUser) {
       toast({
         title: 'Não autenticado',
@@ -44,7 +46,7 @@ export default function ProfilePage() {
     }
 
     const phoneRegex = /^\+?[1-9]\d{1,14}$/
-    if (!phoneRegex.test(whatsapp)) {
+    if (whatsapp && !phoneRegex.test(whatsapp)) {
       toast({
         title: 'Número inválido',
         description: 'Por favor, insira um número válido (ex: +5511999999999)',
@@ -55,48 +57,33 @@ export default function ProfilePage() {
 
     setIsSaving(true)
 
-    const { data: existingProfile } = await supabase
-      .from('profiles')
-      .select('id')
-      .eq('id', authUser.id)
-      .single()
-
-    let err
-    if (existingProfile) {
-      const { error } = await supabase
-        .from('profiles')
-        .update({
-          whatsapp_number: whatsapp,
-          updated_at: new Date().toISOString(),
-        })
-        .eq('id', authUser.id)
-      err = error
-    } else {
-      const { error } = await supabase.from('profiles').insert({
-        id: authUser.id,
-        whatsapp_number: whatsapp,
-        updated_at: new Date().toISOString(),
-      })
-      err = error
-    }
+    const { error } = await supabase.from('profiles').upsert({
+      id: authUser.id,
+      full_name: fullName,
+      whatsapp_number: whatsapp,
+      updated_at: new Date().toISOString(),
+    })
 
     setIsSaving(false)
 
-    if (err) {
+    if (error) {
       toast({
         title: 'Erro ao salvar',
-        description: err.message,
+        description: error.message,
         variant: 'destructive',
       })
     } else {
       toast({
         title: 'Sucesso',
-        description: 'Número de WhatsApp atualizado com sucesso.',
+        description: 'Perfil atualizado com sucesso.',
       })
     }
   }
 
   if (!user) return null
+
+  const displayInitial = (fullName || user.name).charAt(0).toUpperCase()
+  const displayName = fullName || user.name
 
   return (
     <div className="max-w-4xl mx-auto space-y-8 animate-fade-in-up">
@@ -113,9 +100,9 @@ export default function ProfilePage() {
             <CardContent className="flex flex-col items-center">
               <Avatar className="w-24 h-24 mb-4 ring-2 ring-primary ring-offset-4 ring-offset-background">
                 <AvatarImage src={user.avatar} />
-                <AvatarFallback className="text-2xl">{user.name.charAt(0)}</AvatarFallback>
+                <AvatarFallback className="text-2xl">{displayInitial}</AvatarFallback>
               </Avatar>
-              <h3 className="text-xl font-bold text-white">{user.name}</h3>
+              <h3 className="text-xl font-bold text-white">{displayName}</h3>
               <p className="text-sm text-primary mb-6">Corretor {user.tier}</p>
             </CardContent>
           </Card>
@@ -152,18 +139,30 @@ export default function ProfilePage() {
 
           <Card className="bg-card border-border">
             <CardHeader>
-              <CardTitle className="text-lg text-white">Contato WhatsApp</CardTitle>
+              <CardTitle className="text-lg text-white">Informações Pessoais e Contato</CardTitle>
               <CardDescription>
-                Adicione seu número para receber notificações de matches e parcerias via Evolution
-                API.
+                Atualize seu nome e adicione seu número para receber notificações de matches via
+                Evolution API.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="whatsapp" className="text-white">
-                  Número do WhatsApp (com código do país)
-                </Label>
-                <div className="flex gap-2">
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="fullName" className="text-white">
+                    Nome Completo
+                  </Label>
+                  <Input
+                    id="fullName"
+                    placeholder="Seu Nome Completo"
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    className="bg-background text-white"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="whatsapp" className="text-white">
+                    Número do WhatsApp (com código do país)
+                  </Label>
                   <Input
                     id="whatsapp"
                     placeholder="+5521999999999"
@@ -171,10 +170,10 @@ export default function ProfilePage() {
                     onChange={(e) => setWhatsapp(e.target.value)}
                     className="bg-background text-white"
                   />
-                  <Button onClick={handleSaveWhatsapp} disabled={isSaving}>
-                    {isSaving ? 'Salvando...' : 'Salvar'}
-                  </Button>
                 </div>
+                <Button onClick={handleSaveProfile} disabled={isSaving}>
+                  {isSaving ? 'Salvando...' : 'Salvar Alterações'}
+                </Button>
               </div>
             </CardContent>
           </Card>

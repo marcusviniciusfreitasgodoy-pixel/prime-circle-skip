@@ -1,10 +1,11 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
+import { Skeleton } from '@/components/ui/skeleton'
 import { AmbassadorWidget } from '@/components/AmbassadorWidget'
 import { FounderExpiryBanner } from '@/components/FounderExpiryBanner'
 import {
@@ -19,12 +20,18 @@ import {
 } from 'lucide-react'
 import useAppStore from '@/stores/main'
 import { useToast } from '@/hooks/use-toast'
+import { useAuth } from '@/hooks/use-auth'
+import { supabase } from '@/lib/supabase/client'
 
 export default function DashboardPage() {
   const { user, listings, needs, matches, updateMatchStatus, suggestions, updateSuggestionStatus } =
     useAppStore()
+  const { user: authUser } = useAuth()
   const { toast } = useToast()
   const navigate = useNavigate()
+
+  const [profileName, setProfileName] = useState<string>('')
+  const [isLoadingName, setIsLoadingName] = useState(true)
 
   const updateSugRef = useRef(updateSuggestionStatus)
 
@@ -42,6 +49,40 @@ export default function DashboardPage() {
       return () => clearTimeout(timer)
     }
   }, [suggestions, user?.id])
+
+  useEffect(() => {
+    let mounted = true
+
+    const fetchProfile = async () => {
+      if (!authUser) {
+        setIsLoadingName(false)
+        return
+      }
+
+      setIsLoadingName(true)
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('full_name')
+        .eq('id', authUser.id)
+        .single()
+
+      if (!mounted) return
+
+      if (!error && data?.full_name) {
+        setProfileName(data.full_name)
+      } else {
+        // Fallback gracefully
+        setProfileName(authUser.email ? authUser.email.split('@')[0] : 'Administrador')
+      }
+      setIsLoadingName(false)
+    }
+
+    fetchProfile()
+
+    return () => {
+      mounted = false
+    }
+  }, [authUser])
 
   // Chapter Isolation Enforced: Only see data from the same chapter
   const chapterListings = listings.filter((l) => l.chapter === user?.chapter)
@@ -123,8 +164,13 @@ export default function DashboardPage() {
 
       <div className="flex flex-col md:flex-row gap-6 md:items-center justify-between">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight text-white">
-            Dashboard, {user?.name?.split(' ')[0]}
+          <h2 className="text-3xl font-bold tracking-tight text-white flex items-center flex-wrap gap-2 min-h-9">
+            Dashboard,{' '}
+            {isLoadingName ? (
+              <Skeleton className="h-8 w-32 bg-muted/20" />
+            ) : (
+              profileName.split(' ')[0]
+            )}
           </h2>
           <p className="text-muted-foreground mt-2">
             Plano atual:{' '}
