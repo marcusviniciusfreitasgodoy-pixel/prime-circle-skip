@@ -32,6 +32,7 @@ import {
   CommandItem,
   CommandList,
 } from '@/components/ui/command'
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { useToast } from '@/hooks/use-toast'
 import { useAuth } from '@/hooks/use-auth'
 import { cn } from '@/lib/utils'
@@ -67,6 +68,8 @@ const formSchema = z.object({
   creci: z.string().min(4, 'CRECI inválido'),
   region: z.array(z.string()).min(1, 'Informe pelo menos uma região'),
   ticket: z.string().min(1, 'Informe seu ticket médio'),
+  workType: z.enum(['autonomo', 'imobiliaria']).default('autonomo'),
+  companyName: z.string().max(100, 'Nome muito longo').optional(),
   referral: z.string().optional(),
   agreement: z
     .boolean()
@@ -120,6 +123,8 @@ export default function ApplyPage() {
       creci: '',
       region: [],
       ticket: '',
+      workType: 'autonomo',
+      companyName: '',
       referral: '',
       agreement: false,
     },
@@ -135,6 +140,10 @@ export default function ApplyPage() {
         region: values.region.join(', '),
         ticket_value: values.ticket,
         referral_code: values.referral,
+        company_name:
+          values.workType === 'autonomo'
+            ? 'Autônomo'
+            : values.companyName || 'Imobiliária (Não informada)',
         accepted_terms: values.agreement,
       })
 
@@ -517,9 +526,70 @@ export default function ApplyPage() {
 
             <FormField
               control={form.control}
+              name="workType"
+              render={({ field }) => (
+                <FormItem className="space-y-3 pt-2">
+                  <FormLabel className="text-white">Atuação Profissional</FormLabel>
+                  <FormControl>
+                    <RadioGroup
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      disabled={isLoading}
+                      className="flex flex-col space-y-2 sm:flex-row sm:space-x-4 sm:space-y-0"
+                    >
+                      <FormItem className="flex items-center space-x-2 space-y-0">
+                        <FormControl>
+                          <RadioGroupItem value="autonomo" />
+                        </FormControl>
+                        <FormLabel className="font-normal text-white cursor-pointer">
+                          Corretor Autônomo
+                        </FormLabel>
+                      </FormItem>
+                      <FormItem className="flex items-center space-x-2 space-y-0">
+                        <FormControl>
+                          <RadioGroupItem value="imobiliaria" />
+                        </FormControl>
+                        <FormLabel className="font-normal text-white cursor-pointer">
+                          Imobiliária / Agência
+                        </FormLabel>
+                      </FormItem>
+                    </RadioGroup>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {form.watch('workType') === 'imobiliaria' && (
+              <FormField
+                control={form.control}
+                name="companyName"
+                render={({ field }) => (
+                  <FormItem className="animate-in fade-in zoom-in slide-in-from-top-2 duration-300">
+                    <FormLabel className="text-white">Nome da Imobiliária</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Digite o nome da imobiliária (opcional)"
+                        {...field}
+                        className="bg-background"
+                        disabled={isLoading}
+                      />
+                    </FormControl>
+                    <FormDescription className="text-xs text-muted-foreground">
+                      Se você faz parte de uma agência, informe o nome para melhor identificação na
+                      rede.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
+
+            <FormField
+              control={form.control}
               name="referral"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="pt-2">
                   <FormLabel className="text-white flex items-center gap-2">
                     Código de Indicação
                     <Info className="w-4 h-4 text-muted-foreground" />
