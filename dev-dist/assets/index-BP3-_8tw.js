@@ -19813,6 +19813,10 @@ var Users = createLucideIcon("users", [
 		key: "nufk8"
 	}]
 ]);
+var Wrench = createLucideIcon("wrench", [["path", {
+	d: "M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.106-3.105c.32-.322.863-.22.983.218a6 6 0 0 1-8.259 7.057l-7.91 7.91a1 1 0 0 1-2.999-3l7.91-7.91a6 6 0 0 1 7.057-8.259c.438.12.54.662.219.984z",
+	key: "1ngwbx"
+}]]);
 var X = createLucideIcon("x", [["path", {
 	d: "M18 6 6 18",
 	key: "1bl5f8"
@@ -20733,6 +20737,192 @@ function CriteriaSection() {
 					})]
 				})]
 			})]
+		})]
+	});
+}
+//#endregion
+//#region src/components/home/CollaborationSection.tsx
+function CollaborationSection() {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
+		"data-uid": "src/components/home/CollaborationSection.tsx:8:5",
+		"data-prohibitions": "[]",
+		className: "py-24 bg-zinc-950 text-white relative border-t border-zinc-900 overflow-hidden",
+		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+			"data-uid": "src/components/home/CollaborationSection.tsx:9:7",
+			"data-prohibitions": "[editContent]",
+			className: "absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary/10 via-zinc-950 to-zinc-950 opacity-40"
+		}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+			"data-uid": "src/components/home/CollaborationSection.tsx:11:7",
+			"data-prohibitions": "[]",
+			className: "container relative mx-auto px-4 md:px-6",
+			children: [
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					"data-uid": "src/components/home/CollaborationSection.tsx:12:9",
+					"data-prohibitions": "[]",
+					className: "text-center max-w-3xl mx-auto mb-16 space-y-4 animate-fade-in-up",
+					children: [
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+							"data-uid": "src/components/home/CollaborationSection.tsx:13:11",
+							"data-prohibitions": "[]",
+							className: "inline-flex items-center rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs sm:text-sm font-medium text-primary shadow-[0_0_10px_rgba(201,168,76,0.1)]",
+							children: "Co-criação e Evolução"
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h2", {
+							"data-uid": "src/components/home/CollaborationSection.tsx:16:11",
+							"data-prohibitions": "[]",
+							className: "text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight",
+							children: [
+								"Uma plataforma construída a",
+								" ",
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+									"data-uid": "src/components/home/CollaborationSection.tsx:18:13",
+									"data-prohibitions": "[]",
+									className: "text-primary gold-text drop-shadow-sm",
+									children: "várias mãos"
+								})
+							]
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+							"data-uid": "src/components/home/CollaborationSection.tsx:20:11",
+							"data-prohibitions": "[]",
+							className: "text-base sm:text-lg text-zinc-400 leading-relaxed",
+							children: "O Prime Circle é um organismo vivo em constante evolução. Nossa tecnologia e roadmap são guiados diretamente pela inteligência e experiência de mercado dos nossos membros fundadores."
+						})
+					]
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					"data-uid": "src/components/home/CollaborationSection.tsx:27:9",
+					"data-prohibitions": "[]",
+					className: "grid md:grid-cols-3 gap-8 mb-12 relative z-10",
+					children: [
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
+							"data-uid": "src/components/home/CollaborationSection.tsx:28:11",
+							"data-prohibitions": "[]",
+							className: "bg-zinc-900/60 border-zinc-800 backdrop-blur p-8 hover:border-primary/50 transition-all duration-300 hover:-translate-y-1 shadow-lg group",
+							children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+									"data-uid": "src/components/home/CollaborationSection.tsx:29:13",
+									"data-prohibitions": "[]",
+									className: "w-14 h-14 rounded-2xl bg-zinc-950 flex items-center justify-center mb-6 border border-zinc-800 group-hover:border-primary/50 transition-colors shadow-[0_0_15px_rgba(201,168,76,0.05)]",
+									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Wrench, {
+										"data-uid": "src/components/home/CollaborationSection.tsx:30:15",
+										"data-prohibitions": "[editContent]",
+										className: "w-7 h-7 text-primary"
+									})
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
+									"data-uid": "src/components/home/CollaborationSection.tsx:32:13",
+									"data-prohibitions": "[]",
+									className: "text-xl font-bold text-zinc-100 mb-3",
+									children: "Desenvolvimento Contínuo"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+									"data-uid": "src/components/home/CollaborationSection.tsx:33:13",
+									"data-prohibitions": "[]",
+									className: "text-zinc-400 text-sm leading-relaxed",
+									children: "Não somos uma ferramenta estática. Lançamos melhorias frequentemente com base nos desafios reais que você enfrenta nas suas negociações diárias."
+								})
+							]
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
+							"data-uid": "src/components/home/CollaborationSection.tsx:39:11",
+							"data-prohibitions": "[]",
+							className: "bg-zinc-900/60 border-zinc-800 backdrop-blur p-8 hover:border-primary/50 transition-all duration-300 hover:-translate-y-1 shadow-lg group",
+							children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+									"data-uid": "src/components/home/CollaborationSection.tsx:40:13",
+									"data-prohibitions": "[]",
+									className: "w-14 h-14 rounded-2xl bg-zinc-950 flex items-center justify-center mb-6 border border-zinc-800 group-hover:border-primary/50 transition-colors shadow-[0_0_15px_rgba(201,168,76,0.05)]",
+									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Lightbulb, {
+										"data-uid": "src/components/home/CollaborationSection.tsx:41:15",
+										"data-prohibitions": "[editContent]",
+										className: "w-7 h-7 text-primary"
+									})
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
+									"data-uid": "src/components/home/CollaborationSection.tsx:43:13",
+									"data-prohibitions": "[]",
+									className: "text-xl font-bold text-zinc-100 mb-3",
+									children: "Sua Voz no Roadmap"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+									"data-uid": "src/components/home/CollaborationSection.tsx:44:13",
+									"data-prohibitions": "[]",
+									className: "text-zinc-400 text-sm leading-relaxed",
+									children: "Você tem um canal direto para sugerir novas funcionalidades, filtros ou ferramentas que tornariam o seu trabalho mais eficiente e lucrativo."
+								})
+							]
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
+							"data-uid": "src/components/home/CollaborationSection.tsx:50:11",
+							"data-prohibitions": "[]",
+							className: "bg-zinc-900/60 border-primary/30 backdrop-blur p-8 hover:border-primary/60 transition-all duration-300 hover:-translate-y-1 shadow-[0_0_20px_rgba(201,168,76,0.1)] relative overflow-hidden group",
+							children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+									"data-uid": "src/components/home/CollaborationSection.tsx:51:13",
+									"data-prohibitions": "[editContent]",
+									className: "absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-3xl group-hover:bg-primary/20 transition-colors"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+									"data-uid": "src/components/home/CollaborationSection.tsx:52:13",
+									"data-prohibitions": "[]",
+									className: "w-14 h-14 rounded-2xl bg-zinc-950 flex items-center justify-center mb-6 border border-primary/30 group-hover:border-primary/60 transition-colors shadow-[0_0_15px_rgba(201,168,76,0.1)] relative z-10",
+									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Gift, {
+										"data-uid": "src/components/home/CollaborationSection.tsx:53:15",
+										"data-prohibitions": "[editContent]",
+										className: "w-7 h-7 text-primary"
+									})
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
+									"data-uid": "src/components/home/CollaborationSection.tsx:55:13",
+									"data-prohibitions": "[]",
+									className: "text-xl font-bold text-zinc-100 mb-3 relative z-10",
+									children: "Recompensa por Valor"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
+									"data-uid": "src/components/home/CollaborationSection.tsx:58:13",
+									"data-prohibitions": "[]",
+									className: "text-zinc-400 text-sm leading-relaxed relative z-10",
+									children: [
+										"Sua expertise vale muito. Toda sugestão sua que for aprovada e implementada na plataforma rende",
+										" ",
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", {
+											"data-uid": "src/components/home/CollaborationSection.tsx:61:15",
+											"data-prohibitions": "[]",
+											className: "text-zinc-200 font-semibold",
+											children: "1 mês de crédito extra"
+										}),
+										" na sua assinatura."
+									]
+								})
+							]
+						})
+					]
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+					"data-uid": "src/components/home/CollaborationSection.tsx:67:9",
+					"data-prohibitions": "[]",
+					className: "flex justify-center relative z-10 animate-fade-in-up",
+					style: { animationDelay: "200ms" },
+					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+						"data-uid": "src/components/home/CollaborationSection.tsx:71:11",
+						"data-prohibitions": "[]",
+						asChild: true,
+						size: "lg",
+						className: "h-14 px-8 text-base shadow-elevation hover:scale-105 transition-transform duration-300 gold-gradient text-black font-bold group",
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Link, {
+							"data-uid": "src/components/home/CollaborationSection.tsx:76:13",
+							"data-prohibitions": "[]",
+							to: "/suggestions",
+							children: ["Contribuir com o Roadmap", /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ArrowRight, {
+								"data-uid": "src/components/home/CollaborationSection.tsx:78:15",
+								"data-prohibitions": "[editContent]",
+								className: "ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform"
+							})]
+						})
+					})
+				})
+			]
 		})]
 	});
 }
@@ -21685,51 +21875,55 @@ function Index() {
 		};
 	}, []);
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-		"data-uid": "src/pages/Index.tsx:21:5",
+		"data-uid": "src/pages/Index.tsx:22:5",
 		"data-prohibitions": "[]",
 		className: "min-h-screen bg-background text-foreground flex flex-col",
 		children: [
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Navbar, {
-				"data-uid": "src/pages/Index.tsx:22:7",
+				"data-uid": "src/pages/Index.tsx:23:7",
 				"data-prohibitions": "[editContent]"
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("main", {
-				"data-uid": "src/pages/Index.tsx:23:7",
+				"data-uid": "src/pages/Index.tsx:24:7",
 				"data-prohibitions": "[]",
 				className: "flex-1",
 				children: [
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(HeroSection, {
-						"data-uid": "src/pages/Index.tsx:24:9",
-						"data-prohibitions": "[editContent]"
-					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProblemSection, {
 						"data-uid": "src/pages/Index.tsx:25:9",
 						"data-prohibitions": "[editContent]"
 					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(NetworkSection, {
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProblemSection, {
 						"data-uid": "src/pages/Index.tsx:26:9",
 						"data-prohibitions": "[editContent]"
 					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(NetworkDetailsSection, {
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(NetworkSection, {
 						"data-uid": "src/pages/Index.tsx:27:9",
 						"data-prohibitions": "[editContent]"
 					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(PersonaSection, {
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(NetworkDetailsSection, {
 						"data-uid": "src/pages/Index.tsx:28:9",
 						"data-prohibitions": "[editContent]"
 					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CriteriaSection, {
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(PersonaSection, {
 						"data-uid": "src/pages/Index.tsx:29:9",
 						"data-prohibitions": "[editContent]"
 					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ReferralSection, {
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CriteriaSection, {
 						"data-uid": "src/pages/Index.tsx:30:9",
+						"data-prohibitions": "[editContent]"
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CollaborationSection, {
+						"data-uid": "src/pages/Index.tsx:31:9",
+						"data-prohibitions": "[editContent]"
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ReferralSection, {
+						"data-uid": "src/pages/Index.tsx:32:9",
 						"data-prohibitions": "[editContent]"
 					})
 				]
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Footer, {
-				"data-uid": "src/pages/Index.tsx:32:7",
+				"data-uid": "src/pages/Index.tsx:34:7",
 				"data-prohibitions": "[editContent]"
 			})
 		]
@@ -36075,4 +36269,4 @@ function App() {
 }));
 //#endregion
 
-//# sourceMappingURL=index-CoDsoUAR.js.map
+//# sourceMappingURL=index-BP3-_8tw.js.map

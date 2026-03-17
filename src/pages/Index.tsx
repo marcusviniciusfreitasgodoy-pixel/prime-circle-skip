@@ -5,6 +5,7 @@ import { NetworkSection } from '@/components/home/NetworkSection'
 import { NetworkDetailsSection } from '@/components/home/NetworkDetailsSection'
 import { PersonaSection } from '@/components/home/PersonaSection'
 import { CriteriaSection } from '@/components/home/CriteriaSection'
+import { CollaborationSection } from '@/components/home/CollaborationSection'
 import { ReferralSection } from '@/components/home/ReferralSection'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
@@ -27,6 +28,7 @@ export default function Index() {
         <NetworkDetailsSection />
         <PersonaSection />
         <CriteriaSection />
+        <CollaborationSection />
         <ReferralSection />
       </main>
       <Footer />
