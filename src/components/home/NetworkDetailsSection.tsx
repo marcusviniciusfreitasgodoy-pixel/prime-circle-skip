@@ -40,9 +40,9 @@ export function NetworkDetailsSection() {
                 Publicação de Oportunidades e Demandas
               </h3>
               <p className="text-zinc-400 text-sm leading-relaxed">
-                Nossos corretores têm a disponibilidade e o interesse constante em publicar suas
-                oportunidades reais e as necessidades específicas de seus clientes em um ambiente
-                seguro e qualificado.
+                Nossos corretores parceiros têm a disponibilidade e o interesse constante em
+                publicar suas oportunidades reais e as necessidades específicas de seus clientes em
+                um ambiente seguro e qualificado.
               </p>
             </div>
           </Card>

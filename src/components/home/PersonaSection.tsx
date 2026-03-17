@@ -75,7 +75,8 @@ export function PersonaSection() {
                   Junte-se aos melhores profissionais
                 </p>
                 <p className="text-zinc-300 text-xs sm:text-sm mt-2 max-w-sm">
-                  Aumente sua autoridade local e maximize seus resultados no mercado de luxo.
+                  Aumente sua autoridade local e maximize seus resultados no mercado de alto padrão
+                  da Barra da Tijuca
                 </p>
               </div>
             </div>

@@ -20343,7 +20343,7 @@ function NetworkDetailsSection() {
 									"data-uid": "src/components/home/NetworkDetailsSection.tsx:42:15",
 									"data-prohibitions": "[]",
 									className: "text-zinc-400 text-sm leading-relaxed",
-									children: "Nossos corretores têm a disponibilidade e o interesse constante em publicar suas oportunidades reais e as necessidades específicas de seus clientes em um ambiente seguro e qualificado."
+									children: "Nossos corretores parceiros têm a disponibilidade e o interesse constante em publicar suas oportunidades reais e as necessidades específicas de seus clientes em um ambiente seguro e qualificado."
 								})
 							]
 						})]
@@ -20571,7 +20571,7 @@ function PersonaSection() {
 									"data-uid": "src/components/home/PersonaSection.tsx:77:17",
 									"data-prohibitions": "[]",
 									className: "text-zinc-300 text-xs sm:text-sm mt-2 max-w-sm",
-									children: "Aumente sua autoridade local e maximize seus resultados no mercado de luxo."
+									children: "Aumente sua autoridade local e maximize seus resultados no mercado de alto padrão da Barra da Tijuca"
 								})]
 							})
 						]
@@ -36075,4 +36075,4 @@ function App() {
 }));
 //#endregion
 
-//# sourceMappingURL=index-C7r5bYKl.js.map
+//# sourceMappingURL=index-CoDsoUAR.js.map
