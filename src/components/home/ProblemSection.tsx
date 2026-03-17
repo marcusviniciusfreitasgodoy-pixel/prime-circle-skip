@@ -6,7 +6,7 @@ export function ProblemSection() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            O fim do caos no mercado de alto padrão.
+            Um novo caminho que se abre no mercado
           </h2>
           <p className="text-lg text-muted-foreground">
             Diga adeus à fadiga dos portais ineficientes e ao ruído dos grupos de WhatsApp

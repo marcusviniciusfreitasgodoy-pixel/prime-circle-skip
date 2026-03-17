@@ -19876,7 +19876,7 @@ function ProblemSection() {
 					"data-uid": "src/components/home/ProblemSection.tsx:8:11",
 					"data-prohibitions": "[]",
 					className: "text-3xl md:text-4xl font-bold mb-4",
-					children: "O fim do caos no mercado de alto padrão."
+					children: "Um novo caminho que se abre no mercado"
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
 					"data-uid": "src/components/home/ProblemSection.tsx:11:11",
 					"data-prohibitions": "[]",
@@ -35644,4 +35644,4 @@ function App() {
 }));
 //#endregion
 
-//# sourceMappingURL=index-CoMVpGc6.js.map
+//# sourceMappingURL=index-C0HsSNX5.js.map
