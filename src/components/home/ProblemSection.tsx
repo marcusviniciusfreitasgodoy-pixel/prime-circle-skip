@@ -23,7 +23,7 @@ export function ProblemSection() {
             <h3 className="text-xl font-semibold text-white mb-3">A Ineficiência dos Portais</h3>
             <p className="text-muted-foreground">
               Publicar imóveis premium em portais abertos desvaloriza o ativo, atrai curiosos e
-              desgasta a relação de exclusividade com o proprietário.
+              desgasta a relação com o proprietário.
             </p>
           </div>
 

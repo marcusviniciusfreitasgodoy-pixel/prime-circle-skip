@@ -19913,7 +19913,7 @@ function ProblemSection() {
 								"data-uid": "src/components/home/ProblemSection.tsx:24:13",
 								"data-prohibitions": "[]",
 								className: "text-muted-foreground",
-								children: "Publicar imóveis premium em portais abertos desvaloriza o ativo, atrai curiosos e desgasta a relação de exclusividade com o proprietário."
+								children: "Publicar imóveis premium em portais abertos desvaloriza o ativo, atrai curiosos e desgasta a relação com o proprietário."
 							})
 						]
 					}),
@@ -35644,4 +35644,4 @@ function App() {
 }));
 //#endregion
 
-//# sourceMappingURL=index-C0HsSNX5.js.map
+//# sourceMappingURL=index-DZp9BP0y.js.map
