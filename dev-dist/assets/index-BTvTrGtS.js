@@ -20109,77 +20109,77 @@ function NetworkSection() {
 				className: "grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center",
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 					"data-uid": "src/components/home/NetworkSection.tsx:11:11",
-					"data-prohibitions": "[editContent]",
+					"data-prohibitions": "[]",
 					className: "order-2 lg:order-1 relative",
 					children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 						"data-uid": "src/components/home/NetworkSection.tsx:12:13",
-						"data-prohibitions": "[editContent]",
+						"data-prohibitions": "[]",
 						className: "relative w-full h-[350px] sm:h-[400px] lg:h-[600px] rounded-3xl overflow-hidden shadow-2xl border border-zinc-200/50 dark:border-zinc-800/50",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
-							"data-uid": "src/components/home/NetworkSection.tsx:14:15",
+							"data-uid": "src/components/home/NetworkSection.tsx:13:15",
 							"data-prohibitions": "[editContent]",
 							src: voce_quer_parceria_seria_45452_default,
 							alt: "Profissionais trabalhando juntos em um escritório",
 							className: "absolute inset-0 w-full h-full object-cover scale-110 object-center"
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Card, {
-							"data-uid": "src/components/home/NetworkSection.tsx:19:15",
+							"data-uid": "src/components/home/NetworkSection.tsx:18:15",
 							"data-prohibitions": "[]",
 							className: "absolute bottom-4 sm:bottom-6 left-4 sm:left-6 right-4 sm:right-6 p-4 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-sm border-zinc-200/50 dark:border-zinc-800/50 shadow-lg",
 							children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								"data-uid": "src/components/home/NetworkSection.tsx:20:17",
+								"data-uid": "src/components/home/NetworkSection.tsx:19:17",
 								"data-prohibitions": "[]",
 								className: "flex items-center gap-4",
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-									"data-uid": "src/components/home/NetworkSection.tsx:21:19",
+									"data-uid": "src/components/home/NetworkSection.tsx:20:19",
 									"data-prohibitions": "[]",
 									className: "w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0",
 									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Network, {
-										"data-uid": "src/components/home/NetworkSection.tsx:22:21",
+										"data-uid": "src/components/home/NetworkSection.tsx:21:21",
 										"data-prohibitions": "[editContent]",
 										className: "w-5 h-5 sm:w-6 sm:h-6"
 									})
 								}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-									"data-uid": "src/components/home/NetworkSection.tsx:24:19",
+									"data-uid": "src/components/home/NetworkSection.tsx:23:19",
 									"data-prohibitions": "[]",
 									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-										"data-uid": "src/components/home/NetworkSection.tsx:25:21",
+										"data-uid": "src/components/home/NetworkSection.tsx:24:21",
 										"data-prohibitions": "[]",
 										className: "font-semibold text-zinc-900 dark:text-zinc-100 text-sm sm:text-base",
-										children: "Algorithm Match"
+										children: "Rede de Colaboração"
 									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-										"data-uid": "src/components/home/NetworkSection.tsx:28:21",
+										"data-uid": "src/components/home/NetworkSection.tsx:27:21",
 										"data-prohibitions": "[]",
 										className: "text-xs sm:text-sm text-zinc-600 dark:text-zinc-400",
-										children: "Conexões inteligentes e alta liquidez"
+										children: "Parcerias diretas e alta liquidez"
 									})]
 								})]
 							})
 						})]
 					})
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					"data-uid": "src/components/home/NetworkSection.tsx:37:11",
+					"data-uid": "src/components/home/NetworkSection.tsx:36:11",
 					"data-prohibitions": "[editContent]",
 					className: "order-1 lg:order-2 space-y-6 sm:space-y-8",
 					children: [
 						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-							"data-uid": "src/components/home/NetworkSection.tsx:38:13",
+							"data-uid": "src/components/home/NetworkSection.tsx:37:13",
 							"data-prohibitions": "[]",
 							className: "space-y-4",
 							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h2", {
-								"data-uid": "src/components/home/NetworkSection.tsx:39:15",
+								"data-uid": "src/components/home/NetworkSection.tsx:38:15",
 								"data-prohibitions": "[]",
 								className: "text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50",
 								children: ["Conexões que geram ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-									"data-uid": "src/components/home/NetworkSection.tsx:40:36",
+									"data-uid": "src/components/home/NetworkSection.tsx:39:36",
 									"data-prohibitions": "[]",
 									className: "text-primary",
 									children: "liquidez imediata"
 								})]
 							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-								"data-uid": "src/components/home/NetworkSection.tsx:42:15",
+								"data-uid": "src/components/home/NetworkSection.tsx:41:15",
 								"data-prohibitions": "[]",
 								className: "text-base sm:text-lg text-zinc-600 dark:text-zinc-400 leading-relaxed",
-								children: "Nossa infraestrutura utiliza inteligência de mercado avançada para cruzar dados de oferta e demanda entre os principais corretores de alto padrão, garantindo negócios mais rápidos e eficientes."
+								children: "O verdadeiro valor da nossa rede está na colaboração ativa. Uma comunidade onde você pode publicar oportunidades reais e buscar imóveis para atender às necessidades específicas dos seus clientes, acessando um portfólio que não está disponível nas imobiliárias tradicionais."
 							})]
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("ul", {
@@ -20187,32 +20187,50 @@ function NetworkSection() {
 							"data-prohibitions": "[editContent]",
 							className: "space-y-4",
 							children: [
-								"Match perfeito entre o seu imóvel e o cliente ideal.",
-								"Acesso a uma rede fechada de corretores de elite.",
-								"Transações otimizadas com foco em resultados reais."
+								{
+									title: "Oportunidades Reais",
+									desc: "Publicação direta de demandas e necessidades dos clientes."
+								},
+								{
+									title: "Acesso Off-Market",
+									desc: "Estoque exclusivo e imóveis que não aparecem em portais tradicionais."
+								},
+								{
+									title: "Liquidez e Colaboração",
+									desc: "Conexões diretas entre corretores para fechamento ágil de negócios."
+								}
 							].map((item, i) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("li", {
-								"data-uid": "src/components/home/NetworkSection.tsx:55:17",
+								"data-uid": "src/components/home/NetworkSection.tsx:64:17",
 								"data-prohibitions": "[editContent]",
 								className: "flex items-start gap-3",
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CircleCheck, {
-									"data-uid": "src/components/home/NetworkSection.tsx:56:19",
+									"data-uid": "src/components/home/NetworkSection.tsx:65:19",
 									"data-prohibitions": "[editContent]",
-									className: "w-6 h-6 text-primary shrink-0"
-								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-									"data-uid": "src/components/home/NetworkSection.tsx:57:19",
+									className: "w-6 h-6 text-primary shrink-0 mt-0.5"
+								}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
+									"data-uid": "src/components/home/NetworkSection.tsx:66:19",
 									"data-prohibitions": "[editContent]",
 									className: "text-sm sm:text-base text-zinc-700 dark:text-zinc-300",
-									children: item
+									children: [
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("strong", {
+											"data-uid": "src/components/home/NetworkSection.tsx:67:21",
+											"data-prohibitions": "[editContent]",
+											className: "font-semibold text-zinc-900 dark:text-zinc-100",
+											children: [item.title, ":"]
+										}),
+										" ",
+										item.desc
+									]
 								})]
 							}, i))
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
-							"data-uid": "src/components/home/NetworkSection.tsx:64:13",
+							"data-uid": "src/components/home/NetworkSection.tsx:76:13",
 							"data-prohibitions": "[]",
 							size: "lg",
 							className: "gap-2 w-full sm:w-auto font-semibold",
-							children: ["Entenda o Algoritmo ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ArrowRight, {
-								"data-uid": "src/components/home/NetworkSection.tsx:65:35",
+							children: ["Como funciona a rede ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ArrowRight, {
+								"data-uid": "src/components/home/NetworkSection.tsx:77:36",
 								"data-prohibitions": "[editContent]",
 								className: "w-4 h-4"
 							})]
@@ -35857,4 +35875,4 @@ function App() {
 }));
 //#endregion
 
-//# sourceMappingURL=index-BOJZKiHS.js.map
+//# sourceMappingURL=index-BTvTrGtS.js.map

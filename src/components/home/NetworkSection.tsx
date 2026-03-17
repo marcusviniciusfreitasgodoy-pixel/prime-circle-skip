@@ -10,7 +10,6 @@ export function NetworkSection() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           <div className="order-2 lg:order-1 relative">
             <div className="relative w-full h-[350px] sm:h-[400px] lg:h-[600px] rounded-3xl overflow-hidden shadow-2xl border border-zinc-200/50 dark:border-zinc-800/50">
-              {/* Image with scale-110 to reliably hide AI watermarks on corners */}
               <img
                 src={networkImg}
                 alt="Profissionais trabalhando juntos em um escritório"
@@ -23,10 +22,10 @@ export function NetworkSection() {
                   </div>
                   <div>
                     <p className="font-semibold text-zinc-900 dark:text-zinc-100 text-sm sm:text-base">
-                      Algorithm Match
+                      Rede de Colaboração
                     </p>
                     <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400">
-                      Conexões inteligentes e alta liquidez
+                      Parcerias diretas e alta liquidez
                     </p>
                   </div>
                 </div>
@@ -40,29 +39,42 @@ export function NetworkSection() {
                 Conexões que geram <span className="text-primary">liquidez imediata</span>
               </h2>
               <p className="text-base sm:text-lg text-zinc-600 dark:text-zinc-400 leading-relaxed">
-                Nossa infraestrutura utiliza inteligência de mercado avançada para cruzar dados de
-                oferta e demanda entre os principais corretores de alto padrão, garantindo negócios
-                mais rápidos e eficientes.
+                O verdadeiro valor da nossa rede está na colaboração ativa. Uma comunidade onde você
+                pode publicar oportunidades reais e buscar imóveis para atender às necessidades
+                específicas dos seus clientes, acessando um portfólio que não está disponível nas
+                imobiliárias tradicionais.
               </p>
             </div>
 
             <ul className="space-y-4">
               {[
-                'Match perfeito entre o seu imóvel e o cliente ideal.',
-                'Acesso a uma rede fechada de corretores de elite.',
-                'Transações otimizadas com foco em resultados reais.',
+                {
+                  title: 'Oportunidades Reais',
+                  desc: 'Publicação direta de demandas e necessidades dos clientes.',
+                },
+                {
+                  title: 'Acesso Off-Market',
+                  desc: 'Estoque exclusivo e imóveis que não aparecem em portais tradicionais.',
+                },
+                {
+                  title: 'Liquidez e Colaboração',
+                  desc: 'Conexões diretas entre corretores para fechamento ágil de negócios.',
+                },
               ].map((item, i) => (
                 <li key={i} className="flex items-start gap-3">
-                  <CheckCircle2 className="w-6 h-6 text-primary shrink-0" />
+                  <CheckCircle2 className="w-6 h-6 text-primary shrink-0 mt-0.5" />
                   <span className="text-sm sm:text-base text-zinc-700 dark:text-zinc-300">
-                    {item}
+                    <strong className="font-semibold text-zinc-900 dark:text-zinc-100">
+                      {item.title}:
+                    </strong>{' '}
+                    {item.desc}
                   </span>
                 </li>
               ))}
             </ul>
 
             <Button size="lg" className="gap-2 w-full sm:w-auto font-semibold">
-              Entenda o Algoritmo <ArrowRight className="w-4 h-4" />
+              Como funciona a rede <ArrowRight className="w-4 h-4" />
             </Button>
           </div>
         </div>
