@@ -9,23 +9,23 @@ export function NetworkSection() {
       <div className="container mx-auto px-4 md:px-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           <div className="order-2 lg:order-1 relative">
-            <div className="relative w-full h-[400px] lg:h-[600px] rounded-3xl overflow-hidden shadow-2xl border border-zinc-200/50 dark:border-zinc-800/50">
-              {/* Image with scale-[1.05] to hide the bottom-right AI watermark */}
+            <div className="relative w-full h-[350px] sm:h-[400px] lg:h-[600px] rounded-3xl overflow-hidden shadow-2xl border border-zinc-200/50 dark:border-zinc-800/50">
+              {/* Image with scale-110 to reliably hide AI watermarks on corners */}
               <img
                 src={networkImg}
                 alt="Profissionais trabalhando juntos em um escritório"
-                className="absolute inset-0 w-full h-full object-cover scale-[1.05] object-center"
+                className="absolute inset-0 w-full h-full object-cover scale-110 object-center"
               />
-              <Card className="absolute bottom-6 left-6 right-6 p-4 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-sm border-zinc-200/50 dark:border-zinc-800/50 shadow-lg">
+              <Card className="absolute bottom-4 sm:bottom-6 left-4 sm:left-6 right-4 sm:right-6 p-4 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-sm border-zinc-200/50 dark:border-zinc-800/50 shadow-lg">
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
-                    <Network className="w-6 h-6" />
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                    <Network className="w-5 h-5 sm:w-6 sm:h-6" />
                   </div>
                   <div>
-                    <p className="font-semibold text-zinc-900 dark:text-zinc-100">
+                    <p className="font-semibold text-zinc-900 dark:text-zinc-100 text-sm sm:text-base">
                       Algorithm Match
                     </p>
-                    <p className="text-sm text-zinc-600 dark:text-zinc-400">
+                    <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400">
                       Conexões inteligentes e alta liquidez
                     </p>
                   </div>
@@ -34,12 +34,12 @@ export function NetworkSection() {
             </div>
           </div>
 
-          <div className="order-1 lg:order-2 space-y-8">
+          <div className="order-1 lg:order-2 space-y-6 sm:space-y-8">
             <div className="space-y-4">
-              <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
                 Conexões que geram <span className="text-primary">liquidez imediata</span>
               </h2>
-              <p className="text-lg text-zinc-600 dark:text-zinc-400 leading-relaxed">
+              <p className="text-base sm:text-lg text-zinc-600 dark:text-zinc-400 leading-relaxed">
                 Nossa infraestrutura utiliza inteligência de mercado avançada para cruzar dados de
                 oferta e demanda entre os principais corretores de alto padrão, garantindo negócios
                 mais rápidos e eficientes.
@@ -54,12 +54,14 @@ export function NetworkSection() {
               ].map((item, i) => (
                 <li key={i} className="flex items-start gap-3">
                   <CheckCircle2 className="w-6 h-6 text-primary shrink-0" />
-                  <span className="text-zinc-700 dark:text-zinc-300">{item}</span>
+                  <span className="text-sm sm:text-base text-zinc-700 dark:text-zinc-300">
+                    {item}
+                  </span>
                 </li>
               ))}
             </ul>
 
-            <Button size="lg" className="gap-2">
+            <Button size="lg" className="gap-2 w-full sm:w-auto font-semibold">
               Entenda o Algoritmo <ArrowRight className="w-4 h-4" />
             </Button>
           </div>

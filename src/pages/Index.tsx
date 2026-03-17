@@ -1,6 +1,7 @@
 import { HeroSection } from '@/components/home/HeroSection'
 import { ProblemSection } from '@/components/home/ProblemSection'
 import { NetworkSection } from '@/components/home/NetworkSection'
+import { PersonaSection } from '@/components/home/PersonaSection'
 import { CriteriaSection } from '@/components/home/CriteriaSection'
 import { ReferralSection } from '@/components/home/ReferralSection'
 import { Navbar } from '@/components/layout/Navbar'
@@ -14,6 +15,7 @@ export default function Index() {
         <HeroSection />
         <ProblemSection />
         <NetworkSection />
+        <PersonaSection />
         <CriteriaSection />
         <ReferralSection />
       </main>
