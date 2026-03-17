@@ -1,10 +1,100 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { useState, useEffect } from 'react'
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Button } from '@/components/ui/button'
 import { AmbassadorWidget } from '@/components/AmbassadorWidget'
 import useAppStore from '@/stores/main'
+import { useAuth } from '@/hooks/use-auth'
+import { supabase } from '@/lib/supabase/client'
+import { useToast } from '@/hooks/use-toast'
 
 export default function ProfilePage() {
   const { user } = useAppStore()
+  const { user: authUser } = useAuth()
+  const { toast } = useToast()
+
+  const [whatsapp, setWhatsapp] = useState('')
+  const [isSaving, setIsSaving] = useState(false)
+
+  useEffect(() => {
+    if (authUser) {
+      supabase
+        .from('profiles')
+        .select('whatsapp_number')
+        .eq('id', authUser.id)
+        .single()
+        .then(({ data }) => {
+          if (data && data.whatsapp_number) {
+            setWhatsapp(data.whatsapp_number)
+          }
+        })
+    }
+  }, [authUser])
+
+  const handleSaveWhatsapp = async () => {
+    if (!authUser) {
+      toast({
+        title: 'Não autenticado',
+        description: 'Você precisa estar logado para salvar.',
+        variant: 'destructive',
+      })
+      return
+    }
+
+    const phoneRegex = /^\+?[1-9]\d{1,14}$/
+    if (!phoneRegex.test(whatsapp)) {
+      toast({
+        title: 'Número inválido',
+        description: 'Por favor, insira um número válido (ex: +5511999999999)',
+        variant: 'destructive',
+      })
+      return
+    }
+
+    setIsSaving(true)
+
+    const { data: existingProfile } = await supabase
+      .from('profiles')
+      .select('id')
+      .eq('id', authUser.id)
+      .single()
+
+    let err
+    if (existingProfile) {
+      const { error } = await supabase
+        .from('profiles')
+        .update({
+          whatsapp_number: whatsapp,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', authUser.id)
+      err = error
+    } else {
+      const { error } = await supabase.from('profiles').insert({
+        id: authUser.id,
+        whatsapp_number: whatsapp,
+        updated_at: new Date().toISOString(),
+      })
+      err = error
+    }
+
+    setIsSaving(false)
+
+    if (err) {
+      toast({
+        title: 'Erro ao salvar',
+        description: err.message,
+        variant: 'destructive',
+      })
+    } else {
+      toast({
+        title: 'Sucesso',
+        description: 'Número de WhatsApp atualizado com sucesso.',
+      })
+    }
+  }
 
   if (!user) return null
 
@@ -55,6 +145,35 @@ export default function ProfilePage() {
                 <div>
                   <p className="text-sm text-muted-foreground">Membro desde</p>
                   <p className="font-medium text-white">Março 2024</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-card border-border">
+            <CardHeader>
+              <CardTitle className="text-lg text-white">Contato WhatsApp</CardTitle>
+              <CardDescription>
+                Adicione seu número para receber notificações de matches e parcerias via Evolution
+                API.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="whatsapp" className="text-white">
+                  Número do WhatsApp (com código do país)
+                </Label>
+                <div className="flex gap-2">
+                  <Input
+                    id="whatsapp"
+                    placeholder="+5521999999999"
+                    value={whatsapp}
+                    onChange={(e) => setWhatsapp(e.target.value)}
+                    className="bg-background text-white"
+                  />
+                  <Button onClick={handleSaveWhatsapp} disabled={isSaving}>
+                    {isSaving ? 'Salvando...' : 'Salvar'}
+                  </Button>
                 </div>
               </div>
             </CardContent>
