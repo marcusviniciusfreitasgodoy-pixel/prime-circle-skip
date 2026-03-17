@@ -73,8 +73,10 @@ export function NetworkSection() {
               ))}
             </ul>
 
-            <Button size="lg" className="gap-2 w-full sm:w-auto font-semibold">
-              Como funciona a rede <ArrowRight className="w-4 h-4" />
+            <Button asChild size="lg" className="gap-2 w-full sm:w-auto font-semibold">
+              <a href="#network-details">
+                Como funciona a rede <ArrowRight className="w-4 h-4" />
+              </a>
             </Button>
           </div>
         </div>

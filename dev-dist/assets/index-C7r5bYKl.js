@@ -19586,6 +19586,20 @@ var Mail = createLucideIcon("mail", [["path", {
 	rx: "2",
 	key: "izxlao"
 }]]);
+var Megaphone = createLucideIcon("megaphone", [
+	["path", {
+		d: "M11 6a13 13 0 0 0 8.4-2.8A1 1 0 0 1 21 4v12a1 1 0 0 1-1.6.8A13 13 0 0 0 11 14H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z",
+		key: "q8bfy3"
+	}],
+	["path", {
+		d: "M6 14a12 12 0 0 0 2.4 7.2 2 2 0 0 0 3.2-2.4A8 8 0 0 1 10 14",
+		key: "1853fq"
+	}],
+	["path", {
+		d: "M8 6v8",
+		key: "15ugcq"
+	}]
+]);
 var Network = createLucideIcon("network", [
 	["rect", {
 		x: "16",
@@ -20217,21 +20231,204 @@ function NetworkSection() {
 								})]
 							}, i))
 						}),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
 							"data-uid": "src/components/home/NetworkSection.tsx:76:13",
 							"data-prohibitions": "[]",
+							asChild: true,
 							size: "lg",
 							className: "gap-2 w-full sm:w-auto font-semibold",
-							children: ["Como funciona a rede ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ArrowRight, {
-								"data-uid": "src/components/home/NetworkSection.tsx:77:36",
-								"data-prohibitions": "[editContent]",
-								className: "w-4 h-4"
-							})]
+							children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("a", {
+								"data-uid": "src/components/home/NetworkSection.tsx:77:15",
+								"data-prohibitions": "[]",
+								href: "#network-details",
+								children: ["Como funciona a rede ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ArrowRight, {
+									"data-uid": "src/components/home/NetworkSection.tsx:78:38",
+									"data-prohibitions": "[editContent]",
+									className: "w-4 h-4"
+								})]
+							})
 						})
 					]
 				})]
 			})
 		})
+	});
+}
+//#endregion
+//#region src/components/home/NetworkDetailsSection.tsx
+function NetworkDetailsSection() {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
+		"data-uid": "src/components/home/NetworkDetailsSection.tsx:6:5",
+		"data-prohibitions": "[editContent]",
+		id: "network-details",
+		className: "py-24 bg-zinc-950 text-white relative border-t border-zinc-900 overflow-hidden",
+		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+			"data-uid": "src/components/home/NetworkDetailsSection.tsx:10:7",
+			"data-prohibitions": "[editContent]",
+			className: "absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-primary/5 via-zinc-950 to-zinc-950 opacity-50"
+		}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+			"data-uid": "src/components/home/NetworkDetailsSection.tsx:12:7",
+			"data-prohibitions": "[editContent]",
+			className: "container relative mx-auto px-4 sm:px-6 lg:px-8",
+			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				"data-uid": "src/components/home/NetworkDetailsSection.tsx:13:9",
+				"data-prohibitions": "[]",
+				className: "text-center max-w-3xl mx-auto mb-16 space-y-4",
+				children: [
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+						"data-uid": "src/components/home/NetworkDetailsSection.tsx:14:11",
+						"data-prohibitions": "[]",
+						className: "inline-flex items-center rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs sm:text-sm font-medium text-primary",
+						children: "Processo Colaborativo"
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h2", {
+						"data-uid": "src/components/home/NetworkDetailsSection.tsx:17:11",
+						"data-prohibitions": "[]",
+						className: "text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight",
+						children: ["Como Funciona a ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+							"data-uid": "src/components/home/NetworkDetailsSection.tsx:18:29",
+							"data-prohibitions": "[]",
+							className: "text-primary",
+							children: "Nossa Rede"
+						})]
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+						"data-uid": "src/components/home/NetworkDetailsSection.tsx:20:11",
+						"data-prohibitions": "[]",
+						className: "text-lg text-zinc-400",
+						children: "Diferente de algoritmos automatizados, o Prime Circle foca na interação humana e na inteligência de mercado dos melhores corretores."
+					})
+				]
+			}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				"data-uid": "src/components/home/NetworkDetailsSection.tsx:26:9",
+				"data-prohibitions": "[editContent]",
+				className: "grid md:grid-cols-3 gap-8 relative mt-12",
+				children: [
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+						"data-uid": "src/components/home/NetworkDetailsSection.tsx:28:11",
+						"data-prohibitions": "[editContent]",
+						className: "hidden md:block absolute top-16 left-[16%] right-[16%] h-[2px] bg-gradient-to-r from-zinc-800 via-primary/50 to-zinc-800 z-0"
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
+						"data-uid": "src/components/home/NetworkDetailsSection.tsx:31:11",
+						"data-prohibitions": "[]",
+						className: "bg-zinc-900/60 border-zinc-800 backdrop-blur p-8 relative z-10 hover:border-primary/50 transition-all duration-300 hover:-translate-y-1 group",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+							"data-uid": "src/components/home/NetworkDetailsSection.tsx:32:13",
+							"data-prohibitions": "[]",
+							className: "w-16 h-16 rounded-2xl bg-zinc-950 flex items-center justify-center mb-6 shadow-[0_0_15px_rgba(201,168,76,0.1)] border border-zinc-800 mx-auto group-hover:border-primary/50 group-hover:scale-110 transition-all duration-300",
+							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Megaphone, {
+								"data-uid": "src/components/home/NetworkDetailsSection.tsx:33:15",
+								"data-prohibitions": "[editContent]",
+								className: "w-8 h-8 text-primary"
+							})
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							"data-uid": "src/components/home/NetworkDetailsSection.tsx:35:13",
+							"data-prohibitions": "[]",
+							className: "text-center",
+							children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+									"data-uid": "src/components/home/NetworkDetailsSection.tsx:36:15",
+									"data-prohibitions": "[]",
+									className: "text-primary text-xs font-bold tracking-widest uppercase mb-3 block",
+									children: "Pilar 1"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
+									"data-uid": "src/components/home/NetworkDetailsSection.tsx:39:15",
+									"data-prohibitions": "[]",
+									className: "text-xl font-bold text-zinc-100 mb-4",
+									children: "Publicação de Oportunidades e Demandas"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+									"data-uid": "src/components/home/NetworkDetailsSection.tsx:42:15",
+									"data-prohibitions": "[]",
+									className: "text-zinc-400 text-sm leading-relaxed",
+									children: "Nossos corretores têm a disponibilidade e o interesse constante em publicar suas oportunidades reais e as necessidades específicas de seus clientes em um ambiente seguro e qualificado."
+								})
+							]
+						})]
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
+						"data-uid": "src/components/home/NetworkDetailsSection.tsx:51:11",
+						"data-prohibitions": "[]",
+						className: "bg-zinc-900/60 border-zinc-800 backdrop-blur p-8 relative z-10 hover:border-primary/50 transition-all duration-300 hover:-translate-y-1 group",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+							"data-uid": "src/components/home/NetworkDetailsSection.tsx:52:13",
+							"data-prohibitions": "[]",
+							className: "w-16 h-16 rounded-2xl bg-zinc-950 flex items-center justify-center mb-6 shadow-[0_0_15px_rgba(201,168,76,0.1)] border border-zinc-800 mx-auto group-hover:border-primary/50 group-hover:scale-110 transition-all duration-300",
+							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Search, {
+								"data-uid": "src/components/home/NetworkDetailsSection.tsx:53:15",
+								"data-prohibitions": "[editContent]",
+								className: "w-8 h-8 text-primary"
+							})
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							"data-uid": "src/components/home/NetworkDetailsSection.tsx:55:13",
+							"data-prohibitions": "[]",
+							className: "text-center",
+							children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+									"data-uid": "src/components/home/NetworkDetailsSection.tsx:56:15",
+									"data-prohibitions": "[]",
+									className: "text-primary text-xs font-bold tracking-widest uppercase mb-3 block",
+									children: "Pilar 2"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
+									"data-uid": "src/components/home/NetworkDetailsSection.tsx:59:15",
+									"data-prohibitions": "[]",
+									className: "text-xl font-bold text-zinc-100 mb-4",
+									children: "Busca Assertiva Off-Market"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+									"data-uid": "src/components/home/NetworkDetailsSection.tsx:60:15",
+									"data-prohibitions": "[]",
+									className: "text-zinc-400 text-sm leading-relaxed",
+									children: "Facilitamos a busca de imóveis que não estão disponíveis nas imobiliárias tradicionais ou portais públicos, atendendo com precisão cirúrgica às exigências dos clientes mais exclusivos."
+								})
+							]
+						})]
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
+						"data-uid": "src/components/home/NetworkDetailsSection.tsx:69:11",
+						"data-prohibitions": "[]",
+						className: "bg-zinc-900/60 border-zinc-800 backdrop-blur p-8 relative z-10 hover:border-primary/50 transition-all duration-300 hover:-translate-y-1 group",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+							"data-uid": "src/components/home/NetworkDetailsSection.tsx:70:13",
+							"data-prohibitions": "[]",
+							className: "w-16 h-16 rounded-2xl bg-zinc-950 flex items-center justify-center mb-6 shadow-[0_0_15px_rgba(201,168,76,0.1)] border border-zinc-800 mx-auto group-hover:border-primary/50 group-hover:scale-110 transition-all duration-300",
+							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Handshake, {
+								"data-uid": "src/components/home/NetworkDetailsSection.tsx:71:15",
+								"data-prohibitions": "[editContent]",
+								className: "w-8 h-8 text-primary"
+							})
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							"data-uid": "src/components/home/NetworkDetailsSection.tsx:73:13",
+							"data-prohibitions": "[]",
+							className: "text-center",
+							children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+									"data-uid": "src/components/home/NetworkDetailsSection.tsx:74:15",
+									"data-prohibitions": "[]",
+									className: "text-primary text-xs font-bold tracking-widest uppercase mb-3 block",
+									children: "Pilar 3"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
+									"data-uid": "src/components/home/NetworkDetailsSection.tsx:77:15",
+									"data-prohibitions": "[]",
+									className: "text-xl font-bold text-zinc-100 mb-4",
+									children: "Colaboração de Elite"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+									"data-uid": "src/components/home/NetworkDetailsSection.tsx:78:15",
+									"data-prohibitions": "[]",
+									className: "text-zinc-400 text-sm leading-relaxed",
+									children: "A infraestrutura do Prime Circle gera conexões diretas, transparentes e justas entre corretores de alto padrão, garantindo agilidade no fechamento de negócios e liquidez imediata."
+								})
+							]
+						})]
+					})
+				]
+			})]
+		})]
 	});
 }
 //#endregion
@@ -21481,48 +21678,58 @@ function Footer() {
 //#endregion
 //#region src/pages/Index.tsx
 function Index() {
+	(0, import_react.useEffect)(() => {
+		document.documentElement.classList.add("scroll-smooth");
+		return () => {
+			document.documentElement.classList.remove("scroll-smooth");
+		};
+	}, []);
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-		"data-uid": "src/pages/Index.tsx:12:5",
+		"data-uid": "src/pages/Index.tsx:21:5",
 		"data-prohibitions": "[]",
 		className: "min-h-screen bg-background text-foreground flex flex-col",
 		children: [
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Navbar, {
-				"data-uid": "src/pages/Index.tsx:13:7",
+				"data-uid": "src/pages/Index.tsx:22:7",
 				"data-prohibitions": "[editContent]"
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("main", {
-				"data-uid": "src/pages/Index.tsx:14:7",
+				"data-uid": "src/pages/Index.tsx:23:7",
 				"data-prohibitions": "[]",
 				className: "flex-1",
 				children: [
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(HeroSection, {
-						"data-uid": "src/pages/Index.tsx:15:9",
+						"data-uid": "src/pages/Index.tsx:24:9",
 						"data-prohibitions": "[editContent]"
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProblemSection, {
-						"data-uid": "src/pages/Index.tsx:16:9",
+						"data-uid": "src/pages/Index.tsx:25:9",
 						"data-prohibitions": "[editContent]"
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(NetworkSection, {
-						"data-uid": "src/pages/Index.tsx:17:9",
+						"data-uid": "src/pages/Index.tsx:26:9",
+						"data-prohibitions": "[editContent]"
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(NetworkDetailsSection, {
+						"data-uid": "src/pages/Index.tsx:27:9",
 						"data-prohibitions": "[editContent]"
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(PersonaSection, {
-						"data-uid": "src/pages/Index.tsx:18:9",
+						"data-uid": "src/pages/Index.tsx:28:9",
 						"data-prohibitions": "[editContent]"
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CriteriaSection, {
-						"data-uid": "src/pages/Index.tsx:19:9",
+						"data-uid": "src/pages/Index.tsx:29:9",
 						"data-prohibitions": "[editContent]"
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ReferralSection, {
-						"data-uid": "src/pages/Index.tsx:20:9",
+						"data-uid": "src/pages/Index.tsx:30:9",
 						"data-prohibitions": "[editContent]"
 					})
 				]
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Footer, {
-				"data-uid": "src/pages/Index.tsx:22:7",
+				"data-uid": "src/pages/Index.tsx:32:7",
 				"data-prohibitions": "[editContent]"
 			})
 		]
@@ -35868,4 +36075,4 @@ function App() {
 }));
 //#endregion
 
-//# sourceMappingURL=index-DiUUkoRE.js.map
+//# sourceMappingURL=index-C7r5bYKl.js.map
