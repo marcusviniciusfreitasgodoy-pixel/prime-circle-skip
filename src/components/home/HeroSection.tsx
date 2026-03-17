@@ -34,8 +34,8 @@ export function HeroSection() {
           className="mt-6 text-lg sm:text-xl md:text-2xl text-zinc-300 max-w-3xl mx-auto animate-fade-in-up drop-shadow-md leading-relaxed"
           style={{ animationDelay: '200ms' }}
         >
-          Uma rede privada para corretores selecionados da Barra — onde demandas reais circulam
-          antes de qualquer portal ver.
+          Uma rede privada para corretores selecionados da Barra da Tijuca — com demandas reais e
+          condições fora dos portais
         </p>
 
         <p
