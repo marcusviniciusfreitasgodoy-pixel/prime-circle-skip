@@ -35,7 +35,6 @@ import {
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { toast } from 'sonner'
 import { useAuth } from '@/hooks/use-auth'
-import { supabase } from '@/lib/supabase/client'
 import { cn } from '@/lib/utils'
 import { sendWelcomeNotifications } from '@/services/notifications'
 
@@ -98,7 +97,6 @@ export default function ApplyPage() {
     try {
       const redirectUrl = `${window.location.origin}/welcome`
 
-      // Pass user metadata exactly as expected by the handle_new_user database trigger
       const { data, error } = await signUp(
         values.email,
         values.password,
@@ -117,22 +115,19 @@ export default function ApplyPage() {
       if (error) {
         const authError = error as any
 
-        // Handle User Already Exists
         if (authError.status === 422 || authError.code === 'user_already_exists') {
           throw new Error('Este e-mail já está cadastrado.')
         }
 
-        // Handle SMTP / Server Error
         if (
           authError.status === 500 ||
           (authError.message && authError.message.includes('Error sending confirmation email'))
         ) {
           throw new Error(
-            'Erro ao enviar e-mail de confirmação. Por favor, verifique se as configurações de e-mail estão corretas ou tente novamente em alguns minutos.',
+            'Seu cadastro foi pré-aprovado, mas houve um erro temporário no envio do e-mail de confirmação. Por favor, entre em contato com suporte@primecircle.app.br ou tente novamente em instantes.',
           )
         }
 
-        // Handle Rate Limit
         if (authError.status === 429 || authError.code === 'over_email_send_rate_limit') {
           throw new Error(
             'Limite de envio de e-mails atingido. Por favor, aguarde alguns minutos antes de tentar novamente.',
@@ -143,8 +138,6 @@ export default function ApplyPage() {
       }
 
       if (data?.user) {
-        // Send automated welcome notifications via WhatsApp and Email
-        // Trigger handles the database inserts perfectly, so we just run side-effects here
         try {
           await sendWelcomeNotifications({
             userId: data.user.id,

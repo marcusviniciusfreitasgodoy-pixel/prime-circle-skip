@@ -31,18 +31,22 @@ export default function WelcomePage() {
         </div>
 
         <h1 className="text-3xl font-bold text-white mb-4 relative z-10 tracking-tight">
-          Bem-vindo à Prime Circle!
+          Bem-vindo à Prime Circle! 🚀
         </h1>
 
+        <p className="text-white font-medium text-lg leading-relaxed mb-2 relative z-10">
+          Seu cadastro foi validado com sucesso e agora você faz parte da nossa rede exclusiva.
+        </p>
+
         <p className="text-muted-foreground text-base leading-relaxed mb-8 relative z-10">
-          Seu cadastro foi confirmado com sucesso. Estamos felizes em ter você conosco.
+          Explore seu dashboard para encontrar novos matches e oportunidades de parceria.
         </p>
 
         <Button
           asChild
           className="w-full gold-gradient gold-glow text-black font-bold h-14 text-lg relative z-10"
         >
-          <Link to="/dashboard">Acessar meu Dashboard</Link>
+          <Link to="/">Acessar meu Dashboard</Link>
         </Button>
       </div>
     </div>
