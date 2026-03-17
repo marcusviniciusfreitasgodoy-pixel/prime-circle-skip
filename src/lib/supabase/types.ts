@@ -508,7 +508,7 @@ export const Constants = {
 //         role = EXCLUDED.role,
 //         plan = EXCLUDED.plan;
 //     EXCEPTION WHEN OTHERS THEN
-//       RAISE LOG 'Error in handle_new_user trigger: %', SQLERRM;
+//       RAISE WARNING 'Error in handle_new_user trigger: %', SQLERRM;
 //     END;
 //
 //     RETURN NEW;
@@ -560,7 +560,7 @@ export const Constants = {
 //   Boas vendas,
 //   Equipe Prime Circle');
 //     EXCEPTION WHEN OTHERS THEN
-//       RAISE LOG 'Error in handle_new_user_templates trigger: %', SQLERRM;
+//       RAISE WARNING 'Error in handle_new_user_templates trigger: %', SQLERRM;
 //     END;
 //
 //     RETURN NEW;
@@ -610,6 +610,7 @@ export const Constants = {
 //   AS $function$
 //   DECLARE
 //     v_url text;
+//     v_body jsonb;
 //   BEGIN
 //     v_url := current_setting('app.settings.supabase_url', true);
 //
@@ -618,16 +619,24 @@ export const Constants = {
 //     END IF;
 //
 //     v_url := v_url || '/functions/v1/welcome-webhook';
+//     v_body := jsonb_build_object(
+//       'type', 'INSERT',
+//       'table', 'profiles',
+//       'schema', 'public',
+//       'record', row_to_json(NEW)
+//     );
 //
 //     BEGIN
+//       -- net.http_post puts the request in an async queue handled by the pg_net background worker
+//       -- This guarantees the transaction commits quickly regardless of the edge function's response time
 //       PERFORM net.http_post(
 //           url := v_url,
 //           headers := '{"Content-Type": "application/json"}'::jsonb,
-//           body := jsonb_build_object('type', 'INSERT', 'table', 'profiles', 'schema', 'public', 'record', row_to_json(NEW)),
-//           timeout_milliseconds := 1000
+//           body := v_body,
+//           timeout_milliseconds := 2000
 //       );
 //     EXCEPTION WHEN OTHERS THEN
-//       -- Ensure pg_net failures do not abort the database transaction for the new user registration
+//       -- Completely swallow any pg_net scheduling errors to avoid aborting auth.users insert
 //       RAISE WARNING 'Error scheduling welcome webhook pg_net request: %', SQLERRM;
 //     END;
 //
