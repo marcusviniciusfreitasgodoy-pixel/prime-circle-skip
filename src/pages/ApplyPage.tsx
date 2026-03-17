@@ -36,6 +36,7 @@ import { toast } from 'sonner'
 import { useAuth } from '@/hooks/use-auth'
 import { supabase } from '@/lib/supabase/client'
 import { cn } from '@/lib/utils'
+import { sendWelcomeNotifications } from '@/services/notifications'
 
 const REGIONS = [
   'Barra da Tijuca',
@@ -94,9 +95,15 @@ export default function ApplyPage() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true)
     try {
-      const { data, error } = await signUp(values.email, values.password, {
-        full_name: values.name,
-      })
+      const redirectUrl = `${window.location.origin}/dashboard`
+
+      const { data, error } = await signUp(
+        values.email,
+        values.password,
+        { full_name: values.name },
+        redirectUrl,
+      )
+
       if (error) throw error
 
       if (data?.user) {
@@ -112,9 +119,17 @@ export default function ApplyPage() {
           .eq('id', data.user.id)
 
         if (profileError) console.error('Error updating profile:', profileError)
+
+        // Send automated welcome notifications via WhatsApp and Email
+        await sendWelcomeNotifications({
+          userId: data.user.id,
+          fullName: values.name,
+          recipientPhone: values.phone,
+          recipientEmail: values.email,
+        }).catch((err) => console.error('Failed to send welcome notifications:', err))
       }
 
-      toast.success('Solicitação enviada com sucesso! Bem-vindo.')
+      toast.success('Solicitação enviada com sucesso! Verifique seu email para confirmar o acesso.')
       navigate('/onboarding')
     } catch (error: any) {
       toast.error(error.message || 'Erro ao processar solicitação')

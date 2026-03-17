@@ -156,3 +156,79 @@ export const processNotification = async ({
     })
   }
 }
+
+export const sendWelcomeNotifications = async ({
+  userId,
+  fullName,
+  recipientPhone,
+  recipientEmail,
+}: {
+  userId: string
+  fullName: string
+  recipientPhone: string
+  recipientEmail: string
+}) => {
+  const { data: templates } = await supabase
+    .from('notification_templates')
+    .select('*')
+    .eq('user_id', userId)
+
+  const waTemplate = templates?.find((t) => t.name === 'Boas-vindas - WhatsApp')
+  const emailTemplate = templates?.find((t) => t.name === 'Boas-vindas - Email')
+
+  const defaultWaContent =
+    'Olá {{full_name}}! 🚀 Bem-vindo à Prime Circle. Seu cadastro foi recebido com sucesso. Estamos muito felizes em ter você em nossa rede exclusiva de parcerias imobiliárias. Em breve entraremos em contato!'
+  const defaultEmailContent =
+    'Assunto: Bem-vindo à Prime Circle! 🏠\n\nOlá {{full_name}},\n\nÉ um prazer ter você conosco! Sua conta foi criada com sucesso. Agora você faz parte de um ecossistema exclusivo projetado para potencializar seus resultados no mercado imobiliário.\n\nAcesse seu painel agora para completar seu perfil e começar a gerar matches.\n\nBoas vendas,\nEquipe Prime Circle'
+
+  const buildMessage = (content: string) => {
+    return content.replace(/\{\{full_name\}\}/g, fullName)
+  }
+
+  // --- Send WhatsApp Welcome ---
+  const waMessage = buildMessage(waTemplate ? waTemplate.content : defaultWaContent)
+  let waSuccess = false
+  let waError = ''
+
+  try {
+    const res = await sendWhatsappMessage(recipientPhone, waMessage)
+    if (res.error) throw new Error(res.error.message || 'Unknown error')
+    if (res.data?.error) throw new Error(res.data.error)
+    waSuccess = true
+  } catch (err: any) {
+    waError = err.message
+  }
+
+  await supabase.from('notification_logs').insert({
+    user_id: userId,
+    recipient: recipientPhone,
+    channel: 'whatsapp',
+    status: waSuccess ? 'success' : 'failed',
+    message_body: waMessage,
+    error_details: waError || null,
+  })
+
+  // --- Send Email Welcome ---
+  const emailMessage = buildMessage(emailTemplate ? emailTemplate.content : defaultEmailContent)
+  let emailSuccess = false
+  let emailError = ''
+
+  try {
+    await sendTransactionalEmail('welcome_email', {
+      to: recipientEmail,
+      body: emailMessage,
+    })
+    emailSuccess = true
+  } catch (err: any) {
+    emailError = err.message
+  }
+
+  await supabase.from('notification_logs').insert({
+    user_id: userId,
+    recipient: recipientEmail,
+    channel: 'email',
+    status: emailSuccess ? 'success' : 'failed',
+    message_body: emailMessage,
+    error_details: emailError || null,
+  })
+}
