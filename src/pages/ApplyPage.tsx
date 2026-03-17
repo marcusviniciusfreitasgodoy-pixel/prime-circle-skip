@@ -32,6 +32,7 @@ import {
   CommandItem,
   CommandList,
 } from '@/components/ui/command'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { toast } from 'sonner'
 import { useAuth } from '@/hooks/use-auth'
 import { supabase } from '@/lib/supabase/client'
@@ -97,7 +98,7 @@ export default function ApplyPage() {
     try {
       const redirectUrl = `${window.location.origin}/dashboard`
 
-      // Pass user metadata as a robust fallback for the database trigger
+      // Pass user metadata exactly as expected by the handle_new_user database trigger
       const { data, error } = await signUp(
         values.email,
         values.password,
@@ -115,43 +116,32 @@ export default function ApplyPage() {
 
       if (error) {
         const authError = error as any
+
+        // Handle User Already Exists
+        if (authError.status === 422 || authError.code === 'user_already_exists') {
+          throw new Error('Este e-mail já está cadastrado.')
+        }
+
+        // Handle SMTP / Server Error
+        if (authError.status === 500) {
+          throw new Error(
+            'Erro ao enviar e-mail de confirmação. Por favor, tente novamente em instantes ou entre em contato com o suporte.',
+          )
+        }
+
+        // Handle Rate Limit
         if (authError.status === 429 || authError.code === 'over_email_send_rate_limit') {
           throw new Error(
-            'Limite de envio de e-mails atingido. Por favor, aguarde alguns minutos antes de tentar novamente ou verifique sua caixa de entrada.',
+            'Limite de envio de e-mails atingido. Por favor, aguarde alguns minutos antes de tentar novamente.',
           )
         }
-        if (
-          authError.status === 500 &&
-          authError.message?.includes('Error sending confirmation email')
-        ) {
-          throw new Error(
-            'Erro ao enviar o e-mail de confirmação através de contato@primecircle.app.br. Por favor, tente novamente em instantes ou entre em contato com o suporte.',
-          )
-        }
+
         throw new Error(`Erro na criação da conta: ${error.message}`)
       }
 
       if (data?.user) {
-        // Explicitly update the profiles table to ensure all fields are persisted.
-        const { error: profileError } = await supabase
-          .from('profiles')
-          .update({
-            full_name: values.name,
-            whatsapp_number: values.phone,
-            creci: values.creci,
-            region: values.region.join(', '),
-            ticket_value: values.ticket,
-            referral_code: values.referral,
-            accepted_terms: values.agreement,
-          })
-          .eq('id', data.user.id)
-
-        if (profileError) {
-          console.error('Error updating profile:', profileError)
-          throw new Error(`Erro ao salvar dados do perfil: ${profileError.message}`)
-        }
-
         // Send automated welcome notifications via WhatsApp and Email
+        // Trigger handles the database inserts perfectly, so we just run side-effects here
         try {
           await sendWelcomeNotifications({
             userId: data.user.id,
@@ -179,15 +169,19 @@ export default function ApplyPage() {
           <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-6">
             <Mail className="w-8 h-8 text-primary" />
           </div>
-          <h2 className="text-2xl font-bold text-white mb-4">Verifique seu e-mail</h2>
-          <p className="text-muted-foreground mb-6 leading-relaxed">
-            Um e-mail de confirmação foi enviado para o seu endereço. Por favor, verifique a caixa
-            de entrada de <strong className="text-white">contato@primecircle.app.br</strong> (ou sua
-            pasta de spam) para ativar sua conta.
-          </p>
+
+          <Alert className="bg-primary/10 border-primary/20 mb-6 text-left">
+            <Mail className="h-4 w-4 text-primary" />
+            <AlertTitle className="text-white font-semibold">Sucesso!</AlertTitle>
+            <AlertDescription className="text-muted-foreground mt-2 leading-relaxed">
+              Cadastro realizado com sucesso! Verifique sua caixa de entrada (e a pasta de spam) em{' '}
+              <strong>contato@primecircle.app.br</strong> para confirmar seu acesso.
+            </AlertDescription>
+          </Alert>
+
           <Button
             asChild
-            className="w-full gold-gradient gold-glow text-black font-semibold h-12 text-lg"
+            className="w-full gold-gradient gold-glow text-black font-semibold h-12 text-lg mt-4"
           >
             <Link to="/auth/confirm">Ir para Login</Link>
           </Button>
@@ -226,7 +220,12 @@ export default function ApplyPage() {
                 <FormItem>
                   <FormLabel className="text-white">Nome Completo</FormLabel>
                   <FormControl>
-                    <Input placeholder="Seu nome" {...field} className="bg-background" />
+                    <Input
+                      placeholder="Seu nome"
+                      {...field}
+                      className="bg-background"
+                      disabled={isLoading}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -246,6 +245,7 @@ export default function ApplyPage() {
                         placeholder="seu@email.com"
                         {...field}
                         className="bg-background"
+                        disabled={isLoading}
                       />
                     </FormControl>
                     <FormMessage />
@@ -264,6 +264,7 @@ export default function ApplyPage() {
                         placeholder="******"
                         {...field}
                         className="bg-background"
+                        disabled={isLoading}
                       />
                     </FormControl>
                     <FormMessage />
@@ -280,7 +281,12 @@ export default function ApplyPage() {
                   <FormItem>
                     <FormLabel className="text-white">CRECI</FormLabel>
                     <FormControl>
-                      <Input placeholder="00000" {...field} className="bg-background" />
+                      <Input
+                        placeholder="00000"
+                        {...field}
+                        className="bg-background"
+                        disabled={isLoading}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -293,7 +299,12 @@ export default function ApplyPage() {
                   <FormItem>
                     <FormLabel className="text-white">WhatsApp</FormLabel>
                     <FormControl>
-                      <Input placeholder="(21) 99999-9999" {...field} className="bg-background" />
+                      <Input
+                        placeholder="(21) 99999-9999"
+                        {...field}
+                        className="bg-background"
+                        disabled={isLoading}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -314,6 +325,7 @@ export default function ApplyPage() {
                           <Button
                             variant="outline"
                             role="combobox"
+                            disabled={isLoading}
                             className={cn(
                               'w-full justify-between bg-background border-input font-normal hover:bg-background/90 hover:text-white px-3 overflow-hidden',
                               !field.value?.length && 'text-muted-foreground',
@@ -374,7 +386,11 @@ export default function ApplyPage() {
                 render={({ field }) => (
                   <FormItem className="flex flex-col pt-1">
                     <FormLabel className="text-white">Ticket Médio</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      disabled={isLoading}
+                    >
                       <FormControl>
                         <SelectTrigger className="bg-background">
                           <SelectValue placeholder="Selecione..." />
@@ -404,7 +420,12 @@ export default function ApplyPage() {
                     <Info className="w-4 h-4 text-muted-foreground" />
                   </FormLabel>
                   <FormControl>
-                    <Input placeholder="Opcional" {...field} className="bg-background" />
+                    <Input
+                      placeholder="Opcional"
+                      {...field}
+                      className="bg-background"
+                      disabled={isLoading}
+                    />
                   </FormControl>
                   <FormDescription className="text-xs text-muted-foreground leading-relaxed">
                     Opcional. Insira o código enviado por um membro fundador para validação
@@ -422,7 +443,11 @@ export default function ApplyPage() {
               render={({ field }) => (
                 <FormItem className="flex items-start space-x-3 space-y-0 p-4 border border-border rounded-lg bg-background mt-6">
                   <FormControl>
-                    <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                      disabled={isLoading}
+                    />
                   </FormControl>
                   <div className="space-y-1 leading-none">
                     <FormLabel className="text-white text-sm cursor-pointer">
