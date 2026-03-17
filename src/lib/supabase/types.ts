@@ -485,6 +485,17 @@ export const Constants = {
 //   Parcerias aumentam suas chances de fechamento! Acesse seu dashboard para revisar a solicitação.
 //
 //   Atenciosamente,
+//   Equipe Prime Circle'),
+//       (NEW.id, 'Boas-vindas - WhatsApp', 'whatsapp', 'Olá {{full_name}}! 🚀 Bem-vindo à Prime Circle. Seu cadastro foi recebido com sucesso. Estamos muito felizes em ter você em nossa rede exclusiva de parcerias imobiliárias. Em breve entraremos em contato!'),
+//       (NEW.id, 'Boas-vindas - Email', 'email', 'Assunto: Bem-vindo à Prime Circle! 🏠
+//
+//   Olá {{full_name}},
+//
+//   É um prazer ter você conosco! Sua conta foi criada com sucesso. Agora você faz parte de um ecossistema exclusivo projetado para potencializar seus resultados no mercado imobiliário.
+//
+//   Acesse seu painel agora para completar seu perfil e começar a gerar matches.
+//
+//   Boas vendas,
 //   Equipe Prime Circle');
 //
 //     RETURN NEW;

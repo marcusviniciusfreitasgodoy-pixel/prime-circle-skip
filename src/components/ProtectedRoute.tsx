@@ -70,8 +70,9 @@ export function ProtectedRoute() {
   const isPending = mockUser?.status === 'pending'
   const isAdmin = mockUser?.status === 'admin'
 
-  // Prefer real DB state over mock state if authUser is present
-  const hasAccepted = authUser && acceptedTerms !== null ? acceptedTerms : mockUser?.onboarded
+  // Prefer real DB state over mock state if authUser is present, but allow local state to override for seamless navigation
+  const hasAccepted =
+    authUser && acceptedTerms !== null ? acceptedTerms || mockUser?.onboarded : mockUser?.onboarded
 
   if (isAdmin) {
     if (!location.pathname.startsWith('/admin') && location.pathname !== '/dashboard') {

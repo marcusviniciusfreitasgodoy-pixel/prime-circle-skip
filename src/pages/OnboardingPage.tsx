@@ -10,7 +10,7 @@ import { toast } from 'sonner'
 
 export default function OnboardingPage() {
   const navigate = useNavigate()
-  const { user: mockUser, completeOnboarding } = useAppStore()
+  const { completeOnboarding } = useAppStore()
   const { user: authUser } = useAuth()
 
   const [step, setStep] = useState(1)
@@ -21,9 +21,8 @@ export default function OnboardingPage() {
 
   const canProceed = terms && privacy && model5050
 
-  const handleComplete = async (path: string) => {
+  const handleContinue = async () => {
     setIsSubmitting(true)
-
     try {
       if (authUser) {
         const { error } = await supabase
@@ -33,14 +32,18 @@ export default function OnboardingPage() {
 
         if (error) throw error
       }
-
-      completeOnboarding()
-      navigate(path)
+      setStep(2)
     } catch (error: any) {
       console.error(error)
       toast.error('Erro ao salvar suas preferências. Tente novamente.')
+    } finally {
       setIsSubmitting(false)
     }
+  }
+
+  const handleComplete = (path: string) => {
+    completeOnboarding()
+    navigate(path)
   }
 
   return (
@@ -50,9 +53,7 @@ export default function OnboardingPage() {
           <div className="animate-in fade-in-0 duration-500">
             <div className="text-center mb-8">
               <Crown className="w-12 h-12 text-primary mx-auto mb-4" />
-              <h1 className="text-2xl font-bold text-white">
-                Bem-vindo, {mockUser?.name?.split(' ')[0] || 'Corretor'}
-              </h1>
+              <h1 className="text-2xl font-bold text-white">Bem vindo Corretor</h1>
               <p className="text-muted-foreground text-sm mt-2">
                 Antes de acessar o painel, confirme sua adesão às regras do ecossistema.
               </p>
@@ -115,11 +116,11 @@ export default function OnboardingPage() {
             </div>
 
             <Button
-              onClick={() => setStep(2)}
-              disabled={!canProceed}
+              onClick={handleContinue}
+              disabled={!canProceed || isSubmitting}
               className="w-full bg-primary hover:bg-primary/90 text-lg h-14 font-semibold text-black mt-8"
             >
-              Continuar
+              {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Continuar'}
             </Button>
           </div>
         )}
@@ -159,21 +160,15 @@ export default function OnboardingPage() {
               <Button
                 variant="outline"
                 onClick={() => handleComplete('/dashboard')}
-                disabled={isSubmitting}
                 className="flex-1 h-14 font-semibold border-border hover:bg-secondary text-white"
               >
-                {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Ir para Dashboard'}
+                Dashboard
               </Button>
               <Button
                 onClick={() => handleComplete('/suggestions')}
-                disabled={isSubmitting}
                 className="gold-gradient text-black flex-1 h-14 font-bold text-lg"
               >
-                {isSubmitting ? (
-                  <Loader2 className="w-5 h-5 animate-spin text-black" />
-                ) : (
-                  'Ver Sugestões'
-                )}
+                Ver Sugestões
               </Button>
             </div>
           </div>
