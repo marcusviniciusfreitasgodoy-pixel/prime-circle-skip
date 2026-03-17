@@ -35,8 +35,7 @@ export default function WelcomePage() {
         </h1>
 
         <p className="text-muted-foreground text-base leading-relaxed mb-8 relative z-10">
-          Sua conta foi confirmada com sucesso. Agora você faz parte do ecossistema exclusivo da
-          Prime Circle.
+          Seu cadastro foi confirmado com sucesso. Estamos felizes em ter você conosco.
         </p>
 
         <Button

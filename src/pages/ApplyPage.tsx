@@ -123,9 +123,12 @@ export default function ApplyPage() {
         }
 
         // Handle SMTP / Server Error
-        if (authError.status === 500) {
+        if (
+          authError.status === 500 ||
+          (authError.message && authError.message.includes('Error sending confirmation email'))
+        ) {
           throw new Error(
-            'Erro ao enviar e-mail de confirmação. Por favor, tente novamente em instantes ou entre em contato com o suporte.',
+            'Erro ao enviar e-mail de confirmação. Por favor, verifique se as configurações de e-mail estão corretas ou tente novamente em alguns minutos.',
           )
         }
 
