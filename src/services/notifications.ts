@@ -122,13 +122,13 @@ export const processNotification = async ({
     waError = err.message
   }
 
-  await supabase.from('notification_logs').insert({
-    user_id: userId,
-    recipient: recipientPhone,
-    channel: 'whatsapp',
-    status: waSuccess ? 'success' : 'failed',
-    message_body: waMessage,
-    error_details: waError || null,
+  await (supabase.rpc as any)('log_notification', {
+    p_user_id: userId,
+    p_recipient: recipientPhone,
+    p_channel: 'whatsapp',
+    p_status: waSuccess ? 'success' : 'failed',
+    p_message_body: waMessage,
+    p_error_details: waError || null,
   })
 
   if (!waSuccess) {
@@ -146,13 +146,13 @@ export const processNotification = async ({
       emailError = err.message
     }
 
-    await supabase.from('notification_logs').insert({
-      user_id: userId,
-      recipient: recipientEmail,
-      channel: 'email',
-      status: emailSuccess ? 'success' : 'failed',
-      message_body: emailMessage,
-      error_details: emailError || null,
+    await (supabase.rpc as any)('log_notification', {
+      p_user_id: userId,
+      p_recipient: recipientEmail,
+      p_channel: 'email',
+      p_status: emailSuccess ? 'success' : 'failed',
+      p_message_body: emailMessage,
+      p_error_details: emailError || null,
     })
   }
 }
@@ -222,13 +222,13 @@ export const sendWelcomeNotifications = async ({
     waError = err.message
   }
 
-  await supabase.from('notification_logs').insert({
-    user_id: userId,
-    recipient: recipientPhone,
-    channel: 'whatsapp',
-    status: waSuccess ? 'success' : 'failed',
-    message_body: waMessage,
-    error_details: waError || null,
+  await (supabase.rpc as any)('log_notification', {
+    p_user_id: userId,
+    p_recipient: recipientPhone,
+    p_channel: 'whatsapp',
+    p_status: waSuccess ? 'success' : 'failed',
+    p_message_body: waMessage,
+    p_error_details: waError || null,
   })
 
   // --- Send Email Welcome ---
@@ -246,12 +246,12 @@ export const sendWelcomeNotifications = async ({
     emailError = err.message
   }
 
-  await supabase.from('notification_logs').insert({
-    user_id: userId,
-    recipient: recipientEmail,
-    channel: 'email',
-    status: emailSuccess ? 'success' : 'failed',
-    message_body: emailMessage,
-    error_details: emailError || null,
+  await (supabase.rpc as any)('log_notification', {
+    p_user_id: userId,
+    p_recipient: recipientEmail,
+    p_channel: 'email',
+    p_status: emailSuccess ? 'success' : 'failed',
+    p_message_body: emailMessage,
+    p_error_details: emailError || null,
   })
 }

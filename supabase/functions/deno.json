@@ -1,5 +1,6 @@
 {
   "_versions": {
-    "send-whatsapp": 1
+    "send-whatsapp": 2,
+    "send-email": 1
   }
 }

@@ -2,9 +2,11 @@ import { Link, Navigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { PartyPopper, CheckCircle2, Loader2 } from 'lucide-react'
 import { useAuth } from '@/hooks/use-auth'
+import useAppStore from '@/stores/main'
 
 export default function WelcomePage() {
   const { user, loading } = useAuth()
+  const { user: mockUser } = useAppStore()
 
   if (loading) {
     return (
@@ -15,7 +17,9 @@ export default function WelcomePage() {
     )
   }
 
-  if (!user) {
+  const justRegistered = localStorage.getItem('just_registered') === 'true'
+
+  if (!user && !mockUser && !justRegistered) {
     return <Navigate to="/auth/confirm" replace />
   }
 

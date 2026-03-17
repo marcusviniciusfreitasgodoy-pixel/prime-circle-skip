@@ -5,12 +5,7 @@ import { supabase } from '@/lib/supabase/client'
 interface AuthContextType {
   user: User | null
   session: Session | null
-  signUp: (
-    email: string,
-    password: string,
-    metaData?: any,
-    redirectTo?: string,
-  ) => Promise<{ data: any; error: any }>
+  signUp: (email: string, password: string, metaData?: any) => Promise<{ data: any; error: any }>
   signIn: (email: string, password: string) => Promise<{ error: any }>
   signOut: () => Promise<{ error: any }>
   loading: boolean
@@ -56,13 +51,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return () => subscription.unsubscribe()
   }, [])
 
-  const signUp = async (email: string, password: string, metaData?: any, redirectTo?: string) => {
+  const signUp = async (email: string, password: string, metaData?: any) => {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
         data: metaData,
-        emailRedirectTo: redirectTo || `${window.location.origin}/dashboard`,
+        // Removed emailRedirectTo to avoid forcing immediate SMTP triggers natively where possible
       },
     })
 
@@ -70,6 +65,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const authError = error as any
       if (authError.status === 429 || authError.code === 'over_email_send_rate_limit') {
         console.warn(`[Auth] Rate limit exceeded: ${authError.message} (code: ${authError.code})`)
+      }
+    }
+
+    // Attempt auto-login if user was created but session is missing
+    if (data?.user && !data?.session) {
+      const signInRes = await supabase.auth.signInWithPassword({ email, password })
+      if (signInRes.data?.session) {
+        setSession(signInRes.data.session)
+        setUser(signInRes.data.user)
+        data.session = signInRes.data.session
       }
     }
 

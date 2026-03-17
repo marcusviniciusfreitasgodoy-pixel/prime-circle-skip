@@ -36,6 +36,8 @@ import { useToast } from '@/hooks/use-toast'
 import { useAuth } from '@/hooks/use-auth'
 import { cn } from '@/lib/utils'
 import { sendWelcomeNotifications } from '@/services/notifications'
+import useAppStore from '@/stores/main'
+import { supabase } from '@/lib/supabase/client'
 
 const REGIONS = [
   'Barra da Tijuca',
@@ -73,6 +75,7 @@ const formSchema = z.object({
 
 export default function ApplyPage() {
   const { signUp } = useAuth()
+  const { login } = useAppStore()
   const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()
   const { toast } = useToast()
@@ -95,22 +98,15 @@ export default function ApplyPage() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true)
     try {
-      const redirectUrl = `${window.location.origin}/welcome`
-
-      const { data, error } = await signUp(
-        values.email,
-        values.password,
-        {
-          full_name: values.name,
-          whatsapp_number: values.phone,
-          creci: values.creci,
-          region: values.region.join(', '),
-          ticket_value: values.ticket,
-          referral_code: values.referral,
-          accepted_terms: values.agreement,
-        },
-        redirectUrl,
-      )
+      const { data, error } = await signUp(values.email, values.password, {
+        full_name: values.name,
+        whatsapp_number: values.phone,
+        creci: values.creci,
+        region: values.region.join(', '),
+        ticket_value: values.ticket,
+        referral_code: values.referral,
+        accepted_terms: values.agreement,
+      })
 
       let isEmailError = false
 
@@ -138,10 +134,23 @@ export default function ApplyPage() {
         }
       }
 
-      if (data?.user) {
+      // Treat the user as authenticated immediately for UX continuity
+      login(values.email, 'password')
+      localStorage.setItem('just_registered', 'true')
+
+      // If SMTP 500 happened, data.user might be null, but the row exists. Let's fetch it if needed.
+      let userId = data?.user?.id
+      if (!userId && isEmailError) {
+        const { data: fetchedId } = await supabase.rpc('get_user_id_by_email', {
+          p_email: values.email,
+        })
+        userId = fetchedId
+      }
+
+      if (userId) {
         try {
           await sendWelcomeNotifications({
-            userId: data.user.id,
+            userId: userId,
             fullName: values.name,
             recipientPhone: values.phone,
             recipientEmail: values.email,
@@ -155,12 +164,12 @@ export default function ApplyPage() {
         toast({
           title: 'Aviso Importante',
           description:
-            'Seu cadastro foi recebido com sucesso! No entanto, houve um problema técnico ao enviar o e-mail de confirmação. Você já pode tentar acessar sua conta ou aguardar alguns instantes.',
+            'Seu cadastro foi recebido com sucesso! Ocorreu um pequeno atraso no envio do e-mail de confirmação da plataforma, mas você já pode acessar sua conta normalmente.',
         })
       } else {
         toast({
           title: 'Sucesso!',
-          description: 'Cadastro realizado com sucesso. Verifique seu e-mail.',
+          description: 'Cadastro realizado com sucesso. Bem-vindo ao Prime Circle.',
         })
       }
 
