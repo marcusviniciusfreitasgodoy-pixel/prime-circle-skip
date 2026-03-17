@@ -17,32 +17,33 @@ export function HeroSection() {
 
       {/* Hero Content */}
       <div className="container relative z-20 px-4 md:px-6 pt-32 pb-24 sm:py-32 flex flex-col items-center text-center">
-        <div className="inline-flex items-center text-left sm:text-center rounded-full border border-primary/30 bg-primary/10 px-4 py-1.5 text-sm sm:text-base font-medium text-primary mb-8 backdrop-blur-md animate-fade-in-up max-w-full shadow-[0_0_15px_rgba(201,168,76,0.15)]">
+        <div className="inline-flex items-center text-center rounded-full border border-primary/30 bg-primary/10 px-4 py-1.5 text-sm sm:text-base font-medium text-primary mb-8 backdrop-blur-md animate-fade-in-up shadow-[0_0_15px_rgba(201,168,76,0.15)] max-w-[90vw]">
           <Lock className="mr-2 h-4 w-4 shrink-0" />
-          <span className="truncate whitespace-normal sm:whitespace-nowrap">Acesso Restrito</span>
+          <span>Acesso restrito a corretores convidados por membros do núcleo.</span>
         </div>
 
         <h1
           className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-white max-w-5xl mx-auto animate-fade-in-up drop-shadow-xl leading-tight"
           style={{ animationDelay: '100ms' }}
         >
-          Infraestrutura privada de <br className="hidden md:block" />
-          <span className="text-primary drop-shadow-sm gold-text">liquidez imobiliária</span>.
+          Aqui, o outro lado do seu negócio <br className="hidden lg:block" />
+          <span className="text-primary drop-shadow-sm gold-text">já está esperando.</span>
         </h1>
 
         <p
           className="mt-6 text-lg sm:text-xl md:text-2xl text-zinc-300 max-w-3xl mx-auto animate-fade-in-up drop-shadow-md leading-relaxed"
           style={{ animationDelay: '200ms' }}
         >
-          Exclusivo para corretores de alto padrão. Um ambiente onde demandas reais e imóveis
-          off-market se conectam antes de chegarem aos portais.
+          Uma rede privada para corretores selecionados da Barra — onde demandas reais circulam
+          antes de qualquer portal ver.
         </p>
 
         <p
           className="mt-4 text-base sm:text-lg text-zinc-400 max-w-2xl mx-auto animate-fade-in-up drop-shadow-md font-medium"
           style={{ animationDelay: '250ms' }}
         >
-          Acesso rigoroso por indicação e aprovação. Parcerias de alto nível na Barra da Tijuca.
+          Acesso por indicação e aprovação. Demandas e imóveis que não aparecem em nenhum outro
+          lugar.
         </p>
 
         <div
@@ -53,7 +54,7 @@ export function HeroSection() {
             size="lg"
             className="h-14 px-8 text-base w-full sm:w-auto shadow-elevation hover:scale-105 transition-transform duration-300 gold-gradient text-black font-bold"
           >
-            Solicitar Acesso
+            Quero fazer parte
             <ArrowRight className="ml-2 h-5 w-5" />
           </Button>
           <Button

@@ -19841,7 +19841,7 @@ function HeroSection() {
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 						"data-uid": "src/components/home/HeroSection.tsx:20:9",
 						"data-prohibitions": "[]",
-						className: "inline-flex items-center text-left sm:text-center rounded-full border border-primary/30 bg-primary/10 px-4 py-1.5 text-sm sm:text-base font-medium text-primary mb-8 backdrop-blur-md animate-fade-in-up max-w-full shadow-[0_0_15px_rgba(201,168,76,0.15)]",
+						className: "inline-flex items-center text-center rounded-full border border-primary/30 bg-primary/10 px-4 py-1.5 text-sm sm:text-base font-medium text-primary mb-8 backdrop-blur-md animate-fade-in-up shadow-[0_0_15px_rgba(201,168,76,0.15)] max-w-[90vw]",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Lock, {
 							"data-uid": "src/components/home/HeroSection.tsx:21:11",
 							"data-prohibitions": "[editContent]",
@@ -19849,8 +19849,7 @@ function HeroSection() {
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
 							"data-uid": "src/components/home/HeroSection.tsx:22:11",
 							"data-prohibitions": "[]",
-							className: "truncate whitespace-normal sm:whitespace-nowrap",
-							children: "Acesso Restrito"
+							children: "Acesso restrito a corretores convidados por membros do núcleo."
 						})]
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h1", {
@@ -19859,19 +19858,18 @@ function HeroSection() {
 						className: "text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-white max-w-5xl mx-auto animate-fade-in-up drop-shadow-xl leading-tight",
 						style: { animationDelay: "100ms" },
 						children: [
-							"Infraestrutura privada de ",
+							"Aqui, o outro lado do seu negócio ",
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("br", {
-								"data-uid": "src/components/home/HeroSection.tsx:29:37",
+								"data-uid": "src/components/home/HeroSection.tsx:29:45",
 								"data-prohibitions": "[editContent]",
-								className: "hidden md:block"
+								className: "hidden lg:block"
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
 								"data-uid": "src/components/home/HeroSection.tsx:30:11",
 								"data-prohibitions": "[]",
 								className: "text-primary drop-shadow-sm gold-text",
-								children: "liquidez imobiliária"
-							}),
-							"."
+								children: "já está esperando."
+							})
 						]
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
@@ -19879,32 +19877,32 @@ function HeroSection() {
 						"data-prohibitions": "[]",
 						className: "mt-6 text-lg sm:text-xl md:text-2xl text-zinc-300 max-w-3xl mx-auto animate-fade-in-up drop-shadow-md leading-relaxed",
 						style: { animationDelay: "200ms" },
-						children: "Exclusivo para corretores de alto padrão. Um ambiente onde demandas reais e imóveis off-market se conectam antes de chegarem aos portais."
+						children: "Uma rede privada para corretores selecionados da Barra — onde demandas reais circulam antes de qualquer portal ver."
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
 						"data-uid": "src/components/home/HeroSection.tsx:41:9",
 						"data-prohibitions": "[]",
 						className: "mt-4 text-base sm:text-lg text-zinc-400 max-w-2xl mx-auto animate-fade-in-up drop-shadow-md font-medium",
 						style: { animationDelay: "250ms" },
-						children: "Acesso rigoroso por indicação e aprovação. Parcerias de alto nível na Barra da Tijuca."
+						children: "Acesso por indicação e aprovação. Demandas e imóveis que não aparecem em nenhum outro lugar."
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-						"data-uid": "src/components/home/HeroSection.tsx:48:9",
+						"data-uid": "src/components/home/HeroSection.tsx:49:9",
 						"data-prohibitions": "[]",
 						className: "mt-10 flex flex-col sm:flex-row gap-4 sm:gap-6 w-full sm:w-auto animate-fade-in-up px-4 sm:px-0",
 						style: { animationDelay: "300ms" },
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
-							"data-uid": "src/components/home/HeroSection.tsx:52:11",
+							"data-uid": "src/components/home/HeroSection.tsx:53:11",
 							"data-prohibitions": "[]",
 							size: "lg",
 							className: "h-14 px-8 text-base w-full sm:w-auto shadow-elevation hover:scale-105 transition-transform duration-300 gold-gradient text-black font-bold",
-							children: ["Solicitar Acesso", /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ArrowRight, {
-								"data-uid": "src/components/home/HeroSection.tsx:57:13",
+							children: ["Quero fazer parte", /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ArrowRight, {
+								"data-uid": "src/components/home/HeroSection.tsx:58:13",
 								"data-prohibitions": "[editContent]",
 								className: "ml-2 h-5 w-5"
 							})]
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-							"data-uid": "src/components/home/HeroSection.tsx:59:11",
+							"data-uid": "src/components/home/HeroSection.tsx:60:11",
 							"data-prohibitions": "[]",
 							size: "lg",
 							variant: "outline",
@@ -35859,4 +35857,4 @@ function App() {
 }));
 //#endregion
 
-//# sourceMappingURL=index-BfNxKww4.js.map
+//# sourceMappingURL=index-BXacy5FX.js.map

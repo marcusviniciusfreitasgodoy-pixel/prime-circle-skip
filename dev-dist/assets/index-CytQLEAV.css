@@ -1228,8 +1228,8 @@ video {
 .max-w-\[--skeleton-width\] {
   max-width: var(--skeleton-width);
 }
-.max-w-full {
-  max-width: 100%;
+.max-w-\[90vw\] {
+  max-width: 90vw;
 }
 .max-w-lg {
   max-width: 32rem;
@@ -1549,9 +1549,6 @@ video {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-.whitespace-normal {
-  white-space: normal;
 }
 .whitespace-nowrap {
   white-space: nowrap;
@@ -3796,10 +3793,6 @@ video {
     margin-bottom: calc(2rem * var(--tw-space-y-reverse));
   }
 
-  .sm\:whitespace-nowrap {
-    white-space: nowrap;
-  }
-
   .sm\:rounded-lg {
     border-radius: var(--radius);
   }
@@ -3837,10 +3830,6 @@ video {
 
   .sm\:text-left {
     text-align: left;
-  }
-
-  .sm\:text-center {
-    text-align: center;
   }
 
   .sm\:text-4xl {
@@ -4158,6 +4147,10 @@ video {
 
   .lg\:mt-0 {
     margin-top: 0px;
+  }
+
+  .lg\:block {
+    display: block;
   }
 
   .lg\:h-\[600px\] {
