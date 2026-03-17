@@ -57,7 +57,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       password,
       options: {
         data: metaData,
-        // Removed emailRedirectTo to avoid forcing immediate SMTP triggers natively where possible
+        emailRedirectTo: `${window.location.origin}/`,
       },
     })
 

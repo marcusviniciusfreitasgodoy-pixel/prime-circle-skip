@@ -147,8 +147,6 @@ export default function ApplyPage() {
         accepted_terms: values.agreement,
       })
 
-      let isEmailError = false
-
       if (error) {
         const authError = error as any
 
@@ -167,7 +165,9 @@ export default function ApplyPage() {
           authError.code === 'unexpected_failure' ||
           (authError.message && authError.message.includes('Error sending confirmation email'))
         ) {
-          isEmailError = true
+          throw new Error(
+            'Não foi possível concluir o cadastro devido a uma falha na comunicação com o servidor. Por favor, tente novamente.',
+          )
         } else {
           throw new Error(`Erro na criação da conta: ${error.message}`)
         }
@@ -177,15 +177,7 @@ export default function ApplyPage() {
       login(values.email, 'password')
       localStorage.setItem('just_registered', 'true')
 
-      // If SMTP 500 happened, data.user might be null, but the row exists. Let's fetch it if needed.
-      let userId = data?.user?.id
-      if (!userId && isEmailError) {
-        const { data: fetchedId } = await supabase.rpc('get_user_id_by_email', {
-          p_email: values.email,
-        })
-        userId = fetchedId
-      }
-
+      const userId = data?.user?.id
       let uploadErrorMsg = ''
 
       if (userId) {
@@ -234,20 +226,10 @@ export default function ApplyPage() {
         }
       }
 
-      if (isEmailError) {
-        toast({
-          title: 'Aviso Importante',
-          description:
-            'Seu cadastro foi recebido com sucesso! Ocorreu um pequeno atraso no envio do e-mail de confirmação da plataforma, mas você já pode acessar sua conta normalmente.' +
-            uploadErrorMsg,
-        })
-      } else {
-        toast({
-          title: 'Sucesso!',
-          description:
-            'Cadastro realizado com sucesso. Bem-vindo ao Prime Circle.' + uploadErrorMsg,
-        })
-      }
+      toast({
+        title: 'Sucesso!',
+        description: 'Cadastro realizado com sucesso. Bem-vindo ao Prime Circle.' + uploadErrorMsg,
+      })
 
       navigate('/welcome')
     } catch (error: any) {
