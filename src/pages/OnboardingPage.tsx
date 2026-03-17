@@ -41,6 +41,10 @@ export default function OnboardingPage() {
 
         if (error) throw error
 
+        // Synchronous Persistence: Mark as onboarded locally to prevent flash
+        localStorage.setItem(`terms_accepted_${authUser.id}`, 'true')
+        completeOnboarding()
+
         const { data: profile } = await supabase
           .from('profiles')
           .select('full_name')
@@ -57,6 +61,8 @@ export default function OnboardingPage() {
         } catch (notifError) {
           console.error('Failed to send welcome notifications:', notifError)
         }
+      } else {
+        completeOnboarding()
       }
       setStep(2)
     } catch (error: any) {
@@ -68,7 +74,6 @@ export default function OnboardingPage() {
   }
 
   const handleComplete = (path: string) => {
-    completeOnboarding()
     navigate(path)
   }
 

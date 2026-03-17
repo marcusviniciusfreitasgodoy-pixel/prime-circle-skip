@@ -70,9 +70,14 @@ export function ProtectedRoute() {
   const isPending = mockUser?.status === 'pending'
   const isAdmin = mockUser?.status === 'admin'
 
-  // Prefer real DB state over mock state if authUser is present, but allow local state to override for seamless navigation
+  // Ensure state synchronization via local storage override to prevent flashes
+  const localAccepted = authUser
+    ? localStorage.getItem(`terms_accepted_${authUser.id}`) === 'true'
+    : false
   const hasAccepted =
-    authUser && acceptedTerms !== null ? acceptedTerms || mockUser?.onboarded : mockUser?.onboarded
+    authUser && acceptedTerms !== null
+      ? acceptedTerms || localAccepted || mockUser?.onboarded
+      : mockUser?.onboarded || localAccepted
 
   if (isAdmin) {
     if (!location.pathname.startsWith('/admin') && location.pathname !== '/dashboard') {
