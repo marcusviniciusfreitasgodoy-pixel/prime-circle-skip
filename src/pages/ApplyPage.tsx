@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
-import { Crown, Loader2, ArrowLeft, Check, ChevronsUpDown, Info, Mail } from 'lucide-react'
+import { Crown, Loader2, ArrowLeft, Check, ChevronsUpDown, Info } from 'lucide-react'
 import {
   Form,
   FormControl,
@@ -32,8 +32,7 @@ import {
   CommandItem,
   CommandList,
 } from '@/components/ui/command'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { toast } from 'sonner'
+import { useToast } from '@/hooks/use-toast'
 import { useAuth } from '@/hooks/use-auth'
 import { cn } from '@/lib/utils'
 import { sendWelcomeNotifications } from '@/services/notifications'
@@ -75,7 +74,8 @@ const formSchema = z.object({
 export default function ApplyPage() {
   const { signUp } = useAuth()
   const [isLoading, setIsLoading] = useState(false)
-  const [isSuccess, setIsSuccess] = useState(false)
+  const navigate = useNavigate()
+  const { toast } = useToast()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -112,20 +112,13 @@ export default function ApplyPage() {
         redirectUrl,
       )
 
+      let isEmailError = false
+
       if (error) {
         const authError = error as any
 
         if (authError.status === 422 || authError.code === 'user_already_exists') {
           throw new Error('Este e-mail já está cadastrado.')
-        }
-
-        if (
-          authError.status === 500 ||
-          (authError.message && authError.message.includes('Error sending confirmation email'))
-        ) {
-          throw new Error(
-            'Seu cadastro foi pré-aprovado, mas houve um erro temporário no envio do e-mail de confirmação. Por favor, entre em contato com suporte@primecircle.app.br ou tente novamente em instantes.',
-          )
         }
 
         if (authError.status === 429 || authError.code === 'over_email_send_rate_limit') {
@@ -134,7 +127,15 @@ export default function ApplyPage() {
           )
         }
 
-        throw new Error(`Erro na criação da conta: ${error.message}`)
+        if (
+          authError.status === 500 ||
+          authError.code === 'unexpected_failure' ||
+          (authError.message && authError.message.includes('Error sending confirmation email'))
+        ) {
+          isEmailError = true
+        } else {
+          throw new Error(`Erro na criação da conta: ${error.message}`)
+        }
       }
 
       if (data?.user) {
@@ -150,40 +151,29 @@ export default function ApplyPage() {
         }
       }
 
-      setIsSuccess(true)
+      if (isEmailError) {
+        toast({
+          title: 'Aviso Importante',
+          description:
+            'Seu cadastro foi recebido com sucesso! No entanto, houve um problema técnico ao enviar o e-mail de confirmação. Você já pode tentar acessar sua conta ou aguardar alguns instantes.',
+        })
+      } else {
+        toast({
+          title: 'Sucesso!',
+          description: 'Cadastro realizado com sucesso. Verifique seu e-mail.',
+        })
+      }
+
+      navigate('/welcome')
     } catch (error: any) {
-      toast.error(error.message || 'Erro ao processar solicitação')
+      toast({
+        variant: 'destructive',
+        title: 'Erro',
+        description: error.message || 'Erro ao processar solicitação',
+      })
     } finally {
       setIsLoading(false)
     }
-  }
-
-  if (isSuccess) {
-    return (
-      <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4 py-12 relative">
-        <div className="w-full max-w-md bg-card p-8 rounded-2xl border border-border shadow-elevation relative text-center">
-          <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-6">
-            <Mail className="w-8 h-8 text-primary" />
-          </div>
-
-          <Alert className="bg-primary/10 border-primary/20 mb-6 text-left">
-            <Mail className="h-4 w-4 text-primary" />
-            <AlertTitle className="text-white font-semibold">Sucesso!</AlertTitle>
-            <AlertDescription className="text-muted-foreground mt-2 leading-relaxed">
-              Cadastro realizado com sucesso! Verifique sua caixa de entrada (e a pasta de spam) em{' '}
-              <strong>contato@primecircle.app.br</strong> para confirmar seu acesso.
-            </AlertDescription>
-          </Alert>
-
-          <Button
-            asChild
-            className="w-full gold-gradient gold-glow text-black font-semibold h-12 text-lg mt-4"
-          >
-            <Link to="/auth/confirm">Ir para Login</Link>
-          </Button>
-        </div>
-      </div>
-    )
   }
 
   return (
