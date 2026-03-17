@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
-import { LogOut, Settings, Lightbulb, Zap, Map } from 'lucide-react'
+import { LogOut, Settings, Lightbulb, Zap, Map, MessageSquare } from 'lucide-react'
 import useAppStore from '@/stores/main'
 
 export function Navbar() {
@@ -53,6 +53,12 @@ export function Navbar() {
                         className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors flex items-center gap-1"
                       >
                         <Zap className="w-4 h-4" /> Planos
+                      </Link>
+                      <Link
+                        to="/notifications"
+                        className="text-sm font-medium text-muted-foreground hover:text-white transition-colors flex items-center gap-1"
+                      >
+                        <MessageSquare className="w-4 h-4" /> Comunicações
                       </Link>
                       <Link
                         to="/suggestions"

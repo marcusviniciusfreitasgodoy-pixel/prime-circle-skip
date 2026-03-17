@@ -15,6 +15,8 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import useAppStore, { Need } from '@/stores/main'
+import { useAuth } from '@/hooks/use-auth'
+import { processMatchNotification } from '@/services/notifications'
 import { toast } from 'sonner'
 
 export function MatchModal({
@@ -26,20 +28,37 @@ export function MatchModal({
   isOpen: boolean
   onClose: () => void
 }) {
-  const { listings, user, addMatch } = useAppStore()
+  const { listings, user: storeUser, addMatch } = useAppStore()
+  const { user: authUser } = useAuth()
   const [selectedListing, setSelectedListing] = useState('')
 
-  const myListings = listings.filter((l) => l.ownerId === user?.id)
+  const myListings = listings.filter((l) => l.ownerId === storeUser?.id)
 
   const handleConfirm = () => {
     if (!selectedListing || !need) return
     const success = addMatch(need.id, selectedListing)
     if (success) {
       toast.success('Parceria proposta! O negócio foi adicionado ao seu pipeline.')
+
+      const listing = listings.find((l) => l.id === selectedListing)
+      const partnerName = need.ownerId === 'other' ? 'Parceiro Prime' : 'Corretor'
+      // Mock fallback data since full profiles aren't deeply populated in local state yet
+      const recipientPhone = '+5521999999999'
+      const recipientEmail = 'parceiro@primecircle.app.br'
+
+      if (authUser) {
+        processMatchNotification({
+          userId: authUser.id,
+          partnerName,
+          propertyDetails: `${listing?.title} (${listing?.price})`,
+          recipientPhone,
+          recipientEmail,
+        }).catch((err) => console.error('Notification process failed inline:', err))
+      }
+
       onClose()
       setSelectedListing('')
     } else {
-      // The modal closes to let the PlanLimitModal take over smoothly
       onClose()
     }
   }

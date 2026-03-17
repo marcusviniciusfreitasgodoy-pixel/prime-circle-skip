@@ -16,6 +16,7 @@ import PlansPage from './pages/PlansPage'
 import TermsPage from './pages/TermsPage'
 import PrivacyPage from './pages/PrivacyPage'
 import ProfilePage from './pages/ProfilePage'
+import NotificationsPage from './pages/NotificationsPage'
 import NotFound from './pages/NotFound'
 import { Toaster } from '@/components/ui/toaster'
 import { TooltipProvider } from '@/components/ui/tooltip'
@@ -99,6 +100,7 @@ function App() {
                   <Route path="/plans" element={<PlansPage />} />
                   <Route path="/suggestions" element={<SuggestionsPage />} />
                   <Route path="/roadmap" element={<RoadmapPage />} />
+                  <Route path="/notifications" element={<NotificationsPage />} />
                   <Route path="/matches/:id/close" element={<MatchClosePage />} />
                 </Route>
               </Route>
