@@ -2,11 +2,13 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
+import { Input } from '@/components/ui/input'
 import { Crown, Sparkles, Loader2 } from 'lucide-react'
 import useAppStore from '@/stores/main'
 import { useAuth } from '@/hooks/use-auth'
 import { supabase } from '@/lib/supabase/client'
 import { toast } from 'sonner'
+import { sendWelcomeNotifications } from '@/services/notifications'
 
 export default function OnboardingPage() {
   const navigate = useNavigate()
@@ -17,9 +19,12 @@ export default function OnboardingPage() {
   const [terms, setTerms] = useState(false)
   const [privacy, setPrivacy] = useState(false)
   const [model5050, setModel5050] = useState(false)
+  const [whatsapp, setWhatsapp] = useState('')
+  const [creci, setCreci] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const canProceed = terms && privacy && model5050
+  const canProceed =
+    terms && privacy && model5050 && whatsapp.trim().length >= 10 && creci.trim().length >= 4
 
   const handleContinue = async () => {
     setIsSubmitting(true)
@@ -27,10 +32,31 @@ export default function OnboardingPage() {
       if (authUser) {
         const { error } = await supabase
           .from('profiles')
-          .update({ accepted_terms: true })
+          .update({
+            accepted_terms: true,
+            whatsapp_number: whatsapp,
+            creci: creci,
+          })
           .eq('id', authUser.id)
 
         if (error) throw error
+
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('full_name')
+          .eq('id', authUser.id)
+          .single()
+
+        try {
+          await sendWelcomeNotifications({
+            userId: authUser.id,
+            fullName: profile?.full_name || authUser.email?.split('@')[0] || 'Corretor',
+            recipientPhone: whatsapp,
+            recipientEmail: authUser.email || '',
+          })
+        } catch (notifError) {
+          console.error('Failed to send welcome notifications:', notifError)
+        }
       }
       setStep(2)
     } catch (error: any) {
@@ -55,8 +81,35 @@ export default function OnboardingPage() {
               <Crown className="w-12 h-12 text-primary mx-auto mb-4" />
               <h1 className="text-2xl font-bold text-white">Bem vindo Corretor</h1>
               <p className="text-muted-foreground text-sm mt-2">
-                Antes de acessar o painel, confirme sua adesão às regras do ecossistema.
+                Antes de acessar o painel, complete seus dados e confirme sua adesão às regras.
               </p>
+            </div>
+
+            <div className="space-y-4 mb-6">
+              <div className="space-y-2">
+                <label htmlFor="whatsapp" className="text-sm font-medium text-white">
+                  WhatsApp com DDD
+                </label>
+                <Input
+                  id="whatsapp"
+                  placeholder="(11) 99999-9999"
+                  value={whatsapp}
+                  onChange={(e) => setWhatsapp(e.target.value)}
+                  className="bg-secondary/50 border-border text-white placeholder:text-muted-foreground focus-visible:ring-primary"
+                />
+              </div>
+              <div className="space-y-2">
+                <label htmlFor="creci" className="text-sm font-medium text-white">
+                  Número do CRECI
+                </label>
+                <Input
+                  id="creci"
+                  placeholder="00000-F"
+                  value={creci}
+                  onChange={(e) => setCreci(e.target.value)}
+                  className="bg-secondary/50 border-border text-white placeholder:text-muted-foreground focus-visible:ring-primary"
+                />
+              </div>
             </div>
 
             <div className="space-y-4">

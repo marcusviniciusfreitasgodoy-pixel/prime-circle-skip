@@ -173,8 +173,31 @@ export const sendWelcomeNotifications = async ({
     .select('*')
     .eq('user_id', userId)
 
-  const waTemplate = templates?.find((t) => t.name === 'Boas-vindas - WhatsApp')
-  const emailTemplate = templates?.find((t) => t.name === 'Boas-vindas - Email')
+  let waTemplate = templates?.find((t) => t.name === 'Boas-vindas - WhatsApp')
+  let emailTemplate = templates?.find((t) => t.name === 'Boas-vindas - Email')
+
+  if (!waTemplate || !emailTemplate) {
+    const { data: adminProfile } = await supabase
+      .from('profiles')
+      .select('id')
+      .eq('role', 'admin')
+      .limit(1)
+      .single()
+
+    if (adminProfile) {
+      const { data: adminTemplates } = await supabase
+        .from('notification_templates')
+        .select('*')
+        .eq('user_id', adminProfile.id)
+
+      if (!waTemplate) {
+        waTemplate = adminTemplates?.find((t) => t.name === 'Boas-vindas - WhatsApp')
+      }
+      if (!emailTemplate) {
+        emailTemplate = adminTemplates?.find((t) => t.name === 'Boas-vindas - Email')
+      }
+    }
+  }
 
   const defaultWaContent =
     'Olá {{full_name}}! 🚀 Bem-vindo à Prime Circle. Seu cadastro foi recebido com sucesso. Estamos muito felizes em ter você em nossa rede exclusiva de parcerias imobiliárias. Em breve entraremos em contato!'
