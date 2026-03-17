@@ -1,9 +1,9 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
-import { Crown, Loader2, ArrowLeft, Check, ChevronsUpDown, Info } from 'lucide-react'
+import { Crown, Loader2, ArrowLeft, Check, ChevronsUpDown, Info, Camera } from 'lucide-react'
 import {
   Form,
   FormControl,
@@ -80,6 +80,36 @@ export default function ApplyPage() {
   const navigate = useNavigate()
   const { toast } = useToast()
 
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const [avatarFile, setAvatarFile] = useState<File | null>(null)
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null)
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      if (file.size > 2 * 1024 * 1024) {
+        toast({
+          variant: 'destructive',
+          title: 'Erro',
+          description: 'A imagem deve ter no máximo 2MB.',
+        })
+        return
+      }
+      if (!file.type.startsWith('image/')) {
+        toast({
+          variant: 'destructive',
+          title: 'Erro',
+          description: 'Selecione uma imagem válida (JPG, PNG ou WEBP).',
+        })
+        return
+      }
+      setAvatarFile(file)
+      const reader = new FileReader()
+      reader.onloadend = () => setAvatarPreview(reader.result as string)
+      reader.readAsDataURL(file)
+    }
+  }
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -147,7 +177,42 @@ export default function ApplyPage() {
         userId = fetchedId
       }
 
+      let uploadErrorMsg = ''
+
       if (userId) {
+        // Handle Avatar Upload
+        if (avatarFile) {
+          try {
+            // Force session refresh to ensure RLS rules for the new user apply
+            await supabase.auth.getSession()
+
+            const fileExt = avatarFile.name.split('.').pop()
+            const fileName = `${userId}/avatar-${Date.now()}.${fileExt}`
+
+            const { error: uploadError } = await supabase.storage
+              .from('avatars')
+              .upload(fileName, avatarFile, { upsert: true })
+
+            if (uploadError) {
+              console.error('Avatar upload error:', uploadError)
+              uploadErrorMsg = ' Não foi possível enviar a foto de perfil.'
+            } else {
+              const { data: publicUrlData } = supabase.storage
+                .from('avatars')
+                .getPublicUrl(fileName)
+
+              await supabase
+                .from('profiles')
+                .update({ avatar_url: publicUrlData.publicUrl })
+                .eq('id', userId)
+            }
+          } catch (err) {
+            console.error('Failed to process avatar:', err)
+            uploadErrorMsg = ' Erro ao configurar a foto de perfil.'
+          }
+        }
+
+        // Send notifications
         try {
           await sendWelcomeNotifications({
             userId: userId,
@@ -164,12 +229,14 @@ export default function ApplyPage() {
         toast({
           title: 'Aviso Importante',
           description:
-            'Seu cadastro foi recebido com sucesso! Ocorreu um pequeno atraso no envio do e-mail de confirmação da plataforma, mas você já pode acessar sua conta normalmente.',
+            'Seu cadastro foi recebido com sucesso! Ocorreu um pequeno atraso no envio do e-mail de confirmação da plataforma, mas você já pode acessar sua conta normalmente.' +
+            uploadErrorMsg,
         })
       } else {
         toast({
           title: 'Sucesso!',
-          description: 'Cadastro realizado com sucesso. Bem-vindo ao Prime Circle.',
+          description:
+            'Cadastro realizado com sucesso. Bem-vindo ao Prime Circle.' + uploadErrorMsg,
         })
       }
 
@@ -198,12 +265,55 @@ export default function ApplyPage() {
           </Link>
         </Button>
 
-        <div className="flex flex-col items-center mb-8 mt-6">
+        <div className="flex flex-col items-center mb-6 mt-6">
           <Crown className="w-10 h-10 text-primary mb-4" />
           <h1 className="text-2xl font-bold text-white text-center">Solicitar Acesso</h1>
           <p className="text-muted-foreground text-center text-sm mt-2">
             Junte-se ao círculo exclusivo.
           </p>
+        </div>
+
+        <div className="flex flex-col items-center mb-8">
+          <div
+            className={cn(
+              'relative w-24 h-24 rounded-full border-2 border-dashed flex items-center justify-center cursor-pointer overflow-hidden transition-colors group',
+              avatarPreview
+                ? 'border-primary/50 bg-background'
+                : 'border-border bg-background hover:bg-secondary/50',
+            )}
+            onClick={() => !isLoading && fileInputRef.current?.click()}
+          >
+            {avatarPreview ? (
+              <>
+                <img
+                  src={avatarPreview}
+                  alt="Avatar preview"
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                  <Camera className="w-6 h-6 text-white mb-1" />
+                  <span className="text-[10px] text-white">Alterar</span>
+                </div>
+              </>
+            ) : (
+              <div className="flex flex-col items-center text-muted-foreground group-hover:text-primary transition-colors">
+                <Camera className="w-6 h-6 mb-1" />
+                <span className="text-[10px] text-center px-2 leading-tight">
+                  Foto de
+                  <br />
+                  Perfil
+                </span>
+              </div>
+            )}
+          </div>
+          <input
+            type="file"
+            ref={fileInputRef}
+            className="hidden"
+            accept="image/jpeg,image/png,image/webp"
+            onChange={handleFileChange}
+            disabled={isLoading}
+          />
         </div>
 
         <Form {...form}>
