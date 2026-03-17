@@ -1,4 +1,5 @@
 import 'jsr:@supabase/functions-js/edge-runtime.d.ts'
+import { createClient } from 'npm:@supabase/supabase-js@2'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -13,7 +14,7 @@ Deno.serve(async (req: Request) => {
   }
 
   try {
-    const { number, text } = await req.json()
+    const { number, text, user_id } = await req.json()
 
     if (!number || !text) {
       return new Response(JSON.stringify({ error: 'Missing number or text' }), {
@@ -22,11 +23,11 @@ Deno.serve(async (req: Request) => {
       })
     }
 
-    const apiUrl = Deno.env.get('EVOLUTION_API_URL')
+    const apiUrl = Deno.env.get('EVOLUTION_API_URL') || 'https://evo2.godoyprime.shop'
     const apiKey = Deno.env.get('EVOLUTION_API_KEY')
-    const instanceName = Deno.env.get('EVOLUTION_INSTANCE_NAME')
+    const instanceName = Deno.env.get('EVOLUTION_INSTANCE_NAME') || 'GodoyPrimeImoveis'
 
-    if (!apiUrl || !apiKey || !instanceName) {
+    if (!apiKey) {
       return new Response(JSON.stringify({ error: 'Server configuration error' }), {
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -35,19 +36,42 @@ Deno.serve(async (req: Request) => {
 
     const endpoint = `${apiUrl}/message/sendText/${instanceName}`
 
+    const payload = {
+      number,
+      text,
+      options: {
+        delay: 1200,
+        presence: 'composing',
+      },
+    }
+
     const response = await fetch(endpoint, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         apikey: apiKey,
       },
-      body: JSON.stringify({
-        number,
-        text,
-      }),
+      body: JSON.stringify(payload),
     })
 
     const data = await response.json()
+    const success = response.ok && !data.error
+
+    if (user_id) {
+      const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? ''
+      const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+      if (supabaseUrl && supabaseKey) {
+        const supabase = createClient(supabaseUrl, supabaseKey)
+        await supabase.from('notification_logs').insert({
+          user_id,
+          recipient: number,
+          channel: 'whatsapp',
+          status: success ? 'success' : 'failed',
+          message_body: text,
+          error_details: success ? null : JSON.stringify(data),
+        })
+      }
+    }
 
     return new Response(JSON.stringify(data), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },

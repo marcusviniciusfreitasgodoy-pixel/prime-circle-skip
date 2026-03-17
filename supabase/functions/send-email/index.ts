@@ -1,4 +1,5 @@
 import 'jsr:@supabase/functions-js/edge-runtime.d.ts'
+import { createClient } from 'npm:@supabase/supabase-js@2'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -13,7 +14,7 @@ Deno.serve(async (req: Request) => {
   }
 
   try {
-    const { to, subject, text, html } = await req.json()
+    const { to, subject, text, html, user_id } = await req.json()
     const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY')
 
     if (!to) {
@@ -38,7 +39,7 @@ Deno.serve(async (req: Request) => {
         Authorization: `Bearer ${RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: 'Prime Circle <onboarding@primecircle.app.br>',
+        from: 'Prime Circle <contato@primecircle.app.br>',
         to,
         subject: subject || 'Notificação Prime Circle',
         html: html || text?.replace(/\n/g, '<br/>'),
@@ -47,9 +48,27 @@ Deno.serve(async (req: Request) => {
     })
 
     const data = await res.json()
+    const success = res.ok
+
+    if (user_id) {
+      const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? ''
+      const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+      if (supabaseUrl && supabaseKey) {
+        const supabase = createClient(supabaseUrl, supabaseKey)
+        await supabase.from('notification_logs').insert({
+          user_id,
+          recipient: to,
+          channel: 'email',
+          status: success ? 'success' : 'failed',
+          message_body: text || html || subject || '',
+          error_details: success ? null : JSON.stringify(data),
+        })
+      }
+    }
+
     return new Response(JSON.stringify(data), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      status: res.ok ? 200 : res.status,
+      status: success ? 200 : res.status,
     })
   } catch (err: any) {
     return new Response(JSON.stringify({ error: err.message }), {

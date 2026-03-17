@@ -53,11 +53,13 @@ export default function AuthConfirmPage() {
         const errorMessage = error.message || ''
         const isEmailError =
           errorMessage.includes('Error sending confirmation email') ||
-          (error as any)?.name === 'unexpected_failure'
+          errorMessage.includes('rate_limit') ||
+          (error as any)?.name === 'unexpected_failure' ||
+          (error as any)?.status === 500
 
         if (isEmailError) {
           toast.error(
-            'Erro ao enviar e-mail de confirmação. Por favor, verifique as configurações de SMTP/E-mail no painel do Supabase.',
+            'Não foi possível enviar o e-mail no momento. Por favor, verifique se o endereço está correto ou tente novamente em alguns minutos.',
           )
         } else {
           toast.error(`Falha ao enviar link: ${errorMessage || 'Erro desconhecido'}`)

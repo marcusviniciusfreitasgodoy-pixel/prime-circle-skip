@@ -4,7 +4,6 @@ export const sendTransactionalEmail = async (type: string, payload: any) => {
   let subject = payload.subject || 'Notificação Prime Circle'
   let bodyText = payload.body || ''
 
-  // Parse subject directly from body if it includes the "Assunto: " prefix
   const match = bodyText.match(/^Assunto:\s*(.+)\n+([\s\S]*)$/i)
   if (match) {
     subject = match[1].trim()
@@ -21,6 +20,7 @@ export const sendTransactionalEmail = async (type: string, payload: any) => {
         to: payload.to,
         subject,
         text: bodyText,
+        user_id: payload.userId,
       },
     })
 

@@ -111,49 +111,27 @@ export const processNotification = async ({
 
   const waMessage = buildMessage(waTemplate ? waTemplate.content : defaultWaContent)
   let waSuccess = false
-  let waError = ''
 
   try {
-    const res = await sendWhatsappMessage(recipientPhone, waMessage)
+    const res = await sendWhatsappMessage(recipientPhone, waMessage, userId)
     if (res.error) throw new Error(res.error.message || 'Unknown error')
     if (res.data?.error) throw new Error(res.data.error)
     waSuccess = true
   } catch (err: any) {
-    waError = err.message
+    console.error('WA Notification Error:', err)
   }
-
-  await (supabase.rpc as any)('log_notification', {
-    p_user_id: userId,
-    p_recipient: recipientPhone,
-    p_channel: 'whatsapp',
-    p_status: waSuccess ? 'success' : 'failed',
-    p_message_body: waMessage,
-    p_error_details: waError || null,
-  })
 
   if (!waSuccess) {
     const emailMessage = buildMessage(emailTemplate ? emailTemplate.content : defaultEmailContent)
-    let emailSuccess = false
-    let emailError = ''
-
     try {
       await sendTransactionalEmail(type === 'match' ? 'match_fallback' : 'partnership_fallback', {
         to: recipientEmail,
         body: emailMessage,
+        userId,
       })
-      emailSuccess = true
     } catch (err: any) {
-      emailError = err.message
+      console.error('Email Notification Error:', err)
     }
-
-    await (supabase.rpc as any)('log_notification', {
-      p_user_id: userId,
-      p_recipient: recipientEmail,
-      p_channel: 'email',
-      p_status: emailSuccess ? 'success' : 'failed',
-      p_message_body: emailMessage,
-      p_error_details: emailError || null,
-    })
   }
 }
 
@@ -208,50 +186,21 @@ export const sendWelcomeNotifications = async ({
     return content.replace(/\{\{full_name\}\}/g, fullName)
   }
 
-  // --- Send WhatsApp Welcome ---
   const waMessage = buildMessage(waTemplate ? waTemplate.content : defaultWaContent)
-  let waSuccess = false
-  let waError = ''
-
   try {
-    const res = await sendWhatsappMessage(recipientPhone, waMessage)
-    if (res.error) throw new Error(res.error.message || 'Unknown error')
-    if (res.data?.error) throw new Error(res.data.error)
-    waSuccess = true
+    await sendWhatsappMessage(recipientPhone, waMessage, userId)
   } catch (err: any) {
-    waError = err.message
+    console.error('Welcome WA Error:', err)
   }
 
-  await (supabase.rpc as any)('log_notification', {
-    p_user_id: userId,
-    p_recipient: recipientPhone,
-    p_channel: 'whatsapp',
-    p_status: waSuccess ? 'success' : 'failed',
-    p_message_body: waMessage,
-    p_error_details: waError || null,
-  })
-
-  // --- Send Email Welcome ---
   const emailMessage = buildMessage(emailTemplate ? emailTemplate.content : defaultEmailContent)
-  let emailSuccess = false
-  let emailError = ''
-
   try {
     await sendTransactionalEmail('welcome_email', {
       to: recipientEmail,
       body: emailMessage,
+      userId,
     })
-    emailSuccess = true
   } catch (err: any) {
-    emailError = err.message
+    console.error('Welcome Email Error:', err)
   }
-
-  await (supabase.rpc as any)('log_notification', {
-    p_user_id: userId,
-    p_recipient: recipientEmail,
-    p_channel: 'email',
-    p_status: emailSuccess ? 'success' : 'failed',
-    p_message_body: emailMessage,
-    p_error_details: emailError || null,
-  })
 }
