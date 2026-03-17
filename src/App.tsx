@@ -9,6 +9,7 @@ import OnboardingPage from './pages/OnboardingPage'
 import PendingPage from './pages/PendingPage'
 import MatchClosePage from './pages/MatchClosePage'
 import SuggestionsPage from './pages/SuggestionsPage'
+import PublicSuggestionsPage from './pages/PublicSuggestionsPage'
 import PlansPage from './pages/PlansPage'
 import TermsPage from './pages/TermsPage'
 import PrivacyPage from './pages/PrivacyPage'
@@ -48,6 +49,7 @@ function App() {
             <Route path="/auth/confirm" element={<AuthConfirmPage />} />
             <Route path="/termos-de-uso" element={<TermsPage />} />
             <Route path="/politica-de-privacidade" element={<PrivacyPage />} />
+            <Route path="/sugestoes" element={<PublicSuggestionsPage />} />
 
             <Route element={<ProtectedRoute />}>
               <Route path="/pending" element={<PendingPage />} />
