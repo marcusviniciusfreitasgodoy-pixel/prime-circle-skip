@@ -96,7 +96,7 @@ export default function ApplyPage() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true)
     try {
-      const redirectUrl = `${window.location.origin}/dashboard`
+      const redirectUrl = `${window.location.origin}/welcome`
 
       // Pass user metadata exactly as expected by the handle_new_user database trigger
       const { data, error } = await signUp(
