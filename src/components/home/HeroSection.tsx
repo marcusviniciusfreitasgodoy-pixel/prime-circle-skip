@@ -54,11 +54,12 @@ export function HeroSection() {
             </Link>
           </Button>
           <Button
+            asChild
             size="lg"
             variant="outline"
             className="h-14 px-8 text-base w-full sm:w-auto bg-black/40 border-primary/50 text-white hover:bg-primary/20 hover:text-white backdrop-blur-md transition-all duration-300"
           >
-            Entenda como Funciona
+            <a href="#how-it-works">Entenda como Funciona</a>
           </Button>
         </div>
       </div>

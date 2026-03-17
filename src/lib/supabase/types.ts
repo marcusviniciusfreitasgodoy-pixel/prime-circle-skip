@@ -395,6 +395,8 @@ export const Constants = {
 
 // --- ROW LEVEL SECURITY POLICIES ---
 // Table: notification_logs
+//   Policy "Users can insert own logs" (INSERT, PERMISSIVE) roles={authenticated}
+//     WITH CHECK: (auth.uid() = user_id)
 //   Policy "Users can manage their own logs" (ALL, PERMISSIVE) roles={authenticated}
 //     USING: (auth.uid() = user_id)
 //     WITH CHECK: (auth.uid() = user_id)
