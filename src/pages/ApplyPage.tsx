@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
-import { Crown, Loader2, ArrowLeft } from 'lucide-react'
+import { Crown, Loader2, ArrowLeft, Check, ChevronsUpDown } from 'lucide-react'
 import {
   Form,
   FormControl,
@@ -11,7 +11,6 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-  FormDescription,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -23,17 +22,47 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from '@/components/ui/command'
 import { toast } from 'sonner'
 import { useAuth } from '@/hooks/use-auth'
 import { supabase } from '@/lib/supabase/client'
+import { cn } from '@/lib/utils'
+
+const REGIONS = [
+  'Barra da Tijuca',
+  'Recreio dos Bandeirantes',
+  'Leblon',
+  'Ipanema',
+  'Lagoa',
+  'Gávea',
+  'São Conrado',
+  'Centro',
+  'Zona Sul',
+  'Zona Oeste',
+]
+
+const TICKET_RANGES = [
+  'R$ 1.000.000,00 - R$ 2.000.000,00',
+  'R$ 2.000.001,00 - R$ 5.000.000,00',
+  'R$ 5.000.001,00 - R$ 10.000.000,00',
+  'Acima de R$ 10.000.000,00',
+]
 
 const formSchema = z.object({
   name: z.string().min(2, 'Nome é obrigatório'),
   email: z.string().email('Email inválido'),
-  password: z.string().min(6, 'A senha deve ter no mínimo 6 caracteres'),
+  password: z.string().min(6, 'Senha mínima de 6 caracteres'),
   phone: z.string().min(10, 'Telefone inválido'),
   creci: z.string().min(4, 'CRECI inválido'),
-  region: z.string().min(2, 'Informe a região de atuação'),
+  region: z.array(z.string()).min(1, 'Informe pelo menos uma região'),
   ticket: z.string().min(1, 'Informe seu ticket médio'),
   referral: z.string().optional(),
   agreement: z
@@ -54,7 +83,7 @@ export default function ApplyPage() {
       password: '',
       phone: '',
       creci: '',
-      region: '',
+      region: [],
       ticket: '',
       referral: '',
       agreement: false,
@@ -63,12 +92,10 @@ export default function ApplyPage() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true)
-
     try {
       const { data, error } = await signUp(values.email, values.password, {
         full_name: values.name,
       })
-
       if (error) throw error
 
       if (data?.user) {
@@ -77,15 +104,13 @@ export default function ApplyPage() {
           .update({
             whatsapp_number: values.phone,
             creci: values.creci,
-            region: values.region,
+            region: values.region.join(', '),
             ticket_value: values.ticket,
             referral_code: values.referral,
           })
           .eq('id', data.user.id)
 
-        if (profileError) {
-          console.error('Error updating profile:', profileError)
-        }
+        if (profileError) console.error('Error updating profile:', profileError)
       }
 
       toast.success('Solicitação enviada com sucesso! Bem-vindo.')
@@ -114,7 +139,7 @@ export default function ApplyPage() {
           <Crown className="w-10 h-10 text-primary mb-4" />
           <h1 className="text-2xl font-bold text-white text-center">Solicitar Acesso</h1>
           <p className="text-muted-foreground text-center text-sm mt-2">
-            Junte-se ao círculo exclusivo da Barra da Tijuca.
+            Junte-se ao círculo exclusivo.
           </p>
         </div>
 
@@ -140,7 +165,7 @@ export default function ApplyPage() {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-white">Email Profissional</FormLabel>
+                    <FormLabel className="text-white">Email</FormLabel>
                     <FormControl>
                       <Input
                         type="email"
@@ -207,21 +232,64 @@ export default function ApplyPage() {
                 control={form.control}
                 name="region"
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-white">Região de Atuação</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger className="bg-background">
-                          <SelectValue placeholder="Selecione..." />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="Barra da Tijuca">Barra da Tijuca</SelectItem>
-                        <SelectItem value="Recreio">Recreio dos Bandeirantes</SelectItem>
-                        <SelectItem value="Zona Sul">Zona Sul</SelectItem>
-                        <SelectItem value="Outro">Outro</SelectItem>
-                      </SelectContent>
-                    </Select>
+                  <FormItem className="flex flex-col pt-1">
+                    <FormLabel className="text-white">Regiões</FormLabel>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            variant="outline"
+                            role="combobox"
+                            className={cn(
+                              'w-full justify-between bg-background border-input font-normal hover:bg-background/90 hover:text-white px-3 overflow-hidden',
+                              !field.value?.length && 'text-muted-foreground',
+                            )}
+                          >
+                            <span className="truncate block flex-1 text-left">
+                              {field.value?.length > 0 ? field.value.join(', ') : 'Selecione...'}
+                            </span>
+                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent
+                        className="p-0"
+                        style={{ width: 'var(--radix-popover-trigger-width)' }}
+                      >
+                        <Command>
+                          <CommandInput placeholder="Buscar..." />
+                          <CommandList>
+                            <CommandEmpty>Nenhuma região.</CommandEmpty>
+                            <CommandGroup>
+                              {REGIONS.map((region) => (
+                                <CommandItem
+                                  key={region}
+                                  value={region}
+                                  onSelect={() => {
+                                    const curr = field.value || []
+                                    form.setValue(
+                                      'region',
+                                      curr.includes(region)
+                                        ? curr.filter((r) => r !== region)
+                                        : [...curr, region],
+                                      { shouldValidate: true },
+                                    )
+                                  }}
+                                >
+                                  <Check
+                                    className={cn(
+                                      'mr-2 h-4 w-4',
+                                      field.value?.includes(region) ? 'opacity-100' : 'opacity-0',
+                                    )}
+                                  />
+                                  {region}
+                                </CommandItem>
+                              ))}
+                            </CommandGroup>
+                          </CommandList>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -230,11 +298,22 @@ export default function ApplyPage() {
                 control={form.control}
                 name="ticket"
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-white">Ticket Médio (R$)</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Ex: 2.500.000" {...field} className="bg-background" />
-                    </FormControl>
+                  <FormItem className="flex flex-col pt-1">
+                    <FormLabel className="text-white">Ticket Médio</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger className="bg-background">
+                          <SelectValue placeholder="Selecione..." />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {TICKET_RANGES.map((range) => (
+                          <SelectItem key={range} value={range}>
+                            {range}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -250,7 +329,6 @@ export default function ApplyPage() {
                   <FormControl>
                     <Input placeholder="Opcional" {...field} className="bg-background" />
                   </FormControl>
-                  <FormDescription className="text-[10px]">Acelera auto-aprovação.</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}

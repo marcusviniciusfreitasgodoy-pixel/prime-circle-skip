@@ -139,28 +139,40 @@ export type Database = {
       profiles: {
         Row: {
           accepted_terms: boolean
+          creci: string | null
           full_name: string | null
           id: string
           plan: string
+          referral_code: string | null
+          region: string | null
           role: string
+          ticket_value: string | null
           updated_at: string | null
           whatsapp_number: string | null
         }
         Insert: {
           accepted_terms?: boolean
+          creci?: string | null
           full_name?: string | null
           id: string
           plan?: string
+          referral_code?: string | null
+          region?: string | null
           role?: string
+          ticket_value?: string | null
           updated_at?: string | null
           whatsapp_number?: string | null
         }
         Update: {
           accepted_terms?: boolean
+          creci?: string | null
           full_name?: string | null
           id?: string
           plan?: string
+          referral_code?: string | null
+          region?: string | null
           role?: string
+          ticket_value?: string | null
           updated_at?: string | null
           whatsapp_number?: string | null
         }
@@ -358,6 +370,10 @@ export const Constants = {
 //   accepted_terms: boolean (not null, default: false)
 //   role: text (not null, default: 'user'::text)
 //   plan: text (not null, default: 'Free'::text)
+//   region: text (nullable)
+//   ticket_value: text (nullable)
+//   creci: text (nullable)
+//   referral_code: text (nullable)
 
 // --- CONSTRAINTS ---
 // Table: documents
