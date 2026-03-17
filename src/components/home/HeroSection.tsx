@@ -38,13 +38,6 @@ export function HeroSection() {
           condições fora dos portais
         </p>
 
-        <p
-          className="mt-4 text-base sm:text-lg text-zinc-400 max-w-2xl mx-auto animate-fade-in-up drop-shadow-md font-medium"
-          style={{ animationDelay: '250ms' }}
-        >
-          Acesso por indicação e aprovação.&nbsp;
-        </p>
-
         <div
           className="mt-10 flex flex-col sm:flex-row gap-4 sm:gap-6 w-full sm:w-auto animate-fade-in-up px-4 sm:px-0"
           style={{ animationDelay: '300ms' }}

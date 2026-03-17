@@ -19879,30 +19879,23 @@ function HeroSection() {
 						style: { animationDelay: "200ms" },
 						children: "Uma rede privada para corretores selecionados da Barra da Tijuca — com demandas reais e condições fora dos portais"
 					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-						"data-uid": "src/components/home/HeroSection.tsx:41:9",
-						"data-prohibitions": "[]",
-						className: "mt-4 text-base sm:text-lg text-zinc-400 max-w-2xl mx-auto animate-fade-in-up drop-shadow-md font-medium",
-						style: { animationDelay: "250ms" },
-						children: "Acesso por indicação e aprovação.\xA0"
-					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-						"data-uid": "src/components/home/HeroSection.tsx:48:9",
+						"data-uid": "src/components/home/HeroSection.tsx:41:9",
 						"data-prohibitions": "[]",
 						className: "mt-10 flex flex-col sm:flex-row gap-4 sm:gap-6 w-full sm:w-auto animate-fade-in-up px-4 sm:px-0",
 						style: { animationDelay: "300ms" },
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
-							"data-uid": "src/components/home/HeroSection.tsx:52:11",
+							"data-uid": "src/components/home/HeroSection.tsx:45:11",
 							"data-prohibitions": "[]",
 							size: "lg",
 							className: "h-14 px-8 text-base w-full sm:w-auto shadow-elevation hover:scale-105 transition-transform duration-300 gold-gradient text-black font-bold",
 							children: ["Quero fazer parte", /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ArrowRight, {
-								"data-uid": "src/components/home/HeroSection.tsx:57:13",
+								"data-uid": "src/components/home/HeroSection.tsx:50:13",
 								"data-prohibitions": "[editContent]",
 								className: "ml-2 h-5 w-5"
 							})]
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-							"data-uid": "src/components/home/HeroSection.tsx:59:11",
+							"data-uid": "src/components/home/HeroSection.tsx:52:11",
 							"data-prohibitions": "[]",
 							size: "lg",
 							variant: "outline",
@@ -35875,4 +35868,4 @@ function App() {
 }));
 //#endregion
 
-//# sourceMappingURL=index-BTvTrGtS.js.map
+//# sourceMappingURL=index-DiUUkoRE.js.map
