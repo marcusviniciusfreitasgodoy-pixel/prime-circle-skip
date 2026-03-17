@@ -65,6 +65,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         emailRedirectTo: redirectTo || `${window.location.origin}/dashboard`,
       },
     })
+
+    if (error) {
+      const authError = error as any
+      if (authError.status === 429 || authError.code === 'over_email_send_rate_limit') {
+        console.warn(`[Auth] Rate limit exceeded: ${authError.message} (code: ${authError.code})`)
+      }
+    }
+
     return { data, error }
   }
 

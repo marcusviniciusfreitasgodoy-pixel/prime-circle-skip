@@ -114,6 +114,12 @@ export default function ApplyPage() {
       )
 
       if (error) {
+        const authError = error as any
+        if (authError.status === 429 || authError.code === 'over_email_send_rate_limit') {
+          throw new Error(
+            'Limite de envio de e-mail excedido. Você realizou muitas tentativas em pouco tempo. Por favor, aguarde alguns minutos antes de tentar novamente ou verifique sua caixa de entrada.',
+          )
+        }
         throw new Error(`Erro na criação da conta: ${error.message}`)
       }
 

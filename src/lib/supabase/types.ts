@@ -407,7 +407,7 @@ export const Constants = {
 // Table: profiles
 //   Policy "Users can insert own profile" (INSERT, PERMISSIVE) roles={authenticated}
 //     WITH CHECK: (auth.uid() = id)
-//   Policy "Users can update own profile" (UPDATE, PERMISSIVE) roles={authenticated}
+//   Policy "Users can update own profile" (UPDATE, PERMISSIVE) roles={public}
 //     USING: (auth.uid() = id)
 //     WITH CHECK: (auth.uid() = id)
 //   Policy "Users can view own profile" (SELECT, PERMISSIVE) roles={authenticated}
@@ -432,7 +432,6 @@ export const Constants = {
 //     assigned_role TEXT := 'user';
 //     assigned_plan TEXT := 'Free';
 //   BEGIN
-//     -- Verify if this is the first user
 //     SELECT count(*) INTO user_count FROM auth.users;
 //
 //     IF user_count <= 1 THEN
@@ -440,13 +439,29 @@ export const Constants = {
 //       assigned_plan := 'Founder';
 //     END IF;
 //
-//     INSERT INTO public.profiles (id, full_name, role, plan, accepted_terms)
+//     INSERT INTO public.profiles (
+//       id,
+//       full_name,
+//       role,
+//       plan,
+//       accepted_terms,
+//       whatsapp_number,
+//       creci,
+//       region,
+//       ticket_value,
+//       referral_code
+//     )
 //     VALUES (
 //       NEW.id,
 //       COALESCE(NEW.raw_user_meta_data->>'full_name', NEW.raw_user_meta_data->>'name', split_part(NEW.email, '@', 1)),
 //       assigned_role,
 //       assigned_plan,
-//       false
+//       COALESCE((NEW.raw_user_meta_data->>'accepted_terms')::boolean, false),
+//       NEW.raw_user_meta_data->>'whatsapp_number',
+//       NEW.raw_user_meta_data->>'creci',
+//       NEW.raw_user_meta_data->>'region',
+//       NEW.raw_user_meta_data->>'ticket_value',
+//       NEW.raw_user_meta_data->>'referral_code'
 //     )
 //     ON CONFLICT (id) DO UPDATE SET
 //       role = EXCLUDED.role,
