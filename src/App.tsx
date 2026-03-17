@@ -26,17 +26,7 @@ import { ProtectedRoute } from '@/components/ProtectedRoute'
 import { AnalyticsTracker } from '@/components/AnalyticsTracker'
 import useAppStore, { AppProvider } from '@/stores/main'
 import { useToast } from '@/hooks/use-toast'
-import { AuthProvider, useAuth } from '@/hooks/use-auth'
-
-function AuthSync() {
-  const { session, signIn, loading } = useAuth()
-  useEffect(() => {
-    if (!loading && !session) {
-      signIn('admin@example.com', 'StrongPassword123!')
-    }
-  }, [session, signIn, loading])
-  return null
-}
+import { AuthProvider } from '@/hooks/use-auth'
 
 function DashboardLayout() {
   const { notifications, clearNotifications } = useAppStore()
@@ -74,7 +64,6 @@ function DashboardLayout() {
 function App() {
   return (
     <AuthProvider>
-      <AuthSync />
       <AppProvider>
         <TooltipProvider>
           <Toaster />

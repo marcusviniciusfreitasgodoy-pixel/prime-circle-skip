@@ -138,18 +138,21 @@ export type Database = {
       }
       profiles: {
         Row: {
+          accepted_terms: boolean
           full_name: string | null
           id: string
           updated_at: string | null
           whatsapp_number: string | null
         }
         Insert: {
+          accepted_terms?: boolean
           full_name?: string | null
           id: string
           updated_at?: string | null
           whatsapp_number?: string | null
         }
         Update: {
+          accepted_terms?: boolean
           full_name?: string | null
           id?: string
           updated_at?: string | null
@@ -346,6 +349,7 @@ export const Constants = {
 //   full_name: text (nullable)
 //   whatsapp_number: text (nullable)
 //   updated_at: timestamp with time zone (nullable, default: now())
+//   accepted_terms: boolean (not null, default: false)
 
 // --- CONSTRAINTS ---
 // Table: documents

@@ -7,7 +7,7 @@ import { Loader2 } from 'lucide-react'
 
 export function ProtectedRoute() {
   const { user: mockUser } = useAppStore()
-  const { user: authUser, loading: authLoading } = useAuth()
+  const { user: authUser, loading: authLoading, signOut } = useAuth()
   const location = useLocation()
 
   const [acceptedTerms, setAcceptedTerms] = useState<boolean | null>(null)
@@ -23,17 +23,23 @@ export function ProtectedRoute() {
       }
 
       try {
-        const { data } = await supabase
+        const { data, error } = await supabase
           .from('profiles')
           .select('accepted_terms')
           .eq('id', authUser.id)
           .single()
 
-        if (mounted) {
-          setAcceptedTerms(data?.accepted_terms ?? false)
+        if (error) {
+          console.error('Error fetching profile:', error)
+          if (error.code === 'PGRST116') {
+            // User profile not found, likely due to DB reset. Force sign out to invalidate session.
+            await signOut()
+          }
+        } else if (mounted && data) {
+          setAcceptedTerms(data.accepted_terms ?? false)
         }
       } catch (error) {
-        console.error('Error fetching profile:', error)
+        console.error('Unexpected error fetching profile:', error)
       } finally {
         if (mounted) setLoadingProfile(false)
       }
@@ -46,7 +52,7 @@ export function ProtectedRoute() {
     return () => {
       mounted = false
     }
-  }, [authUser, authLoading])
+  }, [authUser, authLoading, signOut])
 
   if (authLoading || loadingProfile) {
     return (
@@ -58,7 +64,7 @@ export function ProtectedRoute() {
   }
 
   if (!mockUser && !authUser) {
-    return <Navigate to="/auth/confirm" replace state={{ from: location }} />
+    return <Navigate to="/" replace state={{ from: location }} />
   }
 
   const isPending = mockUser?.status === 'pending'
