@@ -130,7 +130,9 @@ export default function ApplyPage() {
   })
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    if (isLoading) return
     setIsLoading(true)
+
     try {
       const { data, error } = await signUp(values.email, values.password, {
         full_name: values.name,
@@ -165,9 +167,9 @@ export default function ApplyPage() {
           (authError.message && authError.message.toLowerCase().includes('timeout'))
         ) {
           toast({
-            title: 'Aviso de Conexão',
+            title: 'Solicitação em Processamento',
             description:
-              'A solicitação demorou mais que o normal. Sua conta pode ter sido criada. Tente fazer login ou redefina a senha.',
+              'A criação da sua conta demorou um pouco mais que o normal, mas já está sendo finalizada. Tente fazer login ou verifique seu e-mail em breve.',
           })
           navigate('/auth/confirm')
           return
@@ -186,50 +188,46 @@ export default function ApplyPage() {
         }
       }
 
-      // Treat the user as authenticated immediately for UX continuity
+      // UX Continuity
       login(values.email, 'password')
       localStorage.setItem('just_registered', 'true')
 
       const userId = data?.user?.id
       let uploadErrorMsg = ''
 
-      if (userId) {
-        // Handle Avatar Upload
-        if (avatarFile) {
-          try {
-            // Force session refresh to ensure RLS rules for the new user apply
-            await supabase.auth.getSession()
+      if (userId && avatarFile) {
+        try {
+          await supabase.auth.getSession()
 
-            const fileExt = avatarFile.name.split('.').pop()
-            const fileName = `${userId}/avatar-${Date.now()}.${fileExt}`
+          const fileExt = avatarFile.name.split('.').pop()
+          const fileName = `${userId}/avatar-${Date.now()}.${fileExt}`
 
-            const { error: uploadError } = await supabase.storage
-              .from('avatars')
-              .upload(fileName, avatarFile, { upsert: true })
+          const { error: uploadError } = await supabase.storage
+            .from('avatars')
+            .upload(fileName, avatarFile, { upsert: true })
 
-            if (uploadError) {
-              console.error('Avatar upload error:', uploadError)
-              uploadErrorMsg = ' Não foi possível enviar a foto de perfil.'
-            } else {
-              const { data: publicUrlData } = supabase.storage
-                .from('avatars')
-                .getPublicUrl(fileName)
+          if (uploadError) {
+            console.error('Avatar upload error:', uploadError)
+            uploadErrorMsg = ' Não foi possível enviar a foto de perfil.'
+          } else {
+            const { data: publicUrlData } = supabase.storage.from('avatars').getPublicUrl(fileName)
 
-              await supabase
-                .from('profiles')
-                .update({ avatar_url: publicUrlData.publicUrl })
-                .eq('id', userId)
-            }
-          } catch (err) {
-            console.error('Failed to process avatar:', err)
-            uploadErrorMsg = ' Erro ao configurar a foto de perfil.'
+            await supabase
+              .from('profiles')
+              .update({ avatar_url: publicUrlData.publicUrl })
+              .eq('id', userId)
           }
+        } catch (err) {
+          console.error('Failed to process avatar:', err)
+          uploadErrorMsg = ' Erro ao configurar a foto de perfil.'
         }
       }
 
       toast({
-        title: 'Sucesso!',
-        description: 'Cadastro realizado com sucesso. Bem-vindo ao Prime Circle.' + uploadErrorMsg,
+        title: 'Cadastro Concluído!',
+        description:
+          'Bem-vindo ao Prime Circle. Suas notificações e e-mails de boas-vindas estão a caminho.' +
+          uploadErrorMsg,
       })
 
       navigate('/welcome')
@@ -239,7 +237,6 @@ export default function ApplyPage() {
         title: 'Erro',
         description: error.message || 'Erro ao processar solicitação',
       })
-    } finally {
       setIsLoading(false)
     }
   }
@@ -251,6 +248,7 @@ export default function ApplyPage() {
           variant="ghost"
           asChild
           className="absolute top-4 left-4 text-muted-foreground hover:text-white"
+          disabled={isLoading}
         >
           <Link to="/">
             <ArrowLeft className="w-4 h-4 mr-2" /> Voltar
@@ -268,7 +266,8 @@ export default function ApplyPage() {
         <div className="flex flex-col items-center mb-8">
           <div
             className={cn(
-              'relative w-24 h-24 rounded-full border-2 border-dashed flex items-center justify-center cursor-pointer overflow-hidden transition-colors group',
+              'relative w-24 h-24 rounded-full border-2 border-dashed flex items-center justify-center overflow-hidden transition-colors group',
+              isLoading ? 'cursor-not-allowed opacity-50' : 'cursor-pointer',
               avatarPreview
                 ? 'border-primary/50 bg-background'
                 : 'border-border bg-background hover:bg-secondary/50',
@@ -282,10 +281,12 @@ export default function ApplyPage() {
                   alt="Avatar preview"
                   className="w-full h-full object-cover"
                 />
-                <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                  <Camera className="w-6 h-6 text-white mb-1" />
-                  <span className="text-[10px] text-white">Alterar</span>
-                </div>
+                {!isLoading && (
+                  <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    <Camera className="w-6 h-6 text-white mb-1" />
+                    <span className="text-[10px] text-white">Alterar</span>
+                  </div>
+                )}
               </>
             ) : (
               <div className="flex flex-col items-center text-muted-foreground group-hover:text-primary transition-colors">
@@ -621,7 +622,14 @@ export default function ApplyPage() {
               disabled={isLoading}
               className="w-full gold-gradient gold-glow h-12 text-lg mt-6 font-semibold text-black transition-all"
             >
-              {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Enviar Solicitação'}
+              {isLoading ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin mr-2" />
+                  Processando...
+                </>
+              ) : (
+                'Enviar Solicitação'
+              )}
             </Button>
           </form>
         </Form>

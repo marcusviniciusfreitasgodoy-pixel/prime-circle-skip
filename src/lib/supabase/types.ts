@@ -619,11 +619,17 @@ export const Constants = {
 //
 //     v_url := v_url || '/functions/v1/welcome-webhook';
 //
-//     PERFORM net.http_post(
-//         url := v_url,
-//         headers := '{"Content-Type": "application/json"}'::jsonb,
-//         body := jsonb_build_object('type', 'INSERT', 'table', 'profiles', 'schema', 'public', 'record', row_to_json(NEW))
-//     );
+//     BEGIN
+//       PERFORM net.http_post(
+//           url := v_url,
+//           headers := '{"Content-Type": "application/json"}'::jsonb,
+//           body := jsonb_build_object('type', 'INSERT', 'table', 'profiles', 'schema', 'public', 'record', row_to_json(NEW)),
+//           timeout_milliseconds := 1000
+//       );
+//     EXCEPTION WHEN OTHERS THEN
+//       -- Ensure pg_net failures do not abort the database transaction for the new user registration
+//       RAISE WARNING 'Error scheduling welcome webhook pg_net request: %', SQLERRM;
+//     END;
 //
 //     RETURN NEW;
 //   END;
