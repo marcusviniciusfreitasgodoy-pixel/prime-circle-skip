@@ -31,49 +31,71 @@ export default function AuthConfirmPage() {
 
   const handleMagicLink = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!email) return toast.error('Informe seu e-mail')
+    const cleanEmail = email.trim().toLowerCase()
+    if (!cleanEmail) return toast.error('Informe seu e-mail')
 
     setIsLoading(true)
     const dest = location.state?.from?.pathname || '/dashboard'
     const redirectTo = `${window.location.origin}${dest}`
 
     try {
-      const { error } = await signInWithOtp(email, redirectTo)
+      const { error } = await signInWithOtp(cleanEmail, redirectTo)
 
       let userId: string | null = null
       try {
-        const { data } = await supabase.rpc('get_user_id_by_email', { p_email: email })
+        const { data } = await supabase.rpc('get_user_id_by_email', { p_email: cleanEmail })
         if (data) userId = data
       } catch (err) {
         console.error('Failed to resolve user ID:', err)
       }
 
       if (error) {
-        toast.error(`Falha ao enviar link: ${error.message}`)
+        const errorMessage = error.message || ''
+        const isEmailError =
+          errorMessage.includes('Error sending confirmation email') ||
+          (error as any)?.name === 'unexpected_failure'
+
+        if (isEmailError) {
+          toast.error(
+            'Erro ao enviar e-mail de confirmação. Por favor, verifique as configurações de SMTP/E-mail no painel do Supabase.',
+          )
+        } else {
+          toast.error(`Falha ao enviar link: ${errorMessage || 'Erro desconhecido'}`)
+        }
+
         if (userId) {
-          await supabase.rpc('log_notification', {
-            p_user_id: userId,
-            p_recipient: email,
-            p_channel: 'email',
-            p_status: 'failed',
-            p_message_body: `Solicitação de Magic Link para ${redirectTo}`,
-            p_error_details: error.message,
-          })
+          try {
+            await supabase.rpc('log_notification', {
+              p_user_id: userId,
+              p_recipient: cleanEmail,
+              p_channel: 'email',
+              p_status: 'failed',
+              p_message_body: `Solicitação de Magic Link para ${redirectTo}`,
+              p_error_details: errorMessage || 'Unknown error',
+            })
+          } catch (logErr) {
+            console.error('Failed to log notification error:', logErr)
+          }
         }
       } else {
         toast.success('Link de acesso enviado! Verifique sua caixa de entrada e spam.')
         setCooldown(60)
         if (userId) {
-          await supabase.rpc('log_notification', {
-            p_user_id: userId,
-            p_recipient: email,
-            p_channel: 'email',
-            p_status: 'success',
-            p_message_body: `Solicitação de Magic Link para ${redirectTo}`,
-          })
+          try {
+            await supabase.rpc('log_notification', {
+              p_user_id: userId,
+              p_recipient: cleanEmail,
+              p_channel: 'email',
+              p_status: 'success',
+              p_message_body: `Solicitação de Magic Link para ${redirectTo}`,
+            })
+          } catch (logErr) {
+            console.error('Failed to log success notification:', logErr)
+          }
         }
       }
-    } catch (err) {
+    } catch (err: any) {
+      console.error('Unexpected error during magic link:', err)
       toast.error('Ocorreu um erro inesperado ao processar sua solicitação.')
     } finally {
       setIsLoading(false)
@@ -82,21 +104,27 @@ export default function AuthConfirmPage() {
 
   const handlePasswordLogin = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!email || !password) return toast.error('Preencha todos os campos')
+    const cleanEmail = email.trim().toLowerCase()
+    if (!cleanEmail || !password) return toast.error('Preencha todos os campos')
 
     setIsLoading(true)
-    const { error } = await signIn(email, password)
+    try {
+      const { error } = await signIn(cleanEmail, password)
 
-    if (error) {
-      toast.error('Credenciais inválidas.')
+      if (error) {
+        toast.error('Credenciais inválidas.')
+        setIsLoading(false)
+        return
+      }
+
+      login(cleanEmail, 'password')
+      const dest = location.state?.from?.pathname || '/dashboard'
+      navigate(dest)
+    } catch (err) {
+      toast.error('Ocorreu um erro ao fazer login.')
+    } finally {
       setIsLoading(false)
-      return
     }
-
-    login(email, 'password')
-    const dest = location.state?.from?.pathname || '/dashboard'
-    navigate(dest)
-    setIsLoading(false)
   }
 
   return (

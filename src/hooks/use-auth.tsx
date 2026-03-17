@@ -35,71 +35,97 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     })
 
     // Validate session robustly using getUser() to ensure token is valid and user wasn't deleted by DB reset
-    supabase.auth.getUser().then(({ data: { user }, error }) => {
-      if (error || !user) {
+    supabase.auth
+      .getUser()
+      .then(({ data: { user }, error }) => {
+        if (error || !user) {
+          setSession(null)
+          setUser(null)
+          setLoading(false)
+        } else {
+          supabase.auth.getSession().then(({ data: { session } }) => {
+            setSession(session)
+            setUser(user)
+            setLoading(false)
+          })
+        }
+      })
+      .catch(() => {
         setSession(null)
         setUser(null)
         setLoading(false)
-      } else {
-        supabase.auth.getSession().then(({ data: { session } }) => {
-          setSession(session)
-          setUser(user)
-          setLoading(false)
-        })
-      }
-    })
+      })
 
     return () => subscription.unsubscribe()
   }, [])
 
   const signUp = async (email: string, password: string, metaData?: any) => {
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: metaData,
-        emailRedirectTo: `${window.location.origin}/`,
-      },
-    })
+    try {
+      const cleanEmail = email.trim().toLowerCase()
+      const { data, error } = await supabase.auth.signUp({
+        email: cleanEmail,
+        password,
+        options: {
+          data: metaData,
+          emailRedirectTo: `${window.location.origin}/`,
+        },
+      })
 
-    if (error) {
-      const authError = error as any
-      if (authError.status === 429 || authError.code === 'over_email_send_rate_limit') {
-        console.warn(`[Auth] Rate limit exceeded: ${authError.message} (code: ${authError.code})`)
+      if (error) {
+        const authError = error as any
+        if (authError.status === 429 || authError.code === 'over_email_send_rate_limit') {
+          console.warn(`[Auth] Rate limit exceeded: ${authError.message} (code: ${authError.code})`)
+        }
       }
-    }
 
-    // Attempt auto-login if user was created but session is missing
-    if (data?.user && !data?.session) {
-      const signInRes = await supabase.auth.signInWithPassword({ email, password })
-      if (signInRes.data?.session) {
-        setSession(signInRes.data.session)
-        setUser(signInRes.data.user)
-        data.session = signInRes.data.session
+      // Attempt auto-login if user was created but session is missing
+      if (data?.user && !data?.session) {
+        const signInRes = await supabase.auth.signInWithPassword({ email: cleanEmail, password })
+        if (signInRes.data?.session) {
+          setSession(signInRes.data.session)
+          setUser(signInRes.data.user)
+          data.session = signInRes.data.session
+        }
       }
-    }
 
-    return { data, error }
+      return { data, error }
+    } catch (err: any) {
+      return { data: null, error: err }
+    }
   }
 
   const signIn = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({ email, password })
-    return { error }
+    try {
+      const cleanEmail = email.trim().toLowerCase()
+      const { error } = await supabase.auth.signInWithPassword({ email: cleanEmail, password })
+      return { error }
+    } catch (err: any) {
+      return { error: err }
+    }
   }
 
   const signInWithOtp = async (email: string, redirectTo: string) => {
-    const { error } = await supabase.auth.signInWithOtp({
-      email,
-      options: {
-        emailRedirectTo: redirectTo,
-      },
-    })
-    return { error }
+    try {
+      const cleanEmail = email.trim().toLowerCase()
+      const { error } = await supabase.auth.signInWithOtp({
+        email: cleanEmail,
+        options: {
+          emailRedirectTo: redirectTo,
+        },
+      })
+      return { error }
+    } catch (err: any) {
+      return { error: err }
+    }
   }
 
   const signOut = async () => {
-    const { error } = await supabase.auth.signOut()
-    return { error }
+    try {
+      const { error } = await supabase.auth.signOut()
+      return { error }
+    } catch (err: any) {
+      return { error: err }
+    }
   }
 
   return (
