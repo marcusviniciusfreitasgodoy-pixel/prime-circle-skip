@@ -10,8 +10,8 @@ export function ProblemSection() {
           </h2>
           <p className="text-lg text-muted-foreground">
             Diga adeus à fadiga dos portais ineficientes e ao ruído dos grupos de WhatsApp
-            desorganizados. O Prime Circle é a solução curada que elimina distrações e foca no que
-            importa para a elite da Barra da Tijuca.
+            desorganizados. O Prime Circle é a solução que elimina distrações e foca no que importa
+            - fazer negócios.
           </p>
         </div>
 

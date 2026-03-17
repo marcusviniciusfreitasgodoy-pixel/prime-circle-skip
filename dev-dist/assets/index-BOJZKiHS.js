@@ -19940,7 +19940,7 @@ function ProblemSection() {
 					"data-uid": "src/components/home/ProblemSection.tsx:11:11",
 					"data-prohibitions": "[]",
 					className: "text-lg text-muted-foreground",
-					children: "Diga adeus à fadiga dos portais ineficientes e ao ruído dos grupos de WhatsApp desorganizados. O Prime Circle é a solução curada que elimina distrações e foca no que importa para a elite da Barra da Tijuca."
+					children: "Diga adeus à fadiga dos portais ineficientes e ao ruído dos grupos de WhatsApp desorganizados. O Prime Circle é a solução que elimina distrações e foca no que importa - fazer negócios."
 				})]
 			}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 				"data-uid": "src/components/home/ProblemSection.tsx:18:9",
@@ -35857,4 +35857,4 @@ function App() {
 }));
 //#endregion
 
-//# sourceMappingURL=index-Dl7PSpb-.js.map
+//# sourceMappingURL=index-BOJZKiHS.js.map
