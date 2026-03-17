@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
-import { Crown, Loader2, ArrowLeft, Check, ChevronsUpDown, Info } from 'lucide-react'
+import { Crown, Loader2, ArrowLeft, Check, ChevronsUpDown, Info, Mail } from 'lucide-react'
 import {
   Form,
   FormControl,
@@ -73,9 +73,9 @@ const formSchema = z.object({
 })
 
 export default function ApplyPage() {
-  const navigate = useNavigate()
   const { signUp } = useAuth()
   const [isLoading, setIsLoading] = useState(false)
+  const [isSuccess, setIsSuccess] = useState(false)
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -117,7 +117,15 @@ export default function ApplyPage() {
         const authError = error as any
         if (authError.status === 429 || authError.code === 'over_email_send_rate_limit') {
           throw new Error(
-            'Limite de envio de e-mail excedido. Você realizou muitas tentativas em pouco tempo. Por favor, aguarde alguns minutos antes de tentar novamente ou verifique sua caixa de entrada.',
+            'Limite de envio de e-mails atingido. Por favor, aguarde alguns minutos antes de tentar novamente ou verifique sua caixa de entrada.',
+          )
+        }
+        if (
+          authError.status === 500 &&
+          authError.message?.includes('Error sending confirmation email')
+        ) {
+          throw new Error(
+            'Erro ao enviar o e-mail de confirmação através de contato@primecircle.app.br. Por favor, tente novamente em instantes ou entre em contato com o suporte.',
           )
         }
         throw new Error(`Erro na criação da conta: ${error.message}`)
@@ -125,7 +133,6 @@ export default function ApplyPage() {
 
       if (data?.user) {
         // Explicitly update the profiles table to ensure all fields are persisted.
-        // We throw an explicit error if this fails (e.g., due to RLS) to prevent silent failures.
         const { error: profileError } = await supabase
           .from('profiles')
           .update({
@@ -154,18 +161,39 @@ export default function ApplyPage() {
           })
         } catch (err) {
           console.error('Failed to send welcome notifications:', err)
-          // Non-blocking error: we still want them to proceed if registration succeeded
         }
       }
 
-      toast.success('Solicitação enviada com sucesso!')
-      // Redirect to onboarding avoiding loops
-      navigate('/onboarding')
+      setIsSuccess(true)
     } catch (error: any) {
       toast.error(error.message || 'Erro ao processar solicitação')
     } finally {
       setIsLoading(false)
     }
+  }
+
+  if (isSuccess) {
+    return (
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4 py-12 relative">
+        <div className="w-full max-w-md bg-card p-8 rounded-2xl border border-border shadow-elevation relative text-center">
+          <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-6">
+            <Mail className="w-8 h-8 text-primary" />
+          </div>
+          <h2 className="text-2xl font-bold text-white mb-4">Verifique seu e-mail</h2>
+          <p className="text-muted-foreground mb-6 leading-relaxed">
+            Um e-mail de confirmação foi enviado para o seu endereço. Por favor, verifique a caixa
+            de entrada de <strong className="text-white">contato@primecircle.app.br</strong> (ou sua
+            pasta de spam) para ativar sua conta.
+          </p>
+          <Button
+            asChild
+            className="w-full gold-gradient gold-glow text-black font-semibold h-12 text-lg"
+          >
+            <Link to="/auth/confirm">Ir para Login</Link>
+          </Button>
+        </div>
+      </div>
+    )
   }
 
   return (
