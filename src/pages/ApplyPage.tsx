@@ -97,39 +97,63 @@ export default function ApplyPage() {
     try {
       const redirectUrl = `${window.location.origin}/dashboard`
 
+      // Pass user metadata as a robust fallback for the database trigger
       const { data, error } = await signUp(
         values.email,
         values.password,
-        { full_name: values.name },
+        {
+          full_name: values.name,
+          whatsapp_number: values.phone,
+          creci: values.creci,
+          region: values.region.join(', '),
+          ticket_value: values.ticket,
+          referral_code: values.referral,
+          accepted_terms: values.agreement,
+        },
         redirectUrl,
       )
 
-      if (error) throw error
+      if (error) {
+        throw new Error(`Erro na criação da conta: ${error.message}`)
+      }
 
       if (data?.user) {
+        // Explicitly update the profiles table to ensure all fields are persisted.
+        // We throw an explicit error if this fails (e.g., due to RLS) to prevent silent failures.
         const { error: profileError } = await supabase
           .from('profiles')
           .update({
+            full_name: values.name,
             whatsapp_number: values.phone,
             creci: values.creci,
             region: values.region.join(', '),
             ticket_value: values.ticket,
             referral_code: values.referral,
+            accepted_terms: values.agreement,
           })
           .eq('id', data.user.id)
 
-        if (profileError) console.error('Error updating profile:', profileError)
+        if (profileError) {
+          console.error('Error updating profile:', profileError)
+          throw new Error(`Erro ao salvar dados do perfil: ${profileError.message}`)
+        }
 
         // Send automated welcome notifications via WhatsApp and Email
-        await sendWelcomeNotifications({
-          userId: data.user.id,
-          fullName: values.name,
-          recipientPhone: values.phone,
-          recipientEmail: values.email,
-        }).catch((err) => console.error('Failed to send welcome notifications:', err))
+        try {
+          await sendWelcomeNotifications({
+            userId: data.user.id,
+            fullName: values.name,
+            recipientPhone: values.phone,
+            recipientEmail: values.email,
+          })
+        } catch (err) {
+          console.error('Failed to send welcome notifications:', err)
+          // Non-blocking error: we still want them to proceed if registration succeeded
+        }
       }
 
-      toast.success('Solicitação enviada com sucesso! Verifique seu email para confirmar o acesso.')
+      toast.success('Solicitação enviada com sucesso!')
+      // Redirect to onboarding avoiding loops
       navigate('/onboarding')
     } catch (error: any) {
       toast.error(error.message || 'Erro ao processar solicitação')
