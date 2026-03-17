@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -22,6 +22,39 @@ export default function OnboardingPage() {
   const [whatsapp, setWhatsapp] = useState('')
   const [creci, setCreci] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isFetching, setIsFetching] = useState(true)
+
+  useEffect(() => {
+    let mounted = true
+    const fetchProfileData = async () => {
+      if (!authUser) {
+        setIsFetching(false)
+        return
+      }
+      try {
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('whatsapp_number, creci')
+          .eq('id', authUser.id)
+          .single()
+
+        if (!error && data && mounted) {
+          if (data.whatsapp_number) setWhatsapp(data.whatsapp_number)
+          if (data.creci) setCreci(data.creci)
+        }
+      } catch (err) {
+        console.error('Failed to fetch profile data:', err)
+      } finally {
+        if (mounted) setIsFetching(false)
+      }
+    }
+
+    fetchProfileData()
+
+    return () => {
+      mounted = false
+    }
+  }, [authUser])
 
   const canProceed =
     terms && privacy && model5050 && whatsapp.trim().length >= 10 && creci.trim().length >= 4
@@ -75,6 +108,14 @@ export default function OnboardingPage() {
 
   const handleComplete = (path: string) => {
     navigate(path)
+  }
+
+  if (isFetching) {
+    return (
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4">
+        <Loader2 className="w-8 h-8 text-primary animate-spin" />
+      </div>
+    )
   }
 
   return (

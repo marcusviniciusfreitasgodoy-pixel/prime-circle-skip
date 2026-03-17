@@ -140,6 +140,7 @@ export type Database = {
         Row: {
           accepted_terms: boolean
           avatar_url: string | null
+          company_name: string | null
           creci: string | null
           full_name: string | null
           id: string
@@ -154,6 +155,7 @@ export type Database = {
         Insert: {
           accepted_terms?: boolean
           avatar_url?: string | null
+          company_name?: string | null
           creci?: string | null
           full_name?: string | null
           id: string
@@ -168,6 +170,7 @@ export type Database = {
         Update: {
           accepted_terms?: boolean
           avatar_url?: string | null
+          company_name?: string | null
           creci?: string | null
           full_name?: string | null
           id?: string
@@ -390,6 +393,7 @@ export const Constants = {
 //   creci: text (nullable)
 //   referral_code: text (nullable)
 //   avatar_url: text (nullable)
+//   company_name: text (nullable)
 
 // --- CONSTRAINTS ---
 // Table: documents
@@ -480,7 +484,8 @@ export const Constants = {
 //       region,
 //       ticket_value,
 //       referral_code,
-//       avatar_url
+//       avatar_url,
+//       company_name
 //     )
 //     VALUES (
 //       NEW.id,
@@ -493,7 +498,8 @@ export const Constants = {
 //       NEW.raw_user_meta_data->>'region',
 //       NEW.raw_user_meta_data->>'ticket_value',
 //       NEW.raw_user_meta_data->>'referral_code',
-//       NEW.raw_user_meta_data->>'avatar_url'
+//       NEW.raw_user_meta_data->>'avatar_url',
+//       NEW.raw_user_meta_data->>'company_name'
 //     )
 //     ON CONFLICT (id) DO UPDATE SET
 //       role = EXCLUDED.role,
