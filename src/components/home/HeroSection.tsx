@@ -35,7 +35,7 @@ export function HeroSection() {
           style={{ animationDelay: '200ms' }}
         >
           Uma rede privada para corretores selecionados da Barra da Tijuca — com demandas reais e
-          condições fora dos portais
+          condições especiais fora dos portais
         </p>
 
         <div

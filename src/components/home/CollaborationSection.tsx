@@ -108,7 +108,7 @@ export function CollaborationSection() {
             className="h-14 px-8 text-base shadow-elevation hover:scale-105 transition-transform duration-300 gold-gradient text-black font-bold group"
           >
             <Link to="/sugestoes">
-              Contribuir com o Roadmap
+              Contribuir com o plataforma
               <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
             </Link>
           </Button>

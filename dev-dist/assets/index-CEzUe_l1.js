@@ -19903,7 +19903,7 @@ function HeroSection() {
 						"data-prohibitions": "[]",
 						className: "mt-6 text-lg sm:text-xl md:text-2xl text-zinc-300 max-w-3xl mx-auto animate-fade-in-up drop-shadow-md leading-relaxed",
 						style: { animationDelay: "200ms" },
-						children: "Uma rede privada para corretores selecionados da Barra da Tijuca — com demandas reais e condições fora dos portais"
+						children: "Uma rede privada para corretores selecionados da Barra da Tijuca — com demandas reais e condições especiais fora dos portais"
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 						"data-uid": "src/components/home/HeroSection.tsx:41:9",
@@ -20961,7 +20961,7 @@ function CollaborationSection() {
 							"data-uid": "src/components/home/CollaborationSection.tsx:110:13",
 							"data-prohibitions": "[]",
 							to: "/sugestoes",
-							children: ["Contribuir com o Roadmap", /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ArrowRight, {
+							children: ["Contribuir com o plataforma", /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ArrowRight, {
 								"data-uid": "src/components/home/CollaborationSection.tsx:112:15",
 								"data-prohibitions": "[editContent]",
 								className: "ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform"
@@ -38967,4 +38967,4 @@ function App() {
 }));
 //#endregion
 
-//# sourceMappingURL=index-DTFNqyR_.js.map
+//# sourceMappingURL=index-CEzUe_l1.js.map
