@@ -42,8 +42,7 @@ export function HeroSection() {
           className="mt-4 text-base sm:text-lg text-zinc-400 max-w-2xl mx-auto animate-fade-in-up drop-shadow-md font-medium"
           style={{ animationDelay: '250ms' }}
         >
-          Acesso por indicação e aprovação. Demandas e imóveis que não aparecem em nenhum outro
-          lugar.
+          Acesso por indicação e aprovação.&nbsp;
         </p>
 
         <div
