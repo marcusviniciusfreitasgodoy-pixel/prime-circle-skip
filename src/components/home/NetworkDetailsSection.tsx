@@ -58,9 +58,8 @@ export function NetworkDetailsSection() {
               </span>
               <h3 className="text-xl font-bold text-zinc-100 mb-4">Busca Off-Market</h3>
               <p className="text-zinc-400 text-sm leading-relaxed">
-                Facilitamos a busca de imóveis que não estão disponíveis nas imobiliárias
-                tradicionais ou portais públicos, atendendo com precisão cirúrgica às exigências dos
-                clientes mais exclusivos.
+                Facilitamos a busca de imóveis que não estão disponíveis nas imobiliárias ou portais
+                públicos, atendendo com precisão às exigências dos clientes mais exclusivos.
               </p>
             </div>
           </Card>

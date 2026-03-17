@@ -19,7 +19,7 @@ export function HeroSection() {
       <div className="container relative z-20 px-4 md:px-6 pt-32 pb-24 sm:py-32 flex flex-col items-center text-center">
         <div className="inline-flex items-center text-center rounded-full border border-primary/30 bg-primary/10 px-4 py-1.5 text-sm sm:text-base font-medium text-primary mb-8 backdrop-blur-md animate-fade-in-up shadow-[0_0_15px_rgba(201,168,76,0.15)] max-w-[90vw]">
           <Lock className="mr-2 h-4 w-4 shrink-0" />
-          <span>Acesso restrito a corretores convidados por membros do núcleo.</span>
+          <span>Acesso restrito a corretores convidados por membros da comunidade.</span>
         </div>
 
         <h1

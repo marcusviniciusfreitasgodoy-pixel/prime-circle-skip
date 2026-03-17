@@ -19875,7 +19875,7 @@ function HeroSection() {
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
 							"data-uid": "src/components/home/HeroSection.tsx:22:11",
 							"data-prohibitions": "[]",
-							children: "Acesso restrito a corretores convidados por membros do núcleo."
+							children: "Acesso restrito a corretores convidados por membros da comunidade."
 						})]
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h1", {
@@ -20394,43 +20394,43 @@ function NetworkDetailsSection() {
 									"data-uid": "src/components/home/NetworkDetailsSection.tsx:60:15",
 									"data-prohibitions": "[]",
 									className: "text-zinc-400 text-sm leading-relaxed",
-									children: "Facilitamos a busca de imóveis que não estão disponíveis nas imobiliárias tradicionais ou portais públicos, atendendo com precisão cirúrgica às exigências dos clientes mais exclusivos."
+									children: "Facilitamos a busca de imóveis que não estão disponíveis nas imobiliárias ou portais públicos, atendendo com precisão às exigências dos clientes mais exclusivos."
 								})
 							]
 						})]
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
-						"data-uid": "src/components/home/NetworkDetailsSection.tsx:69:11",
+						"data-uid": "src/components/home/NetworkDetailsSection.tsx:68:11",
 						"data-prohibitions": "[]",
 						className: "bg-zinc-900/60 border-zinc-800 backdrop-blur p-8 relative z-10 hover:border-primary/50 transition-all duration-300 hover:-translate-y-1 group",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-							"data-uid": "src/components/home/NetworkDetailsSection.tsx:70:13",
+							"data-uid": "src/components/home/NetworkDetailsSection.tsx:69:13",
 							"data-prohibitions": "[]",
 							className: "w-16 h-16 rounded-2xl bg-zinc-950 flex items-center justify-center mb-6 shadow-[0_0_15px_rgba(201,168,76,0.1)] border border-zinc-800 mx-auto group-hover:border-primary/50 group-hover:scale-110 transition-all duration-300",
 							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Handshake, {
-								"data-uid": "src/components/home/NetworkDetailsSection.tsx:71:15",
+								"data-uid": "src/components/home/NetworkDetailsSection.tsx:70:15",
 								"data-prohibitions": "[editContent]",
 								className: "w-8 h-8 text-primary"
 							})
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-							"data-uid": "src/components/home/NetworkDetailsSection.tsx:73:13",
+							"data-uid": "src/components/home/NetworkDetailsSection.tsx:72:13",
 							"data-prohibitions": "[]",
 							className: "text-center",
 							children: [
 								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-									"data-uid": "src/components/home/NetworkDetailsSection.tsx:74:15",
+									"data-uid": "src/components/home/NetworkDetailsSection.tsx:73:15",
 									"data-prohibitions": "[]",
 									className: "text-primary text-xs font-bold tracking-widest uppercase mb-3 block",
 									children: "Pilar 3"
 								}),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
-									"data-uid": "src/components/home/NetworkDetailsSection.tsx:77:15",
+									"data-uid": "src/components/home/NetworkDetailsSection.tsx:76:15",
 									"data-prohibitions": "[]",
 									className: "text-xl font-bold text-zinc-100 mb-4",
 									children: "Colaboração de Elite"
 								}),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-									"data-uid": "src/components/home/NetworkDetailsSection.tsx:78:15",
+									"data-uid": "src/components/home/NetworkDetailsSection.tsx:77:15",
 									"data-prohibitions": "[]",
 									className: "text-zinc-400 text-sm leading-relaxed",
 									children: "A infraestrutura do Prime Circle gera conexões diretas, transparentes e justas entre corretores de alto padrão, garantindo agilidade no fechamento de negócios e liquidez imediata."
@@ -20888,7 +20888,7 @@ function CollaborationSection() {
 									"data-uid": "src/components/home/CollaborationSection.tsx:67:13",
 									"data-prohibitions": "[]",
 									className: "text-xl font-bold text-zinc-100 mb-3",
-									children: "Sua Voz no Roadmap"
+									children: "Você contribui com a evolução"
 								}),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
 									"data-uid": "src/components/home/CollaborationSection.tsx:68:13",
@@ -21015,7 +21015,7 @@ function ReferralSection() {
 						"data-uid": "src/components/home/ReferralSection.tsx:10:13",
 						"data-prohibitions": "[editContent]",
 						className: "text-primary w-8 h-8"
-					}), " Ambassador Program"]
+					}), " Programa Embaixador"]
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
 					"data-uid": "src/components/home/ReferralSection.tsx:12:11",
 					"data-prohibitions": "[]",
@@ -21037,7 +21037,7 @@ function ReferralSection() {
 								"data-prohibitions": "[]",
 								variant: "outline",
 								className: "mb-4 text-blue-400 border-blue-400/30",
-								children: "Ambassador"
+								children: "Embaixador"
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
 								"data-uid": "src/components/home/ReferralSection.tsx:23:13",
@@ -38967,4 +38967,4 @@ function App() {
 }));
 //#endregion
 
-//# sourceMappingURL=index-CEzUe_l1.js.map
+//# sourceMappingURL=index-CvYyjkwi.js.map

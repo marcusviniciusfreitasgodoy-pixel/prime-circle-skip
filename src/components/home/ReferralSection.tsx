@@ -7,7 +7,7 @@ export function ReferralSection() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <h2 className="text-3xl md:text-4xl font-bold mb-4 flex items-center justify-center gap-3">
-            <Trophy className="text-primary w-8 h-8" /> Ambassador Program
+            <Trophy className="text-primary w-8 h-8" /> Programa Embaixador
           </h2>
           <p className="text-lg text-muted-foreground">
             Ajude a construir o círculo e elimine seus custos operacionais. Indicações aprovadas
@@ -18,7 +18,7 @@ export function ReferralSection() {
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           <div className="bg-secondary p-6 rounded-2xl border border-border text-center">
             <Badge variant="outline" className="mb-4 text-blue-400 border-blue-400/30">
-              Ambassador
+              Embaixador
             </Badge>
             <h3 className="text-xl font-bold text-white mb-2">1-4 Indicações</h3>
             <p className="text-sm text-muted-foreground">

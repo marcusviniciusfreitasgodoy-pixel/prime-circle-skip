@@ -64,7 +64,7 @@ export function CollaborationSection() {
             <div className="w-14 h-14 rounded-2xl bg-zinc-950 flex items-center justify-center mb-6 border border-zinc-800 group-hover:border-primary/50 transition-colors shadow-[0_0_15px_rgba(201,168,76,0.05)]">
               <Lightbulb className="w-7 h-7 text-primary" />
             </div>
-            <h3 className="text-xl font-bold text-zinc-100 mb-3">Sua Voz no Roadmap</h3>
+            <h3 className="text-xl font-bold text-zinc-100 mb-3">Você contribui com a evolução</h3>
             <p className="text-zinc-400 text-sm leading-relaxed">
               Você tem um canal direto para sugerir novas funcionalidades, filtros ou ferramentas
               que tornariam o seu trabalho mais eficiente e lucrativo.
