@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
-import { Crown, Loader2, ArrowLeft, Check, ChevronsUpDown } from 'lucide-react'
+import { Crown, Loader2, ArrowLeft, Check, ChevronsUpDown, Info } from 'lucide-react'
 import {
   Form,
   FormControl,
@@ -11,6 +11,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  FormDescription,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -325,10 +326,18 @@ export default function ApplyPage() {
               name="referral"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-white">Código de Indicação</FormLabel>
+                  <FormLabel className="text-white flex items-center gap-2">
+                    Código de Indicação
+                    <Info className="w-4 h-4 text-muted-foreground" />
+                  </FormLabel>
                   <FormControl>
                     <Input placeholder="Opcional" {...field} className="bg-background" />
                   </FormControl>
+                  <FormDescription className="text-xs text-muted-foreground leading-relaxed">
+                    Opcional. Insira o código enviado por um membro fundador para validação
+                    imediata. Se não possuir um código, deixe em branco para entrar na fila de
+                    análise do comitê.
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
