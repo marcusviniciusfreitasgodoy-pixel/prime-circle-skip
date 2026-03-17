@@ -141,6 +141,8 @@ export type Database = {
           accepted_terms: boolean
           full_name: string | null
           id: string
+          plan: string
+          role: string
           updated_at: string | null
           whatsapp_number: string | null
         }
@@ -148,6 +150,8 @@ export type Database = {
           accepted_terms?: boolean
           full_name?: string | null
           id: string
+          plan?: string
+          role?: string
           updated_at?: string | null
           whatsapp_number?: string | null
         }
@@ -155,6 +159,8 @@ export type Database = {
           accepted_terms?: boolean
           full_name?: string | null
           id?: string
+          plan?: string
+          role?: string
           updated_at?: string | null
           whatsapp_number?: string | null
         }
@@ -350,6 +356,8 @@ export const Constants = {
 //   whatsapp_number: text (nullable)
 //   updated_at: timestamp with time zone (nullable, default: now())
 //   accepted_terms: boolean (not null, default: false)
+//   role: text (not null, default: 'user'::text)
+//   plan: text (not null, default: 'Free'::text)
 
 // --- CONSTRAINTS ---
 // Table: documents
@@ -395,6 +403,41 @@ export const Constants = {
 //   - documents
 
 // --- DATABASE FUNCTIONS ---
+// FUNCTION handle_new_user()
+//   CREATE OR REPLACE FUNCTION public.handle_new_user()
+//    RETURNS trigger
+//    LANGUAGE plpgsql
+//    SECURITY DEFINER
+//   AS $function$
+//   DECLARE
+//     user_count INT;
+//     assigned_role TEXT := 'user';
+//     assigned_plan TEXT := 'Free';
+//   BEGIN
+//     -- Verify if this is the first user
+//     SELECT count(*) INTO user_count FROM auth.users;
+//
+//     IF user_count <= 1 THEN
+//       assigned_role := 'admin';
+//       assigned_plan := 'Founder';
+//     END IF;
+//
+//     INSERT INTO public.profiles (id, full_name, role, plan, accepted_terms)
+//     VALUES (
+//       NEW.id,
+//       COALESCE(NEW.raw_user_meta_data->>'full_name', NEW.raw_user_meta_data->>'name', split_part(NEW.email, '@', 1)),
+//       assigned_role,
+//       assigned_plan,
+//       false
+//     )
+//     ON CONFLICT (id) DO UPDATE SET
+//       role = EXCLUDED.role,
+//       plan = EXCLUDED.plan;
+//
+//     RETURN NEW;
+//   END;
+//   $function$
+//
 // FUNCTION handle_new_user_templates()
 //   CREATE OR REPLACE FUNCTION public.handle_new_user_templates()
 //    RETURNS trigger
