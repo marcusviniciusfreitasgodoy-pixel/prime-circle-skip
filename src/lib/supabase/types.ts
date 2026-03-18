@@ -611,16 +611,21 @@ export const Constants = {
 //    SECURITY DEFINER
 //   AS $function$
 //   DECLARE
-//     is_first_user BOOLEAN;
+//     user_count INT;
 //     assigned_role TEXT := 'user';
 //     assigned_plan TEXT := 'Free';
+//     assigned_status TEXT := 'pending_validation';
 //   BEGIN
-//     -- Use a fast check on public.profiles instead of a full scan count(*) on auth.users
-//     SELECT NOT EXISTS (SELECT 1 FROM public.profiles LIMIT 1) INTO is_first_user;
+//     -- Fast count to assign Founder to first 20 users
+//     SELECT COUNT(*) INTO user_count FROM public.profiles;
 //
-//     IF is_first_user THEN
+//     IF user_count = 0 THEN
 //       assigned_role := 'admin';
 //       assigned_plan := 'Founder';
+//       assigned_status := 'active';
+//     ELSIF user_count < 20 THEN
+//       assigned_plan := 'Founder';
+//       assigned_status := 'active';
 //     END IF;
 //
 //     BEGIN
@@ -629,6 +634,7 @@ export const Constants = {
 //         full_name,
 //         role,
 //         plan,
+//         status,
 //         accepted_terms,
 //         whatsapp_number,
 //         creci,
@@ -642,6 +648,7 @@ export const Constants = {
 //         COALESCE(NEW.raw_user_meta_data->>'full_name', NEW.raw_user_meta_data->>'name', split_part(NEW.email, '@', 1)),
 //         assigned_role,
 //         assigned_plan,
+//         assigned_status,
 //         COALESCE((NEW.raw_user_meta_data->>'accepted_terms')::boolean, false),
 //         NEW.raw_user_meta_data->>'whatsapp_number',
 //         NEW.raw_user_meta_data->>'creci',
@@ -652,7 +659,8 @@ export const Constants = {
 //       )
 //       ON CONFLICT (id) DO UPDATE SET
 //         role = EXCLUDED.role,
-//         plan = EXCLUDED.plan;
+//         plan = EXCLUDED.plan,
+//         status = EXCLUDED.status;
 //     EXCEPTION WHEN OTHERS THEN
 //       RAISE WARNING 'Error in handle_new_user trigger: %', SQLERRM;
 //     END;
@@ -694,14 +702,14 @@ export const Constants = {
 //
 //   Atenciosamente,
 //   Equipe Prime Circle'),
-//         (NEW.id, 'Boas-vindas - WhatsApp', 'whatsapp', 'Olá {{full_name}}! 🚀 Bem-vindo à Prime Circle. Seu cadastro foi recebido com sucesso. Estamos muito felizes em ter você em nossa rede exclusiva de parcerias imobiliárias. Em breve entraremos em contato!'),
+//         (NEW.id, 'Boas-vindas - WhatsApp', 'whatsapp', 'Olá {{full_name}}! 🚀 Bem-vindo à Prime Circle. Seu cadastro foi recebido com sucesso. Estamos muito felizes em ter você em nossa rede exclusiva de parcerias imobiliárias.'),
 //         (NEW.id, 'Boas-vindas - Email', 'email', 'Assunto: Bem-vindo à Prime Circle! 🏠
 //
-//   Olá {{full_name}}, bem-vindo à Prime Circle! Agora que sua conta foi criada, utilize o link abaixo para acessar seu painel exclusivo e começar a gerar parcerias.
+//   Olá {{full_name}},
+//
+//   Bem-vindo à Prime Circle! Agora que sua conta foi criada, utilize o link abaixo para acessar seu painel exclusivo e começar a gerar parcerias.
 //
 //   Acesse: https://prime-circle-migration-fd549.goskip.app/dashboard
-//
-//   Por favor, certifique-se de confirmar o seu cadastro através do e-mail de verificação que enviamos separadamente, caso ainda não o tenha feito.
 //
 //   Boas vendas,
 //   Equipe Prime Circle');
