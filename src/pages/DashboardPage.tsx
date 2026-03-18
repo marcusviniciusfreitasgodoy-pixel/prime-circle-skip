@@ -24,6 +24,7 @@ import {
   ChevronRight,
   ShieldCheck,
   BellRing,
+  Share2,
 } from 'lucide-react'
 import useAppStore from '@/stores/main'
 import type { Tier, Plan } from '@/stores/main'
@@ -95,7 +96,6 @@ export default function DashboardPage() {
         if (mounted) setProfileName(authUser.email || 'Usuário')
       }
 
-      // Fetch dynamic referrals and tier safely, avoiding HEAD request that causes JSON parse errors
       try {
         const { data: refData, error: countError } = await supabase
           .from('profiles')
@@ -155,7 +155,9 @@ export default function DashboardPage() {
   const chapterNeeds = needs.filter((n) => n.chapter === user?.chapter)
   const myListings = chapterListings.filter((l) => l.ownerId === user?.id).length
   const activeMatches = matches.filter((m) => m.status !== 'Fechado')
-  const referralLink = `${window.location.origin}/apply?ref=${authUser?.id || user?.id || 'founder-123'}`
+
+  const refCode = authUser?.id || user?.id || 'founder-123'
+  const referralLink = `https://prime-circle-migration-fd549.goskip.app/apply?ref=${refCode}`
 
   const copyLink = () => {
     navigator.clipboard.writeText(referralLink)
@@ -164,6 +166,12 @@ export default function DashboardPage() {
       description:
         'Envie este link para convidar parceiros e subir de nível no Ambassador Program.',
     })
+  }
+
+  const handleWhatsappShare = () => {
+    const text = `Olá! Faço parte do *Prime Circle*, uma rede privada de liquidez imobiliária para corretores de alto padrão. Como trabalhamos com a política 50/50 e curadoria rigorosa, gostaria de te convidar para o meu círculo. Cadastre-se por este link para ter prioridade na análise: ${referralLink}`
+    const encodedText = encodeURIComponent(text)
+    window.open(`https://wa.me/?text=${encodedText}`, '_blank')
   }
 
   const formatPlanName = (plan: string) => {
@@ -229,7 +237,6 @@ export default function DashboardPage() {
         </Alert>
       )}
 
-      {/* Renders PendingValidations which internally manages its visibility or locked state based on Reputation Score */}
       <PendingValidations />
 
       <div className="flex flex-col md:flex-row gap-6 md:items-center justify-between">
@@ -324,7 +331,6 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* Opportunity Radar Section */}
       <OpportunityRadar
         refreshKey={refreshKey}
         onAddNeed={triggerRefresh}
@@ -355,9 +361,17 @@ export default function DashboardPage() {
                 <Button
                   onClick={copyLink}
                   size="lg"
-                  className="gold-gradient text-black font-semibold h-12 shadow-[0_0_15px_rgba(201,168,76,0.2)]"
+                  variant="outline"
+                  className="h-12 border-primary/50 text-primary hover:bg-primary/10 font-semibold"
                 >
                   <Copy className="w-4 h-4 mr-2" /> Copiar Link
+                </Button>
+                <Button
+                  onClick={handleWhatsappShare}
+                  size="lg"
+                  className="gold-gradient text-black font-semibold h-12 shadow-[0_0_15px_rgba(201,168,76,0.2)]"
+                >
+                  <Share2 className="w-4 h-4 mr-2" /> Convidar Parceiro
                 </Button>
               </div>
             </CardContent>

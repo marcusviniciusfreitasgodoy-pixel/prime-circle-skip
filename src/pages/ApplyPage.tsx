@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
+import { useNavigate, Link, useSearchParams } from 'react-router-dom'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
@@ -81,10 +81,13 @@ export default function ApplyPage() {
   const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()
   const { toast } = useToast()
+  const [searchParams] = useSearchParams()
 
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [avatarFile, setAvatarFile] = useState<File | null>(null)
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null)
+
+  const refCode = searchParams.get('ref') || ''
 
   useEffect(() => {
     if (!authLoading && (authUser || mockUser)) {
@@ -130,7 +133,7 @@ export default function ApplyPage() {
       ticket: '',
       workType: 'autonomo',
       companyName: '',
-      referral: '',
+      referral: refCode,
       agreement: false,
     },
   })
