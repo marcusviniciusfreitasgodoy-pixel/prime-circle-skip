@@ -13,6 +13,7 @@ import { AddPropertyDialog } from '@/components/dashboard/AddPropertyDialog'
 import { OpportunityRadar } from '@/components/dashboard/OpportunityRadar'
 import { PendingValidations } from '@/components/dashboard/PendingValidations'
 import { ReputationRanking } from '@/components/dashboard/ReputationRanking'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import {
   Activity,
   GitMerge,
@@ -39,6 +40,7 @@ export default function DashboardPage() {
   const navigate = useNavigate()
 
   const [profileName, setProfileName] = useState<string>('')
+  const [profileAvatar, setProfileAvatar] = useState<string>('')
   const [profileScore, setProfileScore] = useState<number>(0)
   const [profileStatus, setProfileStatus] = useState<string>('active')
   const [profilePlan, setProfilePlan] = useState<string>('Free')
@@ -73,6 +75,7 @@ export default function DashboardPage() {
 
         if (!error && data) {
           setProfileName(data.full_name || authUser.email || 'Usuário')
+          setProfileAvatar(data.avatar_url || '')
           setProfileScore(data.reputation_score || 0)
           setProfileStatus(data.status || 'active')
           setProfilePlan(data.plan || 'Free')
@@ -241,34 +244,43 @@ export default function DashboardPage() {
       <PendingValidations />
 
       <div className="flex flex-col md:flex-row gap-6 md:items-center justify-between">
-        <div>
-          <h2 className="text-3xl font-bold tracking-tight text-white flex items-center flex-wrap gap-2 min-h-9">
-            Bem-vindo, {isLoadingName ? <Skeleton className="h-8 w-32 bg-muted/20" /> : profileName}
-            {!isLoadingName && profileScore >= 70 && (
-              <Badge className="ml-2 bg-primary/20 text-primary border-primary/30 hover:bg-primary/30 flex items-center gap-1 shadow-sm">
-                <ShieldCheck className="w-3 h-3" /> Status de Elite
-              </Badge>
-            )}
-          </h2>
-          <div className="text-muted-foreground mt-2 flex items-center flex-wrap gap-3">
-            <span>
-              Plano atual:{' '}
-              <Badge variant="outline" className="border-primary/50 text-primary font-semibold">
-                {isLoadingName ? (
-                  <Skeleton className="h-4 w-16 bg-muted/20 inline-block" />
-                ) : (
-                  formatPlanName(profilePlan)
-                )}
-              </Badge>
-            </span>
-            <span className="text-sm border-l border-border pl-3 flex items-center gap-1">
-              Pontuação PrimeCircle:{' '}
-              <strong
-                className={`text-white px-2 py-0.5 rounded-md border border-border ${profileScore >= 70 ? 'bg-primary/20 border-primary/50 text-primary' : 'bg-secondary/80'}`}
-              >
-                {isLoadingName ? '-' : profileScore}
-              </strong>
-            </span>
+        <div className="flex items-center gap-4">
+          <Avatar className="w-16 h-16 border-2 border-primary/50 shadow-md">
+            <AvatarImage src={profileAvatar} />
+            <AvatarFallback className="bg-secondary text-muted-foreground text-xl">
+              {profileName ? profileName.substring(0, 2).toUpperCase() : 'US'}
+            </AvatarFallback>
+          </Avatar>
+          <div>
+            <h2 className="text-3xl font-bold tracking-tight text-white flex items-center flex-wrap gap-2 min-h-9">
+              Bem-vindo,{' '}
+              {isLoadingName ? <Skeleton className="h-8 w-32 bg-muted/20" /> : profileName}
+              {!isLoadingName && profileScore >= 70 && (
+                <Badge className="ml-2 bg-primary/20 text-primary border-primary/30 hover:bg-primary/30 flex items-center gap-1 shadow-sm">
+                  <ShieldCheck className="w-3 h-3" /> Status de Elite
+                </Badge>
+              )}
+            </h2>
+            <div className="text-muted-foreground mt-2 flex items-center flex-wrap gap-3">
+              <span>
+                Plano atual:{' '}
+                <Badge variant="outline" className="border-primary/50 text-primary font-semibold">
+                  {isLoadingName ? (
+                    <Skeleton className="h-4 w-16 bg-muted/20 inline-block" />
+                  ) : (
+                    formatPlanName(profilePlan)
+                  )}
+                </Badge>
+              </span>
+              <span className="text-sm border-l border-border pl-3 flex items-center gap-1">
+                Pontuação PrimeCircle:{' '}
+                <strong
+                  className={`text-white px-2 py-0.5 rounded-md border border-border ${profileScore >= 70 ? 'bg-primary/20 border-primary/50 text-primary' : 'bg-secondary/80'}`}
+                >
+                  {isLoadingName ? '-' : profileScore}
+                </strong>
+              </span>
+            </div>
           </div>
         </div>
         <div className="flex flex-wrap items-center gap-3">

@@ -2,8 +2,16 @@ import { useEffect, useState } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
 import {
   Select,
   SelectContent,
@@ -14,9 +22,10 @@ import {
 import { Check, X } from 'lucide-react'
 import { toast } from 'sonner'
 import useAppStore, { SuggestionStatus } from '@/stores/main'
-import { sendTransactionalEmail, simulateBiWeeklyReview } from '@/lib/email'
+import { simulateBiWeeklyReview } from '@/lib/email'
 import { supabase } from '@/lib/supabase/client'
 import { cn } from '@/lib/utils'
+import { useAuth } from '@/hooks/use-auth'
 
 interface SupportTicket {
   id: string
@@ -30,18 +39,14 @@ interface SupportTicket {
 }
 
 export default function AdminPage() {
-  const {
-    candidates,
-    suggestions,
-    statusLogs,
-    approveCandidate,
-    rejectCandidate,
-    updateSuggestionStatus,
-    enforceInactivity,
-  } = useAppStore()
+  const { suggestions, statusLogs, updateSuggestionStatus, enforceInactivity } = useAppStore()
+
+  const { user: authUser } = useAuth()
 
   const [tickets, setTickets] = useState<SupportTicket[]>([])
-  const pendingRequests = candidates.filter((c) => c.status === 'pending')
+  const [profiles, setProfiles] = useState<any[]>([])
+
+  const pendingProfiles = profiles.filter((p) => p.status === 'pending_validation')
 
   useEffect(() => {
     const fetchTickets = async () => {
@@ -54,22 +59,38 @@ export default function AdminPage() {
         setTickets(data)
       }
     }
+    const fetchProfiles = async () => {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .order('updated_at', { ascending: false, nullsFirst: false })
+
+      if (!error && data) {
+        setProfiles(data)
+      }
+    }
     fetchTickets()
+    fetchProfiles()
   }, [])
 
-  const handleAction = async (
-    id: string,
-    email: string,
-    name: string,
-    action: 'approved' | 'rejected',
-  ) => {
-    if (action === 'approved') {
-      approveCandidate(id)
-      await sendTransactionalEmail('member_approved', { to: email, name })
-      toast.success('Aprovado via Revisão Manual.')
+  const handleAction = async (id: string, name: string, action: 'active' | 'rejected') => {
+    const updates: any = { status: action }
+    if (action === 'active') {
+      updates.validated_by = authUser?.id
+      updates.validation_date = new Date().toISOString()
+    }
+
+    const { error } = await supabase.from('profiles').update(updates).eq('id', id)
+
+    if (!error) {
+      setProfiles((prev) => prev.map((p) => (p.id === id ? { ...p, status: action } : p)))
+      if (action === 'active') {
+        toast.success('Aprovado via Revisão Manual.')
+      } else {
+        toast.error('Candidato rejeitado.')
+      }
     } else {
-      rejectCandidate(id)
-      toast.error('Candidato rejeitado.')
+      toast.error('Erro ao atualizar status.')
     }
   }
 
@@ -99,7 +120,10 @@ export default function AdminPage() {
       <Tabs defaultValue="requests" className="w-full">
         <TabsList className="bg-card border border-border flex-wrap justify-start h-auto p-1 gap-1">
           <TabsTrigger value="requests" className="data-[state=active]:bg-secondary">
-            Revisão Manual ({pendingRequests.length})
+            Revisão Manual ({pendingProfiles.length})
+          </TabsTrigger>
+          <TabsTrigger value="users" className="data-[state=active]:bg-secondary">
+            Todos os Usuários
           </TabsTrigger>
           <TabsTrigger value="tickets" className="data-[state=active]:bg-secondary">
             Chamados
@@ -131,7 +155,7 @@ export default function AdminPage() {
               Executar Cron
             </Button>
           </div>
-          {pendingRequests.map((req) => (
+          {pendingProfiles.map((req) => (
             <Card
               key={req.id}
               className="bg-secondary border-border border-l-4 border-l-yellow-500/50"
@@ -139,19 +163,22 @@ export default function AdminPage() {
               <CardContent className="p-4 flex flex-col md:flex-row items-center justify-between gap-4">
                 <div className="flex items-center gap-4 w-full">
                   <Avatar>
-                    <AvatarFallback>{req.name[0]}</AvatarFallback>
+                    <AvatarImage src={req.avatar_url} />
+                    <AvatarFallback>
+                      {req.full_name ? req.full_name[0].toUpperCase() : 'U'}
+                    </AvatarFallback>
                   </Avatar>
                   <div>
-                    <h3 className="font-semibold text-white">{req.name}</h3>
+                    <h3 className="font-semibold text-white">{req.full_name || 'Sem Nome'}</h3>
                     <p className="text-sm text-muted-foreground">
-                      {req.email} • {req.phone}
+                      Contato: {req.whatsapp_number || 'N/A'}
                     </p>
                     <div className="flex gap-2 mt-2">
                       <Badge variant="outline" className="border-border">
-                        CRECI: {req.creci}
+                        CRECI: {req.creci || 'N/A'}
                       </Badge>
                       <Badge variant="outline" className="border-border">
-                        Região: {req.region}
+                        Região: {req.region || 'N/A'}
                       </Badge>
                     </div>
                   </div>
@@ -160,13 +187,13 @@ export default function AdminPage() {
                   <Button
                     variant="outline"
                     className="flex-1 border-red-500/20 text-red-500 hover:bg-red-500/10"
-                    onClick={() => handleAction(req.id, req.email, req.name, 'rejected')}
+                    onClick={() => handleAction(req.id, req.full_name, 'rejected')}
                   >
                     <X className="w-4 h-4" />
                   </Button>
                   <Button
                     className="flex-1 bg-green-500/20 text-green-500 hover:bg-green-500/30"
-                    onClick={() => handleAction(req.id, req.email, req.name, 'approved')}
+                    onClick={() => handleAction(req.id, req.full_name, 'active')}
                   >
                     <Check className="w-4 h-4 mr-2" /> Aprovar
                   </Button>
@@ -174,9 +201,89 @@ export default function AdminPage() {
               </CardContent>
             </Card>
           ))}
-          {pendingRequests.length === 0 && (
+          {pendingProfiles.length === 0 && (
             <p className="text-muted-foreground">Nenhuma solicitação pendente de revisão.</p>
           )}
+        </TabsContent>
+
+        <TabsContent value="users" className="mt-6 space-y-4">
+          <Card className="bg-card border-border">
+            <CardHeader>
+              <CardTitle className="text-lg text-white">Todos os Usuários</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Table>
+                <TableHeader>
+                  <TableRow className="border-border">
+                    <TableHead className="w-[80px]">Avatar</TableHead>
+                    <TableHead>Nome</TableHead>
+                    <TableHead>Role</TableHead>
+                    <TableHead>Plano</TableHead>
+                    <TableHead>Status</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {profiles.map((profile) => (
+                    <TableRow key={profile.id} className="border-border">
+                      <TableCell>
+                        <Avatar className="w-8 h-8">
+                          <AvatarImage src={profile.avatar_url} />
+                          <AvatarFallback className="bg-secondary text-xs">
+                            {profile.full_name?.substring(0, 2).toUpperCase() || 'US'}
+                          </AvatarFallback>
+                        </Avatar>
+                      </TableCell>
+                      <TableCell className="font-medium text-white">
+                        {profile.full_name || 'Sem Nome'}
+                        <div className="text-xs text-muted-foreground font-normal mt-0.5">
+                          {profile.whatsapp_number || 'Sem contato'}
+                        </div>
+                      </TableCell>
+                      <TableCell className="capitalize text-muted-foreground">
+                        {profile.role}
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant="outline" className="border-primary/50 text-primary">
+                          {profile.plan}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <Badge
+                          variant={
+                            profile.status === 'active'
+                              ? 'default'
+                              : profile.status === 'rejected'
+                                ? 'destructive'
+                                : 'secondary'
+                          }
+                          className={cn(
+                            'text-[10px]',
+                            profile.status === 'active' &&
+                              'bg-green-500/20 text-green-500 hover:bg-green-500/30',
+                            profile.status === 'pending_validation' &&
+                              'bg-yellow-500/20 text-yellow-500 hover:bg-yellow-500/30',
+                          )}
+                        >
+                          {profile.status === 'pending_validation'
+                            ? 'Pendente'
+                            : profile.status === 'active'
+                              ? 'Ativo'
+                              : 'Rejeitado'}
+                        </Badge>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                  {profiles.length === 0 && (
+                    <TableRow>
+                      <TableCell colSpan={5} className="text-center text-muted-foreground py-8">
+                        Nenhum usuário encontrado.
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
         </TabsContent>
 
         <TabsContent value="tickets" className="mt-6 space-y-4">
