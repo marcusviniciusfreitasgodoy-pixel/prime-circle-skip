@@ -78,23 +78,29 @@ export default function DashboardPage() {
         setProfileName(authUser.email || 'Usuário')
       }
 
-      // Fetch dynamic referrals and tier
-      const { count } = await supabase
-        .from('profiles')
-        .select('id', { count: 'exact', head: true })
-        .eq('referral_code', authUser.id)
-        .eq('status', 'active')
+      // Fetch dynamic referrals and tier with safe execution to prevent JSON parse errors on HEAD requests
+      try {
+        const { count, error: countError } = await supabase
+          .from('profiles')
+          .select('id', { count: 'exact', head: true })
+          .eq('referral_code', authUser.id)
+          .eq('status', 'active')
 
-      if (mounted && count !== null) {
-        setReferralsCount(count)
-        let tier: Tier = 'None'
-        if (count >= 99) tier = 'Elite+'
-        else if (count >= 15) tier = 'Elite'
-        else if (count >= 10) tier = 'Gold'
-        else if (count >= 7) tier = 'Silver'
-        else if (count >= 5) tier = 'Ambassador'
-        setUserTier(tier)
-        updateUser({ tier, referrals: count })
+        if (countError) {
+          console.warn('Error fetching referrals count:', countError)
+        } else if (mounted && count !== null) {
+          setReferralsCount(count)
+          let tier: Tier = 'None'
+          if (count >= 99) tier = 'Elite+'
+          else if (count >= 15) tier = 'Elite'
+          else if (count >= 10) tier = 'Gold'
+          else if (count >= 7) tier = 'Silver'
+          else if (count >= 5) tier = 'Ambassador'
+          setUserTier(tier)
+          updateUser({ tier, referrals: count })
+        }
+      } catch (err) {
+        console.warn('Exception during referral count fetch handled gracefully:', err)
       }
 
       setIsLoadingName(false)
