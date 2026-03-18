@@ -13,13 +13,20 @@ import { toast } from 'sonner'
 export default function AuthConfirmPage() {
   const navigate = useNavigate()
   const location = useLocation()
-  const { login } = useAppStore()
-  const { signIn, signInWithOtp } = useAuth()
+  const { login, user: mockUser } = useAppStore()
+  const { signIn, signInWithOtp, user: authUser, loading: authLoading } = useAuth()
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [cooldown, setCooldown] = useState(0)
+
+  useEffect(() => {
+    if (!authLoading && (authUser || mockUser)) {
+      const dest = location.state?.from?.pathname || '/dashboard'
+      navigate(dest, { replace: true })
+    }
+  }, [authUser, mockUser, authLoading, navigate, location])
 
   useEffect(() => {
     let timer: NodeJS.Timeout
@@ -132,7 +139,7 @@ export default function AuthConfirmPage() {
 
       login(cleanEmail, 'password')
       const dest = location.state?.from?.pathname || '/dashboard'
-      navigate(dest)
+      navigate(dest, { replace: true })
     } catch (err: any) {
       if (
         (err?.status === 400 && err?.code === 'email_not_confirmed') ||
@@ -148,6 +155,15 @@ export default function AuthConfirmPage() {
     } finally {
       setIsLoading(false)
     }
+  }
+
+  // Prevent flash of login screen while checking auth
+  if (authLoading || authUser || mockUser) {
+    return (
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4">
+        <Loader2 className="w-8 h-8 text-primary animate-spin" />
+      </div>
+    )
   }
 
   return (

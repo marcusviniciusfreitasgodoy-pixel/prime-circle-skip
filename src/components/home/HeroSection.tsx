@@ -2,8 +2,14 @@ import { Button } from '@/components/ui/button'
 import { ArrowRight, Lock } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import heroBg from '@/assets/acesso-fundador-aace0.png'
+import { useAuth } from '@/hooks/use-auth'
+import useAppStore from '@/stores/main'
 
 export function HeroSection() {
+  const { user: authUser } = useAuth()
+  const { user: mockUser } = useAppStore()
+  const isAuthenticated = !!authUser || !!mockUser
+
   return (
     <section className="relative flex items-center justify-center min-h-[90vh] md:min-h-screen overflow-hidden w-full">
       {/* Background Image Setup */}
@@ -43,16 +49,29 @@ export function HeroSection() {
           className="mt-10 flex flex-col sm:flex-row gap-4 sm:gap-6 w-full sm:w-auto animate-fade-in-up px-4 sm:px-0"
           style={{ animationDelay: '300ms' }}
         >
-          <Button
-            asChild
-            size="lg"
-            className="h-14 px-8 text-base w-full sm:w-auto shadow-elevation hover:scale-105 transition-transform duration-300 gold-gradient text-black font-bold"
-          >
-            <Link to="/apply">
-              Quero Participar
-              <ArrowRight className="ml-2 h-5 w-5" />
-            </Link>
-          </Button>
+          {isAuthenticated ? (
+            <Button
+              asChild
+              size="lg"
+              className="h-14 px-8 text-base w-full sm:w-auto shadow-elevation hover:scale-105 transition-transform duration-300 gold-gradient text-black font-bold"
+            >
+              <Link to="/dashboard">
+                Ir para o Painel
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Link>
+            </Button>
+          ) : (
+            <Button
+              asChild
+              size="lg"
+              className="h-14 px-8 text-base w-full sm:w-auto shadow-elevation hover:scale-105 transition-transform duration-300 gold-gradient text-black font-bold"
+            >
+              <Link to="/apply">
+                Quero Participar
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Link>
+            </Button>
+          )}
           <Button
             asChild
             size="lg"

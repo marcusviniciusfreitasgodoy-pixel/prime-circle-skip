@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
@@ -76,8 +76,8 @@ const formSchema = z.object({
 })
 
 export default function ApplyPage() {
-  const { signUp } = useAuth()
-  const { login, updateUser } = useAppStore()
+  const { signUp, user: authUser, loading: authLoading } = useAuth()
+  const { login, updateUser, user: mockUser } = useAppStore()
   const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()
   const { toast } = useToast()
@@ -85,6 +85,12 @@ export default function ApplyPage() {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [avatarFile, setAvatarFile] = useState<File | null>(null)
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (!authLoading && (authUser || mockUser)) {
+      navigate('/dashboard', { replace: true })
+    }
+  }, [authUser, mockUser, authLoading, navigate])
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -241,6 +247,14 @@ export default function ApplyPage() {
       })
       setIsLoading(false)
     }
+  }
+
+  if (authLoading || authUser || mockUser) {
+    return (
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4">
+        <Loader2 className="w-8 h-8 text-primary animate-spin" />
+      </div>
+    )
   }
 
   return (

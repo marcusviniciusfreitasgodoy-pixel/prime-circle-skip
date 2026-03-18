@@ -1,5 +1,4 @@
 import { useEffect } from 'react'
-import { Navigate } from 'react-router-dom'
 import { HeroSection } from '@/components/home/HeroSection'
 import { ProblemSection } from '@/components/home/ProblemSection'
 import { MatchmakingShowcase } from '@/components/home/MatchmakingShowcase'
@@ -17,7 +16,7 @@ import { useAuth } from '@/hooks/use-auth'
 import { Loader2 } from 'lucide-react'
 
 export default function Index() {
-  const { user, loading } = useAuth()
+  const { loading } = useAuth()
 
   useEffect(() => {
     document.documentElement.classList.add('scroll-smooth')
@@ -32,11 +31,6 @@ export default function Index() {
         <Loader2 className="w-8 h-8 text-primary animate-spin mb-4" />
       </div>
     )
-  }
-
-  // Prevent authenticated users from accessing the landing page
-  if (user) {
-    return <Navigate to="/dashboard" replace />
   }
 
   return (
