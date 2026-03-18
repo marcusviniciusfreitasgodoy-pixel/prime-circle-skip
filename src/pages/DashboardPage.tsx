@@ -42,6 +42,7 @@ export default function DashboardPage() {
   const [profileScore, setProfileScore] = useState<number>(0)
   const [profileStatus, setProfileStatus] = useState<string>('active')
   const [profilePlan, setProfilePlan] = useState<string>('Free')
+  const [profileReferralCode, setProfileReferralCode] = useState<string>('')
   const [isLoadingName, setIsLoadingName] = useState(true)
   const [refreshKey, setRefreshKey] = useState(0)
   const [recentMatchAlerts, setRecentMatchAlerts] = useState<any[]>([])
@@ -64,7 +65,7 @@ export default function DashboardPage() {
       try {
         const { data, error } = await supabase
           .from('profiles')
-          .select('full_name, reputation_score, status, avatar_url, plan')
+          .select('full_name, reputation_score, status, avatar_url, plan, referral_code')
           .eq('id', authUser.id)
           .single()
 
@@ -75,6 +76,7 @@ export default function DashboardPage() {
           setProfileScore(data.reputation_score || 0)
           setProfileStatus(data.status || 'active')
           setProfilePlan(data.plan || 'Free')
+          setProfileReferralCode(data.referral_code || '')
 
           const storeUpdates: any = {}
           if (data.avatar_url && data.avatar_url !== user?.avatar) {
@@ -156,20 +158,19 @@ export default function DashboardPage() {
   const myListings = chapterListings.filter((l) => l.ownerId === user?.id).length
   const activeMatches = matches.filter((m) => m.status !== 'Fechado')
 
-  const refCode = authUser?.id || user?.id || 'founder-123'
-  const referralLink = `https://prime-circle-migration-fd549.goskip.app/apply?ref=${refCode}`
+  const refCode = profileReferralCode || authUser?.id || user?.id || 'founder-123'
+  const referralLink = `https://prime-circle-migration-fd549.goskip.app/register?ref=${refCode}`
 
   const copyLink = () => {
     navigator.clipboard.writeText(referralLink)
     toast({
-      title: 'Link copiado!',
-      description:
-        'Envie este link para convidar parceiros e subir de nível no Ambassador Program.',
+      title: 'Copiado!',
+      description: 'Link de indicação copiado para a área de transferência.',
     })
   }
 
   const handleWhatsappShare = () => {
-    const text = `Olá! Faço parte do *Prime Circle*, uma rede privada de liquidez imobiliária para corretores de alto padrão. Como trabalhamos com a política 50/50 e curadoria rigorosa, gostaria de te convidar para o meu círculo. Cadastre-se por este link para ter prioridade na análise: ${referralLink}`
+    const text = `Olá! Faço parte do Prime Circle, uma rede privada de liquidez imobiliária para corretores de alto padrão. Como trabalhamos com a política 50/50 e curadoria rigorosa, gostaria de te convidar para o meu círculo. Cadastre-se por este link para ter prioridade na análise: ${referralLink}`
     const encodedText = encodeURIComponent(text)
     window.open(`https://wa.me/?text=${encodedText}`, '_blank')
   }
@@ -352,26 +353,29 @@ export default function DashboardPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="flex flex-col sm:flex-row gap-3 mt-2 relative z-10">
-                <Input
-                  readOnly
-                  value={referralLink}
-                  className="bg-background/80 border-primary/20 text-muted-foreground font-mono h-12 flex-1 focus-visible:ring-primary"
-                />
-                <Button
-                  onClick={copyLink}
-                  size="lg"
-                  variant="outline"
-                  className="h-12 border-primary/50 text-primary hover:bg-primary/10 font-semibold"
-                >
-                  <Copy className="w-4 h-4 mr-2" /> Copiar Link
-                </Button>
+              <div className="flex flex-col sm:flex-row gap-4 mt-2 relative z-10">
+                <div className="relative flex-1">
+                  <Input
+                    readOnly
+                    value={referralLink}
+                    className="bg-background/80 border-primary/20 text-muted-foreground font-mono h-12 pr-12 focus-visible:ring-primary w-full"
+                  />
+                  <Button
+                    onClick={copyLink}
+                    size="icon"
+                    variant="ghost"
+                    className="absolute right-1 top-1 h-10 w-10 text-muted-foreground hover:text-primary hover:bg-primary/10"
+                    title="Copiar Link"
+                  >
+                    <Copy className="w-4 h-4" />
+                  </Button>
+                </div>
                 <Button
                   onClick={handleWhatsappShare}
                   size="lg"
-                  className="gold-gradient text-black font-semibold h-12 shadow-[0_0_15px_rgba(201,168,76,0.2)]"
+                  className="gold-gradient text-black font-bold h-12 shadow-[0_0_15px_rgba(201,168,76,0.2)] w-full sm:w-auto shrink-0"
                 >
-                  <Share2 className="w-4 h-4 mr-2" /> Convidar Parceiro
+                  <Share2 className="w-5 h-5 mr-2" /> Convidar Parceiro
                 </Button>
               </div>
             </CardContent>
