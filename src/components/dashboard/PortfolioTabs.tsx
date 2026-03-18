@@ -5,7 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
-import { MapPin, Building, SearchUser } from 'lucide-react'
+import { MapPin, Building, UserSearch } from 'lucide-react'
 
 export function PortfolioTabs({ refreshKey }: { refreshKey: number }) {
   const { user } = useAuth()
@@ -111,7 +111,7 @@ export function PortfolioTabs({ refreshKey }: { refreshKey: number }) {
             </div>
           ) : needs.length === 0 ? (
             <div className="flex flex-col items-center justify-center p-12 bg-card/50 rounded-xl border border-dashed border-border text-center">
-              <SearchUser className="w-12 h-12 text-muted-foreground/50 mb-4" />
+              <UserSearch className="w-12 h-12 text-muted-foreground/50 mb-4" />
               <p className="text-lg font-medium text-white mb-2">Nenhuma necessidade publicada</p>
               <p className="text-muted-foreground text-sm max-w-sm">
                 Publique o que seus clientes estão buscando para receber indicações direcionadas.
