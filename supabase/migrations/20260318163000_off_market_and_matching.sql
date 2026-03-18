@@ -6,7 +6,9 @@ WHERE metadata->>'type' = 'oferta' AND content LIKE '%Luxo%';
 -- Update reputation score for the seed user to be high enough for testing (>= 70)
 UPDATE public.profiles
 SET reputation_score = 85
-WHERE email = 'seed@primecircle.app';
+WHERE id IN (
+  SELECT id FROM auth.users WHERE email = 'seed@primecircle.app'
+);
 
 -- Create the webhook trigger function to evaluate matches on new property listings
 CREATE OR REPLACE FUNCTION public.trigger_match_property_webhook()
@@ -55,3 +57,4 @@ DROP TRIGGER IF EXISTS on_document_created_send_match ON public.documents;
 CREATE TRIGGER on_document_created_send_match
   AFTER INSERT ON public.documents
   FOR EACH ROW EXECUTE FUNCTION public.trigger_match_property_webhook();
+

@@ -1,8 +1,8 @@
 {
   "_versions": {
-    "send-whatsapp": 14,
+    "send-whatsapp": 15,
     "send-email": 11,
-    "functions": 11,
+    "functions": 12,
     "welcome-webhook": 8,
     "support-ticket-webhook": 1,
     "match-property-webhook": 1
