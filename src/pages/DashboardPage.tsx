@@ -216,20 +216,6 @@ export default function DashboardPage() {
       {/* Renders PendingValidations which internally manages its visibility or locked state based on Reputation Score */}
       <PendingValidations />
 
-      <Alert className="bg-card border-primary/20 text-foreground shadow-[0_0_15px_rgba(201,168,76,0.1)]">
-        <AlertCircle className="h-5 w-5 text-primary" />
-        <AlertTitle className="text-primary font-semibold ml-2">
-          Núcleo Regional {user?.chapter || 'Global'} — Engajamento Exigido
-        </AlertTitle>
-        <AlertDescription className="text-muted-foreground mt-2 ml-2 leading-relaxed">
-          Seu acesso e status dependem de atividade constante na plataforma. A inatividade superior
-          a 60 dias poderá resultar em suspensão.
-          <strong className="text-foreground block mt-1 font-medium">
-            Lembre-se: Prática inegociável de 50/50 em todas as conexões.
-          </strong>
-        </AlertDescription>
-      </Alert>
-
       <div className="flex flex-col md:flex-row gap-6 md:items-center justify-between">
         <div>
           <h2 className="text-3xl font-bold tracking-tight text-white flex items-center flex-wrap gap-2 min-h-9">

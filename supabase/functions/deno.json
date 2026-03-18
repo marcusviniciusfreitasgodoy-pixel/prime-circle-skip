@@ -1,9 +1,4 @@
 {
-  "compilerOptions": {
-    "allowJs": true,
-    "lib": ["deno.window"],
-    "strict": true
-  },
   "_versions": {
     "send-whatsapp": 17,
     "send-email": 12,
