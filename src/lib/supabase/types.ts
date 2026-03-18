@@ -290,6 +290,7 @@ export type Database = {
     }
     Functions: {
       get_user_id_by_email: { Args: { p_email: string }; Returns: string }
+      is_admin: { Args: never; Returns: boolean }
       log_notification: {
         Args: {
           p_channel: string
@@ -573,6 +574,8 @@ export const Constants = {
 //   Policy "Admins and Elite can update other profiles" (UPDATE, PERMISSIVE) roles={authenticated}
 //     USING: (EXISTS ( SELECT 1    FROM profiles p   WHERE ((p.id = auth.uid()) AND ((p.role = 'admin'::text) OR (p.reputation_score > 80)))))
 //     WITH CHECK: (EXISTS ( SELECT 1    FROM profiles p   WHERE ((p.id = auth.uid()) AND ((p.role = 'admin'::text) OR (p.reputation_score > 80)))))
+//   Policy "Admins can view all profiles" (SELECT, PERMISSIVE) roles={authenticated}
+//     USING: is_admin()
 //   Policy "Authenticated users can select active profiles" (SELECT, PERMISSIVE) roles={authenticated}
 //     USING: (status = 'active'::text)
 //   Policy "Enable read access for active profiles" (SELECT, PERMISSIVE) roles={authenticated}
@@ -725,6 +728,16 @@ export const Constants = {
 //
 //     RETURN NEW;
 //   END;
+//   $function$
+//
+// FUNCTION is_admin()
+//   CREATE OR REPLACE FUNCTION public.is_admin()
+//    RETURNS boolean
+//    LANGUAGE sql
+//    SECURITY DEFINER
+//    SET search_path TO 'public'
+//   AS $function$
+//     SELECT COALESCE((SELECT role = 'admin' FROM public.profiles WHERE id = auth.uid()), false);
 //   $function$
 //
 // FUNCTION log_notification(uuid, text, text, text, text, text)

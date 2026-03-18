@@ -5,14 +5,6 @@ import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table'
-import {
   Select,
   SelectContent,
   SelectItem,
@@ -26,6 +18,7 @@ import { simulateBiWeeklyReview } from '@/lib/email'
 import { supabase } from '@/lib/supabase/client'
 import { cn } from '@/lib/utils'
 import { useAuth } from '@/hooks/use-auth'
+import { UsersManagementTab } from '@/components/admin/UsersManagementTab'
 
 interface SupportTicket {
   id: string
@@ -40,13 +33,23 @@ interface SupportTicket {
 
 export default function AdminPage() {
   const { suggestions, statusLogs, updateSuggestionStatus, enforceInactivity } = useAppStore()
-
   const { user: authUser } = useAuth()
 
   const [tickets, setTickets] = useState<SupportTicket[]>([])
   const [profiles, setProfiles] = useState<any[]>([])
 
   const pendingProfiles = profiles.filter((p) => p.status === 'pending_validation')
+
+  const fetchProfiles = async () => {
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('*')
+      .order('updated_at', { ascending: false, nullsFirst: false })
+
+    if (!error && data) {
+      setProfiles(data)
+    }
+  }
 
   useEffect(() => {
     const fetchTickets = async () => {
@@ -59,16 +62,7 @@ export default function AdminPage() {
         setTickets(data)
       }
     }
-    const fetchProfiles = async () => {
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .order('updated_at', { ascending: false, nullsFirst: false })
 
-      if (!error && data) {
-        setProfiles(data)
-      }
-    }
     fetchTickets()
     fetchProfiles()
   }, [])
@@ -207,83 +201,11 @@ export default function AdminPage() {
         </TabsContent>
 
         <TabsContent value="users" className="mt-6 space-y-4">
-          <Card className="bg-card border-border">
-            <CardHeader>
-              <CardTitle className="text-lg text-white">Todos os Usuários</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow className="border-border">
-                    <TableHead className="w-[80px]">Avatar</TableHead>
-                    <TableHead>Nome</TableHead>
-                    <TableHead>Role</TableHead>
-                    <TableHead>Plano</TableHead>
-                    <TableHead>Status</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {profiles.map((profile) => (
-                    <TableRow key={profile.id} className="border-border">
-                      <TableCell>
-                        <Avatar className="w-8 h-8">
-                          <AvatarImage src={profile.avatar_url} />
-                          <AvatarFallback className="bg-secondary text-xs">
-                            {profile.full_name?.substring(0, 2).toUpperCase() || 'US'}
-                          </AvatarFallback>
-                        </Avatar>
-                      </TableCell>
-                      <TableCell className="font-medium text-white">
-                        {profile.full_name || 'Sem Nome'}
-                        <div className="text-xs text-muted-foreground font-normal mt-0.5">
-                          {profile.whatsapp_number || 'Sem contato'}
-                        </div>
-                      </TableCell>
-                      <TableCell className="capitalize text-muted-foreground">
-                        {profile.role}
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant="outline" className="border-primary/50 text-primary">
-                          {profile.plan}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <Badge
-                          variant={
-                            profile.status === 'active'
-                              ? 'default'
-                              : profile.status === 'rejected'
-                                ? 'destructive'
-                                : 'secondary'
-                          }
-                          className={cn(
-                            'text-[10px]',
-                            profile.status === 'active' &&
-                              'bg-green-500/20 text-green-500 hover:bg-green-500/30',
-                            profile.status === 'pending_validation' &&
-                              'bg-yellow-500/20 text-yellow-500 hover:bg-yellow-500/30',
-                          )}
-                        >
-                          {profile.status === 'pending_validation'
-                            ? 'Pendente'
-                            : profile.status === 'active'
-                              ? 'Ativo'
-                              : 'Rejeitado'}
-                        </Badge>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                  {profiles.length === 0 && (
-                    <TableRow>
-                      <TableCell colSpan={5} className="text-center text-muted-foreground py-8">
-                        Nenhum usuário encontrado.
-                      </TableCell>
-                    </TableRow>
-                  )}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
+          <UsersManagementTab
+            profiles={profiles}
+            refetchProfiles={fetchProfiles}
+            authUser={authUser}
+          />
         </TabsContent>
 
         <TabsContent value="tickets" className="mt-6 space-y-4">
