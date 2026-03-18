@@ -555,7 +555,7 @@ export const Constants = {
 //
 //   É um prazer ter você conosco! Sua conta foi criada com sucesso. Agora você faz parte de um ecossistema exclusivo projetado para potencializar seus resultados no mercado imobiliário.
 //
-//   Acesse seu painel agora para completar seu perfil e começar a gerar matches.
+//   Acesse seu painel agora para completar seu perfil e começar a gerar matches através do link: https://prime-circle-migration-fd549.goskip.app/dashboard
 //
 //   Boas vendas,
 //   Equipe Prime Circle');

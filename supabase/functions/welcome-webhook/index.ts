@@ -32,7 +32,9 @@ Deno.serve(async (req: Request) => {
         }
 
         const email = userData.user.email
-        const fullName = profile.full_name || 'Corretor'
+        const fullName = profile.full_name || 'Parceiro(a)'
+        const companyName = profile.company_name || 'sua imobiliária'
+        const region = profile.region || 'sua região'
         const recipientPhone = profile.whatsapp_number
         const recipientEmail = email
 
@@ -72,9 +74,14 @@ Deno.serve(async (req: Request) => {
         const defaultWaContent =
           'Olá {{full_name}}! 🚀 Bem-vindo à Prime Circle. Seu cadastro foi recebido com sucesso. Estamos muito felizes em ter você em nossa rede exclusiva de parcerias imobiliárias. Em breve entraremos em contato!'
         const defaultEmailContent =
-          'Assunto: Bem-vindo à Prime Circle! 🏠\n\nOlá {{full_name}},\n\nÉ um prazer ter você conosco! Sua conta foi criada com sucesso. Agora você faz parte de um ecossistema exclusivo projetado para potencializar seus resultados no mercado imobiliário.\n\nAcesse seu painel agora para completar seu perfil e começar a gerar matches através do link: https://prime-circle-migration-fd549.goskip.app/dashboard\n\nBoas vendas,\nEquipe Prime Circle'
+          'Assunto: Bem-vindo à Prime Circle! 🏠\n\nOlá {{full_name}},\n\nÉ um prazer ter você conosco! Sua conta foi criada com sucesso. Agora você faz parte de um ecossistema exclusivo projetado para potencializar seus resultados no mercado imobiliário.\n\nIdentificamos que você atua na região de {{region}}, o que é excelente para gerar novos matches!\n\nAcesse seu painel agora para completar seu perfil e começar a realizar parcerias através do link: https://prime-circle-migration-fd549.goskip.app/dashboard\n\nBoas vendas,\nEquipe Prime Circle'
 
-        const buildMessage = (content: string) => content.replace(/\{\{full_name\}\}/g, fullName)
+        const buildMessage = (content: string) => {
+          return content
+            .replace(/\{\{full_name\}\}/g, fullName)
+            .replace(/\{\{company_name\}\}/g, companyName)
+            .replace(/\{\{region\}\}/g, region)
+        }
 
         const waMessage = buildMessage(waTemplate ? waTemplate.content : defaultWaContent)
         const emailMessage = buildMessage(
