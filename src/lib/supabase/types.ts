@@ -522,11 +522,10 @@ export const Constants = {
 //    SECURITY DEFINER
 //   AS $function$
 //   BEGIN
-//     BEGIN
-//       INSERT INTO public.notification_templates (user_id, name, channel, content)
-//       VALUES
-//         (NEW.id, 'Notificação de Match - WhatsApp', 'whatsapp', 'Olá {{partner_name}}! 🚀 Acabamos de encontrar um novo match para o imóvel {{property_details}}. Confira agora mesmo no seu painel da Prime Circle!'),
-//         (NEW.id, 'Notificação de Match - Email', 'email', 'Assunto: Novo Match Identificado! 🏠
+//     INSERT INTO public.notification_templates (user_id, name, channel, content)
+//     VALUES
+//       (NEW.id, 'Notificação de Match - WhatsApp', 'whatsapp', 'Olá {{partner_name}}! 🚀 Acabamos de encontrar um novo match para o imóvel {{property_details}}. Confira agora mesmo no seu painel da Prime Circle!'),
+//       (NEW.id, 'Notificação de Match - Email', 'email', 'Assunto: Novo Match Identificado! 🏠
 //
 //   Olá {{partner_name}},
 //
@@ -537,8 +536,8 @@ export const Constants = {
 //
 //   Boas vendas,
 //   Equipe Prime Circle'),
-//         (NEW.id, 'Solicitação de Parceria - WhatsApp', 'whatsapp', 'Olá {{partner_name}}! Você recebeu uma nova solicitação de parceria na Prime Circle. Acesse a plataforma para responder e iniciar essa nova colaboração. 🤝'),
-//         (NEW.id, 'Solicitação de Parceria - Email', 'email', 'Assunto: Você tem uma nova solicitação de parceria 🤝
+//       (NEW.id, 'Solicitação de Parceria - WhatsApp', 'whatsapp', 'Olá {{partner_name}}! Você recebeu uma nova solicitação de parceria na Prime Circle. Acesse a plataforma para responder e iniciar essa nova colaboração. 🤝'),
+//       (NEW.id, 'Solicitação de Parceria - Email', 'email', 'Assunto: Você tem uma nova solicitação de parceria 🤝
 //
 //   Olá {{partner_name}},
 //
@@ -548,20 +547,19 @@ export const Constants = {
 //
 //   Atenciosamente,
 //   Equipe Prime Circle'),
-//         (NEW.id, 'Boas-vindas - WhatsApp', 'whatsapp', 'Olá {{full_name}}! 🚀 Bem-vindo à Prime Circle. Seu cadastro foi recebido com sucesso. Estamos muito felizes em ter você em nossa rede exclusiva de parcerias imobiliárias. Em breve entraremos em contato!'),
-//         (NEW.id, 'Boas-vindas - Email', 'email', 'Assunto: Bem-vindo à Prime Circle! 🏠
+//       (NEW.id, 'Boas-vindas - WhatsApp', 'whatsapp', 'Olá {{full_name}}! 🚀 Bem-vindo à Prime Circle. Seu cadastro foi recebido com sucesso. Estamos muito felizes em ter você em nossa rede exclusiva de parcerias imobiliárias. Em breve entraremos em contato!'),
+//       (NEW.id, 'Boas-vindas - Email', 'email', 'Assunto: Bem-vindo à Prime Circle! 🏠
 //
 //   Olá {{full_name}},
 //
 //   É um prazer ter você conosco! Sua conta foi criada com sucesso. Agora você faz parte de um ecossistema exclusivo projetado para potencializar seus resultados no mercado imobiliário.
 //
-//   Acesse seu painel agora para completar seu perfil e começar a gerar matches através do link: https://prime-circle-migration-fd549.goskip.app/dashboard
+//   Identificamos que você atua na região de {{region}}, o que é excelente para gerar novos matches!
+//
+//   Acesse seu painel agora para completar seu perfil e começar a realizar parcerias através do link: https://prime-circle-migration-fd549.goskip.app/dashboard
 //
 //   Boas vendas,
 //   Equipe Prime Circle');
-//     EXCEPTION WHEN OTHERS THEN
-//       RAISE WARNING 'Error in handle_new_user_templates trigger: %', SQLERRM;
-//     END;
 //
 //     RETURN NEW;
 //   END;

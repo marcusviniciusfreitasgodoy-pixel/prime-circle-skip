@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { ContactDialog } from '@/components/ContactDialog'
 
 export function Footer() {
   return (
@@ -70,12 +71,11 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <a
-                  href="mailto:contato@primecircle.app.br"
-                  className="text-muted-foreground hover:text-primary transition-colors"
-                >
-                  Contato
-                </a>
+                <ContactDialog>
+                  <button className="text-muted-foreground hover:text-primary transition-colors text-left bg-transparent border-none p-0 cursor-pointer">
+                    Contato
+                  </button>
+                </ContactDialog>
               </li>
             </ul>
           </div>
