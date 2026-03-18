@@ -5,7 +5,6 @@ import { MatchmakingShowcase } from '@/components/home/MatchmakingShowcase'
 import { NetworkSection } from '@/components/home/NetworkSection'
 import { NetworkDetailsSection } from '@/components/home/NetworkDetailsSection'
 import { ProcessTimeline } from '@/components/home/ProcessTimeline'
-import { RealtimeStats } from '@/components/home/RealtimeStats'
 import { PersonaSection } from '@/components/home/PersonaSection'
 import { CriteriaSection } from '@/components/home/CriteriaSection'
 import { CollaborationSection } from '@/components/home/CollaborationSection'
@@ -43,7 +42,6 @@ export default function Index() {
         <NetworkSection />
         <NetworkDetailsSection />
         <ProcessTimeline />
-        <RealtimeStats />
         <PersonaSection />
         <CriteriaSection />
         <CollaborationSection />
