@@ -56,7 +56,7 @@ export function HeroSection() {
               className="h-14 px-8 text-base w-full sm:w-auto shadow-elevation hover:scale-105 transition-transform duration-300 gold-gradient text-black font-bold"
             >
               <Link to="/dashboard">
-                Ir para o Painel
+                Quero fazer parte
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
