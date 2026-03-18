@@ -147,6 +147,7 @@ export type Database = {
           plan: string
           referral_code: string | null
           region: string | null
+          reputation_score: number
           role: string
           ticket_value: string | null
           updated_at: string | null
@@ -162,6 +163,7 @@ export type Database = {
           plan?: string
           referral_code?: string | null
           region?: string | null
+          reputation_score?: number
           role?: string
           ticket_value?: string | null
           updated_at?: string | null
@@ -177,6 +179,7 @@ export type Database = {
           plan?: string
           referral_code?: string | null
           region?: string | null
+          reputation_score?: number
           role?: string
           ticket_value?: string | null
           updated_at?: string | null
@@ -435,6 +438,7 @@ export const Constants = {
 //   referral_code: text (nullable)
 //   avatar_url: text (nullable)
 //   company_name: text (nullable)
+//   reputation_score: integer (not null, default: 0)
 // Table: support_tickets
 //   id: uuid (not null, default: gen_random_uuid())
 //   user_id: uuid (nullable)

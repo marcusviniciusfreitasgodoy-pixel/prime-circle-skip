@@ -21,6 +21,7 @@ import {
   Crown,
   ChevronRight,
   ShieldCheck,
+  BellRing,
 } from 'lucide-react'
 import useAppStore from '@/stores/main'
 import { useToast } from '@/hooks/use-toast'
@@ -38,6 +39,7 @@ export default function DashboardPage() {
   const [profileScore, setProfileScore] = useState<number>(0)
   const [isLoadingName, setIsLoadingName] = useState(true)
   const [refreshKey, setRefreshKey] = useState(0)
+  const [recentMatchAlerts, setRecentMatchAlerts] = useState<any[]>([])
 
   const triggerRefresh = () => setRefreshKey((prev) => prev + 1)
   const updateSugRef = useRef(updateSuggestionStatus)
@@ -60,7 +62,7 @@ export default function DashboardPage() {
   useEffect(() => {
     let mounted = true
 
-    const fetchProfile = async () => {
+    const fetchProfileData = async () => {
       if (!authUser) {
         setIsLoadingName(false)
         return
@@ -82,9 +84,22 @@ export default function DashboardPage() {
         setProfileName(authUser.email || 'Usuário')
       }
       setIsLoadingName(false)
+
+      // Fetch Recent Match Alerts
+      const { data: alerts } = await supabase
+        .from('notification_logs')
+        .select('id, message_body, created_at')
+        .eq('user_id', authUser.id)
+        .eq('channel', 'whatsapp')
+        .ilike('message_body', '%match perfeito%')
+        .order('created_at', { ascending: false })
+        .limit(3)
+
+      if (!mounted) return
+      if (alerts) setRecentMatchAlerts(alerts)
     }
 
-    fetchProfile()
+    fetchProfileData()
 
     return () => {
       mounted = false
@@ -170,7 +185,7 @@ export default function DashboardPage() {
         <div>
           <h2 className="text-3xl font-bold tracking-tight text-white flex items-center flex-wrap gap-2 min-h-9">
             Bem-vindo, {isLoadingName ? <Skeleton className="h-8 w-32 bg-muted/20" /> : profileName}
-            {!isLoadingName && profileScore >= 50 && (
+            {!isLoadingName && profileScore >= 70 && (
               <Badge className="ml-2 bg-primary/20 text-primary border-primary/30 hover:bg-primary/30 flex items-center gap-1 shadow-sm">
                 <ShieldCheck className="w-3 h-3" /> Elite Status
               </Badge>
@@ -185,7 +200,9 @@ export default function DashboardPage() {
             </span>
             <span className="text-sm border-l border-border pl-3 flex items-center gap-1">
               PrimeCircle Score:{' '}
-              <strong className="text-white bg-secondary/80 px-2 py-0.5 rounded-md border border-border">
+              <strong
+                className={`text-white px-2 py-0.5 rounded-md border border-border ${profileScore >= 70 ? 'bg-primary/20 border-primary/50 text-primary' : 'bg-secondary/80'}`}
+              >
                 {isLoadingName ? '-' : profileScore}
               </strong>
             </span>
@@ -196,10 +213,68 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      <PortfolioTabs refreshKey={refreshKey} />
+      <div className="grid gap-6 md:grid-cols-3">
+        <div className="md:col-span-2">
+          <PortfolioTabs refreshKey={refreshKey} />
+        </div>
+        <div className="md:col-span-1">
+          <Card className="bg-card border-border h-full">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-lg text-white flex items-center gap-2">
+                <BellRing className="w-5 h-5 text-primary" /> Meus Alertas de Match
+              </CardTitle>
+              <CardDescription>Avisos enviados via WhatsApp recentemente</CardDescription>
+            </CardHeader>
+            <CardContent>
+              {recentMatchAlerts.length > 0 ? (
+                <div className="space-y-4">
+                  {recentMatchAlerts.map((alert) => {
+                    const matchText = alert.message_body.match(
+                      /match perfeito para sua demanda: (.*?)\. Confira/,
+                    )
+                    const excerpt = matchText ? matchText[1] : 'Nova oportunidade identificada!'
+
+                    return (
+                      <div
+                        key={alert.id}
+                        className="p-3 bg-secondary/30 rounded-lg border border-border/50 border-l-2 border-l-primary flex flex-col gap-1"
+                      >
+                        <span className="text-sm font-medium text-white line-clamp-2">
+                          {excerpt}
+                        </span>
+                        <span className="text-xs text-muted-foreground">
+                          {new Date(alert.created_at).toLocaleDateString('pt-BR', {
+                            day: '2-digit',
+                            month: 'short',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                          })}
+                        </span>
+                      </div>
+                    )
+                  })}
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center py-8 text-center px-4">
+                  <div className="w-12 h-12 bg-secondary/50 rounded-full flex items-center justify-center mb-3">
+                    <Search className="w-6 h-6 text-muted-foreground" />
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    Nenhum alerta recente. Cadastre novas Demandas para ser notificado.
+                  </p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+      </div>
 
       {/* Opportunity Radar Section */}
-      <OpportunityRadar refreshKey={refreshKey} onAddNeed={triggerRefresh} />
+      <OpportunityRadar
+        refreshKey={refreshKey}
+        onAddNeed={triggerRefresh}
+        reputationScore={profileScore}
+      />
 
       <div className="grid gap-6 md:grid-cols-3 pt-6 border-t border-border/50">
         <div className="md:col-span-2 space-y-6">

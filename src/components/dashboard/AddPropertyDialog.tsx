@@ -5,21 +5,24 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
+import { Switch } from '@/components/ui/switch'
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogDescription,
 } from '@/components/ui/dialog'
 import { useToast } from '@/hooks/use-toast'
-import { PlusCircle } from 'lucide-react'
+import { PlusCircle, Lock } from 'lucide-react'
 
 export function AddPropertyDialog({ onSuccess }: { onSuccess: () => void }) {
   const { user } = useAuth()
   const { toast } = useToast()
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [isOffMarket, setIsOffMarket] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -42,6 +45,7 @@ export function AddPropertyDialog({ onSuccess }: { onSuccess: () => void }) {
         price,
         location,
         property_type: propertyType,
+        is_off_market: isOffMarket,
       },
     })
 
@@ -55,7 +59,9 @@ export function AddPropertyDialog({ onSuccess }: { onSuccess: () => void }) {
     } else {
       toast({
         title: 'Sucesso',
-        description: 'Imóvel publicado! Agora a rede já pode encontrar compatibilidades.',
+        description: isOffMarket
+          ? 'Imóvel Off-Market publicado com exclusividade.'
+          : 'Imóvel publicado! Agora a rede já pode encontrar compatibilidades.',
         className: 'bg-card border-primary/50 text-white',
       })
       setOpen(false)
@@ -70,9 +76,13 @@ export function AddPropertyDialog({ onSuccess }: { onSuccess: () => void }) {
           <PlusCircle className="w-4 h-4 mr-2" /> Divulgar Imóvel
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[450px]">
+      <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle>Divulgar Novo Imóvel</DialogTitle>
+          <DialogDescription>
+            Insira os dados do imóvel. Imóveis marcados como Off-Market só serão vistos por
+            corretores Elite (Reputação 70+).
+          </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4 mt-4">
           <div className="space-y-2">
@@ -102,6 +112,18 @@ export function AddPropertyDialog({ onSuccess }: { onSuccess: () => void }) {
               placeholder="Descreva os detalhes, diferenciais e metragem do imóvel..."
               className="resize-none h-24"
             />
+          </div>
+          <div className="flex items-center justify-between rounded-lg border border-border p-3 bg-secondary/30">
+            <div className="space-y-0.5">
+              <Label className="flex items-center gap-2">
+                <Lock className="w-4 h-4 text-primary" />
+                Exclusivo Off-Market
+              </Label>
+              <p className="text-xs text-muted-foreground">
+                Restringir visibilidade apenas para corretores de alta reputação.
+              </p>
+            </div>
+            <Switch checked={isOffMarket} onCheckedChange={setIsOffMarket} />
           </div>
           <Button type="submit" className="w-full" disabled={loading}>
             {loading ? 'Salvando...' : 'Publicar Imóvel'}
