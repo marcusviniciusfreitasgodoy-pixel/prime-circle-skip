@@ -144,6 +144,7 @@ interface AppState {
   login: (email: string, method: 'magic_link' | 'password', status?: UserStatus) => void
   logout: () => void
   completeOnboarding: () => void
+  updateUser: (updates: Partial<User>) => void
   addListing: (listing: Partial<Listing>) => boolean
   addNeed: (need: Partial<Need>) => boolean
   addMatch: (needId: string, listingId: string) => boolean
@@ -327,6 +328,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const completeOnboarding = () => {
     setUser((prev) => (prev ? { ...prev, onboarded: true } : prev))
     logEvent('Onboarding', 'Usuário completou onboarding')
+  }
+
+  const updateUser = (updates: Partial<User>) => {
+    setUser((prev) => (prev ? { ...prev, ...updates } : prev))
   }
 
   const logEvent = (action: string, details: string) => {
@@ -687,6 +692,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
         login,
         logout,
         completeOnboarding,
+        updateUser,
         addListing,
         addNeed,
         addMatch,

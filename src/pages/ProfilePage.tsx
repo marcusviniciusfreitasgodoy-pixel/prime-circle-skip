@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Input } from '@/components/ui/input'
@@ -12,10 +12,12 @@ import { useToast } from '@/hooks/use-toast'
 import { ShieldCheck } from 'lucide-react'
 
 export default function ProfilePage() {
-  const { user } = useAppStore()
+  const { user, updateUser } = useAppStore()
   const { user: authUser } = useAuth()
   const { toast } = useToast()
 
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const [avatarUrl, setAvatarUrl] = useState('')
   const [whatsapp, setWhatsapp] = useState('')
   const [fullName, setFullName] = useState('')
   const [isSaving, setIsSaving] = useState(false)
@@ -25,13 +27,14 @@ export default function ProfilePage() {
     if (authUser) {
       supabase
         .from('profiles')
-        .select('whatsapp_number, full_name, validated_by, validation_date')
+        .select('whatsapp_number, full_name, validated_by, validation_date, avatar_url')
         .eq('id', authUser.id)
         .single()
         .then(async ({ data }) => {
           if (data) {
             if (data.whatsapp_number) setWhatsapp(data.whatsapp_number)
             if (data.full_name) setFullName(data.full_name)
+            if (data.avatar_url) setAvatarUrl(data.avatar_url)
 
             if (data.validated_by) {
               const { data: valData } = await supabase
@@ -42,7 +45,7 @@ export default function ProfilePage() {
               if (valData) {
                 setValidatedBy({
                   name: valData.full_name || 'Membro Sênior',
-                  date: data.validation_date,
+                  date: data.validation_date || new Date().toISOString(),
                 })
               }
             }
@@ -50,6 +53,54 @@ export default function ProfilePage() {
         })
     }
   }, [authUser])
+
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file || !authUser) return
+
+    setIsSaving(true)
+    const fileExt = file.name.split('.').pop()
+    const filePath = `${authUser.id}-${Math.random()}.${fileExt}`
+
+    const { error: uploadError } = await supabase.storage
+      .from('avatars')
+      .upload(filePath, file, { upsert: true })
+
+    if (uploadError) {
+      toast({
+        title: 'Erro no Upload',
+        description: 'Não foi possível salvar a imagem de perfil.',
+        variant: 'destructive',
+      })
+      setIsSaving(false)
+      return
+    }
+
+    const { data: publicUrlData } = supabase.storage.from('avatars').getPublicUrl(filePath)
+    const newAvatarUrl = publicUrlData.publicUrl
+
+    const { error: updateError } = await supabase
+      .from('profiles')
+      .update({ avatar_url: newAvatarUrl })
+      .eq('id', authUser.id)
+
+    setIsSaving(false)
+
+    if (updateError) {
+      toast({
+        title: 'Erro ao salvar perfil',
+        description: updateError.message,
+        variant: 'destructive',
+      })
+    } else {
+      setAvatarUrl(newAvatarUrl)
+      updateUser({ avatar: newAvatarUrl })
+      toast({
+        title: 'Sucesso',
+        description: 'Foto de perfil atualizada.',
+      })
+    }
+  }
 
   const handleSaveProfile = async () => {
     if (!authUser) {
@@ -114,10 +165,27 @@ export default function ProfilePage() {
         <div className="md:col-span-1 space-y-6">
           <Card className="bg-card border-border text-center pt-8">
             <CardContent className="flex flex-col items-center">
-              <Avatar className="w-24 h-24 mb-4 ring-2 ring-primary ring-offset-4 ring-offset-background">
-                <AvatarImage src={user.avatar} />
-                <AvatarFallback className="text-2xl">{displayInitial}</AvatarFallback>
-              </Avatar>
+              <div
+                className="relative group cursor-pointer"
+                onClick={() => fileInputRef.current?.click()}
+              >
+                <Avatar className="w-24 h-24 mb-4 ring-2 ring-primary ring-offset-4 ring-offset-background group-hover:opacity-80 transition-opacity">
+                  <AvatarImage src={avatarUrl || user.avatar} />
+                  <AvatarFallback className="text-2xl">{displayInitial}</AvatarFallback>
+                </Avatar>
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none pb-4">
+                  <span className="text-xs font-bold text-white bg-black/60 px-2 py-1 rounded">
+                    Trocar
+                  </span>
+                </div>
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  className="hidden"
+                  accept="image/*"
+                  onChange={handleAvatarUpload}
+                />
+              </div>
               <h3 className="text-xl font-bold text-white">{displayName}</h3>
               <p className="text-sm text-primary mb-4">Corretor {user.tier}</p>
 

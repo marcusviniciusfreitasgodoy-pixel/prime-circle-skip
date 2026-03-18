@@ -83,7 +83,7 @@ Deno.serve(async (req: Request) => {
         const defaultWaContent =
           'Olá {{full_name}}! 🚀 Bem-vindo à Prime Circle. Seu cadastro foi recebido com sucesso. Estamos muito felizes em ter você em nossa rede exclusiva de parcerias imobiliárias.'
         const defaultEmailContent =
-          'Assunto: Bem-vindo à Prime Circle! 🏠\n\nOlá {{full_name}},\n\nBem-vindo à Prime Circle! Agora que sua conta foi criada, utilize o link abaixo para acessar seu painel exclusivo e começar a gerar parcerias.\n\nAcesse: https://prime-circle-migration-fd549.goskip.app/dashboard\n\nBoas vendas,\nEquipe Prime Circle'
+          'Assunto: Bem-vindo à Prime Circle! 🏠\n\nOlá {{full_name}},\n\nBem-vindo à Prime Circle! Agora que sua conta foi criada, acesse o nosso Dashboard para começar a gerar parcerias:\nDashboard: https://prime-circle-migration-fd549.goskip.app/dashboard\n\nCaso precise entrar novamente, você pode solicitar um Magic Link na página de Acesso Exclusivo:\nAcesso Exclusivo: https://prime-circle-migration-fd549.goskip.app/\n\nBoas vendas,\nEquipe Prime Circle'
 
         const buildMessage = (content: string) => {
           return content
@@ -118,13 +118,13 @@ Deno.serve(async (req: Request) => {
                 return res
               })
               .catch(async (err) => {
-                await supabase.from('notification_logs').insert({
-                  user_id: profile.id,
-                  recipient: recipientPhone,
-                  channel: 'whatsapp',
-                  status: 'failed',
-                  message_body: waMessage,
-                  error_details: err.message || JSON.stringify(err),
+                await supabase.rpc('log_notification', {
+                  p_user_id: profile.id,
+                  p_recipient: recipientPhone,
+                  p_channel: 'whatsapp',
+                  p_status: 'failed',
+                  p_message_body: waMessage,
+                  p_error_details: err.message || JSON.stringify(err),
                 })
               }),
           )
@@ -140,13 +140,13 @@ Deno.serve(async (req: Request) => {
               return res
             })
             .catch(async (err) => {
-              await supabase.from('notification_logs').insert({
-                user_id: profile.id,
-                recipient: recipientEmail,
-                channel: 'email',
-                status: 'failed',
-                message_body: bodyText,
-                error_details: err.message || JSON.stringify(err),
+              await supabase.rpc('log_notification', {
+                p_user_id: profile.id,
+                p_recipient: recipientEmail,
+                p_channel: 'email',
+                p_status: 'failed',
+                p_message_body: bodyText,
+                p_error_details: err.message || JSON.stringify(err),
               })
             }),
         )
@@ -155,13 +155,13 @@ Deno.serve(async (req: Request) => {
       } catch (err: any) {
         console.error('Webhook processing error:', err)
         if (payload?.record?.id) {
-          await supabase.from('notification_logs').insert({
-            user_id: payload.record.id,
-            recipient: 'system',
-            channel: 'email',
-            status: 'failed',
-            message_body: 'Webhook execution failed',
-            error_details: err.message || JSON.stringify(err),
+          await supabase.rpc('log_notification', {
+            p_user_id: payload.record.id,
+            p_recipient: 'system',
+            p_channel: 'email',
+            p_status: 'failed',
+            p_message_body: 'Webhook execution failed',
+            p_error_details: err.message || JSON.stringify(err),
           })
         }
       }

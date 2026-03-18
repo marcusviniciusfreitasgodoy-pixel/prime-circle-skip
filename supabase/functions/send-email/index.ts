@@ -55,13 +55,13 @@ Deno.serve(async (req: Request) => {
       const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
       if (supabaseUrl && supabaseKey) {
         const supabase = createClient(supabaseUrl, supabaseKey)
-        await supabase.from('notification_logs').insert({
-          user_id,
-          recipient: to,
-          channel: 'email',
-          status: success ? 'success' : 'failed',
-          message_body: text || html || subject || '',
-          error_details: success ? null : JSON.stringify(data),
+        await supabase.rpc('log_notification', {
+          p_user_id: user_id,
+          p_recipient: to,
+          p_channel: 'email',
+          p_status: success ? 'success' : 'failed',
+          p_message_body: text || html || subject || '',
+          p_error_details: success ? null : JSON.stringify(data),
         })
       }
     }

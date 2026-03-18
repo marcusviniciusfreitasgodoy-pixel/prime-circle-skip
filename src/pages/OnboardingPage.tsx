@@ -8,7 +8,6 @@ import useAppStore from '@/stores/main'
 import { useAuth } from '@/hooks/use-auth'
 import { supabase } from '@/lib/supabase/client'
 import { toast } from 'sonner'
-import { sendWelcomeNotifications } from '@/services/notifications'
 
 export default function OnboardingPage() {
   const navigate = useNavigate()
@@ -21,6 +20,8 @@ export default function OnboardingPage() {
   const [model5050, setModel5050] = useState(false)
   const [whatsapp, setWhatsapp] = useState('')
   const [creci, setCreci] = useState('')
+  const [hasWhatsapp, setHasWhatsapp] = useState(false)
+  const [hasCreci, setHasCreci] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isFetching, setIsFetching] = useState(true)
 
@@ -32,7 +33,6 @@ export default function OnboardingPage() {
         return
       }
       try {
-        // Fetch whatsapp_number and creci to pre-fill the form
         const { data, error } = await supabase
           .from('profiles')
           .select('whatsapp_number, creci')
@@ -40,8 +40,14 @@ export default function OnboardingPage() {
           .single()
 
         if (!error && data && mounted) {
-          if (data.whatsapp_number) setWhatsapp(data.whatsapp_number)
-          if (data.creci) setCreci(data.creci)
+          if (data.whatsapp_number) {
+            setWhatsapp(data.whatsapp_number)
+            setHasWhatsapp(true)
+          }
+          if (data.creci) {
+            setCreci(data.creci)
+            setHasCreci(true)
+          }
         }
       } catch (err) {
         console.error('Failed to fetch profile data:', err)
@@ -77,24 +83,6 @@ export default function OnboardingPage() {
 
         localStorage.setItem(`terms_accepted_${authUser.id}`, 'true')
         completeOnboarding()
-
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('full_name')
-          .eq('id', authUser.id)
-          .single()
-
-        try {
-          // Trigger automated email and WhatsApp messages using Edge Functions
-          await sendWelcomeNotifications({
-            userId: authUser.id,
-            fullName: profile?.full_name || authUser.email?.split('@')[0] || 'Corretor',
-            recipientPhone: whatsapp,
-            recipientEmail: authUser.email || '',
-          })
-        } catch (notifError) {
-          console.error('Failed to send welcome notifications:', notifError)
-        }
       } else {
         completeOnboarding()
       }
@@ -142,7 +130,8 @@ export default function OnboardingPage() {
                   placeholder="(11) 99999-9999"
                   value={whatsapp}
                   onChange={(e) => setWhatsapp(e.target.value)}
-                  className="bg-secondary/50 border-border text-white placeholder:text-muted-foreground focus-visible:ring-primary"
+                  disabled={hasWhatsapp}
+                  className="bg-secondary/50 border-border text-white placeholder:text-muted-foreground focus-visible:ring-primary disabled:opacity-50 disabled:cursor-not-allowed"
                 />
               </div>
               <div className="space-y-2">
@@ -154,7 +143,8 @@ export default function OnboardingPage() {
                   placeholder="00000-F"
                   value={creci}
                   onChange={(e) => setCreci(e.target.value)}
-                  className="bg-secondary/50 border-border text-white placeholder:text-muted-foreground focus-visible:ring-primary"
+                  disabled={hasCreci}
+                  className="bg-secondary/50 border-border text-white placeholder:text-muted-foreground focus-visible:ring-primary disabled:opacity-50 disabled:cursor-not-allowed"
                 />
               </div>
             </div>
