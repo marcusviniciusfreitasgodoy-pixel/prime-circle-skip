@@ -19,13 +19,19 @@ Deno.serve(async (req: Request) => {
           return
         }
 
-        const propLocation = (property.metadata.location || '').toLowerCase()
-        const propTitle = property.metadata.title || 'Imóvel'
-        const propPrice = property.metadata.price || 'Valor sob consulta'
+        const propLocation = (
+          property.metadata.endereco ||
+          property.metadata.location ||
+          ''
+        ).toLowerCase()
+        const propBairro = (property.metadata.bairro || '').toLowerCase()
+        const propTipo = (property.metadata.tipo_imovel || '').toLowerCase()
+        const propValor = property.metadata.valor || 0
+        const propTitle = property.metadata.tipo_imovel
+          ? `${property.metadata.tipo_imovel} em ${property.metadata.bairro || property.metadata.endereco}`
+          : property.metadata.title || 'Imóvel'
 
-        // 1. Fetch all Demands to find potential matches
-        // In a real scenario with populated vector embeddings, we would use match_documents RPC here.
-        // For this implementation, we simulate a keyword-based similarity search using the location/region.
+        // Fetch all Demands to find potential matches
         const { data: demands, error: demandsError } = await supabase
           .from('documents')
           .select('*')
@@ -39,13 +45,33 @@ Deno.serve(async (req: Request) => {
         const notificationPromises = []
 
         for (const demand of demands) {
-          const demandRegion = (demand.metadata.region || '').toLowerCase()
+          const demandEndereco = (
+            demand.metadata.endereco ||
+            demand.metadata.region ||
+            ''
+          ).toLowerCase()
+          const demandBairro = (demand.metadata.bairro || '').toLowerCase()
+          const demandTipo = (demand.metadata.tipo_imovel || '').toLowerCase()
+          const demandValor = demand.metadata.valor || 999999999
 
-          // Simple similarity match fallback: Does the property location overlap with the demand region?
-          const isMatch = propLocation.includes(demandRegion) || demandRegion.includes(propLocation)
+          const isTypeMatch =
+            !demandTipo || propTipo.includes(demandTipo) || demandTipo.includes(propTipo)
+          const isValueMatch = propValor <= demandValor
+
+          const isLocationMatch =
+            (propBairro &&
+              demandBairro &&
+              (propBairro.includes(demandBairro) || demandBairro.includes(propBairro))) ||
+            (propLocation &&
+              demandEndereco &&
+              (propLocation.includes(demandEndereco) || demandEndereco.includes(propLocation))) ||
+            (propBairro && demandEndereco && demandEndereco.includes(propBairro))
+
+          const isLegacyMatch = !property.metadata.bairro && propLocation.includes(demandEndereco)
+
+          const isMatch = (isTypeMatch && isValueMatch && isLocationMatch) || isLegacyMatch
 
           if (isMatch && demand.metadata.user_id) {
-            // Get the broker who owns the demand
             const { data: brokerProfile } = await supabase
               .from('profiles')
               .select('id, full_name, whatsapp_number')
@@ -55,10 +81,11 @@ Deno.serve(async (req: Request) => {
             if (brokerProfile && brokerProfile.whatsapp_number) {
               const brokerName = brokerProfile.full_name || 'Corretor'
 
-              // Standard Template Required by AC with Feedback Links
-              const waMessage = `Olá ${brokerName}, encontramos um imóvel que é o match perfeito para sua demanda: ${propTitle} - ${propPrice} em ${property.metadata.location}. Confira agora no seu Dashboard!\n\nAvalie este match:\n✅ Match Perfeito: https://prime-circle-migration-fd549.goskip.app/match-feedback?id=${property.id}&type=perfect\n❌ Não Atende: https://prime-circle-migration-fd549.goskip.app/match-feedback?id=${property.id}&type=not_suitable`
+              const formattedPrice = new Intl.NumberFormat('pt-BR', {
+                minimumFractionDigits: 2,
+              }).format(propValor)
+              const waMessage = `Olá ${brokerName}, encontramos um imóvel que é o match perfeito para sua demanda: ${propTitle} - R$ ${formattedPrice}. Confira agora no seu Dashboard!\n\nAvalie este match:\n✅ Match Perfeito: https://prime-circle-migration-fd549.goskip.app/match-feedback?id=${property.id}&type=perfect\n❌ Não Atende: https://prime-circle-migration-fd549.goskip.app/match-feedback?id=${property.id}&type=not_suitable`
 
-              // Invoke send-whatsapp to deliver and log the notification automatically
               notificationPromises.push(
                 supabase.functions
                   .invoke('send-whatsapp', {

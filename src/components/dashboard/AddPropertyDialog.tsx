@@ -7,6 +7,13 @@ import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import {
   Dialog,
   DialogContent,
   DialogHeader,
@@ -17,51 +24,57 @@ import {
 import { useToast } from '@/hooks/use-toast'
 import { PlusCircle, Lock } from 'lucide-react'
 
+const formatCurrency = (value: string) => {
+  const digits = value.replace(/\D/g, '')
+  if (!digits) return ''
+  return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(
+    parseInt(digits, 10) / 100,
+  )
+}
+const parseCurrency = (val: string) => parseInt(val.replace(/\D/g, '') || '0', 10) / 100
+
 export function AddPropertyDialog({ onSuccess }: { onSuccess: () => void }) {
   const { user } = useAuth()
   const { toast } = useToast()
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const [isOffMarket, setIsOffMarket] = useState(false)
+  const [valor, setValor] = useState('')
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (!user) return
     setLoading(true)
 
-    const formData = new FormData(e.currentTarget)
-    const title = formData.get('title') as string
-    const description = formData.get('description') as string
-    const price = formData.get('price') as string
-    const location = formData.get('location') as string
-    const propertyType = formData.get('propertyType') as string
+    const fd = new FormData(e.currentTarget)
+    const md = {
+      type: 'oferta',
+      user_id: user.id,
+      is_off_market: isOffMarket,
+      valor: parseCurrency(valor),
+      tipo_imovel: fd.get('tipo_imovel'),
+      endereco: fd.get('endereco'),
+      bairro: fd.get('bairro'),
+      quartos: fd.get('quartos'),
+      suites: fd.get('suites'),
+      tamanho_imovel: Number(fd.get('tamanho_imovel')),
+      tamanho_terreno: Number(fd.get('tamanho_terreno')),
+      nome_condominio: fd.get('nome_condominio'),
+      link_imovel: fd.get('link_imovel'),
+      description: fd.get('description'),
+    }
 
-    const { error } = await supabase.from('documents').insert({
-      content: description,
-      metadata: {
-        type: 'oferta',
-        user_id: user.id,
-        title,
-        price,
-        location,
-        property_type: propertyType,
-        is_off_market: isOffMarket,
-      },
-    })
+    const content = `Tipo: ${md.tipo_imovel}\nBairro: ${md.bairro}\nEndereço: ${md.endereco}\nValor: R$ ${md.valor}\nQuartos: ${md.quartos}\nSuítes: ${md.suites}\nDetalhes: ${md.description}`
+
+    const { error } = await supabase.from('documents').insert({ content, metadata: md })
 
     setLoading(false)
     if (error) {
-      toast({
-        title: 'Erro',
-        description: 'Falha ao divulgar o imóvel. Tente novamente.',
-        variant: 'destructive',
-      })
+      toast({ title: 'Erro', description: 'Falha ao divulgar imóvel.', variant: 'destructive' })
     } else {
       toast({
         title: 'Sucesso',
-        description: isOffMarket
-          ? 'Imóvel Reservado publicado com exclusividade.'
-          : 'Imóvel publicado! Agora a rede já pode encontrar compatibilidades.',
+        description: isOffMarket ? 'Imóvel Reservado.' : 'Imóvel publicado!',
         className: 'bg-card border-primary/50 text-white',
       })
       setOpen(false)
@@ -76,51 +89,111 @@ export function AddPropertyDialog({ onSuccess }: { onSuccess: () => void }) {
           <PlusCircle className="w-4 h-4 mr-2" /> Divulgar Imóvel
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="sm:max-w-[700px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Divulgar Novo Imóvel</DialogTitle>
           <DialogDescription>
-            Insira os dados do imóvel. Imóveis marcados como Reservados só serão vistos por
-            corretores Elite (Pontuação 70+).
+            Insira os dados do imóvel. Imóveis Reservados só serão vistos por corretores Elite.
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4 mt-4">
-          <div className="space-y-2">
-            <Label htmlFor="title">Título do Imóvel</Label>
-            <Input id="title" name="title" required placeholder="Ex: Cobertura Duplex em Moema" />
-          </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="propertyType">Tipo de Imóvel</Label>
-              <Input id="propertyType" name="propertyType" required placeholder="Ex: Apartamento" />
+              <Label>Tipo de Imóvel</Label>
+              <Select name="tipo_imovel" required defaultValue="Apartamento">
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {['Apartamento', 'Cobertura', 'Casa', 'Terreno', 'Sala Comercial'].map((o) => (
+                    <SelectItem key={o} value={o}>
+                      {o}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="price">Valor</Label>
-              <Input id="price" name="price" required placeholder="Ex: R$ 2.500.000" />
+              <Label>Valor</Label>
+              <Input
+                required
+                placeholder="R$ 0,00"
+                value={valor}
+                onChange={(e) => setValor(formatCurrency(e.target.value))}
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label>Rua/Avenida</Label>
+              <Input name="endereco" required placeholder="Ex: Av. Faria Lima" />
+            </div>
+            <div className="space-y-2">
+              <Label>Bairro</Label>
+              <Input name="bairro" required placeholder="Ex: Itaim Bibi" />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="space-y-2">
+              <Label>Quartos</Label>
+              <Select name="quartos" required defaultValue="1">
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {['1', '2', '3', '4', '5 ou mais'].map((o) => (
+                    <SelectItem key={o} value={o}>
+                      {o}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label>Suítes</Label>
+              <Select name="suites" required defaultValue="1">
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {['1', '2', '3', '4', '5 ou mais'].map((o) => (
+                    <SelectItem key={o} value={o}>
+                      {o}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label>Área Útil (m²)</Label>
+              <Input name="tamanho_imovel" type="number" required placeholder="120" />
+            </div>
+            <div className="space-y-2">
+              <Label>Terreno (m²)</Label>
+              <Input name="tamanho_terreno" type="number" required placeholder="200" />
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label>Nome do Condomínio (Opcional)</Label>
+              <Input name="nome_condominio" placeholder="Ex: Condomínio Jardim" />
+            </div>
+            <div className="space-y-2">
+              <Label>Link do Imóvel (Opcional)</Label>
+              <Input name="link_imovel" placeholder="https://" />
             </div>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="location">Localização</Label>
-            <Input id="location" name="location" required placeholder="Ex: Zona Sul, São Paulo" />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="description">Descrição</Label>
-            <Textarea
-              id="description"
-              name="description"
-              required
-              placeholder="Descreva os detalhes, diferenciais e metragem do imóvel..."
-              className="resize-none h-24"
-            />
+            <Label>Descrição</Label>
+            <Textarea name="description" required placeholder="Diferenciais..." className="h-20" />
           </div>
           <div className="flex items-center justify-between rounded-lg border border-border p-3 bg-secondary/30">
-            <div className="space-y-0.5">
+            <div>
               <Label className="flex items-center gap-2">
-                <Lock className="w-4 h-4 text-primary" />
-                Exclusivo / Reservado
+                <Lock className="w-4 h-4 text-primary" /> Exclusivo / Reservado
               </Label>
               <p className="text-xs text-muted-foreground">
-                Restringir visibilidade apenas para corretores de alta pontuação.
+                Restringir visibilidade para corretores de alta pontuação.
               </p>
             </div>
             <Switch checked={isOffMarket} onCheckedChange={setIsOffMarket} />

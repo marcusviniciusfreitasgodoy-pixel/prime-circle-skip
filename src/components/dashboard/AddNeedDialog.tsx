@@ -6,6 +6,13 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import {
   Dialog,
   DialogContent,
   DialogHeader,
@@ -15,45 +22,59 @@ import {
 import { useToast } from '@/hooks/use-toast'
 import { PlusCircle } from 'lucide-react'
 
+const formatCurrency = (value: string) => {
+  const digits = value.replace(/\D/g, '')
+  if (!digits) return ''
+  return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(
+    parseInt(digits, 10) / 100,
+  )
+}
+const parseCurrency = (val: string) => parseInt(val.replace(/\D/g, '') || '0', 10) / 100
+
 export function AddNeedDialog({ onSuccess }: { onSuccess: () => void }) {
   const { user } = useAuth()
   const { toast } = useToast()
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [valor, setValor] = useState('')
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (!user) return
     setLoading(true)
 
-    const formData = new FormData(e.currentTarget)
-    const profile = formData.get('profile') as string
-    const description = formData.get('description') as string
-    const budget = formData.get('budget') as string
-    const region = formData.get('region') as string
+    const fd = new FormData(e.currentTarget)
+    const md = {
+      type: 'demanda',
+      user_id: user.id,
+      valor: parseCurrency(valor),
+      tipo_imovel: fd.get('tipo_imovel'),
+      endereco: fd.get('endereco'),
+      bairro: fd.get('bairro'),
+      quartos: fd.get('quartos'),
+      suites: fd.get('suites'),
+      tamanho_imovel: Number(fd.get('tamanho_imovel')),
+      tamanho_terreno: Number(fd.get('tamanho_terreno')),
+      nome_condominio: fd.get('nome_condominio'),
+      link_imovel: fd.get('link_imovel'),
+      description: fd.get('description'),
+    }
 
-    const { error } = await supabase.from('documents').insert({
-      content: description,
-      metadata: {
-        type: 'demanda',
-        user_id: user.id,
-        profile,
-        budget,
-        region,
-      },
-    })
+    const content = `Busca: ${md.tipo_imovel}\nBairro: ${md.bairro}\nEndereço: ${md.endereco}\nValor Max: R$ ${md.valor}\nQuartos: ${md.quartos}\nDetalhes: ${md.description}`
+
+    const { error } = await supabase.from('documents').insert({ content, metadata: md })
 
     setLoading(false)
     if (error) {
       toast({
         title: 'Erro',
-        description: 'Falha ao publicar necessidade. Tente novamente.',
+        description: 'Falha ao publicar necessidade.',
         variant: 'destructive',
       })
     } else {
       toast({
         title: 'Sucesso',
-        description: 'Demanda publicada no Radar! Você será notificado se houver match.',
+        description: 'Demanda publicada!',
         className: 'bg-card border-primary/50 text-white',
       })
       setOpen(false)
@@ -71,38 +92,104 @@ export function AddNeedDialog({ onSuccess }: { onSuccess: () => void }) {
           <PlusCircle className="w-4 h-4 mr-2" /> Postar Demanda
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[450px]">
+      <DialogContent className="sm:max-w-[700px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Publicar Nova Necessidade</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4 mt-4">
-          <div className="space-y-2">
-            <Label htmlFor="profile">Perfil da Necessidade</Label>
-            <Input
-              id="profile"
-              name="profile"
-              required
-              placeholder="Ex: Cliente busca apto 3 suítes"
-            />
-          </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="budget">Orçamento (Budget)</Label>
-              <Input id="budget" name="budget" required placeholder="Ex: Até R$ 3M" />
+              <Label>Tipo de Imóvel</Label>
+              <Select name="tipo_imovel" required defaultValue="Apartamento">
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {['Apartamento', 'Cobertura', 'Casa', 'Terreno', 'Sala Comercial'].map((o) => (
+                    <SelectItem key={o} value={o}>
+                      {o}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="region">Região de Interesse</Label>
-              <Input id="region" name="region" required placeholder="Ex: Itaim Bibi ou Moema" />
+              <Label>Orçamento Máximo</Label>
+              <Input
+                required
+                placeholder="R$ 0,00"
+                value={valor}
+                onChange={(e) => setValor(formatCurrency(e.target.value))}
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label>Região / Rua Preferencial</Label>
+              <Input name="endereco" required placeholder="Ex: Av. Faria Lima" />
+            </div>
+            <div className="space-y-2">
+              <Label>Bairros de Interesse</Label>
+              <Input name="bairro" required placeholder="Ex: Itaim Bibi" />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="space-y-2">
+              <Label>Quartos (Mín)</Label>
+              <Select name="quartos" required defaultValue="1">
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {['1', '2', '3', '4', '5 ou mais'].map((o) => (
+                    <SelectItem key={o} value={o}>
+                      {o}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label>Suítes (Mín)</Label>
+              <Select name="suites" required defaultValue="1">
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {['1', '2', '3', '4', '5 ou mais'].map((o) => (
+                    <SelectItem key={o} value={o}>
+                      {o}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label>Área Mínima (m²)</Label>
+              <Input name="tamanho_imovel" type="number" required placeholder="120" />
+            </div>
+            <div className="space-y-2">
+              <Label>Terreno Mínimo (m²)</Label>
+              <Input name="tamanho_terreno" type="number" required placeholder="200" />
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label>Condomínio (Opcional)</Label>
+              <Input name="nome_condominio" placeholder="Ex: Condomínio Jardim" />
+            </div>
+            <div className="space-y-2">
+              <Label>Link de Referência (Opcional)</Label>
+              <Input name="link_imovel" placeholder="https://" />
             </div>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="description">Descrição Detalhada</Label>
+            <Label>Descrição Detalhada</Label>
             <Textarea
-              id="description"
               name="description"
               required
-              placeholder="Detalhes adicionais, restrições ou preferências do cliente..."
-              className="resize-none h-24"
+              placeholder="Preferências adicionais..."
+              className="h-20"
             />
           </div>
           <Button type="submit" className="w-full" disabled={loading}>
