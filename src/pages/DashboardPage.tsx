@@ -8,6 +8,9 @@ import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { AmbassadorWidget } from '@/components/AmbassadorWidget'
 import { FounderExpiryBanner } from '@/components/FounderExpiryBanner'
+import { PortfolioTabs } from '@/components/dashboard/PortfolioTabs'
+import { AddPropertyDialog } from '@/components/dashboard/AddPropertyDialog'
+import { AddNeedDialog } from '@/components/dashboard/AddNeedDialog'
 import {
   Activity,
   GitMerge,
@@ -32,7 +35,9 @@ export default function DashboardPage() {
 
   const [profileName, setProfileName] = useState<string>('')
   const [isLoadingName, setIsLoadingName] = useState(true)
+  const [refreshKey, setRefreshKey] = useState(0)
 
+  const triggerRefresh = () => setRefreshKey((prev) => prev + 1)
   const updateSugRef = useRef(updateSuggestionStatus)
 
   useEffect(() => {
@@ -71,8 +76,7 @@ export default function DashboardPage() {
       if (!error && data?.full_name) {
         setProfileName(data.full_name)
       } else {
-        // Fallback gracefully
-        setProfileName(authUser.email ? authUser.email.split('@')[0] : 'Administrador')
+        setProfileName(authUser.email || 'Usuário')
       }
       setIsLoadingName(false)
     }
@@ -165,12 +169,7 @@ export default function DashboardPage() {
       <div className="flex flex-col md:flex-row gap-6 md:items-center justify-between">
         <div>
           <h2 className="text-3xl font-bold tracking-tight text-white flex items-center flex-wrap gap-2 min-h-9">
-            Dashboard,{' '}
-            {isLoadingName ? (
-              <Skeleton className="h-8 w-32 bg-muted/20" />
-            ) : (
-              profileName.split(' ')[0]
-            )}
+            Bem-vindo, {isLoadingName ? <Skeleton className="h-8 w-32 bg-muted/20" /> : profileName}
           </h2>
           <p className="text-muted-foreground mt-2">
             Plano atual:{' '}
@@ -179,9 +178,15 @@ export default function DashboardPage() {
             </Badge>
           </p>
         </div>
+        <div className="flex flex-wrap items-center gap-3">
+          <AddPropertyDialog onSuccess={triggerRefresh} />
+          <AddNeedDialog onSuccess={triggerRefresh} />
+        </div>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-3">
+      <PortfolioTabs refreshKey={refreshKey} />
+
+      <div className="grid gap-6 md:grid-cols-3 pt-6 border-t border-border/50">
         <div className="md:col-span-2 space-y-6">
           <Card className="bg-card border-primary/30 shadow-[0_0_30px_rgba(201,168,76,0.1)] relative overflow-hidden">
             <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-[80px] pointer-events-none" />
