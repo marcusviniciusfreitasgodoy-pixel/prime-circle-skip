@@ -3,7 +3,7 @@
     "send-whatsapp": 13,
     "send-email": 11,
     "functions": 11,
-    "welcome-webhook": 7,
+    "welcome-webhook": 8,
     "support-ticket-webhook": 1
   }
 }

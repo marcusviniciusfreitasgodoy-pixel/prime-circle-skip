@@ -1,4 +1,5 @@
-import { Link, Navigate } from 'react-router-dom'
+import { useEffect } from 'react'
+import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { PartyPopper, CheckCircle2, Loader2 } from 'lucide-react'
 import { useAuth } from '@/hooks/use-auth'
@@ -7,6 +8,17 @@ import useAppStore from '@/stores/main'
 export default function WelcomePage() {
   const { user, loading } = useAuth()
   const { user: mockUser } = useAppStore()
+  const navigate = useNavigate()
+
+  // Auto-redirect valid users to dashboard directly after successful confirmation
+  useEffect(() => {
+    if (!loading && (user || mockUser)) {
+      const timer = setTimeout(() => {
+        navigate('/dashboard', { replace: true })
+      }, 3500)
+      return () => clearTimeout(timer)
+    }
+  }, [user, mockUser, loading, navigate])
 
   if (loading) {
     return (
@@ -42,15 +54,15 @@ export default function WelcomePage() {
           Seu cadastro foi validado com sucesso e agora você faz parte da nossa rede exclusiva.
         </p>
 
-        <p className="text-muted-foreground text-base leading-relaxed mb-8 relative z-10">
-          Explore seu dashboard para encontrar novos matches e oportunidades de parceria.
+        <p className="text-muted-foreground text-sm mb-8 relative z-10">
+          Redirecionando para o seu dashboard...
         </p>
 
         <Button
           asChild
           className="w-full gold-gradient gold-glow text-black font-bold h-14 text-lg relative z-10"
         >
-          <Link to="/dashboard">Acessar meu Dashboard</Link>
+          <Link to="/dashboard">Acessar meu Dashboard Agora</Link>
         </Button>
       </div>
     </div>
