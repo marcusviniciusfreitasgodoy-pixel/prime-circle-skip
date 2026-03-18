@@ -114,7 +114,18 @@ export default function AuthConfirmPage() {
       const { error } = await signIn(cleanEmail, password)
 
       if (error) {
-        toast.error('Credenciais inválidas.')
+        const authError = error as any
+        if (
+          (authError.status === 400 && authError.code === 'email_not_confirmed') ||
+          authError.message?.includes('Email not confirmed') ||
+          authError.code === 'email_not_confirmed'
+        ) {
+          toast.error(
+            'Email not confirmed. Please check your inbox and confirm your email address before logging in.',
+          )
+        } else {
+          toast.error('Credenciais inválidas.')
+        }
         setIsLoading(false)
         return
       }
@@ -122,8 +133,18 @@ export default function AuthConfirmPage() {
       login(cleanEmail, 'password')
       const dest = location.state?.from?.pathname || '/dashboard'
       navigate(dest)
-    } catch (err) {
-      toast.error('Ocorreu um erro ao fazer login.')
+    } catch (err: any) {
+      if (
+        (err?.status === 400 && err?.code === 'email_not_confirmed') ||
+        err?.message?.includes('Email not confirmed') ||
+        err?.code === 'email_not_confirmed'
+      ) {
+        toast.error(
+          'Email not confirmed. Please check your inbox and confirm your email address before logging in.',
+        )
+      } else {
+        toast.error('Ocorreu um erro ao fazer login.')
+      }
     } finally {
       setIsLoading(false)
     }
