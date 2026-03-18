@@ -13,7 +13,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 import { useToast } from '@/hooks/use-toast'
-import { Search } from 'lucide-react'
+import { PlusCircle } from 'lucide-react'
 
 export function AddNeedDialog({ onSuccess }: { onSuccess: () => void }) {
   const { user } = useAuth()
@@ -53,7 +53,8 @@ export function AddNeedDialog({ onSuccess }: { onSuccess: () => void }) {
     } else {
       toast({
         title: 'Sucesso',
-        description: 'Necessidade publicada com sucesso!',
+        description: 'Demanda publicada no Radar! Você será notificado se houver match.',
+        className: 'bg-card border-primary/50 text-white',
       })
       setOpen(false)
       onSuccess()
@@ -65,9 +66,9 @@ export function AddNeedDialog({ onSuccess }: { onSuccess: () => void }) {
       <DialogTrigger asChild>
         <Button
           variant="outline"
-          className="border-primary/50 text-primary hover:bg-primary/10 shadow-[0_0_15px_rgba(201,168,76,0.1)]"
+          className="border-primary/50 text-primary hover:bg-primary/10 shadow-[0_0_15px_rgba(201,168,76,0.1)] font-semibold"
         >
-          <Search className="w-4 h-4 mr-2" /> Publicar Necessidade
+          <PlusCircle className="w-4 h-4 mr-2" /> Postar Demanda
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[450px]">
@@ -105,7 +106,7 @@ export function AddNeedDialog({ onSuccess }: { onSuccess: () => void }) {
             />
           </div>
           <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? 'Salvando...' : 'Publicar Necessidade'}
+            {loading ? 'Publicando...' : 'Publicar Demanda'}
           </Button>
         </form>
       </DialogContent>

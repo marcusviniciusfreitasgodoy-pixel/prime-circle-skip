@@ -10,7 +10,7 @@ import { AmbassadorWidget } from '@/components/AmbassadorWidget'
 import { FounderExpiryBanner } from '@/components/FounderExpiryBanner'
 import { PortfolioTabs } from '@/components/dashboard/PortfolioTabs'
 import { AddPropertyDialog } from '@/components/dashboard/AddPropertyDialog'
-import { AddNeedDialog } from '@/components/dashboard/AddNeedDialog'
+import { OpportunityRadar } from '@/components/dashboard/OpportunityRadar'
 import {
   Activity,
   GitMerge,
@@ -20,6 +20,7 @@ import {
   Copy,
   Crown,
   ChevronRight,
+  ShieldCheck,
 } from 'lucide-react'
 import useAppStore from '@/stores/main'
 import { useToast } from '@/hooks/use-toast'
@@ -34,6 +35,7 @@ export default function DashboardPage() {
   const navigate = useNavigate()
 
   const [profileName, setProfileName] = useState<string>('')
+  const [profileScore, setProfileScore] = useState<number>(0)
   const [isLoadingName, setIsLoadingName] = useState(true)
   const [refreshKey, setRefreshKey] = useState(0)
 
@@ -44,7 +46,7 @@ export default function DashboardPage() {
     updateSugRef.current = updateSuggestionStatus
   }, [updateSuggestionStatus])
 
-  // Demo: Automatically approve a specific pending suggestion to show the notification AC working end-to-end
+  // Demo: Automatically approve a specific pending suggestion
   useEffect(() => {
     const pendingSug = suggestions.find((s) => s.id === '2' && s.status === 'Em Análise')
     if (pendingSug && user?.id === 'user1') {
@@ -67,14 +69,15 @@ export default function DashboardPage() {
       setIsLoadingName(true)
       const { data, error } = await supabase
         .from('profiles')
-        .select('full_name')
+        .select('full_name, reputation_score')
         .eq('id', authUser.id)
         .single()
 
       if (!mounted) return
 
-      if (!error && data?.full_name) {
-        setProfileName(data.full_name)
+      if (!error && data) {
+        setProfileName(data.full_name || authUser.email || 'Usuário')
+        setProfileScore(data.reputation_score || 0)
       } else {
         setProfileName(authUser.email || 'Usuário')
       }
@@ -88,13 +91,10 @@ export default function DashboardPage() {
     }
   }, [authUser])
 
-  // Chapter Isolation Enforced: Only see data from the same chapter
   const chapterListings = listings.filter((l) => l.chapter === user?.chapter)
   const chapterNeeds = needs.filter((n) => n.chapter === user?.chapter)
-
   const myListings = chapterListings.filter((l) => l.ownerId === user?.id).length
   const activeMatches = matches.filter((m) => m.status !== 'Fechado')
-
   const referralLink = `${window.location.origin}/apply?ref=${user?.id || 'founder-123'}`
 
   const copyLink = () => {
@@ -158,10 +158,10 @@ export default function DashboardPage() {
           Chapter {user?.chapter} — Engajamento Exigido
         </AlertTitle>
         <AlertDescription className="text-muted-foreground mt-2 ml-2 leading-relaxed">
-          Seu acesso e status de Embaixador dependem de atividade constante na plataforma. A
-          inatividade superior a 30 dias gerará avisos, podendo resultar em suspensão do plano.
+          Seu acesso e status dependem de atividade constante na plataforma. A inatividade superior
+          a 60 dias poderá resultar em suspensão.
           <strong className="text-foreground block mt-1 font-medium">
-            Lembre-se: Prática obrigatória de 50/50 em todas as conexões.
+            Lembre-se: Prática inegociável de 50/50 em todas as conexões.
           </strong>
         </AlertDescription>
       </Alert>
@@ -170,21 +170,36 @@ export default function DashboardPage() {
         <div>
           <h2 className="text-3xl font-bold tracking-tight text-white flex items-center flex-wrap gap-2 min-h-9">
             Bem-vindo, {isLoadingName ? <Skeleton className="h-8 w-32 bg-muted/20" /> : profileName}
+            {!isLoadingName && profileScore >= 50 && (
+              <Badge className="ml-2 bg-primary/20 text-primary border-primary/30 hover:bg-primary/30 flex items-center gap-1 shadow-sm">
+                <ShieldCheck className="w-3 h-3" /> Elite Status
+              </Badge>
+            )}
           </h2>
-          <p className="text-muted-foreground mt-2">
-            Plano atual:{' '}
-            <Badge variant="outline" className="border-primary/50 text-primary">
-              {user?.plan}
-            </Badge>
-          </p>
+          <div className="text-muted-foreground mt-2 flex items-center flex-wrap gap-3">
+            <span>
+              Plano atual:{' '}
+              <Badge variant="outline" className="border-primary/50 text-primary">
+                {user?.plan}
+              </Badge>
+            </span>
+            <span className="text-sm border-l border-border pl-3 flex items-center gap-1">
+              PrimeCircle Score:{' '}
+              <strong className="text-white bg-secondary/80 px-2 py-0.5 rounded-md border border-border">
+                {isLoadingName ? '-' : profileScore}
+              </strong>
+            </span>
+          </div>
         </div>
         <div className="flex flex-wrap items-center gap-3">
           <AddPropertyDialog onSuccess={triggerRefresh} />
-          <AddNeedDialog onSuccess={triggerRefresh} />
         </div>
       </div>
 
       <PortfolioTabs refreshKey={refreshKey} />
+
+      {/* Opportunity Radar Section */}
+      <OpportunityRadar refreshKey={refreshKey} onAddNeed={triggerRefresh} />
 
       <div className="grid gap-6 md:grid-cols-3 pt-6 border-t border-border/50">
         <div className="md:col-span-2 space-y-6">
@@ -278,7 +293,6 @@ export default function DashboardPage() {
                       </Badge>
                     )}
                   </div>
-                  {/* Visual Funnel */}
                   <div className="flex items-center w-full justify-between mt-6 relative">
                     <div className="absolute top-1/2 left-0 w-full h-0.5 bg-secondary -translate-y-1/2 z-0" />
                     <div
@@ -299,7 +313,7 @@ export default function DashboardPage() {
                       </div>
                     ))}
                   </div>
-                  <div className="h-4" /> {/* Spacer for labels */}
+                  <div className="h-4" />
                 </div>
               )
             })}

@@ -5,29 +5,29 @@ import { ChevronRight, FileText, Search, Zap, Play, DollarSign } from 'lucide-re
 export function ProcessTimeline() {
   const steps = [
     {
-      icon: FileText,
-      title: 'Aplicação',
-      desc: 'Preenchimento do formulário inicial com seu histórico.',
+      icon: Search,
+      title: 'Admissão',
+      desc: 'Validação de CRECI e histórico para entrada na rede.',
     },
     {
-      icon: Search,
-      title: 'Análise Técnica',
-      desc: 'Avaliação de portfólio e background check detalhado.',
+      icon: FileText,
+      title: 'Private Listing',
+      desc: 'Publicação do seu portfólio de forma segura e restrita.',
     },
     {
       icon: Zap,
-      title: 'Acesso Imediato',
-      desc: 'Aprovação ágil e liberação instantânea de todo o ecossistema.',
+      title: 'Match Automático',
+      desc: 'Nossa IA cruza suas ofertas com demandas ativas.',
     },
     {
       icon: Play,
-      title: 'Onboarding',
-      desc: 'Acesso à tecnologia de match e imersão na rede.',
+      title: 'Negociação Direta',
+      desc: 'Conexão direta com o corretor parceiro para agendamento.',
     },
     {
       icon: DollarSign,
-      title: 'Fechamento',
-      desc: 'Match realizado e primeira comissão 50/50 segura.',
+      title: 'Sucesso Mútuo',
+      desc: 'Fechamento do negócio com split obrigatório de 50/50.',
     },
   ]
 
@@ -36,11 +36,11 @@ export function ProcessTimeline() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl relative z-10">
         <div className="text-center mb-20">
           <h2 className="text-3xl md:text-5xl font-bold mb-4">
-            Seu Caminho até a <span className="text-primary">Elite</span>
+            O Ciclo de <span className="text-primary">Sucesso</span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Um processo estruturado para garantir a excelência e liberação imediata da
-            infraestrutura para profissionais qualificados.
+            A jornada do corretor de alto padrão dentro da nossa infraestrutura: do cadastro à
+            comissão garantida.
           </p>
         </div>
 
@@ -55,9 +55,9 @@ export function ProcessTimeline() {
             {steps.map((step, index) => (
               <div
                 key={index}
-                className="relative flex md:flex-col items-start md:items-center gap-6 md:gap-4"
+                className="relative flex md:flex-col items-start md:items-center gap-6 md:gap-4 group"
               >
-                <div className="relative z-10 w-16 h-16 rounded-full bg-background border-2 border-primary shadow-[0_0_15px_rgba(201,168,76,0.3)] flex items-center justify-center shrink-0 mx-auto">
+                <div className="relative z-10 w-16 h-16 rounded-full bg-background border-2 border-primary shadow-[0_0_15px_rgba(201,168,76,0.2)] flex items-center justify-center shrink-0 mx-auto group-hover:scale-110 transition-transform">
                   <step.icon className="w-6 h-6 text-primary" />
                 </div>
                 <div className="pt-2 md:pt-6 md:text-center">
@@ -73,7 +73,11 @@ export function ProcessTimeline() {
         </div>
 
         <div className="mt-20 text-center">
-          <Button size="lg" asChild className="h-14 px-10 shadow-[0_0_20px_rgba(201,168,76,0.2)]">
+          <Button
+            size="lg"
+            asChild
+            className="h-14 px-10 shadow-[0_0_20px_rgba(201,168,76,0.2)] hover:scale-105 transition-transform duration-300"
+          >
             <Link to="/apply">
               Iniciar Aplicação <ChevronRight className="ml-2 w-5 h-5" />
             </Link>

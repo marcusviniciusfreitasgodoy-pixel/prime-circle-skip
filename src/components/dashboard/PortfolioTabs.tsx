@@ -44,7 +44,7 @@ export function PortfolioTabs({ refreshKey }: { refreshKey: number }) {
             Meus Imóveis ({properties.length})
           </TabsTrigger>
           <TabsTrigger value="necessidades" className="data-[state=active]:bg-card rounded-sm h-10">
-            Minhas Necessidades ({needs.length})
+            Minhas Publicações ({needs.length})
           </TabsTrigger>
         </TabsList>
 
@@ -52,7 +52,7 @@ export function PortfolioTabs({ refreshKey }: { refreshKey: number }) {
           {loading ? (
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {[1, 2, 3].map((i) => (
-                <Skeleton key={i} className="h-40 w-full bg-muted/20" />
+                <Skeleton key={i} className="h-40 w-full bg-card rounded-xl border border-border" />
               ))}
             </div>
           ) : properties.length === 0 ? (
@@ -92,9 +92,7 @@ export function PortfolioTabs({ refreshKey }: { refreshKey: number }) {
                       <MapPin className="w-4 h-4 text-primary/70 shrink-0" />
                       <span className="truncate">{p.metadata.location}</span>
                     </div>
-                    <p className="text-sm text-muted-foreground line-clamp-2">
-                      {p.content?.split('\n\n').slice(1).join('\n\n') || p.content}
-                    </p>
+                    <p className="text-sm text-muted-foreground line-clamp-2">{p.content}</p>
                   </CardContent>
                 </Card>
               ))}
@@ -106,7 +104,7 @@ export function PortfolioTabs({ refreshKey }: { refreshKey: number }) {
           {loading ? (
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {[1, 2, 3].map((i) => (
-                <Skeleton key={i} className="h-40 w-full bg-muted/20" />
+                <Skeleton key={i} className="h-40 w-full bg-card rounded-xl border border-border" />
               ))}
             </div>
           ) : needs.length === 0 ? (

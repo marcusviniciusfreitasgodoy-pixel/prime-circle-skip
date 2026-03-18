@@ -13,51 +13,53 @@ export function CriteriaSection() {
             Critérios de <span className="text-primary">Admissão</span>
           </h2>
           <p className="text-base sm:text-lg text-zinc-400">
-            O Prime Circle é um clube de negócios e networking exclusivo. Nossa curadoria garante
-            que apenas profissionais com histórico comprovado integrem nossa rede.
+            O Prime Circle é um clube de negócios e networking restrito. Nossa curadoria rigorosa
+            garante que apenas profissionais qualificados integrem a rede.
           </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
           <div className="lg:col-span-5 space-y-4 sm:space-y-6 order-2 lg:order-1">
-            <Card className="p-5 sm:p-6 bg-zinc-900/50 border-zinc-800 backdrop-blur text-left hover:bg-zinc-800/80 transition-colors shadow-lg">
+            <Card className="p-5 sm:p-6 bg-zinc-900/50 border-zinc-800 backdrop-blur text-left hover:bg-zinc-800/80 transition-colors shadow-lg group">
               <div className="flex gap-4">
-                <Shield className="w-8 h-8 text-primary shrink-0" />
+                <Shield className="w-8 h-8 text-primary shrink-0 group-hover:scale-110 transition-transform" />
                 <div>
                   <h3 className="font-semibold text-base sm:text-lg text-zinc-100">
-                    Reputação Ilibada
+                    Validação Profissional
                   </h3>
                   <p className="text-zinc-400 mt-2 text-xs sm:text-sm leading-relaxed">
-                    Análise criteriosa do histórico profissional no mercado imobiliário de luxo.
+                    Exigência obrigatória de CRECI ativo e análise criteriosa do histórico ilibado
+                    no mercado imobiliário.
                   </p>
                 </div>
               </div>
             </Card>
 
-            <Card className="p-5 sm:p-6 bg-zinc-900/50 border-zinc-800 backdrop-blur text-left hover:bg-zinc-800/80 transition-colors shadow-lg">
+            <Card className="p-5 sm:p-6 bg-zinc-900/50 border-zinc-800 backdrop-blur text-left hover:bg-zinc-800/80 transition-colors shadow-lg group">
               <div className="flex gap-4">
-                <Award className="w-8 h-8 text-primary shrink-0" />
+                <Award className="w-8 h-8 text-primary shrink-0 group-hover:scale-110 transition-transform" />
                 <div>
                   <h3 className="font-semibold text-base sm:text-lg text-zinc-100">
-                    Volume de Vendas
+                    Split Mandatório (50/50)
                   </h3>
                   <p className="text-zinc-400 mt-2 text-xs sm:text-sm leading-relaxed">
-                    Exigência de VGV mínimo comprovado nos últimos 24 meses em propriedades de alto
-                    padrão.
+                    Nossa regra de ouro inegociável: toda e qualquer parceria gerada na plataforma
+                    deve respeitar a divisão justa de 50/50 na comissão.
                   </p>
                 </div>
               </div>
             </Card>
 
-            <Card className="p-5 sm:p-6 bg-zinc-900/50 border-zinc-800 backdrop-blur text-left hover:bg-zinc-800/80 transition-colors shadow-lg">
+            <Card className="p-5 sm:p-6 bg-zinc-900/50 border-zinc-800 backdrop-blur text-left hover:bg-zinc-800/80 transition-colors shadow-lg group">
               <div className="flex gap-4">
-                <Lock className="w-8 h-8 text-primary shrink-0" />
+                <Lock className="w-8 h-8 text-primary shrink-0 group-hover:scale-110 transition-transform" />
                 <div>
                   <h3 className="font-semibold text-base sm:text-lg text-zinc-100">
-                    Indicação Exclusiva
+                    Governança de Atividade
                   </h3>
                   <p className="text-zinc-400 mt-2 text-xs sm:text-sm leading-relaxed">
-                    A entrada requer aprovação por membros ativos e análise da diretoria do clube.
+                    Para manter a liquidez alta, exigimos engajamento. Membros inativos por mais de
+                    60 dias perdem o acesso ao círculo privado.
                   </p>
                 </div>
               </div>
@@ -65,7 +67,6 @@ export function CriteriaSection() {
           </div>
 
           <div className="lg:col-span-7 relative w-full h-[350px] sm:h-[450px] lg:h-[600px] rounded-3xl overflow-hidden ring-1 ring-white/10 shadow-2xl order-1 lg:order-2">
-            {/* Using scale-110 inside an overflow-hidden wrapper conceals AI generation watermarks */}
             <img
               src={criteriaImg}
               alt="Membros do Prime Circle em reunião"

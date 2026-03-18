@@ -2,8 +2,11 @@ import { useEffect } from 'react'
 import { Navigate } from 'react-router-dom'
 import { HeroSection } from '@/components/home/HeroSection'
 import { ProblemSection } from '@/components/home/ProblemSection'
+import { MatchmakingShowcase } from '@/components/home/MatchmakingShowcase'
 import { NetworkSection } from '@/components/home/NetworkSection'
 import { NetworkDetailsSection } from '@/components/home/NetworkDetailsSection'
+import { ProcessTimeline } from '@/components/home/ProcessTimeline'
+import { RealtimeStats } from '@/components/home/RealtimeStats'
 import { PersonaSection } from '@/components/home/PersonaSection'
 import { CriteriaSection } from '@/components/home/CriteriaSection'
 import { CollaborationSection } from '@/components/home/CollaborationSection'
@@ -42,8 +45,11 @@ export default function Index() {
       <main className="flex-1">
         <HeroSection />
         <ProblemSection />
+        <MatchmakingShowcase />
         <NetworkSection />
         <NetworkDetailsSection />
+        <ProcessTimeline />
+        <RealtimeStats />
         <PersonaSection />
         <CriteriaSection />
         <CollaborationSection />

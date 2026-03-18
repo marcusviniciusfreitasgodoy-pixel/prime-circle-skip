@@ -34,7 +34,7 @@ export function AddPropertyDialog({ onSuccess }: { onSuccess: () => void }) {
     const propertyType = formData.get('propertyType') as string
 
     const { error } = await supabase.from('documents').insert({
-      content: `${title}\n\n${description}`,
+      content: description,
       metadata: {
         type: 'oferta',
         user_id: user.id,
@@ -55,7 +55,8 @@ export function AddPropertyDialog({ onSuccess }: { onSuccess: () => void }) {
     } else {
       toast({
         title: 'Sucesso',
-        description: 'Imóvel divulgado com sucesso!',
+        description: 'Imóvel publicado! Agora a rede já pode encontrar compatibilidades.',
+        className: 'bg-card border-primary/50 text-white',
       })
       setOpen(false)
       onSuccess()
