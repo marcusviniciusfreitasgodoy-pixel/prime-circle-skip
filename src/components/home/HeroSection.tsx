@@ -35,8 +35,8 @@ export function HeroSection() {
           className="mt-6 text-lg sm:text-xl md:text-2xl text-zinc-300 max-w-3xl mx-auto animate-fade-in-up drop-shadow-md leading-relaxed"
           style={{ animationDelay: '200ms' }}
         >
-          Uma rede privada para corretores selecionados da Barra da Tijuca — com demandas reais e
-          condições especiais fora dos portais
+          Uma rede privada e curada de corretores — dividida em Núcleos Regionais com demandas reais
+          e Imóveis Reservados fora dos portais.
         </p>
 
         <div
@@ -49,7 +49,7 @@ export function HeroSection() {
             className="h-14 px-8 text-base w-full sm:w-auto shadow-elevation hover:scale-105 transition-transform duration-300 gold-gradient text-black font-bold"
           >
             <Link to="/apply">
-              Quero fazer parte
+              Quero Participar
               <ArrowRight className="ml-2 h-5 w-5" />
             </Link>
           </Button>

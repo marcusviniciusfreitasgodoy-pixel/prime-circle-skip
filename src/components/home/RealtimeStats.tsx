@@ -33,7 +33,7 @@ export function RealtimeStats() {
             <h3 className="text-4xl lg:text-5xl font-extrabold text-white mb-2 drop-shadow-md">
               214
             </h3>
-            <p className="text-zinc-400 font-medium">Membros Elite Ativos</p>
+            <p className="text-zinc-400 font-medium">Membros com Status de Elite</p>
           </Card>
 
           <Card className="p-8 text-center bg-zinc-900/60 border-zinc-800 backdrop-blur hover:border-primary/50 transition-all duration-300 group shadow-lg hover:-translate-y-1">
@@ -41,7 +41,7 @@ export function RealtimeStats() {
             <h3 className="text-4xl lg:text-5xl font-extrabold text-white mb-2 drop-shadow-md">
               36h
             </h3>
-            <p className="text-zinc-400 font-medium">Tempo Médio de Match</p>
+            <p className="text-zinc-400 font-medium">Tempo Médio de Conexão</p>
           </Card>
         </div>
       </div>

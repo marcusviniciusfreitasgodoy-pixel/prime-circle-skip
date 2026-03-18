@@ -1,10 +1,7 @@
 {
-  "_versions": {
-    "send-whatsapp": 17,
-    "send-email": 12,
-    "functions": 14,
-    "welcome-webhook": 11,
-    "support-ticket-webhook": 1,
-    "match-property-webhook": 2
+  "compilerOptions": {
+    "allowJs": true,
+    "lib": ["deno.window"],
+    "strict": true
   }
 }

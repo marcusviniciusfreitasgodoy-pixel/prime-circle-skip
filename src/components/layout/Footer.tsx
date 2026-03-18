@@ -16,8 +16,8 @@ export function Footer() {
               </span>
             </Link>
             <p className="text-muted-foreground max-w-sm mb-6">
-              A infraestrutura privada definitiva para corretores de alto padrão da Barra da Tijuca.
-              Focado em liquidez e parcerias justas (50/50).
+              A infraestrutura privada definitiva para corretores de alto padrão. Focado em liquidez
+              e parcerias justas (50/50).
             </p>
           </div>
 
@@ -29,7 +29,7 @@ export function Footer() {
                   to="/apply"
                   className="text-muted-foreground hover:text-primary transition-colors"
                 >
-                  Solicitar Acesso
+                  Quero Participar
                 </Link>
               </li>
               <li>
@@ -37,7 +37,7 @@ export function Footer() {
                   to="/auth/confirm"
                   className="text-muted-foreground hover:text-primary transition-colors"
                 >
-                  Login
+                  Acesso Exclusivo
                 </Link>
               </li>
               <li>

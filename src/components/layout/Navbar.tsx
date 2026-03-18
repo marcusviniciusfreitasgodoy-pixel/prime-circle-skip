@@ -86,14 +86,14 @@ export function Navbar() {
             ) : (
               <>
                 <Button asChild variant="ghost" className="font-semibold">
-                  <Link to="/auth/confirm">Entrar</Link>
+                  <Link to="/auth/confirm">Acesso Exclusivo</Link>
                 </Button>
                 <Button
                   asChild
                   variant="default"
                   className="font-semibold shadow-[0_0_15px_rgba(201,168,76,0.2)] gold-gradient text-black"
                 >
-                  <Link to="/apply">Aplicar Agora</Link>
+                  <Link to="/apply">Quero Participar</Link>
                 </Button>
               </>
             )}

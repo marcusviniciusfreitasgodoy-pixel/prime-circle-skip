@@ -16,8 +16,8 @@ export function ProcessTimeline() {
     },
     {
       icon: Zap,
-      title: 'Conexão Automática',
-      desc: 'Nossa IA cruza suas ofertas com demandas ativas.',
+      title: 'Conexão Inteligente',
+      desc: 'Nossa IA cruza suas ofertas com demandas ativas no seu Núcleo Regional.',
     },
     {
       icon: Play,
