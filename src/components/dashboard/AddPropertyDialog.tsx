@@ -126,11 +126,11 @@ export function AddPropertyDialog({ onSuccess }: { onSuccess: () => void }) {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label>Rua/Avenida</Label>
-              <Input name="endereco" required placeholder="Ex: Av. Faria Lima" />
+              <Input name="endereco" required placeholder="Ex: Av. das Américas" />
             </div>
             <div className="space-y-2">
               <Label>Bairro</Label>
-              <Input name="bairro" required placeholder="Ex: Itaim Bibi" />
+              <Input name="bairro" required placeholder="Ex: Barra da Tijuca" />
             </div>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -176,7 +176,7 @@ export function AddPropertyDialog({ onSuccess }: { onSuccess: () => void }) {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label>Nome do Condomínio (Opcional)</Label>
-              <Input name="nome_condominio" placeholder="Ex: Condomínio Jardim" />
+              <Input name="nome_condominio" placeholder="Ex: Condomínio Península" />
             </div>
             <div className="space-y-2">
               <Label>Link do Imóvel (Opcional)</Label>

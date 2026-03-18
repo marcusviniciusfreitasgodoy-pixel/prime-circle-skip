@@ -126,11 +126,11 @@ export function AddNeedDialog({ onSuccess }: { onSuccess: () => void }) {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label>Região / Rua Preferencial</Label>
-              <Input name="endereco" required placeholder="Ex: Av. Faria Lima" />
+              <Input name="endereco" required placeholder="Ex: Av. Lúcio Costa" />
             </div>
             <div className="space-y-2">
               <Label>Bairros de Interesse</Label>
-              <Input name="bairro" required placeholder="Ex: Itaim Bibi" />
+              <Input name="bairro" required placeholder="Ex: Barra da Tijuca ou Recreio" />
             </div>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -176,7 +176,7 @@ export function AddNeedDialog({ onSuccess }: { onSuccess: () => void }) {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label>Condomínio (Opcional)</Label>
-              <Input name="nome_condominio" placeholder="Ex: Condomínio Jardim" />
+              <Input name="nome_condominio" placeholder="Ex: Condomínio Rio Mar" />
             </div>
             <div className="space-y-2">
               <Label>Link de Referência (Opcional)</Label>
