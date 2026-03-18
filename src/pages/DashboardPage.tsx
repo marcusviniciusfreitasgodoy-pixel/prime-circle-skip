@@ -58,37 +58,45 @@ export default function DashboardPage() {
       }
 
       setIsLoadingName(true)
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('full_name, reputation_score, status, avatar_url')
-        .eq('id', authUser.id)
-        .single()
 
-      if (!mounted) return
+      try {
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('full_name, reputation_score, status, avatar_url')
+          .eq('id', authUser.id)
+          .single()
 
-      if (!error && data) {
-        setProfileName(data.full_name || authUser.email || 'Usuário')
-        setProfileScore(data.reputation_score || 0)
-        setProfileStatus(data.status || 'active')
+        if (!mounted) return
 
-        if (data.avatar_url && data.avatar_url !== user?.avatar) {
-          updateUser({ avatar: data.avatar_url })
+        if (!error && data) {
+          setProfileName(data.full_name || authUser.email || 'Usuário')
+          setProfileScore(data.reputation_score || 0)
+          setProfileStatus(data.status || 'active')
+
+          if (data.avatar_url && data.avatar_url !== user?.avatar) {
+            updateUser({ avatar: data.avatar_url })
+          }
+        } else {
+          setProfileName(authUser.email || 'Usuário')
+          if (error) console.warn('Error fetching profile:', error)
         }
-      } else {
-        setProfileName(authUser.email || 'Usuário')
+      } catch (err) {
+        console.warn('Exception fetching profile data:', err)
+        if (mounted) setProfileName(authUser.email || 'Usuário')
       }
 
-      // Fetch dynamic referrals and tier with safe execution to prevent JSON parse errors on HEAD requests
+      // Fetch dynamic referrals and tier safely, avoiding HEAD request that causes JSON parse errors
       try {
-        const { count, error: countError } = await supabase
+        const { data: refData, error: countError } = await supabase
           .from('profiles')
-          .select('id', { count: 'exact', head: true })
+          .select('id')
           .eq('referral_code', authUser.id)
           .eq('status', 'active')
 
         if (countError) {
           console.warn('Error fetching referrals count:', countError)
-        } else if (mounted && count !== null) {
+        } else if (mounted && refData) {
+          const count = refData.length
           setReferralsCount(count)
           let tier: Tier = 'None'
           if (count >= 99) tier = 'Elite+'
@@ -105,17 +113,25 @@ export default function DashboardPage() {
 
       setIsLoadingName(false)
 
-      const { data: alerts } = await supabase
-        .from('notification_logs')
-        .select('id, message_body, created_at')
-        .eq('user_id', authUser.id)
-        .eq('channel', 'whatsapp')
-        .ilike('message_body', '%match perfeito%')
-        .order('created_at', { ascending: false })
-        .limit(3)
+      try {
+        const { data: alerts, error: alertsError } = await supabase
+          .from('notification_logs')
+          .select('id, message_body, created_at')
+          .eq('user_id', authUser.id)
+          .eq('channel', 'whatsapp')
+          .ilike('message_body', '%match perfeito%')
+          .order('created_at', { ascending: false })
+          .limit(3)
 
-      if (!mounted) return
-      if (alerts) setRecentMatchAlerts(alerts)
+        if (!mounted) return
+        if (alertsError) {
+          console.warn('Error fetching alerts:', alertsError)
+        } else if (alerts) {
+          setRecentMatchAlerts(alerts)
+        }
+      } catch (err) {
+        console.warn('Exception fetching alerts:', err)
+      }
     }
 
     fetchProfileData()
