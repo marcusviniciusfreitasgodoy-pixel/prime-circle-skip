@@ -16,6 +16,7 @@ import { toast } from 'sonner'
 import useAppStore, { SuggestionStatus } from '@/stores/main'
 import { sendTransactionalEmail, simulateBiWeeklyReview } from '@/lib/email'
 import { supabase } from '@/lib/supabase/client'
+import { cn } from '@/lib/utils'
 
 interface SupportTicket {
   id: string
@@ -193,12 +194,24 @@ export default function AdminPage() {
                     value={ticket.status}
                     onValueChange={(val) => handleTicketStatusChange(ticket.id, val)}
                   >
-                    <SelectTrigger className="w-[160px] bg-background border-border text-xs text-white h-9">
-                      <SelectValue />
+                    <SelectTrigger
+                      className={cn(
+                        'w-[160px] h-9 text-xs border font-medium transition-colors',
+                        ticket.status === 'open' &&
+                          'bg-destructive/10 text-destructive border-destructive/20 hover:bg-destructive/20',
+                        ticket.status === 'pending' &&
+                          'bg-yellow-500/10 text-yellow-500 border-yellow-500/20 hover:bg-yellow-500/20',
+                        ticket.status === 'resolved' &&
+                          'bg-green-500/10 text-green-500 border-green-500/20 hover:bg-green-500/20',
+                        !['open', 'pending', 'resolved'].includes(ticket.status) &&
+                          'bg-background border-border text-white',
+                      )}
+                    >
+                      <SelectValue placeholder="Status" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="open">Aberto</SelectItem>
-                      <SelectItem value="in_progress">Em Andamento</SelectItem>
+                      <SelectItem value="pending">Pendente</SelectItem>
                       <SelectItem value="resolved">Resolvido</SelectItem>
                     </SelectContent>
                   </Select>

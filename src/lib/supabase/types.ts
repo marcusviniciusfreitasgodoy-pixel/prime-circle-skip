@@ -184,6 +184,47 @@ export type Database = {
         }
         Relationships: []
       }
+      support_tickets: {
+        Row: {
+          created_at: string
+          email: string
+          full_name: string
+          id: string
+          message: string
+          status: string
+          subject: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          full_name: string
+          id?: string
+          message: string
+          status?: string
+          subject: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          full_name?: string
+          id?: string
+          message?: string
+          status?: string
+          subject?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'support_tickets_user_id_fkey'
+            columns: ['user_id']
+            isOneToOne: false
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -394,6 +435,15 @@ export const Constants = {
 //   referral_code: text (nullable)
 //   avatar_url: text (nullable)
 //   company_name: text (nullable)
+// Table: support_tickets
+//   id: uuid (not null, default: gen_random_uuid())
+//   user_id: uuid (nullable)
+//   full_name: text (not null)
+//   email: text (not null)
+//   subject: text (not null)
+//   message: text (not null)
+//   status: text (not null, default: 'open'::text)
+//   created_at: timestamp with time zone (not null, default: now())
 
 // --- CONSTRAINTS ---
 // Table: documents
@@ -412,6 +462,9 @@ export const Constants = {
 // Table: profiles
 //   FOREIGN KEY profiles_id_fkey: FOREIGN KEY (id) REFERENCES auth.users(id) ON DELETE CASCADE
 //   PRIMARY KEY profiles_pkey: PRIMARY KEY (id)
+// Table: support_tickets
+//   PRIMARY KEY support_tickets_pkey: PRIMARY KEY (id)
+//   FOREIGN KEY support_tickets_user_id_fkey: FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE SET NULL
 
 // --- ROW LEVEL SECURITY POLICIES ---
 // Table: documents
@@ -442,6 +495,14 @@ export const Constants = {
 //     WITH CHECK: (auth.uid() = id)
 //   Policy "Users can view own profile" (SELECT, PERMISSIVE) roles={authenticated}
 //     USING: (auth.uid() = id)
+// Table: support_tickets
+//   Policy "Admins can update tickets" (UPDATE, PERMISSIVE) roles={authenticated}
+//     USING: (EXISTS ( SELECT 1    FROM profiles   WHERE ((profiles.id = auth.uid()) AND (profiles.role = 'admin'::text))))
+//     WITH CHECK: (EXISTS ( SELECT 1    FROM profiles   WHERE ((profiles.id = auth.uid()) AND (profiles.role = 'admin'::text))))
+//   Policy "Admins can view all tickets" (SELECT, PERMISSIVE) roles={authenticated}
+//     USING: (EXISTS ( SELECT 1    FROM profiles   WHERE ((profiles.id = auth.uid()) AND (profiles.role = 'admin'::text))))
+//   Policy "Anyone can insert support tickets" (INSERT, PERMISSIVE) roles={public}
+//     WITH CHECK: true
 
 // --- DATABASE FUNCTIONS ---
 // FUNCTION get_user_id_by_email(text)
