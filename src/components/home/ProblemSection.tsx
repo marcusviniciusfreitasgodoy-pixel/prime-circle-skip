@@ -20,7 +20,9 @@ export function ProblemSection() {
             <div className="w-12 h-12 rounded-full bg-destructive/10 flex items-center justify-center mb-6">
               <EyeOff className="w-6 h-6 text-destructive" />
             </div>
-            <h3 className="text-xl font-semibold text-white mb-3">A Ineficiência dos Portais</h3>
+            <h3 className="text-xl font-semibold text-white mb-3">
+              Uma opção à Ineficiência dos Portais Imobiliários
+            </h3>
             <p className="text-muted-foreground">
               Publicar imóveis premium em portais abertos desvaloriza o ativo, atrai curiosos e
               desgasta a relação com o proprietário.
