@@ -14,19 +14,13 @@ export default function AuthConfirmPage() {
   const navigate = useNavigate()
   const location = useLocation()
   const { login, user: mockUser } = useAppStore()
-  const { signIn, signInWithOtp, user: authUser, loading: authLoading } = useAuth()
+  const { signIn, signInWithOtp, user: authUser, loading: authLoading, signOut } = useAuth()
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [verifyingProfile, setVerifyingProfile] = useState(false)
   const [cooldown, setCooldown] = useState(0)
-
-  useEffect(() => {
-    if (!authLoading && (authUser || mockUser)) {
-      const dest = location.state?.from?.pathname || '/dashboard'
-      navigate(dest, { replace: true })
-    }
-  }, [authUser, mockUser, authLoading, navigate, location])
 
   useEffect(() => {
     let timer: NodeJS.Timeout
@@ -35,6 +29,73 @@ export default function AuthConfirmPage() {
     }
     return () => clearInterval(timer)
   }, [cooldown])
+
+  useEffect(() => {
+    let mounted = true
+    let retryCount = 0
+    const maxRetries = 10
+
+    const checkProfileAndRedirect = async () => {
+      if (!authUser) {
+        if (mockUser && mounted) {
+          const dest = location.state?.from?.pathname || '/dashboard'
+          navigate(dest, { replace: true })
+        }
+        return
+      }
+
+      setVerifyingProfile(true)
+
+      const verifyProfile = async () => {
+        try {
+          const { data, error } = await supabase
+            .from('profiles')
+            .select('id')
+            .eq('id', authUser.id)
+            .single()
+
+          if (error && error.code === 'PGRST116') {
+            if (retryCount < maxRetries) {
+              retryCount++
+              if (mounted) {
+                setTimeout(verifyProfile, 1000)
+              }
+            } else {
+              if (mounted) {
+                setVerifyingProfile(false)
+                toast.error(
+                  'Seu perfil ainda está sendo criado. Por favor, aguarde e tente novamente.',
+                )
+                await signOut()
+              }
+            }
+          } else if (!error && data && mounted) {
+            const dest = location.state?.from?.pathname || '/dashboard'
+            navigate(dest, { replace: true })
+          } else if (error && mounted) {
+            setVerifyingProfile(false)
+            toast.error('Erro ao verificar perfil.')
+            console.error('Supabase error:', error)
+          }
+        } catch (err) {
+          console.error('Profile check error:', err)
+          if (mounted) {
+            setVerifyingProfile(false)
+          }
+        }
+      }
+
+      verifyProfile()
+    }
+
+    if (!authLoading && (authUser || mockUser)) {
+      checkProfileAndRedirect()
+    }
+
+    return () => {
+      mounted = false
+    }
+  }, [authUser, mockUser, authLoading, navigate, location, signOut])
 
   const handleMagicLink = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -138,8 +199,7 @@ export default function AuthConfirmPage() {
       }
 
       login(cleanEmail, 'password')
-      const dest = location.state?.from?.pathname || '/dashboard'
-      navigate(dest, { replace: true })
+      // Navigation is now handled by the useEffect after confirming profile exists
     } catch (err: any) {
       if (
         (err?.status === 400 && err?.code === 'email_not_confirmed') ||
@@ -158,10 +218,15 @@ export default function AuthConfirmPage() {
   }
 
   // Prevent flash of login screen while checking auth
-  if (authLoading || authUser || mockUser) {
+  if (authLoading || authUser || mockUser || verifyingProfile) {
     return (
       <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4">
         <Loader2 className="w-8 h-8 text-primary animate-spin" />
+        {verifyingProfile && (
+          <p className="text-muted-foreground mt-4 text-sm animate-pulse">
+            Sincronizando perfil...
+          </p>
+        )}
       </div>
     )
   }

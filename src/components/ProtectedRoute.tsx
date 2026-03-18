@@ -15,6 +15,8 @@ export function ProtectedRoute() {
 
   useEffect(() => {
     let mounted = true
+    let retryCount = 0
+    const maxRetries = 10
 
     const fetchProfile = async () => {
       if (!authUser) {
@@ -22,27 +24,39 @@ export function ProtectedRoute() {
         return
       }
 
-      try {
-        const { data, error } = await supabase
-          .from('profiles')
-          .select('accepted_terms')
-          .eq('id', authUser.id)
-          .single()
+      const tryFetch = async () => {
+        try {
+          const { data, error } = await supabase
+            .from('profiles')
+            .select('accepted_terms')
+            .eq('id', authUser.id)
+            .single()
 
-        if (error) {
-          console.error('Error fetching profile:', error)
-          if (error.code === 'PGRST116') {
-            // User profile not found, likely due to DB reset. Force sign out to invalidate session.
-            await signOut()
+          if (error) {
+            console.error('Error fetching profile:', error)
+            if (error.code === 'PGRST116') {
+              if (retryCount < maxRetries) {
+                retryCount++
+                if (mounted) setTimeout(tryFetch, 1000)
+              } else {
+                // User profile not found, likely due to DB reset. Force sign out to invalidate session.
+                await signOut()
+                if (mounted) setLoadingProfile(false)
+              }
+            } else {
+              if (mounted) setLoadingProfile(false)
+            }
+          } else if (mounted && data) {
+            setAcceptedTerms(data.accepted_terms ?? false)
+            setLoadingProfile(false)
           }
-        } else if (mounted && data) {
-          setAcceptedTerms(data.accepted_terms ?? false)
+        } catch (error) {
+          console.error('Unexpected error fetching profile:', error)
+          if (mounted) setLoadingProfile(false)
         }
-      } catch (error) {
-        console.error('Unexpected error fetching profile:', error)
-      } finally {
-        if (mounted) setLoadingProfile(false)
       }
+
+      tryFetch()
     }
 
     if (!authLoading) {
@@ -58,7 +72,9 @@ export function ProtectedRoute() {
     return (
       <div className="min-h-screen bg-background flex flex-col items-center justify-center">
         <Loader2 className="w-8 h-8 text-primary animate-spin mb-4" />
-        <p className="text-muted-foreground text-sm">Verificando credenciais...</p>
+        <p className="text-muted-foreground text-sm animate-pulse">
+          Verificando credenciais e sincronizando perfil...
+        </p>
       </div>
     )
   }
