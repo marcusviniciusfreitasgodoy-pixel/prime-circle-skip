@@ -19,7 +19,8 @@ export function NetworkDetailsSection() {
           </h2>
           <p className="text-lg text-zinc-400">
             Diferente de algoritmos automatizados, o Prime Circle foca na interação humana e na
-            inteligência de mercado dos melhores corretores em seus respectivos Núcleos Regionais.
+            inteligência de mercado dos melhores corretores em suas respectivas áreas de atuação e
+            especialização
           </p>
         </div>
 

@@ -29,7 +29,7 @@ export function CriteriaSection() {
                   </h3>
                   <p className="text-zinc-400 mt-2 text-xs sm:text-sm leading-relaxed">
                     Exigência obrigatória de CRECI ativo e análise criteriosa do histórico ilibado
-                    no mercado imobiliário.
+                    no mercado imobiliário, privilegiando os indicados por membros da comunidade.
                   </p>
                 </div>
               </div>

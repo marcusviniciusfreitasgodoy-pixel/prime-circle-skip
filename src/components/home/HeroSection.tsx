@@ -41,8 +41,8 @@ export function HeroSection() {
           className="mt-6 text-lg sm:text-xl md:text-2xl text-zinc-300 max-w-3xl mx-auto animate-fade-in-up drop-shadow-md leading-relaxed"
           style={{ animationDelay: '200ms' }}
         >
-          Uma rede privada e curada de corretores — dividida em Núcleos Regionais com demandas reais
-          e Imóveis Reservados fora dos portais.
+          Uma rede privada de corretores — dividida em Núcleos Regionais com demandas reais e
+          condições especiais fora dos portais.
         </p>
 
         <div

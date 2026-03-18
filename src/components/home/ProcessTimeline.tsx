@@ -79,7 +79,8 @@ export function ProcessTimeline() {
             className="h-14 px-10 shadow-[0_0_20px_rgba(201,168,76,0.2)] hover:scale-105 transition-transform duration-300"
           >
             <Link to="/apply">
-              Iniciar Aplicação <ChevronRight className="ml-2 w-5 h-5" />
+              Quero fazer parte
+              <ChevronRight className="ml-2 w-5 h-5" />
             </Link>
           </Button>
         </div>
