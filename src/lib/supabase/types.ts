@@ -464,6 +464,7 @@ export const Constants = {
 //   PRIMARY KEY profiles_pkey: PRIMARY KEY (id)
 // Table: support_tickets
 //   PRIMARY KEY support_tickets_pkey: PRIMARY KEY (id)
+//   CHECK support_tickets_status_check: CHECK ((status = ANY (ARRAY['open'::text, 'pending'::text, 'resolved'::text])))
 //   FOREIGN KEY support_tickets_user_id_fkey: FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE SET NULL
 
 // --- ROW LEVEL SECURITY POLICIES ---
