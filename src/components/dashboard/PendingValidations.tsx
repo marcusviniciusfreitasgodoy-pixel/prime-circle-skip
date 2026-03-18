@@ -20,7 +20,7 @@ export function PendingValidations() {
       setLoading(true)
       const { data: myProfile } = await supabase
         .from('profiles')
-        .select('id, reputation_score, role')
+        .select('id, reputation_score, role, plan, status, validated_by, referral_code')
         .eq('id', user.id)
         .single()
 
@@ -79,10 +79,21 @@ export function PendingValidations() {
 
   if (loading) return null
 
-  // Check if user is eligible to validate others (score > 80 or admin)
-  const isEligible = myProfileData?.role === 'admin' || (myProfileData?.reputation_score ?? 0) > 80
+  // Check if user is eligible to validate others (score > 80 or admin or Founder)
+  const isEligible =
+    myProfileData?.role === 'admin' ||
+    (myProfileData?.reputation_score ?? 0) > 80 ||
+    myProfileData?.plan === 'Founder'
 
   if (!isEligible) {
+    const hasReferralOrValidation =
+      myProfileData?.status === 'active' ||
+      !!myProfileData?.validated_by ||
+      !!myProfileData?.referral_code
+    const showBlockedMessage = myProfileData?.plan !== 'Founder' && !hasReferralOrValidation
+
+    if (!showBlockedMessage) return null
+
     return (
       <Card className="bg-card border-red-900/30 bg-red-950/10 mb-8 animate-fade-in-up">
         <CardHeader className="pb-4">

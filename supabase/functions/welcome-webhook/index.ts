@@ -36,7 +36,7 @@ Deno.serve(async (req: Request) => {
         const companyName = profile.company_name || 'sua imobiliária'
         const region = profile.region || 'sua região'
 
-        // Clean and format WhatsApp number for API (remove non-digits, add country code if local)
+        // Clean and format WhatsApp number for API
         let recipientPhone = profile.whatsapp_number
         if (recipientPhone) {
           recipientPhone = recipientPhone.replace(/\D/g, '')
@@ -81,9 +81,9 @@ Deno.serve(async (req: Request) => {
         }
 
         const defaultWaContent =
-          'Olá {{full_name}}! 🚀 Bem-vindo à Prime Circle. Seu cadastro foi recebido com sucesso. Estamos muito felizes em ter você em nossa rede exclusiva de parcerias imobiliárias. Em breve entraremos em contato!'
+          'Olá {{full_name}}! 🚀 Bem-vindo à Prime Circle. Seu cadastro foi recebido com sucesso. Estamos muito felizes em ter você em nossa rede exclusiva de parcerias imobiliárias.'
         const defaultEmailContent =
-          'Assunto: Bem-vindo à Prime Circle! 🏠\n\nOlá {{full_name}}, bem-vindo à Prime Circle! Agora que sua conta foi criada, utilize o link abaixo para acessar seu painel exclusivo e começar a gerar parcerias.\n\nAcesse: https://prime-circle-migration-fd549.goskip.app/dashboard\n\nPor favor, certifique-se de confirmar o seu cadastro através do e-mail de verificação que enviamos separadamente, caso ainda não o tenha feito.\n\nBoas vendas,\nEquipe Prime Circle'
+          'Assunto: Bem-vindo à Prime Circle! 🏠\n\nOlá {{full_name}},\n\nBem-vindo à Prime Circle! Agora que sua conta foi criada, utilize o link abaixo para acessar seu painel exclusivo e começar a gerar parcerias.\n\nAcesse: https://prime-circle-migration-fd549.goskip.app/dashboard\n\nBoas vendas,\nEquipe Prime Circle'
 
         const buildMessage = (content: string) => {
           return content
