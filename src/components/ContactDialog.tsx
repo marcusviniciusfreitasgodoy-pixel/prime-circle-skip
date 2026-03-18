@@ -61,8 +61,8 @@ export function ContactDialog({ children }: ContactDialogProps) {
   useEffect(() => {
     if (open) {
       form.reset({
-        name: profileUser?.full_name || authUser?.user_metadata?.full_name || '',
-        email: authUser?.email || '',
+        name: profileUser?.name || authUser?.user_metadata?.full_name || '',
+        email: profileUser?.email || authUser?.email || '',
         subject: '',
         message: '',
       })
@@ -72,16 +72,43 @@ export function ContactDialog({ children }: ContactDialogProps) {
   async function onSubmit(values: FormValues) {
     setIsLoading(true)
     try {
-      const { error } = await supabase.functions.invoke('send-email', {
+      // 1. Insert into database
+      const { error: dbError } = await supabase.from('support_tickets' as any).insert({
+        user_id: authUser?.id || null,
+        full_name: values.name,
+        email: values.email,
+        subject: values.subject,
+        message: values.message,
+        status: 'open',
+      })
+
+      if (dbError) throw dbError
+
+      // 2. Notify Admin
+      const { error: adminError } = await supabase.functions.invoke('send-email', {
         body: {
           to: 'contato@primecircle.app.br',
           subject: `[Contato Plataforma] ${values.subject}`,
           text: `Nome: ${values.name}\nE-mail: ${values.email}\n\nMensagem:\n${values.message}`,
-          user_id: authUser?.id,
+          user_id: authUser?.id || undefined,
         },
       })
 
-      if (error) throw error
+      if (adminError) throw adminError
+
+      // 3. Auto-reply to User
+      const { error: replyError } = await supabase.functions.invoke('send-email', {
+        body: {
+          to: values.email,
+          subject: 'Recebemos sua mensagem - Prime Circle',
+          text: `Olá ${values.name},\n\nRecebemos sua mensagem referente a "${values.subject}".\nNossa equipe analisará sua solicitação e retornará o contato o mais breve possível.\n\nAtenciosamente,\nEquipe Prime Circle`,
+          user_id: authUser?.id || undefined,
+        },
+      })
+
+      if (replyError) {
+        console.warn('Auto-reply failed to send, but ticket was registered:', replyError)
+      }
 
       toast({
         title: 'Sucesso!',
@@ -91,7 +118,7 @@ export function ContactDialog({ children }: ContactDialogProps) {
       setOpen(false)
       form.reset()
     } catch (error) {
-      console.error('Error sending contact email:', error)
+      console.error('Error processing contact request:', error)
       toast({
         title: 'Erro',
         description: 'Erro ao enviar mensagem. Por favor, tente novamente mais tarde.',

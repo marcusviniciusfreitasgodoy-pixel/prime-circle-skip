@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -14,6 +15,18 @@ import { Check, X } from 'lucide-react'
 import { toast } from 'sonner'
 import useAppStore, { SuggestionStatus } from '@/stores/main'
 import { sendTransactionalEmail, simulateBiWeeklyReview } from '@/lib/email'
+import { supabase } from '@/lib/supabase/client'
+
+interface SupportTicket {
+  id: string
+  user_id: string | null
+  full_name: string
+  email: string
+  subject: string
+  message: string
+  status: string
+  created_at: string
+}
 
 export default function AdminPage() {
   const {
@@ -25,7 +38,23 @@ export default function AdminPage() {
     updateSuggestionStatus,
     enforceInactivity,
   } = useAppStore()
+
+  const [tickets, setTickets] = useState<SupportTicket[]>([])
   const pendingRequests = candidates.filter((c) => c.status === 'pending')
+
+  useEffect(() => {
+    const fetchTickets = async () => {
+      const { data, error } = await supabase
+        .from('support_tickets' as any)
+        .select('*')
+        .order('created_at', { ascending: false })
+
+      if (!error && data) {
+        setTickets(data)
+      }
+    }
+    fetchTickets()
+  }, [])
 
   const handleAction = async (
     id: string,
@@ -43,12 +72,26 @@ export default function AdminPage() {
     }
   }
 
+  const handleTicketStatusChange = async (ticketId: string, newStatus: string) => {
+    const { error } = await supabase
+      .from('support_tickets' as any)
+      .update({ status: newStatus })
+      .eq('id', ticketId)
+
+    if (!error) {
+      setTickets((prev) => prev.map((t) => (t.id === ticketId ? { ...t, status: newStatus } : t)))
+      toast.success('Status do chamado atualizado.')
+    } else {
+      toast.error('Erro ao atualizar status do chamado.')
+    }
+  }
+
   return (
     <div className="space-y-6 animate-fade-in-up pb-8">
       <div>
         <h2 className="text-2xl font-bold text-white">Governança & Admin</h2>
         <p className="text-muted-foreground text-sm">
-          Review manual, logs de status, sugestões e monitoramento.
+          Review manual, logs de status, chamados e monitoramento.
         </p>
       </div>
 
@@ -56,6 +99,9 @@ export default function AdminPage() {
         <TabsList className="bg-card border border-border flex-wrap justify-start h-auto p-1 gap-1">
           <TabsTrigger value="requests" className="data-[state=active]:bg-secondary">
             Manual Review ({pendingRequests.length})
+          </TabsTrigger>
+          <TabsTrigger value="tickets" className="data-[state=active]:bg-secondary">
+            Chamados
           </TabsTrigger>
           <TabsTrigger value="suggestions" className="data-[state=active]:bg-secondary">
             Sugestões
@@ -129,6 +175,47 @@ export default function AdminPage() {
           ))}
           {pendingRequests.length === 0 && (
             <p className="text-muted-foreground">Nenhuma solicitação pendente de revisão.</p>
+          )}
+        </TabsContent>
+
+        <TabsContent value="tickets" className="mt-6 space-y-4">
+          {tickets.map((ticket) => (
+            <Card key={ticket.id} className="bg-secondary border-border">
+              <CardContent className="p-5 flex flex-col gap-4">
+                <div className="flex flex-col md:flex-row justify-between items-start gap-4">
+                  <div>
+                    <h3 className="font-semibold text-white text-lg">{ticket.subject}</h3>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      De: <span className="text-white">{ticket.full_name}</span> ({ticket.email})
+                    </p>
+                  </div>
+                  <Select
+                    value={ticket.status}
+                    onValueChange={(val) => handleTicketStatusChange(ticket.id, val)}
+                  >
+                    <SelectTrigger className="w-[160px] bg-background border-border text-xs text-white h-9">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="open">Aberto</SelectItem>
+                      <SelectItem value="in_progress">Em Andamento</SelectItem>
+                      <SelectItem value="resolved">Resolvido</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="bg-background/50 p-4 rounded-md text-sm text-muted-foreground whitespace-pre-wrap border border-border/50">
+                  {ticket.message}
+                </div>
+                <div className="text-xs text-muted-foreground text-right">
+                  Recebido em: {new Date(ticket.created_at).toLocaleString('pt-BR')}
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+          {tickets.length === 0 && (
+            <div className="p-8 text-center bg-card rounded-lg border border-border">
+              <p className="text-muted-foreground">Nenhum chamado de suporte registrado.</p>
+            </div>
           )}
         </TabsContent>
 
