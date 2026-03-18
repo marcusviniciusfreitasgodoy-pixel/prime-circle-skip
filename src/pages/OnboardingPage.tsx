@@ -64,7 +64,11 @@ export default function OnboardingPage() {
   }, [authUser])
 
   const canProceed =
-    terms && privacy && model5050 && whatsapp.trim().length >= 10 && creci.trim().length >= 4
+    terms &&
+    privacy &&
+    model5050 &&
+    (hasWhatsapp || whatsapp.trim().length >= 10) &&
+    (hasCreci || creci.trim().length >= 4)
 
   const handleContinue = async () => {
     setIsSubmitting(true)
@@ -120,34 +124,38 @@ export default function OnboardingPage() {
               </p>
             </div>
 
-            <div className="space-y-4 mb-6">
-              <div className="space-y-2">
-                <label htmlFor="whatsapp" className="text-sm font-medium text-white">
-                  WhatsApp com DDD
-                </label>
-                <Input
-                  id="whatsapp"
-                  placeholder="(11) 99999-9999"
-                  value={whatsapp}
-                  onChange={(e) => setWhatsapp(e.target.value)}
-                  disabled={hasWhatsapp}
-                  className="bg-secondary/50 border-border text-white placeholder:text-muted-foreground focus-visible:ring-primary disabled:opacity-50 disabled:cursor-not-allowed"
-                />
+            {(!hasWhatsapp || !hasCreci) && (
+              <div className="space-y-4 mb-6">
+                {!hasWhatsapp && (
+                  <div className="space-y-2">
+                    <label htmlFor="whatsapp" className="text-sm font-medium text-white">
+                      WhatsApp com DDD
+                    </label>
+                    <Input
+                      id="whatsapp"
+                      placeholder="(11) 99999-9999"
+                      value={whatsapp}
+                      onChange={(e) => setWhatsapp(e.target.value)}
+                      className="bg-secondary/50 border-border text-white placeholder:text-muted-foreground focus-visible:ring-primary"
+                    />
+                  </div>
+                )}
+                {!hasCreci && (
+                  <div className="space-y-2">
+                    <label htmlFor="creci" className="text-sm font-medium text-white">
+                      Número do CRECI
+                    </label>
+                    <Input
+                      id="creci"
+                      placeholder="00000-F"
+                      value={creci}
+                      onChange={(e) => setCreci(e.target.value)}
+                      className="bg-secondary/50 border-border text-white placeholder:text-muted-foreground focus-visible:ring-primary"
+                    />
+                  </div>
+                )}
               </div>
-              <div className="space-y-2">
-                <label htmlFor="creci" className="text-sm font-medium text-white">
-                  Número do CRECI
-                </label>
-                <Input
-                  id="creci"
-                  placeholder="00000-F"
-                  value={creci}
-                  onChange={(e) => setCreci(e.target.value)}
-                  disabled={hasCreci}
-                  className="bg-secondary/50 border-border text-white placeholder:text-muted-foreground focus-visible:ring-primary disabled:opacity-50 disabled:cursor-not-allowed"
-                />
-              </div>
-            </div>
+            )}
 
             <div className="space-y-4">
               <div className="flex items-start space-x-3 p-3 bg-secondary rounded-lg border border-border">

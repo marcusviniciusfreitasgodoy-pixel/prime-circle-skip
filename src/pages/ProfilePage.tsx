@@ -149,7 +149,7 @@ export default function ProfilePage() {
 
   if (!user) return null
 
-  const displayInitial = (fullName || user.name).charAt(0).toUpperCase()
+  const displayInitial = (fullName || user.name || 'User').charAt(0).toUpperCase()
   const displayName = fullName || user.name
 
   return (
@@ -200,7 +200,7 @@ export default function ProfilePage() {
         </div>
 
         <div className="md:col-span-2 space-y-6">
-          <AmbassadorWidget tier={user.tier} />
+          <AmbassadorWidget tier={user.tier} referrals={user.referrals} />
 
           <Card className="bg-card border-border">
             <CardHeader>

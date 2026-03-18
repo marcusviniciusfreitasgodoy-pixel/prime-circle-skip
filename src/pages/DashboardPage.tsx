@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
@@ -26,13 +26,13 @@ import {
   BellRing,
 } from 'lucide-react'
 import useAppStore from '@/stores/main'
+import type { Tier } from '@/stores/main'
 import { useToast } from '@/hooks/use-toast'
 import { useAuth } from '@/hooks/use-auth'
 import { supabase } from '@/lib/supabase/client'
 
 export default function DashboardPage() {
-  const { user, listings, needs, matches, updateMatchStatus, suggestions, updateSuggestionStatus } =
-    useAppStore()
+  const { user, listings, needs, matches, updateMatchStatus, updateUser } = useAppStore()
   const { user: authUser } = useAuth()
   const { toast } = useToast()
   const navigate = useNavigate()
@@ -43,24 +43,10 @@ export default function DashboardPage() {
   const [isLoadingName, setIsLoadingName] = useState(true)
   const [refreshKey, setRefreshKey] = useState(0)
   const [recentMatchAlerts, setRecentMatchAlerts] = useState<any[]>([])
+  const [referralsCount, setReferralsCount] = useState<number>(0)
+  const [userTier, setUserTier] = useState<Tier>('None')
 
   const triggerRefresh = () => setRefreshKey((prev) => prev + 1)
-  const updateSugRef = useRef(updateSuggestionStatus)
-
-  useEffect(() => {
-    updateSugRef.current = updateSuggestionStatus
-  }, [updateSuggestionStatus])
-
-  // Demo: Automatically approve a specific pending suggestion
-  useEffect(() => {
-    const pendingSug = suggestions.find((s) => s.id === '2' && s.status === 'Em Análise')
-    if (pendingSug && user?.id === 'user1') {
-      const timer = setTimeout(() => {
-        updateSugRef.current('2', 'Em Desenvolvimento')
-      }, 5000)
-      return () => clearTimeout(timer)
-    }
-  }, [suggestions, user?.id])
 
   useEffect(() => {
     let mounted = true
@@ -74,7 +60,7 @@ export default function DashboardPage() {
       setIsLoadingName(true)
       const { data, error } = await supabase
         .from('profiles')
-        .select('full_name, reputation_score, status')
+        .select('full_name, reputation_score, status, avatar_url')
         .eq('id', authUser.id)
         .single()
 
@@ -84,12 +70,35 @@ export default function DashboardPage() {
         setProfileName(data.full_name || authUser.email || 'Usuário')
         setProfileScore(data.reputation_score || 0)
         setProfileStatus(data.status || 'active')
+
+        if (data.avatar_url && data.avatar_url !== user?.avatar) {
+          updateUser({ avatar: data.avatar_url })
+        }
       } else {
         setProfileName(authUser.email || 'Usuário')
       }
+
+      // Fetch dynamic referrals and tier
+      const { count } = await supabase
+        .from('profiles')
+        .select('id', { count: 'exact', head: true })
+        .eq('referral_code', authUser.id)
+        .eq('status', 'active')
+
+      if (mounted && count !== null) {
+        setReferralsCount(count)
+        let tier: Tier = 'None'
+        if (count >= 99) tier = 'Elite+'
+        else if (count >= 15) tier = 'Elite'
+        else if (count >= 10) tier = 'Gold'
+        else if (count >= 7) tier = 'Silver'
+        else if (count >= 5) tier = 'Ambassador'
+        setUserTier(tier)
+        updateUser({ tier, referrals: count })
+      }
+
       setIsLoadingName(false)
 
-      // Fetch Recent Match Alerts
       const { data: alerts } = await supabase
         .from('notification_logs')
         .select('id, message_body, created_at')
@@ -136,7 +145,7 @@ export default function DashboardPage() {
       title: 'Meus Imóveis Ativos',
       value: myListings.toString(),
       icon: Home,
-      trend: `Plano: ${user?.plan}`,
+      trend: `Plano: ${user?.plan || 'Free'}`,
     },
     {
       title: 'Conexões Abertas',
@@ -188,7 +197,7 @@ export default function DashboardPage() {
       <Alert className="bg-card border-primary/20 text-foreground shadow-[0_0_15px_rgba(201,168,76,0.1)]">
         <AlertCircle className="h-5 w-5 text-primary" />
         <AlertTitle className="text-primary font-semibold ml-2">
-          Chapter {user?.chapter} — Engajamento Exigido
+          Chapter {user?.chapter || 'Global'} — Engajamento Exigido
         </AlertTitle>
         <AlertDescription className="text-muted-foreground mt-2 ml-2 leading-relaxed">
           Seu acesso e status dependem de atividade constante na plataforma. A inatividade superior
@@ -213,7 +222,7 @@ export default function DashboardPage() {
             <span>
               Plano atual:{' '}
               <Badge variant="outline" className="border-primary/50 text-primary">
-                {user?.plan}
+                {user?.plan || 'Free'}
               </Badge>
             </span>
             <span className="text-sm border-l border-border pl-3 flex items-center gap-1">
@@ -345,7 +354,7 @@ export default function DashboardPage() {
         </div>
 
         <div className="md:col-span-1 space-y-6">
-          <AmbassadorWidget tier={user?.tier || 'None'} referrals={user?.referrals} />
+          <AmbassadorWidget tier={userTier} referrals={referralsCount} />
           <ReputationRanking />
         </div>
       </div>

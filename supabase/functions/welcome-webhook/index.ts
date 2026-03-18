@@ -40,7 +40,7 @@ Deno.serve(async (req: Request) => {
         let recipientPhone = profile.whatsapp_number
         if (recipientPhone) {
           recipientPhone = recipientPhone.replace(/\D/g, '')
-          if (recipientPhone.length > 0 && recipientPhone.length <= 11) {
+          if (recipientPhone.length >= 10 && recipientPhone.length <= 11) {
             recipientPhone = '55' + recipientPhone
           }
         }

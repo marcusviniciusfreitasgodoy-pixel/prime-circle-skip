@@ -74,12 +74,7 @@ export function ReputationRanking() {
               >
                 <div className="w-6 flex justify-center shrink-0">{getRankIcon(index)}</div>
                 <Avatar className="w-10 h-10 border border-border bg-background">
-                  <AvatarImage
-                    src={
-                      broker.avatar_url ||
-                      `https://img.usecurling.com/ppl/thumbnail?seed=${broker.id}`
-                    }
-                  />
+                  <AvatarImage src={broker.avatar_url} />
                   <AvatarFallback className="bg-secondary text-muted-foreground">
                     {broker.full_name?.substring(0, 2).toUpperCase() || 'CO'}
                   </AvatarFallback>

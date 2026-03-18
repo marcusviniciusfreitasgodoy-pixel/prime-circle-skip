@@ -77,7 +77,7 @@ const formSchema = z.object({
 
 export default function ApplyPage() {
   const { signUp } = useAuth()
-  const { login } = useAppStore()
+  const { login, updateUser } = useAppStore()
   const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()
   const { toast } = useToast()
@@ -216,6 +216,8 @@ export default function ApplyPage() {
               .from('profiles')
               .update({ avatar_url: publicUrlData.publicUrl })
               .eq('id', userId)
+
+            updateUser({ avatar: publicUrlData.publicUrl })
           }
         } catch (err) {
           console.error('Failed to process avatar:', err)

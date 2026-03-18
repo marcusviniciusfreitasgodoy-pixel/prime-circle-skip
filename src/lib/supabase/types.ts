@@ -707,9 +707,11 @@ export const Constants = {
 //
 //   Olá {{full_name}},
 //
-//   Bem-vindo à Prime Circle! Agora que sua conta foi criada, utilize o link abaixo para acessar seu painel exclusivo e começar a gerar parcerias.
+//   Bem-vindo à Prime Circle! Agora que sua conta foi criada, acesse o nosso Dashboard para começar a gerar parcerias:
+//   Dashboard: https://prime-circle-migration-fd549.goskip.app/dashboard
 //
-//   Acesse: https://prime-circle-migration-fd549.goskip.app/dashboard
+//   Caso precise entrar novamente, você pode solicitar um Magic Link na página de Acesso Exclusivo:
+//   Acesso Exclusivo: https://prime-circle-migration-fd549.goskip.app/
 //
 //   Boas vendas,
 //   Equipe Prime Circle');

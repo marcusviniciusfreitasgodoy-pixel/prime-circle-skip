@@ -34,10 +34,15 @@ Deno.serve(async (req: Request) => {
       })
     }
 
+    let formattedNumber = number.replace(/\D/g, '')
+    if (formattedNumber.length >= 10 && formattedNumber.length <= 11) {
+      formattedNumber = '55' + formattedNumber
+    }
+
     const endpoint = `${apiUrl}/message/sendText/${instanceName}`
 
     const payload = {
-      number,
+      number: formattedNumber,
       text,
       options: {
         delay: 1200,
@@ -64,7 +69,7 @@ Deno.serve(async (req: Request) => {
         const supabase = createClient(supabaseUrl, supabaseKey)
         await supabase.rpc('log_notification', {
           p_user_id: user_id,
-          p_recipient: number,
+          p_recipient: formattedNumber,
           p_channel: 'whatsapp',
           p_status: success ? 'success' : 'failed',
           p_message_body: text,

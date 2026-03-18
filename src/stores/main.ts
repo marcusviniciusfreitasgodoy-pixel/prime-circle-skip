@@ -165,97 +165,11 @@ interface AppState {
   enforceInactivity: () => void
 }
 
-const initialListings: Listing[] = [
-  {
-    id: '1',
-    title: 'Cobertura Lúcio Costa',
-    type: 'Cobertura',
-    price: 'R$ 8.500.000',
-    priceValue: 8500000,
-    area: '450m²',
-    beds: 4,
-    neighborhood: 'Lúcio Costa',
-    chapter: 'Barra da Tijuca',
-    status: 'Disponível',
-    image: 'https://img.usecurling.com/p/600/400?q=luxury%20penthouse',
-    ownerId: 'user1',
-  },
-]
-
-const initialNeeds: Need[] = [
-  {
-    id: '1',
-    title: 'Cliente Família 4 Pessoas',
-    type: 'Casa',
-    priceRange: 'Até R$ 7M',
-    neighborhood: 'Santa Mônica',
-    chapter: 'Barra da Tijuca',
-    urgency: 'Alta',
-    ownerId: 'other',
-  },
-]
-
-const initialMatches: Match[] = [{ id: '1', needId: '1', listingId: '1', status: 'Proposta' }]
-
-const initialSuggestions: Suggestion[] = [
-  {
-    id: '1',
-    title: 'Filtro por Condomínio',
-    desc: 'Seria ótimo poder filtrar demandas pelo nome do condomínio.',
-    category: 'Nova Funcionalidade',
-    status: 'Em Desenvolvimento',
-    votes: 12,
-    authorId: 'other',
-    updatedAt: new Date(Date.now() - 86400000).toISOString(),
-  },
-  {
-    id: '2',
-    title: 'Integração CRM',
-    desc: 'Conectar com RD Station para puxar os leads automaticamente.',
-    category: 'Integrações',
-    status: 'Em Análise',
-    votes: 8,
-    authorId: 'user1',
-    updatedAt: new Date(Date.now() - 172800000).toISOString(),
-  },
-  {
-    id: '3',
-    title: 'Chat Interno',
-    desc: 'Comunicação direta sem precisar ir pro WhatsApp.',
-    category: 'Experiência (UX)',
-    status: 'Entregue',
-    votes: 45,
-    authorId: 'other',
-    updatedAt: new Date(Date.now() - 259200000).toISOString(),
-  },
-]
-
-const initialMembers: CommunityMember[] = [
-  {
-    id: 'user2',
-    name: 'Maria Silva',
-    avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=female&seed=2',
-    suggestionsSubmitted: 12,
-    suggestionsImplemented: 5,
-    suggestionMonthsCredited: 5,
-  },
-  {
-    id: 'other',
-    name: 'Pedro Alves',
-    avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=3',
-    suggestionsSubmitted: 8,
-    suggestionsImplemented: 3,
-    suggestionMonthsCredited: 3,
-  },
-  {
-    id: 'user1',
-    name: 'João Corretor',
-    avatar: 'https://img.usecurling.com/ppl/thumbnail?gender=male&seed=1',
-    suggestionsSubmitted: 4,
-    suggestionsImplemented: 1,
-    suggestionMonthsCredited: 1,
-  },
-]
+const initialListings: Listing[] = []
+const initialNeeds: Need[] = []
+const initialMatches: Match[] = []
+const initialSuggestions: Suggestion[] = []
+const initialMembers: CommunityMember[] = []
 
 const AppContext = createContext<AppState | null>(null)
 
@@ -270,18 +184,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     { id: string; title: string; description: string }[]
   >([])
   const [brokerMonitoring] = useState<BrokerMonitor[]>([])
-  const [candidates, setCandidates] = useState<Candidate[]>([
-    {
-      id: 'c1',
-      name: 'Carlos Mendes',
-      email: 'carlos@mendes.com',
-      phone: '21999991111',
-      creci: '12345',
-      region: 'Barra',
-      ticket: '3M',
-      status: 'pending',
-    },
-  ])
+  const [candidates, setCandidates] = useState<Candidate[]>([])
   const [pageViews, setPageViews] = useState<{ path: string; timestamp: string }[]>([])
   const [logs, setLogs] = useState<{ action: string; details: string; timestamp: string }[]>([])
   const [statusLogs, setStatusLogs] = useState<
@@ -301,23 +204,23 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
     setUser({
       id: isAdmin ? 'admin-1' : 'user1',
-      name: isAdmin ? 'Admin Root' : 'João Corretor',
+      name: isAdmin ? 'Admin Root' : 'Usuário',
       email,
       status,
-      tier: isAdmin ? 'Ambassador' : 'Elite',
-      plan: isAdmin ? 'Founder' : 'Founder',
-      wasFounder: true,
+      tier: 'None',
+      plan: isAdmin ? 'Founder' : 'Free',
+      wasFounder: false,
       chapter: 'Barra da Tijuca',
-      avatar: `https://img.usecurling.com/ppl/thumbnail?gender=${isAdmin ? 'female' : 'male'}&seed=1`,
+      avatar: undefined,
       onboarded: isAdmin,
       lastLogin: new Date().toISOString(),
       lastContributionAt: new Date().toISOString(),
-      referrals: isAdmin ? 2 : 16,
+      referrals: 0,
       planStartedAt: userStart.toISOString(),
       referralMonthsCredited: 0,
-      suggestionMonthsCredited: 1,
-      suggestionsSubmitted: 4,
-      suggestionsImplemented: 1,
+      suggestionMonthsCredited: 0,
+      suggestionsSubmitted: 0,
+      suggestionsImplemented: 0,
       lastViewedSuggestionsAt: new Date(Date.now() - 86400000 * 5).toISOString(),
     })
     logEvent('Login', `User logged in via ${method}`)
