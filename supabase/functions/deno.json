@@ -3,9 +3,12 @@
     "allowJs": true,
     "lib": ["deno.window"],
     "strict": true
-  }
-}
--webhook": 11,
+  },
+  "_versions": {
+    "send-whatsapp": 17,
+    "send-email": 12,
+    "functions": 16,
+    "welcome-webhook": 11,
     "support-ticket-webhook": 1,
     "match-property-webhook": 3
   }
