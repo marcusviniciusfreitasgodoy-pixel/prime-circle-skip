@@ -72,7 +72,7 @@ Deno.serve(async (req: Request) => {
         const defaultWaContent =
           'Olá {{full_name}}! 🚀 Bem-vindo à Prime Circle. Seu cadastro foi recebido com sucesso. Estamos muito felizes em ter você em nossa rede exclusiva de parcerias imobiliárias. Em breve entraremos em contato!'
         const defaultEmailContent =
-          'Assunto: Bem-vindo à Prime Circle! 🏠\n\nOlá {{full_name}},\n\nÉ um prazer ter você conosco! Sua conta foi criada com sucesso. Agora você faz parte de um ecossistema exclusivo projetado para potencializar seus resultados no mercado imobiliário.\n\nAcesse seu painel agora para completar seu perfil e começar a gerar matches.\n\nBoas vendas,\nEquipe Prime Circle'
+          'Assunto: Bem-vindo à Prime Circle! 🏠\n\nOlá {{full_name}},\n\nÉ um prazer ter você conosco! Sua conta foi criada com sucesso. Agora você faz parte de um ecossistema exclusivo projetado para potencializar seus resultados no mercado imobiliário.\n\nAcesse seu painel agora para completar seu perfil e começar a gerar matches através do link: https://prime-circle-migration-fd549.goskip.app/dashboard\n\nBoas vendas,\nEquipe Prime Circle'
 
         const buildMessage = (content: string) => content.replace(/\{\{full_name\}\}/g, fullName)
 
