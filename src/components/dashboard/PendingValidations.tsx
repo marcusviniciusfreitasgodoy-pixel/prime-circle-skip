@@ -4,13 +4,14 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button'
 import { useAuth } from '@/hooks/use-auth'
 import { useToast } from '@/hooks/use-toast'
-import { ShieldCheck, UserCheck } from 'lucide-react'
+import { ShieldCheck, UserCheck, Lock } from 'lucide-react'
 
 export function PendingValidations() {
   const { user } = useAuth()
   const { toast } = useToast()
   const [pendingUsers, setPendingUsers] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
+  const [myProfileData, setMyProfileData] = useState<any>(null)
 
   useEffect(() => {
     if (!user) return
@@ -19,18 +20,22 @@ export function PendingValidations() {
       setLoading(true)
       const { data: myProfile } = await supabase
         .from('profiles')
-        .select('id')
+        .select('id, reputation_score, role')
         .eq('id', user.id)
         .single()
-      const refCode = myProfile?.id || user.id
 
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('id, full_name, creci, whatsapp_number, created_at')
-        .eq('status', 'pending_validation')
-        .eq('referral_code', refCode)
+      if (myProfile) {
+        setMyProfileData(myProfile)
+        const refCode = myProfile.id
 
-      if (data) setPendingUsers(data)
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('id, full_name, creci, whatsapp_number, created_at')
+          .eq('status', 'pending_validation')
+          .eq('referral_code', refCode)
+
+        if (data) setPendingUsers(data)
+      }
       setLoading(false)
     }
 
@@ -51,25 +56,18 @@ export function PendingValidations() {
 
     if (updateError) {
       toast({
-        title: 'Erro',
-        description: 'Não foi possível validar o membro.',
+        title: 'Erro de Permissão',
+        description: 'Não foi possível validar o membro. Verifique sua reputação.',
         variant: 'destructive',
       })
       return
     }
 
-    const { data: myProfile } = await supabase
-      .from('profiles')
-      .select('reputation_score')
-      .eq('id', user.id)
-      .single()
-    if (myProfile) {
-      await supabase
-        .from('profiles')
-        .update({
-          reputation_score: (myProfile.reputation_score || 0) + 5,
-        })
-        .eq('id', user.id)
+    if (myProfileData) {
+      const newScore = (myProfileData.reputation_score || 0) + 5
+      await supabase.from('profiles').update({ reputation_score: newScore }).eq('id', user.id)
+
+      setMyProfileData({ ...myProfileData, reputation_score: newScore })
     }
 
     toast({
@@ -79,7 +77,30 @@ export function PendingValidations() {
     setPendingUsers((prev) => prev.filter((p) => p.id !== targetId))
   }
 
-  if (loading || pendingUsers.length === 0) return null
+  if (loading) return null
+
+  // Check if user is eligible to validate others (score > 80 or admin)
+  const isEligible = myProfileData?.role === 'admin' || (myProfileData?.reputation_score ?? 0) > 80
+
+  if (!isEligible) {
+    return (
+      <Card className="bg-card border-red-900/30 bg-red-950/10 mb-8 animate-fade-in-up">
+        <CardHeader className="pb-4">
+          <CardTitle className="text-lg flex items-center gap-2 text-red-400">
+            <Lock className="w-5 h-5" /> Privilégios de Curadoria Bloqueados
+          </CardTitle>
+          <CardDescription className="text-red-300/70 text-base leading-relaxed">
+            Seu PrimeCircle Score atual é <strong>{myProfileData?.reputation_score || 0}</strong>. É
+            necessário atingir <strong>mais de 80 pontos</strong> para validar os corretores
+            indicados por você. Continue engajando e fechando parcerias na rede para recuperar seus
+            privilégios.
+          </CardDescription>
+        </CardHeader>
+      </Card>
+    )
+  }
+
+  if (pendingUsers.length === 0) return null
 
   return (
     <Card className="bg-card border-primary/30 shadow-[0_0_30px_rgba(201,168,76,0.1)] mb-8 animate-fade-in-up">
@@ -88,8 +109,8 @@ export function PendingValidations() {
           <ShieldCheck className="w-6 h-6" /> Curadoria da Rede (Membros Pendentes)
         </CardTitle>
         <CardDescription>
-          Estes corretores usaram seu código de indicação. Como membro de Alta Reputação, você tem a
-          autoridade para validar o acesso deles.
+          Estes corretores usaram seu código de indicação. Como membro de Alta Reputação (Elite),
+          você tem a autoridade para validar o acesso deles à plataforma.
         </CardDescription>
       </CardHeader>
       <CardContent>

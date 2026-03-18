@@ -30,6 +30,45 @@ export type Database = {
         }
         Relationships: []
       }
+      match_feedback: {
+        Row: {
+          created_at: string
+          document_id: number
+          feedback_type: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          document_id: number
+          feedback_type: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          document_id?: number
+          feedback_type?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'match_feedback_document_id_fkey'
+            columns: ['document_id']
+            isOneToOne: false
+            referencedRelation: 'documents'
+            referencedColumns: ['id']
+          },
+          {
+            foreignKeyName: 'match_feedback_user_id_fkey'
+            columns: ['user_id']
+            isOneToOne: false
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
+          },
+        ]
+      }
       notification_logs: {
         Row: {
           channel: string
@@ -149,8 +188,11 @@ export type Database = {
           region: string | null
           reputation_score: number
           role: string
+          status: string
           ticket_value: string | null
           updated_at: string | null
+          validated_by: string | null
+          validation_date: string | null
           whatsapp_number: string | null
         }
         Insert: {
@@ -165,8 +207,11 @@ export type Database = {
           region?: string | null
           reputation_score?: number
           role?: string
+          status?: string
           ticket_value?: string | null
           updated_at?: string | null
+          validated_by?: string | null
+          validation_date?: string | null
           whatsapp_number?: string | null
         }
         Update: {
@@ -181,11 +226,22 @@ export type Database = {
           region?: string | null
           reputation_score?: number
           role?: string
+          status?: string
           ticket_value?: string | null
           updated_at?: string | null
+          validated_by?: string | null
+          validation_date?: string | null
           whatsapp_number?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: 'profiles_validated_by_fkey'
+            columns: ['validated_by']
+            isOneToOne: false
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
+          },
+        ]
       }
       support_tickets: {
         Row: {
@@ -400,6 +456,12 @@ export const Constants = {
 //   content: text (nullable)
 //   metadata: jsonb (nullable)
 //   embedding: vector (nullable)
+// Table: match_feedback
+//   id: uuid (not null, default: gen_random_uuid())
+//   user_id: uuid (not null)
+//   document_id: bigint (not null)
+//   feedback_type: text (not null)
+//   created_at: timestamp with time zone (not null, default: now())
 // Table: notification_logs
 //   id: uuid (not null, default: gen_random_uuid())
 //   user_id: uuid (not null)
@@ -439,6 +501,9 @@ export const Constants = {
 //   avatar_url: text (nullable)
 //   company_name: text (nullable)
 //   reputation_score: integer (not null, default: 0)
+//   status: text (not null, default: 'pending_validation'::text)
+//   validated_by: uuid (nullable)
+//   validation_date: timestamp with time zone (nullable)
 // Table: support_tickets
 //   id: uuid (not null, default: gen_random_uuid())
 //   user_id: uuid (nullable)
@@ -452,6 +517,11 @@ export const Constants = {
 // --- CONSTRAINTS ---
 // Table: documents
 //   PRIMARY KEY documents_pkey: PRIMARY KEY (id)
+// Table: match_feedback
+//   FOREIGN KEY match_feedback_document_id_fkey: FOREIGN KEY (document_id) REFERENCES documents(id) ON DELETE CASCADE
+//   CHECK match_feedback_feedback_type_check: CHECK ((feedback_type = ANY (ARRAY['perfect'::text, 'not_suitable'::text])))
+//   PRIMARY KEY match_feedback_pkey: PRIMARY KEY (id)
+//   FOREIGN KEY match_feedback_user_id_fkey: FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE CASCADE
 // Table: notification_logs
 //   CHECK notification_logs_channel_check: CHECK ((channel = ANY (ARRAY['whatsapp'::text, 'email'::text])))
 //   PRIMARY KEY notification_logs_pkey: PRIMARY KEY (id)
@@ -466,6 +536,8 @@ export const Constants = {
 // Table: profiles
 //   FOREIGN KEY profiles_id_fkey: FOREIGN KEY (id) REFERENCES auth.users(id) ON DELETE CASCADE
 //   PRIMARY KEY profiles_pkey: PRIMARY KEY (id)
+//   CHECK profiles_status_check: CHECK ((status = ANY (ARRAY['pending_validation'::text, 'active'::text, 'rejected'::text])))
+//   FOREIGN KEY profiles_validated_by_fkey: FOREIGN KEY (validated_by) REFERENCES profiles(id) ON DELETE SET NULL
 // Table: support_tickets
 //   PRIMARY KEY support_tickets_pkey: PRIMARY KEY (id)
 //   CHECK support_tickets_status_check: CHECK ((status = ANY (ARRAY['open'::text, 'pending'::text, 'resolved'::text])))
@@ -482,6 +554,11 @@ export const Constants = {
 //   Policy "authenticated_update_documents" (UPDATE, PERMISSIVE) roles={authenticated}
 //     USING: true
 //     WITH CHECK: true
+// Table: match_feedback
+//   Policy "Users can insert own feedback" (INSERT, PERMISSIVE) roles={authenticated}
+//     WITH CHECK: (auth.uid() = user_id)
+//   Policy "Users can select own feedback" (SELECT, PERMISSIVE) roles={authenticated}
+//     USING: (auth.uid() = user_id)
 // Table: notification_logs
 //   Policy "Users can insert own logs" (INSERT, PERMISSIVE) roles={authenticated}
 //     WITH CHECK: (auth.uid() = user_id)
@@ -493,6 +570,9 @@ export const Constants = {
 //     USING: (auth.uid() = user_id)
 //     WITH CHECK: (auth.uid() = user_id)
 // Table: profiles
+//   Policy "Admins and Elite can update other profiles" (UPDATE, PERMISSIVE) roles={authenticated}
+//     USING: (EXISTS ( SELECT 1    FROM profiles p   WHERE ((p.id = auth.uid()) AND ((p.role = 'admin'::text) OR (p.reputation_score > 80)))))
+//     WITH CHECK: (EXISTS ( SELECT 1    FROM profiles p   WHERE ((p.id = auth.uid()) AND ((p.role = 'admin'::text) OR (p.reputation_score > 80)))))
 //   Policy "Users can insert own profile" (INSERT, PERMISSIVE) roles={authenticated}
 //     WITH CHECK: (auth.uid() = id)
 //   Policy "Users can update own profile" (UPDATE, PERMISSIVE) roles={public}

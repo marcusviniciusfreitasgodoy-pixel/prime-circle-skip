@@ -12,6 +12,7 @@ import { PortfolioTabs } from '@/components/dashboard/PortfolioTabs'
 import { AddPropertyDialog } from '@/components/dashboard/AddPropertyDialog'
 import { OpportunityRadar } from '@/components/dashboard/OpportunityRadar'
 import { PendingValidations } from '@/components/dashboard/PendingValidations'
+import { ReputationRanking } from '@/components/dashboard/ReputationRanking'
 import {
   Activity,
   GitMerge,
@@ -181,7 +182,8 @@ export default function DashboardPage() {
         </Alert>
       )}
 
-      {profileScore > 80 && <PendingValidations />}
+      {/* Renders PendingValidations which internally manages its visibility or locked state based on Reputation Score */}
+      <PendingValidations />
 
       <Alert className="bg-card border-primary/20 text-foreground shadow-[0_0_15px_rgba(201,168,76,0.1)]">
         <AlertCircle className="h-5 w-5 text-primary" />
@@ -342,8 +344,9 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        <div className="md:col-span-1">
+        <div className="md:col-span-1 space-y-6">
           <AmbassadorWidget tier={user?.tier || 'None'} referrals={user?.referrals} />
+          <ReputationRanking />
         </div>
       </div>
 
