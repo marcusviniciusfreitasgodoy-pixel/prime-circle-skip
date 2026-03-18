@@ -10,6 +10,7 @@ import WelcomePage from './pages/WelcomePage'
 import OnboardingPage from './pages/OnboardingPage'
 import PendingPage from './pages/PendingPage'
 import MatchClosePage from './pages/MatchClosePage'
+import MatchFeedbackPage from './pages/MatchFeedbackPage'
 import SuggestionsPage from './pages/SuggestionsPage'
 import RoadmapPage from './pages/RoadmapPage'
 import PublicSuggestionsPage from './pages/PublicSuggestionsPage'
@@ -84,6 +85,7 @@ function App() {
               <Route element={<ProtectedRoute />}>
                 <Route path="/pending" element={<PendingPage />} />
                 <Route path="/onboarding" element={<OnboardingPage />} />
+                <Route path="/match-feedback" element={<MatchFeedbackPage />} />
                 <Route element={<DashboardLayout />}>
                   <Route path="/dashboard" element={<DashboardPage />} />
                   <Route path="/admin" element={<AdminPage />} />

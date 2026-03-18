@@ -11,6 +11,7 @@ import { FounderExpiryBanner } from '@/components/FounderExpiryBanner'
 import { PortfolioTabs } from '@/components/dashboard/PortfolioTabs'
 import { AddPropertyDialog } from '@/components/dashboard/AddPropertyDialog'
 import { OpportunityRadar } from '@/components/dashboard/OpportunityRadar'
+import { PendingValidations } from '@/components/dashboard/PendingValidations'
 import {
   Activity,
   GitMerge,
@@ -37,6 +38,7 @@ export default function DashboardPage() {
 
   const [profileName, setProfileName] = useState<string>('')
   const [profileScore, setProfileScore] = useState<number>(0)
+  const [profileStatus, setProfileStatus] = useState<string>('active')
   const [isLoadingName, setIsLoadingName] = useState(true)
   const [refreshKey, setRefreshKey] = useState(0)
   const [recentMatchAlerts, setRecentMatchAlerts] = useState<any[]>([])
@@ -71,7 +73,7 @@ export default function DashboardPage() {
       setIsLoadingName(true)
       const { data, error } = await supabase
         .from('profiles')
-        .select('full_name, reputation_score')
+        .select('full_name, reputation_score, status')
         .eq('id', authUser.id)
         .single()
 
@@ -80,6 +82,7 @@ export default function DashboardPage() {
       if (!error && data) {
         setProfileName(data.full_name || authUser.email || 'Usuário')
         setProfileScore(data.reputation_score || 0)
+        setProfileStatus(data.status || 'active')
       } else {
         setProfileName(authUser.email || 'Usuário')
       }
@@ -110,7 +113,7 @@ export default function DashboardPage() {
   const chapterNeeds = needs.filter((n) => n.chapter === user?.chapter)
   const myListings = chapterListings.filter((l) => l.ownerId === user?.id).length
   const activeMatches = matches.filter((m) => m.status !== 'Fechado')
-  const referralLink = `${window.location.origin}/apply?ref=${user?.id || 'founder-123'}`
+  const referralLink = `${window.location.origin}/apply?ref=${authUser?.id || user?.id || 'founder-123'}`
 
   const copyLink = () => {
     navigator.clipboard.writeText(referralLink)
@@ -166,6 +169,19 @@ export default function DashboardPage() {
   return (
     <div className="space-y-8 animate-fade-in-up">
       <FounderExpiryBanner />
+
+      {profileStatus === 'pending_validation' && (
+        <Alert className="mb-6 bg-yellow-500/10 border-yellow-500/50 text-yellow-700 dark:text-yellow-400 shadow-[0_0_15px_rgba(234,179,8,0.1)]">
+          <AlertCircle className="h-5 w-5" />
+          <AlertTitle className="font-semibold ml-2">Conta em Processo de Curadoria</AlertTitle>
+          <AlertDescription className="mt-2 ml-2">
+            Sua conta está em processo de curadoria. Aguarde a validação de um membro sênior ou da
+            administração. Algumas funções podem estar restritas.
+          </AlertDescription>
+        </Alert>
+      )}
+
+      {profileScore > 80 && <PendingValidations />}
 
       <Alert className="bg-card border-primary/20 text-foreground shadow-[0_0_15px_rgba(201,168,76,0.1)]">
         <AlertCircle className="h-5 w-5 text-primary" />
@@ -286,7 +302,8 @@ export default function DashboardPage() {
               </CardTitle>
               <CardDescription className="text-base text-muted-foreground max-w-2xl">
                 Convide corretores alinhados à política 50/50 e receba meses grátis. Parceiros com
-                seu código têm prioridade na análise.
+                seu código têm prioridade na análise e você pode validá-los diretamente caso possua
+                alta reputação.
               </CardDescription>
             </CardHeader>
             <CardContent>

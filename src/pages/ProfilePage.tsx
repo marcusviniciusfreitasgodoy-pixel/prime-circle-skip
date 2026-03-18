@@ -9,6 +9,7 @@ import useAppStore from '@/stores/main'
 import { useAuth } from '@/hooks/use-auth'
 import { supabase } from '@/lib/supabase/client'
 import { useToast } from '@/hooks/use-toast'
+import { ShieldCheck } from 'lucide-react'
 
 export default function ProfilePage() {
   const { user } = useAppStore()
@@ -18,18 +19,33 @@ export default function ProfilePage() {
   const [whatsapp, setWhatsapp] = useState('')
   const [fullName, setFullName] = useState('')
   const [isSaving, setIsSaving] = useState(false)
+  const [validatedBy, setValidatedBy] = useState<{ name: string; date: string } | null>(null)
 
   useEffect(() => {
     if (authUser) {
       supabase
         .from('profiles')
-        .select('whatsapp_number, full_name')
+        .select('whatsapp_number, full_name, validated_by, validation_date')
         .eq('id', authUser.id)
         .single()
-        .then(({ data }) => {
+        .then(async ({ data }) => {
           if (data) {
             if (data.whatsapp_number) setWhatsapp(data.whatsapp_number)
             if (data.full_name) setFullName(data.full_name)
+
+            if (data.validated_by) {
+              const { data: valData } = await supabase
+                .from('profiles')
+                .select('full_name')
+                .eq('id', data.validated_by)
+                .single()
+              if (valData) {
+                setValidatedBy({
+                  name: valData.full_name || 'Membro Sênior',
+                  date: data.validation_date,
+                })
+              }
+            }
           }
         })
     }
@@ -103,7 +119,14 @@ export default function ProfilePage() {
                 <AvatarFallback className="text-2xl">{displayInitial}</AvatarFallback>
               </Avatar>
               <h3 className="text-xl font-bold text-white">{displayName}</h3>
-              <p className="text-sm text-primary mb-6">Corretor {user.tier}</p>
+              <p className="text-sm text-primary mb-4">Corretor {user.tier}</p>
+
+              {validatedBy && (
+                <div className="flex items-center gap-1.5 bg-green-500/10 text-green-500 border border-green-500/20 px-3 py-1 rounded-full text-xs font-medium mb-4">
+                  <ShieldCheck className="w-3.5 h-3.5" />
+                  Verificado por {validatedBy.name}
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>

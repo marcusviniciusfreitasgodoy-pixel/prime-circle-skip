@@ -55,8 +55,8 @@ Deno.serve(async (req: Request) => {
             if (brokerProfile && brokerProfile.whatsapp_number) {
               const brokerName = brokerProfile.full_name || 'Corretor'
 
-              // Standard Template Required by AC
-              const waMessage = `Olá ${brokerName}, encontramos um imóvel que é o match perfeito para sua demanda: ${propTitle} - ${propPrice} em ${property.metadata.location}. Confira agora no seu Dashboard!`
+              // Standard Template Required by AC with Feedback Links
+              const waMessage = `Olá ${brokerName}, encontramos um imóvel que é o match perfeito para sua demanda: ${propTitle} - ${propPrice} em ${property.metadata.location}. Confira agora no seu Dashboard!\n\nAvalie este match:\n✅ Match Perfeito: https://prime-circle-migration-fd549.goskip.app/match-feedback?id=${property.id}&type=perfect\n❌ Não Atende: https://prime-circle-migration-fd549.goskip.app/match-feedback?id=${property.id}&type=not_suitable`
 
               // Invoke send-whatsapp to deliver and log the notification automatically
               notificationPromises.push(
