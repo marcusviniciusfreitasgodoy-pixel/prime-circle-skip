@@ -715,7 +715,7 @@ export const Constants = {
 //   Dashboard: https://prime-circle-migration-fd549.goskip.app/dashboard
 //
 //   Caso precise entrar novamente, você pode solicitar um Magic Link na página de Acesso Exclusivo:
-//   Acesso Exclusivo: https://prime-circle-migration-fd549.goskip.app/
+//   Acesso Exclusivo: https://prime-circle-migration-fd549.goskip.app/login
 //
 //   Boas vendas,
 //   Equipe Prime Circle');

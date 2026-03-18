@@ -26,7 +26,7 @@ import {
   BellRing,
 } from 'lucide-react'
 import useAppStore from '@/stores/main'
-import type { Tier } from '@/stores/main'
+import type { Tier, Plan } from '@/stores/main'
 import { useToast } from '@/hooks/use-toast'
 import { useAuth } from '@/hooks/use-auth'
 import { supabase } from '@/lib/supabase/client'
@@ -40,6 +40,7 @@ export default function DashboardPage() {
   const [profileName, setProfileName] = useState<string>('')
   const [profileScore, setProfileScore] = useState<number>(0)
   const [profileStatus, setProfileStatus] = useState<string>('active')
+  const [profilePlan, setProfilePlan] = useState<string>('Free')
   const [isLoadingName, setIsLoadingName] = useState(true)
   const [refreshKey, setRefreshKey] = useState(0)
   const [recentMatchAlerts, setRecentMatchAlerts] = useState<any[]>([])
@@ -62,7 +63,7 @@ export default function DashboardPage() {
       try {
         const { data, error } = await supabase
           .from('profiles')
-          .select('full_name, reputation_score, status, avatar_url')
+          .select('full_name, reputation_score, status, avatar_url, plan')
           .eq('id', authUser.id)
           .single()
 
@@ -72,9 +73,18 @@ export default function DashboardPage() {
           setProfileName(data.full_name || authUser.email || 'Usuário')
           setProfileScore(data.reputation_score || 0)
           setProfileStatus(data.status || 'active')
+          setProfilePlan(data.plan || 'Free')
 
+          const storeUpdates: any = {}
           if (data.avatar_url && data.avatar_url !== user?.avatar) {
-            updateUser({ avatar: data.avatar_url })
+            storeUpdates.avatar = data.avatar_url
+          }
+          if (data.plan && data.plan !== user?.plan) {
+            storeUpdates.plan = data.plan as Plan
+          }
+
+          if (Object.keys(storeUpdates).length > 0) {
+            updateUser(storeUpdates)
           }
         } else {
           setProfileName(authUser.email || 'Usuário')
@@ -156,6 +166,12 @@ export default function DashboardPage() {
     })
   }
 
+  const formatPlanName = (plan: string) => {
+    if (plan === 'Founder') return 'Fundador'
+    if (plan === 'Free') return 'Gratuito'
+    return plan
+  }
+
   const stats = [
     {
       title: 'Demandas do Círculo',
@@ -167,7 +183,7 @@ export default function DashboardPage() {
       title: 'Meus Imóveis Ativos',
       value: myListings.toString(),
       icon: Home,
-      trend: `Plano: ${user?.plan === 'Free' ? 'Gratuito' : user?.plan || 'Gratuito'}`,
+      trend: `Plano: ${formatPlanName(profilePlan)}`,
     },
     {
       title: 'Conexões Abertas',
@@ -229,8 +245,12 @@ export default function DashboardPage() {
           <div className="text-muted-foreground mt-2 flex items-center flex-wrap gap-3">
             <span>
               Plano atual:{' '}
-              <Badge variant="outline" className="border-primary/50 text-primary">
-                {user?.plan === 'Free' ? 'Gratuito' : user?.plan || 'Gratuito'}
+              <Badge variant="outline" className="border-primary/50 text-primary font-semibold">
+                {isLoadingName ? (
+                  <Skeleton className="h-4 w-16 bg-muted/20 inline-block" />
+                ) : (
+                  formatPlanName(profilePlan)
+                )}
               </Badge>
             </span>
             <span className="text-sm border-l border-border pl-3 flex items-center gap-1">
