@@ -30,7 +30,7 @@ export function PendingValidations() {
 
         const { data, error } = await supabase
           .from('profiles')
-          .select('id, full_name, creci, whatsapp_number, created_at')
+          .select('id, full_name, creci, whatsapp_number, updated_at')
           .eq('status', 'pending_validation')
           .eq('referral_code', refCode)
 

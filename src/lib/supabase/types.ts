@@ -575,6 +575,8 @@ export const Constants = {
 //     WITH CHECK: (EXISTS ( SELECT 1    FROM profiles p   WHERE ((p.id = auth.uid()) AND ((p.role = 'admin'::text) OR (p.reputation_score > 80)))))
 //   Policy "Authenticated users can select active profiles" (SELECT, PERMISSIVE) roles={authenticated}
 //     USING: (status = 'active'::text)
+//   Policy "Enable read access for active profiles" (SELECT, PERMISSIVE) roles={authenticated}
+//     USING: (status = 'active'::text)
 //   Policy "Users can insert own profile" (INSERT, PERMISSIVE) roles={authenticated}
 //     WITH CHECK: (auth.uid() = id)
 //   Policy "Users can update own profile" (UPDATE, PERMISSIVE) roles={public}
