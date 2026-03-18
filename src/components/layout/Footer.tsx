@@ -34,7 +34,7 @@ export function Footer() {
               </li>
               <li>
                 <Link
-                  to="/auth/confirm"
+                  to="/login"
                   className="text-muted-foreground hover:text-primary transition-colors"
                 >
                   Acesso Exclusivo

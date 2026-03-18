@@ -32,7 +32,7 @@ export default function WelcomePage() {
   const justRegistered = localStorage.getItem('just_registered') === 'true'
 
   if (!user && !mockUser && !justRegistered) {
-    return <Navigate to="/auth/confirm" replace />
+    return <Navigate to="/login" replace />
   }
 
   return (

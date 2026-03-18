@@ -177,7 +177,7 @@ export default function ApplyPage() {
             description:
               'A criação da sua conta demorou um pouco mais que o normal, mas já está sendo finalizada. Tente fazer login ou verifique seu e-mail em breve.',
           })
-          navigate('/auth/confirm')
+          navigate('/login')
           return
         }
 

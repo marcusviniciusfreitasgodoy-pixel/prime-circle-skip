@@ -80,7 +80,7 @@ export function ProtectedRoute() {
   }
 
   if (!mockUser && !authUser) {
-    return <Navigate to="/auth/confirm" replace state={{ from: location }} />
+    return <Navigate to="/login" replace state={{ from: location }} />
   }
 
   const isPending = mockUser?.status === 'pending'

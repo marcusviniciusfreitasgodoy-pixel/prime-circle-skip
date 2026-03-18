@@ -86,7 +86,7 @@ export function Navbar() {
             ) : (
               <>
                 <Button asChild variant="ghost" className="font-semibold">
-                  <Link to="/auth/confirm">Acesso Exclusivo</Link>
+                  <Link to="/login">Acesso Exclusivo</Link>
                 </Button>
                 <Button
                   asChild

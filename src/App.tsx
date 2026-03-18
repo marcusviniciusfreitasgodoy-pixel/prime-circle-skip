@@ -5,6 +5,7 @@ import ApplyPage from './pages/ApplyPage'
 import WaitlistPage from './pages/WaitlistPage'
 import DashboardPage from './pages/DashboardPage'
 import AdminPage from './pages/AdminPage'
+import LoginPage from './pages/LoginPage'
 import AuthConfirmPage from './pages/AuthConfirmPage'
 import WelcomePage from './pages/WelcomePage'
 import OnboardingPage from './pages/OnboardingPage'
@@ -76,6 +77,7 @@ function App() {
               <Route path="/apply" element={<ApplyPage />} />
               <Route path="/apply/lista-de-espera" element={<WaitlistPage />} />
               <Route path="/waitlist" element={<WaitlistPage />} />
+              <Route path="/login" element={<LoginPage />} />
               <Route path="/auth/confirm" element={<AuthConfirmPage />} />
               <Route path="/welcome" element={<WelcomePage />} />
               <Route path="/termos-de-uso" element={<TermsPage />} />
