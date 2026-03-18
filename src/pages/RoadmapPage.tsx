@@ -44,7 +44,7 @@ export default function RoadmapPage() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h2 className="text-3xl font-bold text-white flex items-center gap-3">
-            <Map className="w-8 h-8 text-primary" /> Roadmap Real-Time
+            <Map className="w-8 h-8 text-primary" /> Cronograma de Evolução em Tempo Real
           </h2>
           <p className="text-muted-foreground text-base mt-2 max-w-2xl">
             Acompanhe as prioridades da plataforma e o impacto das suas ideias no ecossistema Prime

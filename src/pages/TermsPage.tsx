@@ -53,7 +53,7 @@ export default function TermsPage() {
               </h2>
               <p>
                 A liquidez da plataforma exige engajamento. A inatividade prolongada prejudica todos
-                os membros do Chapter. Se for detectada inatividade superior a{' '}
+                os membros do Núcleo Regional. Se for detectada inatividade superior a{' '}
                 <strong className="text-white">60 dias</strong> (monitorado via a métrica
                 <code className="bg-secondary text-primary px-1.5 py-0.5 rounded text-sm ml-1">
                   last_contribution_at

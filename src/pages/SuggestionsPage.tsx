@@ -95,7 +95,7 @@ export default function SuggestionsPage() {
           className="gold-gradient text-black font-semibold h-11 px-6 shadow-[0_0_15px_rgba(201,168,76,0.2)]"
         >
           <Link to="/roadmap">
-            <Map className="w-4 h-4 mr-2" /> Ver Roadmap Real-Time
+            <Map className="w-4 h-4 mr-2" /> Ver Cronograma de Evolução
           </Link>
         </Button>
       </div>

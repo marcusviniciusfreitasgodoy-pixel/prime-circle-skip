@@ -68,7 +68,7 @@ export function OpportunityRadar({
 
   const handleMatchClick = () => {
     toast({
-      title: 'Alerta de Match Enviado',
+      title: 'Alerta de Conexão Enviado',
       description: 'O corretor responsável foi notificado. Em breve ele entrará em contato.',
       className: 'border-primary/50 text-white',
     })
@@ -77,7 +77,7 @@ export function OpportunityRadar({
   const handleRequestAccess = () => {
     toast({
       title: 'Acesso Restrito',
-      description: 'Você precisa de uma pontuação de reputação maior que 70 para acessar.',
+      description: 'Você precisa de uma pontuação maior que 70 para acessar.',
       variant: 'destructive',
     })
   }
@@ -91,7 +91,7 @@ export function OpportunityRadar({
             Radar de Oportunidades
           </h2>
           <p className="text-muted-foreground text-sm mt-1">
-            Mural de Demandas e acesso privilegiado a imóveis Off-Market da rede.
+            Mural de Demandas e acesso privilegiado a Imóveis Reservados da rede.
           </p>
         </div>
         <AddNeedDialog onSuccess={onAddNeed} />
@@ -106,7 +106,7 @@ export function OpportunityRadar({
             value="offmarket"
             className="data-[state=active]:bg-card rounded-sm h-10 flex items-center gap-1"
           >
-            Off-Market {!isElite && <Lock className="w-3 h-3 text-red-400" />}
+            Imóveis Reservados {!isElite && <Lock className="w-3 h-3 text-red-400" />}
           </TabsTrigger>
         </TabsList>
 
@@ -129,7 +129,7 @@ export function OpportunityRadar({
                   >
                     {isMatch && !isMine && (
                       <div className="absolute top-0 right-0 bg-primary text-black text-xs font-bold px-3 py-1 rounded-bl-lg z-10 flex items-center gap-1 shadow-md">
-                        <Zap className="w-3 h-3 fill-black" /> Smart Match
+                        <Zap className="w-3 h-3 fill-black" /> Conexão Inteligente
                       </div>
                     )}
                     <CardHeader className="pb-3 pt-5">
@@ -193,10 +193,10 @@ export function OpportunityRadar({
               <div>
                 <h4 className="text-red-400 font-semibold text-lg">Acesso Restrito</h4>
                 <p className="text-red-300/80 text-sm mt-1">
-                  Seu PrimeCircle Score atual é{' '}
+                  Sua Pontuação PrimeCircle atual é{' '}
                   <strong className="text-white">{reputationScore}</strong>. É necessário atingir{' '}
                   <strong>{ELITE_THRESHOLD} pontos</strong> para visualizar detalhes de propriedades
-                  Off-Market exclusivas. Continue fechando parcerias para aumentar sua reputação.
+                  Reservadas exclusivas. Continue fechando parcerias para aumentar sua reputação.
                 </p>
               </div>
             </div>
@@ -213,7 +213,7 @@ export function OpportunityRadar({
                   className={`bg-card border-border relative overflow-hidden transition-all group ${!canView ? 'opacity-80 pointer-events-none' : 'hover:border-primary/50'}`}
                 >
                   <div className="absolute top-0 right-0 bg-primary/20 text-primary border-b border-l border-primary/20 text-xs font-bold px-3 py-1 rounded-bl-lg z-10 flex items-center gap-1">
-                    <Lock className="w-3 h-3" /> Off-Market
+                    <Lock className="w-3 h-3" /> Reservado
                   </div>
 
                   <CardHeader className="pb-3 pt-6">
@@ -242,7 +242,7 @@ export function OpportunityRadar({
                     >
                       {canView
                         ? p.content
-                        : 'Os detalhes desta propriedade off-market estão ocultos. Aumente seu score de reputação para acessar todo o portfólio exclusivo da Prime Circle.'}
+                        : 'Os detalhes desta propriedade estão ocultos. Aumente sua pontuação de reputação para acessar todo o portfólio exclusivo da Prime Circle.'}
                     </p>
 
                     {!canView ? (
@@ -251,7 +251,8 @@ export function OpportunityRadar({
                         className="w-full border-red-900/50 text-red-400 pointer-events-auto"
                         onClick={handleRequestAccess}
                       >
-                        <Lock className="w-4 h-4 mr-2" /> Bloqueado (Score &lt; {ELITE_THRESHOLD})
+                        <Lock className="w-4 h-4 mr-2" /> Bloqueado (Pontuação &lt;{' '}
+                        {ELITE_THRESHOLD})
                       </Button>
                     ) : isMine ? (
                       <Badge
@@ -272,7 +273,7 @@ export function OpportunityRadar({
             {offMarketProps.length === 0 && (
               <div className="col-span-full flex flex-col items-center justify-center p-12 bg-card/50 rounded-xl border border-dashed border-border text-center">
                 <Lock className="w-12 h-12 text-muted-foreground/50 mb-4" />
-                <p className="text-lg font-medium text-white mb-2">Nenhum Imóvel Off-Market</p>
+                <p className="text-lg font-medium text-white mb-2">Nenhum Imóvel Reservado</p>
                 <p className="text-muted-foreground text-sm max-w-sm">
                   Atualmente não há ofertas exclusivas ativas. Seja o primeiro a postar!
                 </p>

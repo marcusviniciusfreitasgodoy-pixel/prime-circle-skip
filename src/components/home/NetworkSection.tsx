@@ -53,7 +53,7 @@ export function NetworkSection() {
                   desc: 'Publicação direta de demandas e necessidades dos clientes.',
                 },
                 {
-                  title: 'Acesso Off-Market',
+                  title: 'Acesso a Imóveis Reservados',
                   desc: 'Estoque exclusivo e imóveis que não aparecem em portais tradicionais.',
                 },
                 {

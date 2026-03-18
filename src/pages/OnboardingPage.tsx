@@ -190,7 +190,7 @@ export default function OnboardingPage() {
                     Política de Privacidade
                   </label>
                   <p className="text-xs text-muted-foreground">
-                    Autorizo o uso de dados para match isolado dentro do meu Chapter.
+                    Autorizo o uso de dados para match isolado dentro do meu Núcleo Regional.
                   </p>
                 </div>
               </div>
@@ -260,7 +260,7 @@ export default function OnboardingPage() {
                 onClick={() => handleComplete('/dashboard')}
                 className="flex-1 h-14 font-semibold border-border hover:bg-secondary text-white"
               >
-                Dashboard
+                Painel de Controle
               </Button>
               <Button
                 onClick={() => handleComplete('/suggestions')}

@@ -62,13 +62,13 @@ export function AppLayout() {
   ).length
 
   const navItems = [
-    { title: 'Dashboard', icon: LayoutDashboard, url: '/dashboard' },
+    { title: 'Painel de Controle', icon: LayoutDashboard, url: '/dashboard' },
     { title: 'Meu Perfil', icon: UserIcon, url: '/profile' },
     { title: 'Demandas', icon: FileText, url: '/needs' },
     { title: 'Imóveis', icon: Home, url: '/listings' },
     { title: 'Conexões', icon: GitMerge, url: '/matches' },
     { title: 'Sugestões', icon: Lightbulb, url: '/suggestions' },
-    { title: 'Roadmap', icon: Map, url: '/roadmap' },
+    { title: 'Cronograma de Evolução', icon: Map, url: '/roadmap' },
     { title: 'Planos', icon: Crown, url: '/plans' },
   ]
 
@@ -103,14 +103,15 @@ export function AppLayout() {
                         >
                           <item.icon className="w-5 h-5" />
                           <span className="flex-1">{item.title}</span>
-                          {item.title === 'Roadmap' && unseenSuggestionsCount > 0 && (
-                            <Badge
-                              variant="destructive"
-                              className="ml-auto h-5 min-w-5 px-1.5 flex items-center justify-center text-[10px]"
-                            >
-                              {unseenSuggestionsCount}
-                            </Badge>
-                          )}
+                          {item.title === 'Cronograma de Evolução' &&
+                            unseenSuggestionsCount > 0 && (
+                              <Badge
+                                variant="destructive"
+                                className="ml-auto h-5 min-w-5 px-1.5 flex items-center justify-center text-[10px]"
+                              >
+                                {unseenSuggestionsCount}
+                              </Badge>
+                            )}
                         </Link>
                       </SidebarMenuButton>
                     </SidebarMenuItem>

@@ -9,7 +9,7 @@ export function MatchmakingShowcase() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <h2 className="text-3xl md:text-5xl font-bold mb-4 text-foreground">
-            Motor de <span className="text-primary gold-text">Matchmaking IA</span>
+            Sistema de <span className="text-primary gold-text">Combinação IA</span>
           </h2>
           <p className="text-lg text-muted-foreground">
             Esqueça grupos de WhatsApp barulhentos e ineficientes. Nossa infraestrutura cruza sua
@@ -24,7 +24,7 @@ export function MatchmakingShowcase() {
               <Box className="w-12 h-12 text-muted-foreground mx-auto mb-4 group-hover:text-primary transition-colors" />
               <h3 className="text-xl font-bold text-foreground mb-2">Suas Ofertas</h3>
               <p className="text-sm text-muted-foreground">
-                Imóveis off-market indexados de forma segura e totalmente discreta.
+                Imóveis reservados indexados de forma segura e totalmente discreta.
               </p>
               <div className="absolute -right-6 top-1/2 -translate-y-1/2 w-12 h-px bg-gradient-to-r from-border to-primary/50 hidden lg:block" />
             </Card>

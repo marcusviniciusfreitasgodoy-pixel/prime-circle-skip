@@ -66,7 +66,7 @@ export default function AdminPage() {
     if (action === 'approved') {
       approveCandidate(id)
       await sendTransactionalEmail('member_approved', { to: email, name })
-      toast.success('Aprovado via Review Manual.')
+      toast.success('Aprovado via Revisão Manual.')
     } else {
       rejectCandidate(id)
       toast.error('Candidato rejeitado.')
@@ -92,14 +92,14 @@ export default function AdminPage() {
       <div>
         <h2 className="text-2xl font-bold text-white">Governança & Admin</h2>
         <p className="text-muted-foreground text-sm">
-          Review manual, logs de status, chamados e monitoramento.
+          Revisão manual, logs de status, chamados e monitoramento.
         </p>
       </div>
 
       <Tabs defaultValue="requests" className="w-full">
         <TabsList className="bg-card border border-border flex-wrap justify-start h-auto p-1 gap-1">
           <TabsTrigger value="requests" className="data-[state=active]:bg-secondary">
-            Manual Review ({pendingRequests.length})
+            Revisão Manual ({pendingRequests.length})
           </TabsTrigger>
           <TabsTrigger value="tickets" className="data-[state=active]:bg-secondary">
             Chamados
@@ -111,7 +111,7 @@ export default function AdminPage() {
             Monitoramento
           </TabsTrigger>
           <TabsTrigger value="logs" className="data-[state=active]:bg-secondary">
-            Audit Trail
+            Trilha de Auditoria
           </TabsTrigger>
         </TabsList>
 
@@ -128,7 +128,7 @@ export default function AdminPage() {
                 toast.success('Cron processado.')
               }}
             >
-              Rodar Cron
+              Executar Cron
             </Button>
           </div>
           {pendingRequests.map((req) => (
@@ -276,7 +276,9 @@ export default function AdminPage() {
         <TabsContent value="logs" className="mt-6 space-y-4">
           <Card className="bg-card border-border">
             <CardHeader>
-              <CardTitle className="text-lg text-white">Status Logs (Traceability)</CardTitle>
+              <CardTitle className="text-lg text-white">
+                Status Logs (Trilha de Auditoria)
+              </CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
               {[...statusLogs]

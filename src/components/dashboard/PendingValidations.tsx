@@ -101,10 +101,10 @@ export function PendingValidations() {
             <Lock className="w-5 h-5" /> Privilégios de Curadoria Bloqueados
           </CardTitle>
           <CardDescription className="text-red-300/70 text-base leading-relaxed">
-            Seu PrimeCircle Score atual é <strong>{myProfileData?.reputation_score || 0}</strong>. É
-            necessário atingir <strong>mais de 80 pontos</strong> para validar os corretores
-            indicados por você. Continue engajando e fechando parcerias na rede para recuperar seus
-            privilégios.
+            Sua Pontuação PrimeCircle atual é{' '}
+            <strong>{myProfileData?.reputation_score || 0}</strong>. É necessário atingir{' '}
+            <strong>mais de 80 pontos</strong> para validar os corretores indicados por você.
+            Continue engajando e fechando parcerias na rede para recuperar seus privilégios.
           </CardDescription>
         </CardHeader>
       </Card>
@@ -120,8 +120,8 @@ export function PendingValidations() {
           <ShieldCheck className="w-6 h-6" /> Curadoria da Rede (Membros Pendentes)
         </CardTitle>
         <CardDescription>
-          Estes corretores usaram seu código de indicação. Como membro de Alta Reputação (Elite),
-          você tem a autoridade para validar o acesso deles à plataforma.
+          Estes corretores usaram seu código de indicação. Como membro de Alta Reputação (Status de
+          Elite), você tem a autoridade para validar o acesso deles à plataforma.
         </CardDescription>
       </CardHeader>
       <CardContent>

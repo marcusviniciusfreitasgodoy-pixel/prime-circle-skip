@@ -10,11 +10,11 @@ export default function WaitlistPage() {
         <h1 className="text-3xl font-bold text-white">Lista de Espera</h1>
         <p className="text-muted-foreground">
           Sua região ou perfil de atuação ainda não está habilitado para auto-aprovação. Nossa
-          infraestrutura escala de forma curada por Chapters.
+          infraestrutura escala de forma curada por Núcleos Regionais.
         </p>
         <div className="bg-secondary p-4 rounded-lg border border-border text-sm text-left text-muted-foreground">
-          Avisaremos via e-mail assim que um novo Chapter for aberto na sua região ou sua aplicação
-          for revisada manualmente.
+          Avisaremos via e-mail assim que um novo Núcleo Regional for aberto na sua região ou sua
+          aplicação for revisada manualmente.
         </div>
         <Button asChild className="w-full gold-gradient text-black mt-4 text-lg h-12 font-semibold">
           <Link to="/">Voltar ao Início</Link>

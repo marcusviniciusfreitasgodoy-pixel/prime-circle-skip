@@ -90,7 +90,7 @@ export default function PlansPage() {
           <CardContent className="p-6 flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
             <div>
               <h3 className="text-xl font-bold text-white mb-1">
-                Status da Assinatura: {user.plan}
+                Status da Assinatura: {user.plan === 'Free' ? 'Gratuito' : user.plan}
               </h3>
               {user.plan === 'Founder' && (
                 <p className="text-primary font-medium mb-3">
@@ -149,7 +149,9 @@ export default function PlansPage() {
                 </div>
               )}
               <CardHeader className="text-center pb-2">
-                <CardTitle className="text-xl text-white">{plan.name}</CardTitle>
+                <CardTitle className="text-xl text-white">
+                  {plan.name === 'Free' ? 'Gratuito' : plan.name}
+                </CardTitle>
                 <CardDescription className="text-muted-foreground min-h-[40px]">
                   {plan.desc}
                 </CardDescription>

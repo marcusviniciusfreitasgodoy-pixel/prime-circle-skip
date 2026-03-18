@@ -232,7 +232,7 @@ export default function ProfilePage() {
             <CardHeader>
               <CardTitle className="text-lg text-white">Informações Pessoais e Contato</CardTitle>
               <CardDescription>
-                Atualize seu nome e adicione seu número para receber notificações de matches via
+                Atualize seu nome e adicione seu número para receber notificações de conexões via
                 Evolution API.
               </CardDescription>
             </CardHeader>

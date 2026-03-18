@@ -38,7 +38,7 @@ export function MatchModal({
     if (!selectedListing || !need) return
     const success = addMatch(need.id, selectedListing)
     if (success) {
-      toast.success('Parceria proposta! O negócio foi adicionado ao seu pipeline.')
+      toast.success('Parceria proposta! O negócio foi adicionado ao seu funil.')
 
       const listing = listings.find((l) => l.id === selectedListing)
       const partnerName = need.ownerId === 'other' ? 'Parceiro Prime' : 'Corretor'
@@ -108,7 +108,7 @@ export function MatchModal({
             disabled={!selectedListing}
             className="gold-gradient text-black"
           >
-            Confirmar Match
+            Confirmar Conexão
           </Button>
         </div>
       </DialogContent>

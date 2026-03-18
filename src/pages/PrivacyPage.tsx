@@ -22,8 +22,8 @@ export default function PrivacyPage() {
               <p>
                 Para prover uma infraestrutura privada e confiável, coletamos{' '}
                 <strong>dados de perfil</strong> (incluindo nome, e-mail, telefone, CRECI, ticket de
-                atuação e Chapter) e mantemos <strong>logs de atividade</strong> e status (cadastros
-                de imóveis, interações com demandas, fechamentos de conexões).
+                atuação e Núcleo Regional) e mantemos <strong>logs de atividade</strong> e status
+                (cadastros de imóveis, interações com demandas, fechamentos de conexões).
               </p>
             </section>
 
@@ -39,7 +39,7 @@ export default function PrivacyPage() {
                 </strong>{' '}
                 e assegurar o cumprimento das regras. Nós não comercializamos, compartilhamos ou
                 vendemos listas de leads, e os imóveis/demandas operam isolados exclusivamente
-                dentro do escopo do seu respectivo Chapter.
+                dentro do escopo do seu respectivo Núcleo Regional.
               </p>
             </section>
 
@@ -74,9 +74,9 @@ export default function PrivacyPage() {
               <p>
                 Você pode solicitar o descredenciamento e remoção das suas listagens ativas a
                 qualquer momento. Para garantir a trilha de auditoria (audit trail) e estabilidade
-                do match making preexistente, dados anonimizados de histórico de transações podem
-                ser mantidos de acordo com as permissões da legislação vigente de proteção de dados
-                aplicável ao território nacional.
+                do sistema de combinação preexistente, dados anonimizados de histórico de transações
+                podem ser mantidos de acordo com as permissões da legislação vigente de proteção de
+                dados aplicável ao território nacional.
               </p>
             </section>
           </CardContent>

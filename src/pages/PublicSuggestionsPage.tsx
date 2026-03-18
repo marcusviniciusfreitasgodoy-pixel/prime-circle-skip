@@ -75,7 +75,7 @@ export default function PublicSuggestionsPage() {
             </Link>
           </Button>
           <h1 className="text-3xl md:text-4xl font-bold text-white mb-4 flex items-center gap-3">
-            <Lightbulb className="w-8 h-8 text-primary" /> Roadmap Colaborativo
+            <Lightbulb className="w-8 h-8 text-primary" /> Cronograma de Evolução Colaborativo
           </h1>
           <p className="text-muted-foreground text-lg max-w-2xl">
             Sua visão de mercado é fundamental. Compartilhe suas ideias e ajude a construir as

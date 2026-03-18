@@ -76,7 +76,7 @@ export default function MatchFeedbackPage() {
                 melhores para você.
               </p>
               <Button asChild variant="outline" className="w-full mt-4">
-                <Link to="/dashboard">Ir para o Dashboard</Link>
+                <Link to="/dashboard">Ir para o Painel de Controle</Link>
               </Button>
             </>
           )}
@@ -91,7 +91,7 @@ export default function MatchFeedbackPage() {
                 tarde.
               </p>
               <Button asChild variant="outline" className="w-full mt-4">
-                <Link to="/dashboard">Ir para o Dashboard</Link>
+                <Link to="/dashboard">Ir para o Painel de Controle</Link>
               </Button>
             </>
           )}

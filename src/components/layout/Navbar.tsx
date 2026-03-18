@@ -46,7 +46,7 @@ export function Navbar() {
                         to="/dashboard"
                         className="text-sm font-medium text-muted-foreground hover:text-white transition-colors"
                       >
-                        Dashboard
+                        Painel de Controle
                       </Link>
                       <Link
                         to="/plans"
@@ -70,7 +70,7 @@ export function Navbar() {
                         to="/roadmap"
                         className="text-sm font-medium text-muted-foreground hover:text-white transition-colors flex items-center gap-1"
                       >
-                        <Map className="w-4 h-4" /> Roadmap
+                        <Map className="w-4 h-4" /> Cronograma de Evolução
                       </Link>
                     </>
                   )}

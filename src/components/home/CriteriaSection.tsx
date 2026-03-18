@@ -40,7 +40,7 @@ export function CriteriaSection() {
                 <Award className="w-8 h-8 text-primary shrink-0 group-hover:scale-110 transition-transform" />
                 <div>
                   <h3 className="font-semibold text-base sm:text-lg text-zinc-100">
-                    Split Mandatório (50/50)
+                    Divisão Mandatória (50/50)
                   </h3>
                   <p className="text-zinc-400 mt-2 text-xs sm:text-sm leading-relaxed">
                     Nossa regra de ouro inegociável: toda e qualquer parceria gerada na plataforma

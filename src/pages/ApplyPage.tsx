@@ -280,7 +280,7 @@ export default function ApplyPage() {
               <>
                 <img
                   src={avatarPreview}
-                  alt="Avatar preview"
+                  alt="Visualização da Foto de Perfil"
                   className="w-full h-full object-cover"
                 />
                 {!isLoading && (
@@ -591,7 +591,7 @@ export default function ApplyPage() {
                   <FormDescription className="text-xs text-muted-foreground leading-relaxed">
                     Opcional. Insira o código enviado por um membro fundador para validação
                     imediata. Se não possuir um código, deixe em branco para entrar na fila de
-                    análise do comitê.
+                    espera de análise do comitê.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>

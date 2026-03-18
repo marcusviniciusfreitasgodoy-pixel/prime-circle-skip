@@ -16,8 +16,8 @@ export function PersonaSection() {
               </h2>
               <p className="text-base sm:text-lg text-zinc-600 dark:text-zinc-400 leading-relaxed">
                 O Prime Circle é um ambiente restrito, desenhado exclusivamente para corretores de
-                alto padrão que buscam parcerias estratégicas, discrição e acesso a um portfólio
-                off-market incomparável.
+                alto padrão que buscam parcerias estratégicas, discrição e acesso a um portfólio de
+                imóveis reservados incomparável.
               </p>
             </div>
 
@@ -31,7 +31,7 @@ export function PersonaSection() {
                 {
                   icon: Building2,
                   title: 'Portfólio Exclusivo',
-                  desc: 'Imóveis off-market selecionados.',
+                  desc: 'Imóveis reservados selecionados.',
                 },
                 {
                   icon: ShieldCheck,

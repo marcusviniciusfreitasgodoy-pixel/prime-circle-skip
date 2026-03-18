@@ -55,14 +55,14 @@ export default function WelcomePage() {
         </p>
 
         <p className="text-muted-foreground text-sm mb-8 relative z-10">
-          Redirecionando para o seu dashboard...
+          Redirecionando para o seu Painel de Controle...
         </p>
 
         <Button
           asChild
           className="w-full gold-gradient gold-glow text-black font-bold h-14 text-lg relative z-10"
         >
-          <Link to="/dashboard">Acessar meu Dashboard Agora</Link>
+          <Link to="/dashboard">Acessar meu Painel de Controle Agora</Link>
         </Button>
       </div>
     </div>

@@ -30,7 +30,7 @@ export default function MatchesListPage() {
   return (
     <div className="h-[calc(100vh-8rem)] flex flex-col space-y-6 animate-fade-in-up">
       <div>
-        <h2 className="text-2xl font-bold text-white">Pipeline de Conexões</h2>
+        <h2 className="text-2xl font-bold text-white">Funil de Negócios de Conexões</h2>
         <p className="text-muted-foreground text-sm">
           Acompanhe e movimente o status das parcerias em andamento.
         </p>

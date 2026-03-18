@@ -167,7 +167,7 @@ export default function DashboardPage() {
       title: 'Meus Imóveis Ativos',
       value: myListings.toString(),
       icon: Home,
-      trend: `Plano: ${user?.plan || 'Free'}`,
+      trend: `Plano: ${user?.plan === 'Free' ? 'Gratuito' : user?.plan || 'Gratuito'}`,
     },
     {
       title: 'Conexões Abertas',
@@ -219,7 +219,7 @@ export default function DashboardPage() {
       <Alert className="bg-card border-primary/20 text-foreground shadow-[0_0_15px_rgba(201,168,76,0.1)]">
         <AlertCircle className="h-5 w-5 text-primary" />
         <AlertTitle className="text-primary font-semibold ml-2">
-          Chapter {user?.chapter || 'Global'} — Engajamento Exigido
+          Núcleo Regional {user?.chapter || 'Global'} — Engajamento Exigido
         </AlertTitle>
         <AlertDescription className="text-muted-foreground mt-2 ml-2 leading-relaxed">
           Seu acesso e status dependem de atividade constante na plataforma. A inatividade superior
@@ -236,7 +236,7 @@ export default function DashboardPage() {
             Bem-vindo, {isLoadingName ? <Skeleton className="h-8 w-32 bg-muted/20" /> : profileName}
             {!isLoadingName && profileScore >= 70 && (
               <Badge className="ml-2 bg-primary/20 text-primary border-primary/30 hover:bg-primary/30 flex items-center gap-1 shadow-sm">
-                <ShieldCheck className="w-3 h-3" /> Elite Status
+                <ShieldCheck className="w-3 h-3" /> Status de Elite
               </Badge>
             )}
           </h2>
@@ -244,11 +244,11 @@ export default function DashboardPage() {
             <span>
               Plano atual:{' '}
               <Badge variant="outline" className="border-primary/50 text-primary">
-                {user?.plan || 'Free'}
+                {user?.plan === 'Free' ? 'Gratuito' : user?.plan || 'Gratuito'}
               </Badge>
             </span>
             <span className="text-sm border-l border-border pl-3 flex items-center gap-1">
-              PrimeCircle Score:{' '}
+              Pontuação PrimeCircle:{' '}
               <strong
                 className={`text-white px-2 py-0.5 rounded-md border border-border ${profileScore >= 70 ? 'bg-primary/20 border-primary/50 text-primary' : 'bg-secondary/80'}`}
               >
@@ -270,7 +270,7 @@ export default function DashboardPage() {
           <Card className="bg-card border-border h-full">
             <CardHeader className="pb-3">
               <CardTitle className="text-lg text-white flex items-center gap-2">
-                <BellRing className="w-5 h-5 text-primary" /> Meus Alertas de Match
+                <BellRing className="w-5 h-5 text-primary" /> Meus Alertas de Conexão
               </CardTitle>
               <CardDescription>Avisos enviados via WhatsApp recentemente</CardDescription>
             </CardHeader>
@@ -383,7 +383,7 @@ export default function DashboardPage() {
 
       <Card className="bg-card border-border">
         <CardHeader>
-          <CardTitle className="text-lg text-white">Pipeline de Conexões (Matches)</CardTitle>
+          <CardTitle className="text-lg text-white">Funil de Negócios de Conexões</CardTitle>
           <CardDescription>Fluxo de validação obrigatório até o fechamento.</CardDescription>
         </CardHeader>
         <CardContent>

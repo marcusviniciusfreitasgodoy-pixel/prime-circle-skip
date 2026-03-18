@@ -11,12 +11,12 @@ export function ProcessTimeline() {
     },
     {
       icon: FileText,
-      title: 'Private Listing',
+      title: 'Listagem Privativa',
       desc: 'Publicação do seu portfólio de forma segura e restrita.',
     },
     {
       icon: Zap,
-      title: 'Match Automático',
+      title: 'Conexão Automática',
       desc: 'Nossa IA cruza suas ofertas com demandas ativas.',
     },
     {
@@ -27,7 +27,7 @@ export function ProcessTimeline() {
     {
       icon: DollarSign,
       title: 'Sucesso Mútuo',
-      desc: 'Fechamento do negócio com split obrigatório de 50/50.',
+      desc: 'Fechamento do negócio com divisão obrigatória de 50/50.',
     },
   ]
 

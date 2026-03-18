@@ -60,7 +60,7 @@ export function AddPropertyDialog({ onSuccess }: { onSuccess: () => void }) {
       toast({
         title: 'Sucesso',
         description: isOffMarket
-          ? 'Imóvel Off-Market publicado com exclusividade.'
+          ? 'Imóvel Reservado publicado com exclusividade.'
           : 'Imóvel publicado! Agora a rede já pode encontrar compatibilidades.',
         className: 'bg-card border-primary/50 text-white',
       })
@@ -80,8 +80,8 @@ export function AddPropertyDialog({ onSuccess }: { onSuccess: () => void }) {
         <DialogHeader>
           <DialogTitle>Divulgar Novo Imóvel</DialogTitle>
           <DialogDescription>
-            Insira os dados do imóvel. Imóveis marcados como Off-Market só serão vistos por
-            corretores Elite (Reputação 70+).
+            Insira os dados do imóvel. Imóveis marcados como Reservados só serão vistos por
+            corretores Elite (Pontuação 70+).
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4 mt-4">
@@ -117,10 +117,10 @@ export function AddPropertyDialog({ onSuccess }: { onSuccess: () => void }) {
             <div className="space-y-0.5">
               <Label className="flex items-center gap-2">
                 <Lock className="w-4 h-4 text-primary" />
-                Exclusivo Off-Market
+                Exclusivo / Reservado
               </Label>
               <p className="text-xs text-muted-foreground">
-                Restringir visibilidade apenas para corretores de alta reputação.
+                Restringir visibilidade apenas para corretores de alta pontuação.
               </p>
             </div>
             <Switch checked={isOffMarket} onCheckedChange={setIsOffMarket} />
