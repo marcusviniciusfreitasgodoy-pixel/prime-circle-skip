@@ -5,7 +5,7 @@
     "welcome-webhook": 15,
     "support-ticket-webhook": 2,
     "match-property-webhook": 6,
-    "functions": 3,
+    "functions": 4,
     "demand-push-webhook": 3
   }
 }
