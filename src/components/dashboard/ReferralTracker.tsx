@@ -34,22 +34,39 @@ export function ReferralTracker({
     let mounted = true
 
     const fetchData = async () => {
-      const { count } = await supabase
-        .from('referral_clicks')
-        .select('*', { count: 'exact', head: true })
-        .eq('referrer_id', userId)
+      try {
+        // We avoid head: true to prevent "Unexpected end of JSON input" errors
+        // that can occur in some Supabase client versions for empty count responses.
+        const { count, error } = await supabase
+          .from('referral_clicks')
+          .select('id', { count: 'exact' })
+          .eq('referrer_id', userId)
+          .limit(1)
 
-      if (count !== null && mounted) setClicksCount(count)
+        if (error) {
+          console.warn('Error fetching clicks count:', error)
+        } else if (count !== null && mounted) {
+          setClicksCount(count)
+        }
+      } catch (err) {
+        console.warn('Exception fetching referral clicks count handled safely:', err)
+      }
 
-      const { data } = await supabase
-        .from('profiles')
-        .select('id, full_name, status, created_at')
-        .eq('referred_by_id', userId)
-        .order('created_at', { ascending: false })
+      try {
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('id, full_name, status, created_at')
+          .eq('referred_by_id', userId)
+          .order('created_at', { ascending: false })
 
-      if (data && mounted) {
-        setMyCircle(data)
-        setRegistrationsCount(data.length)
+        if (error) {
+          console.warn('Error fetching referrals:', error)
+        } else if (data && mounted) {
+          setMyCircle(data)
+          setRegistrationsCount(data.length)
+        }
+      } catch (err) {
+        console.warn('Exception fetching referrals handled safely:', err)
       }
     }
 

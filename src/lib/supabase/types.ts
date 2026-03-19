@@ -180,6 +180,7 @@ export type Database = {
           accepted_terms: boolean
           avatar_url: string | null
           company_name: string | null
+          created_at: string
           creci: string | null
           email: string | null
           full_name: string | null
@@ -201,6 +202,7 @@ export type Database = {
           accepted_terms?: boolean
           avatar_url?: string | null
           company_name?: string | null
+          created_at?: string
           creci?: string | null
           email?: string | null
           full_name?: string | null
@@ -222,6 +224,7 @@ export type Database = {
           accepted_terms?: boolean
           avatar_url?: string | null
           company_name?: string | null
+          created_at?: string
           creci?: string | null
           email?: string | null
           full_name?: string | null
@@ -576,6 +579,7 @@ export const Constants = {
 //   validation_date: timestamp with time zone (nullable)
 //   email: text (nullable)
 //   referred_by_id: uuid (nullable)
+//   created_at: timestamp with time zone (not null, default: now())
 // Table: referral_clicks
 //   id: uuid (not null, default: gen_random_uuid())
 //   referrer_id: uuid (not null)
