@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
+import { Badge } from '@/components/ui/badge'
 import {
   Select,
   SelectContent,
@@ -20,7 +21,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 import { useToast } from '@/hooks/use-toast'
-import { PlusCircle } from 'lucide-react'
+import { PlusCircle, X } from 'lucide-react'
 import { AddressAutocomplete } from '@/components/ui/address-autocomplete'
 
 const formatCurrency = (value: string) => {
@@ -44,6 +45,17 @@ export function AddNeedDialog({ onSuccess }: { onSuccess: () => void }) {
   const [city, setCity] = useState('')
   const [stateLocation, setStateLocation] = useState('')
 
+  const [condominiums, setCondominiums] = useState<string[]>([])
+  const [condoInput, setCondoInput] = useState('')
+
+  const addCondo = () => {
+    const trimmed = condoInput.trim()
+    if (trimmed && !condominiums.includes(trimmed)) {
+      setCondominiums([...condominiums, trimmed])
+    }
+    setCondoInput('')
+  }
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (!user) return
@@ -66,12 +78,13 @@ export function AddNeedDialog({ onSuccess }: { onSuccess: () => void }) {
       suites: String(fd.get('suites') || ''),
       tamanho_imovel: Number(fd.get('tamanho_imovel') || 0),
       tamanho_terreno: fd.get('tamanho_terreno') ? Number(fd.get('tamanho_terreno')) : null,
-      nome_condominio: fd.get('nome_condominio') ? String(fd.get('nome_condominio')) : null,
+      condominiums: condominiums,
       link_imovel: fd.get('link_imovel') ? String(fd.get('link_imovel')) : null,
       description: String(fd.get('description') || ''),
     }
 
-    const content = `Busca: ${md.tipo_imovel}\nBairro: ${md.neighborhood}\nEndereço: ${md.street}\nCidade: ${md.city}\nEstado: ${md.state}\nValor Max: R$ ${md.valor}\nQuartos: ${md.quartos}\nDetalhes: ${md.description}`
+    const condosText = condominiums.length > 0 ? `\nCondomínios: ${condominiums.join(', ')}` : ''
+    const content = `Busca: ${md.tipo_imovel}\nBairro: ${md.neighborhood}\nEndereço: ${md.street}${condosText}\nCidade: ${md.city}\nEstado: ${md.state}\nValor Max: R$ ${md.valor}\nQuartos: ${md.quartos}\nDetalhes: ${md.description}`
 
     const { error } = await supabase.from('documents').insert({ content, metadata: md })
 
@@ -94,6 +107,8 @@ export function AddNeedDialog({ onSuccess }: { onSuccess: () => void }) {
       setCity('')
       setStateLocation('')
       setValor('')
+      setCondominiums([])
+      setCondoInput('')
       onSuccess()
     }
   }
@@ -213,8 +228,40 @@ export function AddNeedDialog({ onSuccess }: { onSuccess: () => void }) {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label>Condomínio (Opcional)</Label>
-              <Input name="nome_condominio" placeholder="Ex: Condomínio Rio Mar" />
+              <Label>Condomínios Específicos (Opcional)</Label>
+              <div className="flex gap-2">
+                <Input
+                  value={condoInput}
+                  onChange={(e) => setCondoInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault()
+                      addCondo()
+                    }
+                  }}
+                  placeholder="Ex: Condomínio Rio Mar"
+                />
+                <Button type="button" onClick={addCondo} variant="secondary">
+                  Adicionar
+                </Button>
+              </div>
+              {condominiums.length > 0 && (
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {condominiums.map((c) => (
+                    <Badge
+                      key={c}
+                      variant="secondary"
+                      className="flex items-center gap-1 bg-secondary/50"
+                    >
+                      {c}
+                      <X
+                        className="w-3 h-3 cursor-pointer hover:text-destructive transition-colors"
+                        onClick={() => setCondominiums((prev) => prev.filter((x) => x !== c))}
+                      />
+                    </Badge>
+                  ))}
+                </div>
+              )}
             </div>
             <div className="space-y-2">
               <Label>Link de Referência (Opcional)</Label>

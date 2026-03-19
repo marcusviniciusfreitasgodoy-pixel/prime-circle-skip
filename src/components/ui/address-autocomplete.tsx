@@ -58,7 +58,8 @@ export function AddressAutocomplete({
   }, [isLoaded])
 
   useEffect(() => {
-    const timer = setTimeout(() => setDebouncedValue(value), 300)
+    // Reduced debounce to 150ms for faster, more responsive autocomplete
+    const timer = setTimeout(() => setDebouncedValue(value), 150)
     return () => clearTimeout(timer)
   }, [value])
 
