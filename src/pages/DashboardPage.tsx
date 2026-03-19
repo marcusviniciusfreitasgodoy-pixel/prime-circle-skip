@@ -162,7 +162,7 @@ export default function DashboardPage() {
   const activeMatches = matches.filter((m) => m.status !== 'Fechado')
 
   const refCode = profileReferralCode || authUser?.id || user?.id || 'founder-123'
-  const referralLink = `https://prime-circle-migration-fd549.goskip.app/register?ref=${refCode}`
+  const referralLink = `https://prime-circle-migration-fd549.goskip.app/apply?ref=${refCode}`
 
   const copyLink = () => {
     navigator.clipboard.writeText(referralLink)
@@ -173,7 +173,7 @@ export default function DashboardPage() {
   }
 
   const handleWhatsappShare = () => {
-    const text = `Olá! Faço parte do Prime Circle, uma rede privada de liquidez imobiliária para corretores de alto padrão. Como trabalhamos com a política 50/50 e curadoria rigorosa, gostaria de te convidar para o meu círculo. Cadastre-se por este link para ter prioridade na análise: ${referralLink}`
+    const text = `Olá! Faço parte do Prime Circle, uma rede privada de liquidez imobiliária para corretores de alto padrão. Gostaria de te convidar para o meu círculo. Cadastre-se por este link para ter prioridade na análise: ${referralLink}`
     const encodedText = encodeURIComponent(text)
     window.open(`https://wa.me/?text=${encodedText}`, '_blank')
   }
