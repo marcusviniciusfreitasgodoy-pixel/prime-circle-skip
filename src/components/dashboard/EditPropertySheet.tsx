@@ -332,7 +332,7 @@ export function EditPropertySheet({
                 value={endereco}
                 onChange={setEndereco}
                 onSelect={(details) => {
-                  setEndereco(details.street)
+                  setEndereco(details.street || details.formattedAddress)
                   if (details.neighborhood) setBairro(details.neighborhood)
                   if (details.city) setCity(details.city)
                   if (details.state) setStateLocation(details.state)
@@ -346,11 +346,15 @@ export function EditPropertySheet({
             </div>
             <div className="space-y-2">
               <Label>Bairro</Label>
-              <Input
+              <AddressAutocomplete
                 name="bairro"
                 required
+                types={['(regions)']}
                 value={bairro}
-                onChange={(e) => setBairro(e.target.value)}
+                onChange={setBairro}
+                onSelect={(details) => {
+                  setBairro(details.neighborhood || details.street || details.formattedAddress)
+                }}
                 placeholder="Ex: Barra da Tijuca"
               />
             </div>

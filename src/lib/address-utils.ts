@@ -22,6 +22,8 @@ export function normalizeStreetName(street: string) {
   normalized = normalized.replace(/^Pca\s+/i, 'Praça ')
   normalized = normalized.replace(/^Al\.\s*/i, 'Alameda ')
   normalized = normalized.replace(/^Al\s+/i, 'Alameda ')
+  normalized = normalized.replace(/^Trav\.\s*/i, 'Travessa ')
+  normalized = normalized.replace(/^Trav\s+/i, 'Travessa ')
 
   normalized = normalized.replace(/\s+/g, ' ').trim()
   return capitalizeWords(normalized)
@@ -67,6 +69,6 @@ export function extractAddressComponents(place: any) {
     neighborhood,
     city,
     state,
-    formattedAddress: place.formatted_address,
+    formattedAddress: place.formatted_address || '',
   }
 }

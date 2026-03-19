@@ -148,7 +148,7 @@ export function AddNeedDialog({ onSuccess }: { onSuccess: () => void }) {
                 value={endereco}
                 onChange={setEndereco}
                 onSelect={(details) => {
-                  setEndereco(details.street)
+                  setEndereco(details.street || details.formattedAddress)
                   if (details.neighborhood) setBairro(details.neighborhood)
                   if (details.city) setCity(details.city)
                   if (details.state) setStateLocation(details.state)
@@ -158,12 +158,16 @@ export function AddNeedDialog({ onSuccess }: { onSuccess: () => void }) {
             </div>
             <div className="space-y-2">
               <Label>Bairros de Interesse</Label>
-              <Input
+              <AddressAutocomplete
                 name="bairro"
                 required
-                placeholder="Ex: Barra da Tijuca ou Recreio"
+                types={['(regions)']}
                 value={bairro}
-                onChange={(e) => setBairro(e.target.value)}
+                onChange={setBairro}
+                onSelect={(details) => {
+                  setBairro(details.neighborhood || details.street || details.formattedAddress)
+                }}
+                placeholder="Ex: Barra da Tijuca ou Recreio"
               />
             </div>
           </div>

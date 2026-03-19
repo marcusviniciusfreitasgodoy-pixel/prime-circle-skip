@@ -15,10 +15,17 @@ declare global {
 interface AddressAutocompleteProps {
   value: string
   onChange: (val: string) => void
-  onSelect: (details: { street: string; neighborhood: string; city: string; state: string }) => void
+  onSelect: (details: {
+    street: string
+    neighborhood: string
+    city: string
+    state: string
+    formattedAddress: string
+  }) => void
   placeholder?: string
   required?: boolean
   name?: string
+  types?: string[]
 }
 
 export function AddressAutocomplete({
@@ -28,13 +35,18 @@ export function AddressAutocomplete({
   placeholder,
   required,
   name,
+  types,
 }: AddressAutocompleteProps) {
   const isLoaded = useGoogleMapsScript()
   const [open, setOpen] = useState(false)
   const [predictions, setPredictions] = useState<any[]>([])
+  const [isSearching, setIsSearching] = useState(false)
   const autocompleteService = useRef<any>(null)
   const placesService = useRef<any>(null)
   const mapDiv = useRef<HTMLDivElement>(null)
+
+  const [debouncedValue, setDebouncedValue] = useState(value)
+  const skipSearchRef = useRef(false)
 
   useEffect(() => {
     if (isLoaded && !autocompleteService.current && window.google) {
@@ -46,25 +58,44 @@ export function AddressAutocomplete({
   }, [isLoaded])
 
   useEffect(() => {
-    if (!value || value.length < 3 || !autocompleteService.current) {
+    const timer = setTimeout(() => setDebouncedValue(value), 300)
+    return () => clearTimeout(timer)
+  }, [value])
+
+  useEffect(() => {
+    if (!debouncedValue || debouncedValue.length < 3 || !autocompleteService.current) {
       setPredictions([])
+      setIsSearching(false)
       return
     }
 
-    autocompleteService.current.getPlacePredictions(
-      { input: value, componentRestrictions: { country: 'br' } },
-      (results: any[], status: any) => {
-        if (status === window.google.maps.places.PlacesServiceStatus.OK && results) {
-          setPredictions(results)
-          setOpen(true)
-        } else {
-          setPredictions([])
-        }
-      },
-    )
-  }, [value])
+    if (skipSearchRef.current) {
+      return
+    }
+
+    setIsSearching(true)
+    const request: any = {
+      input: debouncedValue,
+      componentRestrictions: { country: 'br' },
+    }
+
+    if (types && types.length > 0) {
+      request.types = types
+    }
+
+    autocompleteService.current.getPlacePredictions(request, (results: any[], status: any) => {
+      setIsSearching(false)
+      if (status === window.google.maps.places.PlacesServiceStatus.OK && results) {
+        setPredictions(results)
+        setOpen(true)
+      } else {
+        setPredictions([])
+      }
+    })
+  }, [debouncedValue, types])
 
   const handleSelect = (placeId: string, description: string) => {
+    skipSearchRef.current = true
     onChange(description)
     setOpen(false)
 
@@ -74,15 +105,17 @@ export function AddressAutocomplete({
         (place: any, status: any) => {
           if (status === window.google.maps.places.PlacesServiceStatus.OK && place) {
             const details = extractAddressComponents(place)
-            onSelect({
-              street: details.street,
-              neighborhood: details.neighborhood,
-              city: details.city,
-              state: details.state,
-            })
+            onSelect(details)
           }
+          setTimeout(() => {
+            skipSearchRef.current = false
+          }, 500)
         },
       )
+    } else {
+      setTimeout(() => {
+        skipSearchRef.current = false
+      }, 500)
     }
   }
 
@@ -96,13 +129,16 @@ export function AddressAutocomplete({
             <Input
               name={name}
               required={required}
-              placeholder={placeholder || 'Comece a digitar o endereço...'}
+              placeholder={placeholder || 'Comece a digitar...'}
               value={value}
-              onChange={(e) => onChange(e.target.value)}
-              className="pl-9"
+              onChange={(e) => {
+                skipSearchRef.current = false
+                onChange(e.target.value)
+              }}
+              className="pl-9 pr-9"
               autoComplete="off"
             />
-            {!isLoaded && (
+            {(!isLoaded || isSearching) && (
               <Loader2 className="absolute right-3 top-3 h-4 w-4 animate-spin text-muted-foreground" />
             )}
           </div>

@@ -237,7 +237,7 @@ export function AddPropertyDialog({ onSuccess }: { onSuccess: () => void }) {
                 value={endereco}
                 onChange={setEndereco}
                 onSelect={(details) => {
-                  setEndereco(details.street)
+                  setEndereco(details.street || details.formattedAddress)
                   if (details.neighborhood) setBairro(details.neighborhood)
                   if (details.city) setCity(details.city)
                   if (details.state) setStateLocation(details.state)
@@ -247,12 +247,16 @@ export function AddPropertyDialog({ onSuccess }: { onSuccess: () => void }) {
             </div>
             <div className="space-y-2">
               <Label>Bairro</Label>
-              <Input
+              <AddressAutocomplete
                 name="bairro"
                 required
-                placeholder="Ex: Barra da Tijuca"
+                types={['(regions)']}
                 value={bairro}
-                onChange={(e) => setBairro(e.target.value)}
+                onChange={setBairro}
+                onSelect={(details) => {
+                  setBairro(details.neighborhood || details.street || details.formattedAddress)
+                }}
+                placeholder="Ex: Barra da Tijuca"
               />
             </div>
             <div className="space-y-2">
