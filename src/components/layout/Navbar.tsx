@@ -1,15 +1,52 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
-import { LogOut, Settings, Lightbulb, Zap, Map, MessageSquare, Menu } from 'lucide-react'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import {
+  LogOut,
+  Settings,
+  Lightbulb,
+  Zap,
+  Map,
+  MessageSquare,
+  Menu,
+  User as UserIcon,
+} from 'lucide-react'
 import useAppStore from '@/stores/main'
+import { useAuth } from '@/hooks/use-auth'
+import { useToast } from '@/hooks/use-toast'
 
 export function Navbar() {
   const { user, logout } = useAppStore()
+  const { signOut } = useAuth()
+  const navigate = useNavigate()
+  const { toast } = useToast()
   const [isOpen, setIsOpen] = useState(false)
 
   const closeMenu = () => setIsOpen(false)
+
+  const handleLogout = async () => {
+    try {
+      const { error } = await signOut()
+      if (error) throw error
+      logout()
+      navigate('/')
+    } catch (error) {
+      toast({
+        title: 'Erro ao sair',
+        description: 'Não foi possível encerrar a sessão. Tente novamente.',
+        variant: 'destructive',
+      })
+    }
+  }
 
   return (
     <nav className="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-md border-b border-border">
@@ -81,13 +118,50 @@ export function Navbar() {
                     </>
                   )}
                 </div>
-                <Button
-                  variant="outline"
-                  onClick={logout}
-                  className="text-muted-foreground border-border hover:bg-secondary"
-                >
-                  <LogOut className="w-4 h-4 mr-2" /> Sair
-                </Button>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      className="relative h-10 w-10 rounded-full border border-border"
+                    >
+                      <Avatar className="h-10 w-10">
+                        <AvatarImage src={user.avatar} />
+                        <AvatarFallback className="bg-primary/10 text-primary">
+                          {user.name?.charAt(0)?.toUpperCase() || 'U'}
+                        </AvatarFallback>
+                      </Avatar>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent
+                    className="w-56 bg-card border-border"
+                    align="end"
+                    forceMount
+                  >
+                    <div className="flex items-center justify-start gap-2 p-3">
+                      <div className="flex flex-col space-y-1 leading-none">
+                        <p className="font-medium text-sm text-white truncate">{user.name}</p>
+                        <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+                      </div>
+                    </div>
+                    <DropdownMenuSeparator className="bg-border" />
+                    <DropdownMenuItem
+                      asChild
+                      className="cursor-pointer hover:bg-secondary focus:bg-secondary py-2"
+                    >
+                      <Link to="/profile">
+                        <UserIcon className="mr-2 h-4 w-4" />
+                        <span>Meu Perfil</span>
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={handleLogout}
+                      className="cursor-pointer text-red-400 focus:text-red-400 focus:bg-red-400/10 py-2"
+                    >
+                      <LogOut className="mr-2 h-4 w-4" />
+                      <span>Sair</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </>
             ) : (
               <>
@@ -217,10 +291,10 @@ export function Navbar() {
                       <Button
                         variant="outline"
                         onClick={() => {
-                          logout()
+                          handleLogout()
                           closeMenu()
                         }}
-                        className="justify-start text-muted-foreground border-border hover:bg-secondary w-full"
+                        className="justify-start text-red-400 border-border hover:bg-red-400/10 hover:text-red-400 w-full"
                       >
                         <LogOut className="w-4 h-4 mr-2" /> Sair
                       </Button>

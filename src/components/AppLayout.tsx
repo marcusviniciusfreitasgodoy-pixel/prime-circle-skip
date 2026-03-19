@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { Outlet, Link, useLocation } from 'react-router-dom'
+import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom'
 import {
   LayoutDashboard,
   FileText,
@@ -25,14 +25,24 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+} from '@/components/ui/dropdown-menu'
 import useAppStore from '@/stores/main'
+import { useAuth } from '@/hooks/use-auth'
 import { useToast } from '@/hooks/use-toast'
 import { cn } from '@/lib/utils'
 import { PlanLimitModal } from '@/components/PlanLimitModal'
 
 export function AppLayout() {
   const { user, logout, suggestions, notifications, clearNotifications } = useAppStore()
+  const { signOut } = useAuth()
   const location = useLocation()
+  const navigate = useNavigate()
   const { toast } = useToast()
 
   const clearRef = useRef(clearNotifications)
@@ -53,6 +63,21 @@ export function AppLayout() {
       clearRef.current()
     }
   }, [notifications, toast])
+
+  const handleLogout = async () => {
+    try {
+      const { error } = await signOut()
+      if (error) throw error
+      logout()
+      navigate('/')
+    } catch (error) {
+      toast({
+        title: 'Erro ao sair',
+        description: 'Não foi possível encerrar a sessão. Tente novamente.',
+        variant: 'destructive',
+      })
+    }
+  }
 
   const unseenSuggestionsCount = suggestions.filter(
     (s) =>
@@ -120,27 +145,52 @@ export function AppLayout() {
               </SidebarMenu>
             </SidebarGroup>
             <div className="mt-auto p-4 border-t border-border">
-              <Link
-                to="/profile"
-                className="flex items-center gap-3 mb-4 px-2 hover:bg-secondary/50 p-2 rounded-lg transition-colors"
-              >
-                <Avatar className="ring-2 ring-primary/20">
-                  <AvatarImage src={user?.avatar} />
-                  <AvatarFallback className="bg-secondary text-primary">JC</AvatarFallback>
-                </Avatar>
-                <div className="flex flex-col min-w-0">
-                  <span className="text-sm font-medium text-white truncate">{user?.name}</span>
-                  <span className="text-xs text-primary truncate">Tier {user?.tier}</span>
-                </div>
-              </Link>
-              <Button
-                variant="ghost"
-                className="w-full justify-start text-muted-foreground hover:text-red-400 hover:bg-red-400/10"
-                onClick={logout}
-              >
-                <LogOut className="w-4 h-4 mr-2" />
-                Sair
-              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="flex items-center gap-3 w-full px-2 hover:bg-secondary/50 p-2 rounded-lg transition-colors outline-none focus:ring-2 focus:ring-primary/50">
+                    <Avatar className="ring-2 ring-primary/20">
+                      <AvatarImage src={user?.avatar} />
+                      <AvatarFallback className="bg-secondary text-primary">
+                        {user?.name?.charAt(0)?.toUpperCase() || 'U'}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex flex-col min-w-0 text-left">
+                      <span className="text-sm font-medium text-white truncate">{user?.name}</span>
+                      <span className="text-xs text-primary truncate">Tier {user?.tier}</span>
+                    </div>
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  align="end"
+                  side="right"
+                  sideOffset={16}
+                  className="w-56 bg-card border-border"
+                >
+                  <div className="flex items-center justify-start gap-2 p-3 md:hidden">
+                    <div className="flex flex-col space-y-1 leading-none">
+                      <p className="font-medium text-sm text-white truncate">{user?.name}</p>
+                      <p className="text-xs text-muted-foreground truncate">{user?.email}</p>
+                    </div>
+                  </div>
+                  <DropdownMenuItem
+                    asChild
+                    className="cursor-pointer hover:bg-secondary focus:bg-secondary py-2"
+                  >
+                    <Link to="/profile">
+                      <UserIcon className="mr-2 h-4 w-4" />
+                      <span>Meu Perfil</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator className="bg-border" />
+                  <DropdownMenuItem
+                    onClick={handleLogout}
+                    className="cursor-pointer text-red-400 focus:text-red-400 focus:bg-red-400/10 py-2"
+                  >
+                    <LogOut className="mr-2 h-4 w-4" />
+                    <span>Sair</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </SidebarContent>
         </Sidebar>
@@ -150,16 +200,54 @@ export function AppLayout() {
             <h1 className="text-lg font-medium text-white drop-shadow-sm">
               {navItems.find((i) => i.url === location.pathname)?.title || 'Prime Circle'}
             </h1>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-muted-foreground hover:text-primary relative"
-            >
-              <Bell className="w-5 h-5" />
-              {unseenSuggestionsCount > 0 && (
-                <span className="absolute top-2 right-2 w-2 h-2 bg-destructive rounded-full" />
-              )}
-            </Button>
+            <div className="flex items-center gap-3">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-muted-foreground hover:text-primary relative"
+              >
+                <Bell className="w-5 h-5" />
+                {unseenSuggestionsCount > 0 && (
+                  <span className="absolute top-2 right-2 w-2 h-2 bg-destructive rounded-full" />
+                )}
+              </Button>
+              <div className="sm:hidden">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="icon" className="rounded-full relative h-8 w-8">
+                      <Avatar className="h-8 w-8 ring-1 ring-primary/20">
+                        <AvatarImage src={user?.avatar} />
+                        <AvatarFallback className="bg-secondary text-primary text-xs">
+                          {user?.name?.charAt(0)?.toUpperCase() || 'U'}
+                        </AvatarFallback>
+                      </Avatar>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-56 bg-card border-border mt-2">
+                    <div className="flex flex-col space-y-1 p-3 border-b border-border">
+                      <p className="font-medium text-sm text-white truncate">{user?.name}</p>
+                      <p className="text-xs text-muted-foreground truncate">{user?.email}</p>
+                    </div>
+                    <DropdownMenuItem
+                      asChild
+                      className="cursor-pointer hover:bg-secondary focus:bg-secondary py-2 mt-1"
+                    >
+                      <Link to="/profile">
+                        <UserIcon className="mr-2 h-4 w-4" />
+                        <span>Meu Perfil</span>
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={handleLogout}
+                      className="cursor-pointer text-red-400 focus:text-red-400 focus:bg-red-400/10 py-2"
+                    >
+                      <LogOut className="w-4 h-4 mr-2" />
+                      <span>Sair</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            </div>
           </header>
           <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 pb-20 sm:pb-8">
             <Outlet />
