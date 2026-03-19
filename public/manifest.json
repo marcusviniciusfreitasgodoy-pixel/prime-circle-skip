@@ -1,21 +1,23 @@
 {
   "name": "Prime Circle",
   "short_name": "Prime Circle",
-  "description": "Rede exclusiva de parcerias imobiliárias.",
+  "description": "Rede exclusiva de parcerias imobiliárias",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#000000",
-  "theme_color": "#c9a84c",
+  "theme_color": "#D4AF37",
   "icons": [
     {
-      "src": "https://img.usecurling.com/i?q=prime-circle&color=gradient&shape=fill",
+      "src": "/icon-192x192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
-      "src": "https://img.usecurling.com/i?q=prime-circle&color=gradient&shape=fill",
+      "src": "/icon-512x512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }
