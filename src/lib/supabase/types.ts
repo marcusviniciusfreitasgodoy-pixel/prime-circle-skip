@@ -323,6 +323,35 @@ export type Database = {
           },
         ]
       }
+      user_push_subscriptions: {
+        Row: {
+          created_at: string
+          id: string
+          subscription_data: Json
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          subscription_data: Json
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          subscription_data?: Json
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'user_push_subscriptions_user_id_fkey'
+            columns: ['user_id']
+            isOneToOne: false
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -560,6 +589,11 @@ export const Constants = {
 //   message: text (not null)
 //   status: text (not null, default: 'open'::text)
 //   created_at: timestamp with time zone (not null, default: now())
+// Table: user_push_subscriptions
+//   id: uuid (not null, default: gen_random_uuid())
+//   user_id: uuid (not null)
+//   subscription_data: jsonb (not null)
+//   created_at: timestamp with time zone (not null, default: now())
 
 // --- CONSTRAINTS ---
 // Table: documents
@@ -570,7 +604,7 @@ export const Constants = {
 //   PRIMARY KEY match_feedback_pkey: PRIMARY KEY (id)
 //   FOREIGN KEY match_feedback_user_id_fkey: FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE CASCADE
 // Table: notification_logs
-//   CHECK notification_logs_channel_check: CHECK ((channel = ANY (ARRAY['whatsapp'::text, 'email'::text])))
+//   CHECK notification_logs_channel_check: CHECK ((channel = ANY (ARRAY['whatsapp'::text, 'email'::text, 'push'::text])))
 //   PRIMARY KEY notification_logs_pkey: PRIMARY KEY (id)
 //   CHECK notification_logs_status_check: CHECK ((status = ANY (ARRAY['success'::text, 'failed'::text])))
 //   FOREIGN KEY notification_logs_user_id_fkey: FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE CASCADE
@@ -593,6 +627,9 @@ export const Constants = {
 //   PRIMARY KEY support_tickets_pkey: PRIMARY KEY (id)
 //   CHECK support_tickets_status_check: CHECK ((status = ANY (ARRAY['open'::text, 'pending'::text, 'resolved'::text])))
 //   FOREIGN KEY support_tickets_user_id_fkey: FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE SET NULL
+// Table: user_push_subscriptions
+//   PRIMARY KEY user_push_subscriptions_pkey: PRIMARY KEY (id)
+//   FOREIGN KEY user_push_subscriptions_user_id_fkey: FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE CASCADE
 
 // --- ROW LEVEL SECURITY POLICIES ---
 // Table: documents
@@ -655,6 +692,12 @@ export const Constants = {
 //     USING: (EXISTS ( SELECT 1    FROM profiles   WHERE ((profiles.id = auth.uid()) AND (profiles.role = 'admin'::text))))
 //   Policy "Anyone can insert support tickets" (INSERT, PERMISSIVE) roles={public}
 //     WITH CHECK: true
+// Table: user_push_subscriptions
+//   Policy "Admins can view all push subscriptions" (SELECT, PERMISSIVE) roles={authenticated}
+//     USING: is_admin()
+//   Policy "Users can manage own push subscriptions" (ALL, PERMISSIVE) roles={authenticated}
+//     USING: (auth.uid() = user_id)
+//     WITH CHECK: (auth.uid() = user_id)
 
 // --- DATABASE FUNCTIONS ---
 // FUNCTION get_user_id_by_email(text)
@@ -787,11 +830,11 @@ export const Constants = {
 //
 //   Olá {{full_name}},
 //
-//   Bem-vindo à Prime Circle! Agora que sua conta foi criada, acesse o nosso Dashboard para começar a gerar parcerias:
-//   Dashboard: https://prime-circle-migration-fd549.goskip.app/dashboard
+//   Bem-vindo à Prime Circle! Agora que sua conta foi criada, utilize o link abaixo para acessar seu painel exclusivo e começar a gerar parcerias.
 //
-//   Caso precise entrar novamente, você pode solicitar um Magic Link na página de Acesso Exclusivo:
-//   Acesso Exclusivo: https://prime-circle-migration-fd549.goskip.app/login
+//   Acesse: https://prime-circle-migration-fd549.goskip.app/dashboard
+//
+//   Dica Prime: Para facilitar seu acesso, abra este link no seu celular (Safari no iOS ou Chrome no Android) e use a opção "Adicionar à Tela de Início". Assim, você terá o Prime Circle como um aplicativo sempre à mão e receberá nossas notificações em tempo real!
 //
 //   Boas vendas,
 //   Equipe Prime Circle');
@@ -863,6 +906,47 @@ export const Constants = {
 //     order by documents.embedding <=> query_embedding
 //     limit match_count;
 //   end;
+//   $function$
+//
+// FUNCTION trigger_demand_push_webhook()
+//   CREATE OR REPLACE FUNCTION public.trigger_demand_push_webhook()
+//    RETURNS trigger
+//    LANGUAGE plpgsql
+//    SECURITY DEFINER
+//   AS $function$
+//   DECLARE
+//     v_url text;
+//     v_body jsonb;
+//   BEGIN
+//     v_url := current_setting('app.settings.supabase_url', true);
+//     IF v_url IS NULL OR v_url = '' THEN
+//       v_url := 'https://lortaowlmktdnttoykfl.supabase.co';
+//     END IF;
+//
+//     v_url := v_url || '/functions/v1/demand-push-webhook';
+//
+//     IF NEW.metadata->>'type' = 'demanda' THEN
+//       v_body := jsonb_build_object(
+//         'type', 'INSERT',
+//         'table', 'documents',
+//         'schema', 'public',
+//         'record', row_to_json(NEW)
+//       );
+//
+//       BEGIN
+//         PERFORM net.http_post(
+//             url := v_url,
+//             headers := '{"Content-Type": "application/json"}'::jsonb,
+//             body := v_body,
+//             timeout_milliseconds := 2000
+//         );
+//       EXCEPTION WHEN OTHERS THEN
+//         RAISE WARNING 'Error scheduling demand push webhook pg_net request: %', SQLERRM;
+//       END;
+//     END IF;
+//
+//     RETURN NEW;
+//   END;
 //   $function$
 //
 // FUNCTION trigger_match_property_webhook()
@@ -1046,6 +1130,7 @@ export const Constants = {
 
 // --- TRIGGERS ---
 // Table: documents
+//   on_document_created_send_demand_push: CREATE TRIGGER on_document_created_send_demand_push AFTER INSERT ON public.documents FOR EACH ROW EXECUTE FUNCTION trigger_demand_push_webhook()
 //   on_document_created_send_match: CREATE TRIGGER on_document_created_send_match AFTER INSERT ON public.documents FOR EACH ROW EXECUTE FUNCTION trigger_match_property_webhook()
 // Table: profiles
 //   on_profile_created_add_templates: CREATE TRIGGER on_profile_created_add_templates AFTER INSERT ON public.profiles FOR EACH ROW EXECUTE FUNCTION handle_new_user_templates()

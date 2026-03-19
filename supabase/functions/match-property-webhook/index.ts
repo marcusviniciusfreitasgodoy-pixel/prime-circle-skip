@@ -84,7 +84,25 @@ Deno.serve(async (req: Request) => {
               const formattedPrice = new Intl.NumberFormat('pt-BR', {
                 minimumFractionDigits: 2,
               }).format(propValor)
-              const waMessage = `Olá ${brokerName}, encontramos um imóvel que é o match perfeito para sua demanda: ${propTitle} - R$ ${formattedPrice}. Confira agora no seu Dashboard!\n\nAvalie este match:\n✅ Match Perfeito: https://prime-circle-migration-fd549.goskip.app/match-feedback?id=${property.id}&type=perfect\n❌ Não Atende: https://prime-circle-migration-fd549.goskip.app/match-feedback?id=${property.id}&type=not_suitable`
+              const propertyDetails = `${propTitle} - R$ ${formattedPrice}`
+
+              // Load custom template if exists
+              const { data: templates } = await supabase
+                .from('notification_templates')
+                .select('*')
+                .eq('user_id', brokerProfile.id)
+                .eq('name', 'Notificação de Match - WhatsApp')
+                .single()
+
+              let waMessage = `Olá ${brokerName}, encontramos um imóvel que é o match perfeito para sua demanda: ${propertyDetails}. Confira agora no seu Dashboard!`
+
+              if (templates && templates.content) {
+                waMessage = templates.content
+                  .replace(/\{\{partner_name\}\}/g, brokerName)
+                  .replace(/\{\{property_details\}\}/g, propertyDetails)
+              }
+
+              waMessage += `\n\nAvalie este match:\n✅ Match Perfeito: https://prime-circle-migration-fd549.goskip.app/match-feedback?id=${property.id}&type=perfect\n❌ Não Atende: https://prime-circle-migration-fd549.goskip.app/match-feedback?id=${property.id}&type=not_suitable`
 
               notificationPromises.push(
                 supabase.functions

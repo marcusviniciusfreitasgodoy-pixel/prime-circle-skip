@@ -28,6 +28,7 @@ Deno.serve(async (req: Request) => {
     const instanceName = Deno.env.get('EVOLUTION_INSTANCE_NAME') || 'GodoyPrimeImoveis'
 
     if (!apiKey) {
+      console.error('Server configuration error: Missing EVOLUTION_API_KEY')
       return new Response(JSON.stringify({ error: 'Server configuration error' }), {
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -35,18 +36,24 @@ Deno.serve(async (req: Request) => {
     }
 
     let formattedNumber = number.replace(/\D/g, '')
+    // WhatsApp format logic for Brazil
     if (formattedNumber.length >= 10 && formattedNumber.length <= 11) {
       formattedNumber = '55' + formattedNumber
     }
 
     const endpoint = `${apiUrl}/message/sendText/${instanceName}`
 
+    // Support both standard text and textMessage structure for V2 compatibility
     const payload = {
       number: formattedNumber,
-      text,
+      text: text,
+      textMessage: {
+        text: text,
+      },
       options: {
         delay: 1200,
         presence: 'composing',
+        linkPreview: false,
       },
     }
 
@@ -55,13 +62,22 @@ Deno.serve(async (req: Request) => {
       headers: {
         'Content-Type': 'application/json',
         apikey: apiKey,
+        Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify(payload),
     })
 
-    const data = await response.json()
-    const success = response.ok && !data.error
+    const responseText = await response.text()
+    let data: any = { raw: responseText }
+    try {
+      data = JSON.parse(responseText)
+    } catch (e) {
+      // Ignored if not JSON
+    }
 
+    const success = response.ok && !data.error && data.status !== 'ERROR'
+
+    // Log the notification
     if (user_id) {
       const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? ''
       const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
@@ -78,9 +94,9 @@ Deno.serve(async (req: Request) => {
       }
     }
 
-    return new Response(JSON.stringify(data), {
+    return new Response(JSON.stringify({ success, data }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      status: response.status,
+      status: response.ok ? 200 : response.status,
     })
   } catch (error: any) {
     return new Response(JSON.stringify({ error: error.message }), {
