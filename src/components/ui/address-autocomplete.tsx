@@ -37,7 +37,7 @@ export function AddressAutocomplete({
   name,
   types,
 }: AddressAutocompleteProps) {
-  const isLoaded = useGoogleMapsScript()
+  const { isLoaded, loadError } = useGoogleMapsScript()
   const [open, setOpen] = useState(false)
   const [predictions, setPredictions] = useState<any[]>([])
   const [isSearching, setIsSearching] = useState(false)
@@ -49,11 +49,15 @@ export function AddressAutocomplete({
   const skipSearchRef = useRef(false)
 
   useEffect(() => {
-    if (isLoaded && !autocompleteService.current && window.google) {
-      autocompleteService.current = new window.google.maps.places.AutocompleteService()
-    }
-    if (isLoaded && !placesService.current && mapDiv.current && window.google) {
-      placesService.current = new window.google.maps.places.PlacesService(mapDiv.current)
+    try {
+      if (isLoaded && !autocompleteService.current && window.google?.maps?.places) {
+        autocompleteService.current = new window.google.maps.places.AutocompleteService()
+      }
+      if (isLoaded && !placesService.current && mapDiv.current && window.google?.maps?.places) {
+        placesService.current = new window.google.maps.places.PlacesService(mapDiv.current)
+      }
+    } catch (e) {
+      console.warn('Failed to initialize Google Maps services gracefully', e)
     }
   }, [isLoaded])
 
@@ -84,15 +88,25 @@ export function AddressAutocomplete({
       request.types = types
     }
 
-    autocompleteService.current.getPlacePredictions(request, (results: any[], status: any) => {
+    try {
+      autocompleteService.current.getPlacePredictions(request, (results: any[], status: any) => {
+        setIsSearching(false)
+        if (
+          window.google?.maps?.places &&
+          status === window.google.maps.places.PlacesServiceStatus.OK &&
+          results
+        ) {
+          setPredictions(results)
+          setOpen(true)
+        } else {
+          setPredictions([])
+        }
+      })
+    } catch (e) {
+      console.warn('Error during place prediction gracefully caught', e)
       setIsSearching(false)
-      if (status === window.google.maps.places.PlacesServiceStatus.OK && results) {
-        setPredictions(results)
-        setOpen(true)
-      } else {
-        setPredictions([])
-      }
-    })
+      setPredictions([])
+    }
   }, [debouncedValue, types])
 
   const handleSelect = (placeId: string, description: string) => {
@@ -101,18 +115,29 @@ export function AddressAutocomplete({
     setOpen(false)
 
     if (placesService.current) {
-      placesService.current.getDetails(
-        { placeId, fields: ['address_components', 'formatted_address', 'name'] },
-        (place: any, status: any) => {
-          if (status === window.google.maps.places.PlacesServiceStatus.OK && place) {
-            const details = extractAddressComponents(place)
-            onSelect(details)
-          }
-          setTimeout(() => {
-            skipSearchRef.current = false
-          }, 500)
-        },
-      )
+      try {
+        placesService.current.getDetails(
+          { placeId, fields: ['address_components', 'formatted_address', 'name'] },
+          (place: any, status: any) => {
+            if (
+              window.google?.maps?.places &&
+              status === window.google.maps.places.PlacesServiceStatus.OK &&
+              place
+            ) {
+              const details = extractAddressComponents(place)
+              onSelect(details)
+            }
+            setTimeout(() => {
+              skipSearchRef.current = false
+            }, 500)
+          },
+        )
+      } catch (e) {
+        console.warn('Error fetching place details gracefully caught', e)
+        setTimeout(() => {
+          skipSearchRef.current = false
+        }, 500)
+      }
     } else {
       setTimeout(() => {
         skipSearchRef.current = false
@@ -139,7 +164,7 @@ export function AddressAutocomplete({
               className="pl-9 pr-9"
               autoComplete="off"
             />
-            {(!isLoaded || isSearching) && (
+            {((!isLoaded && !loadError) || isSearching) && (
               <Loader2 className="absolute right-3 top-3 h-4 w-4 animate-spin text-muted-foreground" />
             )}
           </div>
