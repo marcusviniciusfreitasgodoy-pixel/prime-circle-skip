@@ -17,15 +17,20 @@ import {
   DialogTitle,
   DialogDescription,
 } from '@/components/ui/dialog'
-import { Eye, Mail, MessageSquare, AlertCircle } from 'lucide-react'
+import { Eye, Mail, MessageSquare, AlertCircle, RefreshCw } from 'lucide-react'
 import { fetchLogs, NotificationLog } from '@/services/notifications'
 import { useAuth } from '@/hooks/use-auth'
+import { useToast } from '@/hooks/use-toast'
+import { supabase } from '@/lib/supabase/client'
+import { cn } from '@/lib/utils'
 
 export function LogsTab() {
   const { user } = useAuth()
+  const { toast } = useToast()
   const [logs, setLogs] = useState<NotificationLog[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [selectedLog, setSelectedLog] = useState<NotificationLog | null>(null)
+  const [isResending, setIsResending] = useState<string | null>(null)
 
   useEffect(() => {
     if (user) loadLogs()
@@ -36,6 +41,47 @@ export function LogsTab() {
     const { data } = await fetchLogs(user!.id)
     if (data) setLogs(data)
     setIsLoading(false)
+  }
+
+  const handleResend = async (log: NotificationLog) => {
+    setIsResending(log.id)
+    try {
+      let res
+
+      if (log.channel === 'whatsapp') {
+        res = await supabase.functions.invoke('send-whatsapp', {
+          body: { number: log.recipient, text: log.message_body, user_id: log.user_id },
+        })
+      } else if (log.channel === 'email') {
+        let subject = 'Notificação Prime Circle'
+        let bodyText = log.message_body
+
+        const match = bodyText.match(/^Assunto:\s*(.+)\n+([\s\S]*)$/i)
+        if (match) {
+          subject = match[1].trim()
+          bodyText = match[2].trim()
+        }
+
+        res = await supabase.functions.invoke('send-email', {
+          body: { to: log.recipient, subject, text: bodyText, user_id: log.user_id },
+        })
+      }
+
+      if (res?.error) throw res.error
+      if (res?.data?.error) throw new Error(res.data.error)
+
+      toast({ title: 'Notificação reenviada com sucesso' })
+      await loadLogs()
+    } catch (error: any) {
+      console.error('Error resending:', error)
+      toast({
+        title: 'Erro ao reenviar',
+        description: error.message || 'Falha no envio',
+        variant: 'destructive',
+      })
+    } finally {
+      setIsResending(null)
+    }
   }
 
   if (isLoading)
@@ -93,14 +139,28 @@ export function LogsTab() {
                       {log.status === 'success' ? 'Enviado' : 'Falha'}
                     </Badge>
                   </TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="text-right whitespace-nowrap">
+                    {log.status === 'failed' && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="mr-2 border-primary/50 text-primary hover:bg-primary/10 h-8"
+                        onClick={() => handleResend(log)}
+                        disabled={isResending === log.id}
+                      >
+                        <RefreshCw
+                          className={cn('w-3 h-3 mr-1', isResending === log.id && 'animate-spin')}
+                        />
+                        Reenviar
+                      </Button>
+                    )}
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="text-primary hover:text-primary/80"
+                      className="text-muted-foreground hover:text-white h-8"
                       onClick={() => setSelectedLog(log)}
                     >
-                      <Eye className="w-4 h-4 mr-2" /> Ver
+                      <Eye className="w-4 h-4 mr-1" /> Ver
                     </Button>
                   </TableCell>
                 </TableRow>

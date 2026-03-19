@@ -11,6 +11,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Copy, Share2, Crown, Activity, UserCheck } from 'lucide-react'
 import { supabase } from '@/lib/supabase/client'
 import { useToast } from '@/hooks/use-toast'
@@ -35,8 +36,6 @@ export function ReferralTracker({
 
     const fetchData = async () => {
       try {
-        // We avoid head: true to prevent "Unexpected end of JSON input" errors
-        // that can occur in some Supabase client versions for empty count responses.
         const { count, error } = await supabase
           .from('referral_clicks')
           .select('id', { count: 'exact' })
@@ -55,7 +54,7 @@ export function ReferralTracker({
       try {
         const { data, error } = await supabase
           .from('profiles')
-          .select('id, full_name, status, created_at')
+          .select('id, full_name, status, created_at, avatar_url')
           .eq('referred_by_id', userId)
           .order('created_at', { ascending: false })
 
@@ -83,7 +82,6 @@ export function ReferralTracker({
         `Olá! Faço parte do Prime Circle, uma rede privada de liquidez imobiliária para corretores de alto padrão. Gostaria de te convidar para o meu círculo. Cadastre-se por este link para ter prioridade na análise:\n\n${referralLink}`,
       )
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [referralLink])
 
   const handleCopy = () => {
@@ -173,6 +171,7 @@ export function ReferralTracker({
               <Table>
                 <TableHeader>
                   <TableRow className="border-border/50 hover:bg-transparent">
+                    <TableHead className="w-[50px]"></TableHead>
                     <TableHead className="text-muted-foreground font-semibold">Nome</TableHead>
                     <TableHead className="text-muted-foreground font-semibold">Status</TableHead>
                     <TableHead className="text-muted-foreground font-semibold">
@@ -183,6 +182,14 @@ export function ReferralTracker({
                 <TableBody>
                   {myCircle.map((partner) => (
                     <TableRow key={partner.id} className="border-border/50 hover:bg-secondary/30">
+                      <TableCell>
+                        <Avatar className="w-8 h-8 border border-border bg-background">
+                          <AvatarImage src={partner.avatar_url} />
+                          <AvatarFallback className="bg-secondary text-muted-foreground text-xs">
+                            {partner.full_name?.substring(0, 2).toUpperCase() || 'US'}
+                          </AvatarFallback>
+                        </Avatar>
+                      </TableCell>
                       <TableCell className="font-medium text-white">
                         {partner.full_name || 'Usuário'}
                       </TableCell>

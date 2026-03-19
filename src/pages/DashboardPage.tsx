@@ -13,6 +13,7 @@ import { OpportunityRadar } from '@/components/dashboard/OpportunityRadar'
 import { PendingValidations } from '@/components/dashboard/PendingValidations'
 import { ReputationRanking } from '@/components/dashboard/ReputationRanking'
 import { ReferralTracker } from '@/components/dashboard/ReferralTracker'
+import { DeliveryStatusWidget } from '@/components/dashboard/DeliveryStatusWidget'
 import { PwaInstallPrompt } from '@/components/dashboard/PwaInstallPrompt'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import {
@@ -277,8 +278,8 @@ export default function DashboardPage() {
         <div className="md:col-span-2">
           <PortfolioTabs refreshKey={refreshKey} />
         </div>
-        <div className="md:col-span-1">
-          <Card className="bg-card border-border h-full">
+        <div className="md:col-span-1 flex flex-col gap-6">
+          <Card className="bg-card border-border">
             <CardHeader className="pb-3">
               <CardTitle className="text-lg text-white flex items-center gap-2">
                 <BellRing className="w-5 h-5 text-primary" /> Meus Alertas de Conexão
@@ -326,6 +327,7 @@ export default function DashboardPage() {
               )}
             </CardContent>
           </Card>
+          <DeliveryStatusWidget />
         </div>
       </div>
 
