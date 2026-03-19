@@ -21,6 +21,7 @@ import {
 } from '@/components/ui/dialog'
 import { useToast } from '@/hooks/use-toast'
 import { PlusCircle } from 'lucide-react'
+import { AddressAutocomplete } from '@/components/ui/address-autocomplete'
 
 const formatCurrency = (value: string) => {
   const digits = value.replace(/\D/g, '')
@@ -38,6 +39,11 @@ export function AddNeedDialog({ onSuccess }: { onSuccess: () => void }) {
   const [loading, setLoading] = useState(false)
   const [valor, setValor] = useState('')
 
+  const [endereco, setEndereco] = useState('')
+  const [bairro, setBairro] = useState('')
+  const [city, setCity] = useState('')
+  const [stateLocation, setStateLocation] = useState('')
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (!user) return
@@ -45,15 +51,17 @@ export function AddNeedDialog({ onSuccess }: { onSuccess: () => void }) {
 
     const fd = new FormData(e.currentTarget)
 
-    // Explicitly cast to prevent TypeScript from evaluating FormDataEntryValue (which includes File)
-    // against Supabase's recursive Json type, avoiding a known type-checking OOM during build.
     const md = {
       type: 'demanda',
       user_id: user.id,
       valor: parseCurrency(valor),
       tipo_imovel: String(fd.get('tipo_imovel') || ''),
-      endereco: String(fd.get('endereco') || ''),
-      bairro: String(fd.get('bairro') || ''),
+      endereco: endereco,
+      bairro: bairro,
+      street: endereco,
+      neighborhood: bairro,
+      city: city,
+      state: stateLocation,
       quartos: String(fd.get('quartos') || ''),
       suites: String(fd.get('suites') || ''),
       tamanho_imovel: Number(fd.get('tamanho_imovel') || 0),
@@ -63,7 +71,7 @@ export function AddNeedDialog({ onSuccess }: { onSuccess: () => void }) {
       description: String(fd.get('description') || ''),
     }
 
-    const content = `Busca: ${md.tipo_imovel}\nBairro: ${md.bairro}\nEndereço: ${md.endereco}\nValor Max: R$ ${md.valor}\nQuartos: ${md.quartos}\nDetalhes: ${md.description}`
+    const content = `Busca: ${md.tipo_imovel}\nBairro: ${md.neighborhood}\nEndereço: ${md.street}\nCidade: ${md.city}\nEstado: ${md.state}\nValor Max: R$ ${md.valor}\nQuartos: ${md.quartos}\nDetalhes: ${md.description}`
 
     const { error } = await supabase.from('documents').insert({ content, metadata: md })
 
@@ -81,6 +89,11 @@ export function AddNeedDialog({ onSuccess }: { onSuccess: () => void }) {
         className: 'bg-card border-primary/50 text-white',
       })
       setOpen(false)
+      setEndereco('')
+      setBairro('')
+      setCity('')
+      setStateLocation('')
+      setValor('')
       onSuccess()
     }
   }
@@ -129,11 +142,29 @@ export function AddNeedDialog({ onSuccess }: { onSuccess: () => void }) {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label>Região / Rua Preferencial</Label>
-              <Input name="endereco" required placeholder="Ex: Av. Lúcio Costa" />
+              <AddressAutocomplete
+                name="endereco"
+                required
+                value={endereco}
+                onChange={setEndereco}
+                onSelect={(details) => {
+                  setEndereco(details.street)
+                  if (details.neighborhood) setBairro(details.neighborhood)
+                  if (details.city) setCity(details.city)
+                  if (details.state) setStateLocation(details.state)
+                }}
+                placeholder="Ex: Av. Lúcio Costa"
+              />
             </div>
             <div className="space-y-2">
               <Label>Bairros de Interesse</Label>
-              <Input name="bairro" required placeholder="Ex: Barra da Tijuca ou Recreio" />
+              <Input
+                name="bairro"
+                required
+                placeholder="Ex: Barra da Tijuca ou Recreio"
+                value={bairro}
+                onChange={(e) => setBairro(e.target.value)}
+              />
             </div>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">

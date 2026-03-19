@@ -23,6 +23,7 @@ import {
 } from '@/components/ui/dialog'
 import { useToast } from '@/hooks/use-toast'
 import { PlusCircle, Lock, Image as ImageIcon, X } from 'lucide-react'
+import { AddressAutocomplete } from '@/components/ui/address-autocomplete'
 
 const formatCurrency = (value: string) => {
   const digits = value.replace(/\D/g, '')
@@ -43,11 +44,20 @@ export function AddPropertyDialog({ onSuccess }: { onSuccess: () => void }) {
   const [photos, setPhotos] = useState<string[]>([])
   const [uploadingPhotos, setUploadingPhotos] = useState(false)
 
+  const [endereco, setEndereco] = useState('')
+  const [bairro, setBairro] = useState('')
+  const [city, setCity] = useState('')
+  const [stateLocation, setStateLocation] = useState('')
+
   useEffect(() => {
     if (!open) {
       setPhotos([])
       setValor('')
       setIsOffMarket(false)
+      setEndereco('')
+      setBairro('')
+      setCity('')
+      setStateLocation('')
     }
   }, [open])
 
@@ -98,9 +108,13 @@ export function AddPropertyDialog({ onSuccess }: { onSuccess: () => void }) {
       is_off_market: isOffMarket,
       valor: parseCurrency(valor),
       tipo_imovel: fd.get('tipo_imovel'),
-      endereco: fd.get('endereco'),
+      endereco: endereco,
+      bairro: bairro,
+      street: endereco,
+      neighborhood: bairro,
+      city: city,
+      state: stateLocation,
       complemento: fd.get('complemento') || '',
-      bairro: fd.get('bairro'),
       quartos: fd.get('quartos'),
       suites: fd.get('suites'),
       tamanho_imovel: Number(fd.get('tamanho_imovel')),
@@ -113,7 +127,7 @@ export function AddPropertyDialog({ onSuccess }: { onSuccess: () => void }) {
       photos,
     }
 
-    const content = `Tipo: ${md.tipo_imovel}\nBairro: ${md.bairro}\nEndereço: ${md.endereco} ${md.complemento ? `- ${md.complemento}` : ''}\nValor: R$ ${md.valor}\nQuartos: ${md.quartos}\nSuítes: ${md.suites}\nDetalhes: ${md.description}`
+    const content = `Tipo: ${md.tipo_imovel}\nBairro: ${md.neighborhood}\nEndereço: ${md.street} ${md.complemento ? `- ${md.complemento}` : ''}\nCidade: ${md.city}\nEstado: ${md.state}\nValor: R$ ${md.valor}\nQuartos: ${md.quartos}\nSuítes: ${md.suites}\nDetalhes: ${md.description}`
 
     const { error } = await supabase.from('documents').insert({ content, metadata: md })
 
@@ -216,16 +230,34 @@ export function AddPropertyDialog({ onSuccess }: { onSuccess: () => void }) {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="space-y-2">
-              <Label>Rua/Avenida</Label>
-              <Input name="endereco" required placeholder="Ex: Av. das Américas" />
+              <Label>Buscar Endereço (Rua/Avenida)</Label>
+              <AddressAutocomplete
+                name="endereco"
+                required
+                value={endereco}
+                onChange={setEndereco}
+                onSelect={(details) => {
+                  setEndereco(details.street)
+                  if (details.neighborhood) setBairro(details.neighborhood)
+                  if (details.city) setCity(details.city)
+                  if (details.state) setStateLocation(details.state)
+                }}
+                placeholder="Ex: Av. das Américas"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Bairro</Label>
+              <Input
+                name="bairro"
+                required
+                placeholder="Ex: Barra da Tijuca"
+                value={bairro}
+                onChange={(e) => setBairro(e.target.value)}
+              />
             </div>
             <div className="space-y-2">
               <Label>Complemento (Opcional)</Label>
               <Input name="complemento" placeholder="Ex: Apto 101" />
-            </div>
-            <div className="space-y-2">
-              <Label>Bairro</Label>
-              <Input name="bairro" required placeholder="Ex: Barra da Tijuca" />
             </div>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
