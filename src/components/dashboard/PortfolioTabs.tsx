@@ -5,8 +5,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
-import { MapPin, Building, UserSearch, Image as ImageIcon } from 'lucide-react'
+import { MapPin, Building, UserSearch, Image as ImageIcon, Video } from 'lucide-react'
 import { EditPropertySheet } from './EditPropertySheet'
+import { Button } from '@/components/ui/button'
 
 export function PortfolioTabs({ refreshKey }: { refreshKey: number }) {
   const { user } = useAuth()
@@ -139,9 +140,23 @@ export function PortfolioTabs({ refreshKey }: { refreshKey: number }) {
                           'Não informado'}
                       </span>
                     </div>
-                    <p className="text-sm text-muted-foreground line-clamp-2 mt-auto">
+                    <p className="text-sm text-muted-foreground line-clamp-2 mt-auto mb-1">
                       {p.content}
                     </p>
+
+                    {p.metadata.video_url && (
+                      <Button
+                        size="sm"
+                        variant="secondary"
+                        className="mt-3 w-full bg-secondary/50 hover:bg-secondary text-white"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          window.open(p.metadata.video_url, '_blank', 'noopener,noreferrer')
+                        }}
+                      >
+                        <Video className="w-4 h-4 mr-2" /> Ver Vídeo
+                      </Button>
+                    )}
                   </CardContent>
                 </Card>
               ))}

@@ -140,6 +140,7 @@ export function EditPropertySheet({
       tamanho_terreno: fd.get('tamanho_terreno') ? Number(fd.get('tamanho_terreno')) : null,
       nome_condominio: fd.get('nome_condominio'),
       link_imovel: fd.get('link_imovel'),
+      video_url: fd.get('video_url') || null,
       description: fd.get('description'),
       status,
       photos,
@@ -386,8 +387,27 @@ export function EditPropertySheet({
             </div>
             <div className="space-y-2">
               <Label>Link do Imóvel (Opcional)</Label>
-              <Input name="link_imovel" defaultValue={property.metadata?.link_imovel || ''} />
+              <Input
+                name="link_imovel"
+                type="url"
+                placeholder="https://"
+                pattern="https?://.*"
+                title="O link deve começar com http:// ou https://"
+                defaultValue={property.metadata?.link_imovel || ''}
+              />
             </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label>Link do Vídeo (Opcional)</Label>
+            <Input
+              name="video_url"
+              type="url"
+              placeholder="https://youtube.com/... ou virtual tour"
+              pattern="https?://.*"
+              title="O link deve começar com http:// ou https://"
+              defaultValue={property.metadata?.video_url || ''}
+            />
           </div>
 
           <div className="space-y-2">

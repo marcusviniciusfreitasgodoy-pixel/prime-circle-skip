@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { MapPin, Target, Zap, Lock, ShieldAlert } from 'lucide-react'
+import { MapPin, Target, Zap, Lock, ShieldAlert, Video } from 'lucide-react'
 import { AddNeedDialog } from './AddNeedDialog'
 import { useAuth } from '@/hooks/use-auth'
 import { useToast } from '@/hooks/use-toast'
@@ -254,17 +254,35 @@ export function OpportunityRadar({
                         <Lock className="w-4 h-4 mr-2" /> Bloqueado (Pontuação &lt;{' '}
                         {ELITE_THRESHOLD})
                       </Button>
-                    ) : isMine ? (
-                      <Badge
-                        variant="outline"
-                        className="w-full justify-center bg-secondary/20 py-2 border-dashed text-muted-foreground"
-                      >
-                        Sua Publicação Exclusiva
-                      </Badge>
                     ) : (
-                      <Button className="w-full gold-gradient text-black font-semibold shadow-md">
-                        Contatar Captador
-                      </Button>
+                      <div className="space-y-3">
+                        {isMine ? (
+                          <Badge
+                            variant="outline"
+                            className="w-full justify-center bg-secondary/20 py-2 border-dashed text-muted-foreground"
+                          >
+                            Sua Publicação Exclusiva
+                          </Badge>
+                        ) : (
+                          <Button className="w-full gold-gradient text-black font-semibold shadow-md">
+                            Contatar Captador
+                          </Button>
+                        )}
+
+                        {p.metadata?.video_url && (
+                          <Button
+                            size="sm"
+                            variant="secondary"
+                            className="w-full bg-secondary/50 hover:bg-secondary text-white"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              window.open(p.metadata.video_url, '_blank', 'noopener,noreferrer')
+                            }}
+                          >
+                            <Video className="w-4 h-4 mr-2" /> Ver Vídeo
+                          </Button>
+                        )}
+                      </div>
                     )}
                   </CardContent>
                 </Card>
