@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { MapPin, Building, UserSearch, Image as ImageIcon, PlayCircle, Eye } from 'lucide-react'
 import { EditPropertySheet } from './EditPropertySheet'
+import { EditNeedSheet } from './EditNeedSheet'
 import { Button } from '@/components/ui/button'
 import { VideoPlayerModal } from './VideoPlayerModal'
 
@@ -16,6 +17,7 @@ export function PortfolioTabs({ refreshKey }: { refreshKey: number }) {
   const [needs, setNeeds] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [editingProperty, setEditingProperty] = useState<any>(null)
+  const [editingNeed, setEditingNeed] = useState<any>(null)
   const [playingVideoUrl, setPlayingVideoUrl] = useState<string | null>(null)
 
   const fetchPortfolio = useCallback(async () => {
@@ -78,6 +80,16 @@ export function PortfolioTabs({ refreshKey }: { refreshKey: number }) {
         }}
       />
 
+      <EditNeedSheet
+        need={editingNeed}
+        open={!!editingNeed}
+        onOpenChange={(open) => !open && setEditingNeed(null)}
+        onSuccess={() => {
+          setEditingNeed(null)
+          fetchPortfolio()
+        }}
+      />
+
       <VideoPlayerModal
         open={!!playingVideoUrl}
         onOpenChange={(open) => !open && setPlayingVideoUrl(null)}
@@ -115,7 +127,7 @@ export function PortfolioTabs({ refreshKey }: { refreshKey: number }) {
               {properties.map((p) => (
                 <Card
                   key={p.id}
-                  className="bg-card border-border hover:border-primary/50 transition-all cursor-pointer group flex flex-col"
+                  className="bg-card border-border hover:border-primary/50 transition-all cursor-pointer group flex flex-col h-full"
                   onClick={() => setEditingProperty(p)}
                 >
                   <CardHeader className="pb-3 flex-none">
@@ -241,12 +253,15 @@ export function PortfolioTabs({ refreshKey }: { refreshKey: number }) {
               {needs.map((n) => (
                 <Card
                   key={n.id}
-                  className="bg-card border-border hover:border-primary/50 transition-all"
+                  className="bg-card border-border hover:border-primary/50 transition-all flex flex-col h-full group"
                 >
-                  <CardHeader className="pb-3">
+                  <CardHeader className="pb-3 flex-none">
                     <div className="flex justify-between items-start gap-2 mb-1">
-                      <CardTitle className="text-lg text-white line-clamp-1">
-                        {n.metadata.profile}
+                      <CardTitle
+                        className="text-lg text-white line-clamp-1"
+                        title={n.metadata.profile || n.metadata.tipo_imovel || 'Demanda'}
+                      >
+                        {n.metadata.profile || n.metadata.tipo_imovel || 'Demanda'}
                       </CardTitle>
                       <Badge
                         variant="outline"
@@ -255,16 +270,52 @@ export function PortfolioTabs({ refreshKey }: { refreshKey: number }) {
                         Demanda
                       </Badge>
                     </div>
-                    <CardDescription className="text-primary font-bold text-lg">
-                      {n.metadata.budget}
+                    <CardDescription className="text-primary font-bold text-lg mt-1">
+                      {n.metadata.budget ||
+                        (n.metadata.valor
+                          ? new Intl.NumberFormat('pt-BR', {
+                              style: 'currency',
+                              currency: 'BRL',
+                            }).format(n.metadata.valor)
+                          : 'Orçamento não informado')}
                     </CardDescription>
                   </CardHeader>
-                  <CardContent>
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground mb-3">
+                  <CardContent className="flex flex-col flex-1">
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground mb-3 bg-secondary/30 p-2 rounded-md border border-border/50">
                       <MapPin className="w-4 h-4 text-primary/70 shrink-0" />
-                      <span className="truncate">{n.metadata.region}</span>
+                      <span className="truncate font-medium">
+                        {n.metadata.region ||
+                          n.metadata.bairro ||
+                          n.metadata.endereco ||
+                          'Região não informada'}
+                      </span>
                     </div>
-                    <p className="text-sm text-muted-foreground line-clamp-2">{n.content}</p>
+
+                    {n.metadata.condominiums && n.metadata.condominiums.length > 0 && (
+                      <div className="flex flex-wrap gap-1.5 mb-3">
+                        {n.metadata.condominiums.map((condo: string, idx: number) => (
+                          <Badge
+                            key={idx}
+                            variant="secondary"
+                            className="text-[10px] py-0 font-medium bg-background border-border"
+                          >
+                            {condo}
+                          </Badge>
+                        ))}
+                      </div>
+                    )}
+
+                    <p className="text-sm text-muted-foreground line-clamp-3 mb-4 flex-1">
+                      {n.content}
+                    </p>
+
+                    <Button
+                      variant="outline"
+                      className="w-full mt-auto border-border hover:bg-secondary group-hover:border-primary/50 transition-colors"
+                      onClick={() => setEditingNeed(n)}
+                    >
+                      Editar Demanda
+                    </Button>
                   </CardContent>
                 </Card>
               ))}
