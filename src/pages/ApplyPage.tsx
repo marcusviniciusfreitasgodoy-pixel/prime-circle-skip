@@ -79,6 +79,7 @@ export default function ApplyPage() {
   const { signUp, user: authUser, loading: authLoading } = useAuth()
   const { login, updateUser, user: mockUser } = useAppStore()
   const [isLoading, setIsLoading] = useState(false)
+  const [referrerId, setReferrerId] = useState<string | null>(null)
   const navigate = useNavigate()
   const { toast } = useToast()
   const [searchParams] = useSearchParams()
@@ -88,6 +89,43 @@ export default function ApplyPage() {
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null)
 
   const refCode = searchParams.get('ref') || ''
+
+  useEffect(() => {
+    let mounted = true
+    const trackClick = async () => {
+      if (!refCode) return
+      try {
+        let query = supabase.from('profiles').select('id')
+        const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+          refCode,
+        )
+
+        if (isUuid) {
+          query = query.or(`id.eq.${refCode},referral_code.eq.${refCode}`)
+        } else {
+          query = query.eq('referral_code', refCode)
+        }
+        const { data: profiles } = await query.limit(1)
+
+        if (profiles && profiles.length > 0 && mounted) {
+          const rId = profiles[0].id
+          setReferrerId(rId)
+
+          const tracked = sessionStorage.getItem(`tracked_${rId}`)
+          if (!tracked) {
+            await supabase.from('referral_clicks').insert({ referrer_id: rId })
+            sessionStorage.setItem(`tracked_${rId}`, 'true')
+          }
+        }
+      } catch (e) {
+        console.error('Error tracking referral:', e)
+      }
+    }
+    trackClick()
+    return () => {
+      mounted = false
+    }
+  }, [refCode])
 
   useEffect(() => {
     if (!authLoading && (authUser || mockUser)) {
@@ -155,6 +193,7 @@ export default function ApplyPage() {
             ? 'Autônomo'
             : values.companyName || 'Imobiliária (Não informada)',
         accepted_terms: values.agreement,
+        referred_by_id: referrerId,
       })
 
       if (error) {

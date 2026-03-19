@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
@@ -9,6 +9,7 @@ import { useToast } from '@/hooks/use-toast'
 import useAppStore from '@/stores/main'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Crown, Info } from 'lucide-react'
+import { supabase } from '@/lib/supabase/client'
 
 export default function Apply() {
   const { toast } = useToast()
@@ -18,12 +19,50 @@ export default function Apply() {
   const { addCandidate, login } = useAppStore()
 
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [referrerId, setReferrerId] = useState<string | null>(null)
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     phone: '',
     creci: '',
   })
+
+  useEffect(() => {
+    let mounted = true
+    const trackClick = async () => {
+      if (!refCode) return
+      try {
+        let query = supabase.from('profiles').select('id')
+        const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+          refCode,
+        )
+
+        if (isUuid) {
+          query = query.or(`id.eq.${refCode},referral_code.eq.${refCode}`)
+        } else {
+          query = query.eq('referral_code', refCode)
+        }
+        const { data: profiles } = await query.limit(1)
+
+        if (profiles && profiles.length > 0 && mounted) {
+          const rId = profiles[0].id
+          setReferrerId(rId)
+
+          const tracked = sessionStorage.getItem(`tracked_${rId}`)
+          if (!tracked) {
+            await supabase.from('referral_clicks').insert({ referrer_id: rId })
+            sessionStorage.setItem(`tracked_${rId}`, 'true')
+          }
+        }
+      } catch (e) {
+        console.error('Error tracking referral:', e)
+      }
+    }
+    trackClick()
+    return () => {
+      mounted = false
+    }
+  }, [refCode])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prev) => ({ ...prev, [e.target.id]: e.target.value }))
@@ -36,7 +75,7 @@ export default function Apply() {
     // Simulate API call and validation
     setTimeout(() => {
       if (refCode) {
-        addCandidate({ ...formData, referredBy: refCode, status: 'approved' })
+        addCandidate({ ...formData, referredBy: referrerId || refCode, status: 'approved' })
         login('approved')
         toast({
           title: 'Aprovado para Acesso Imediato!',

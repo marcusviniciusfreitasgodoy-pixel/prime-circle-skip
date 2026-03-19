@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { AmbassadorWidget } from '@/components/AmbassadorWidget'
@@ -13,6 +12,7 @@ import { AddPropertyDialog } from '@/components/dashboard/AddPropertyDialog'
 import { OpportunityRadar } from '@/components/dashboard/OpportunityRadar'
 import { PendingValidations } from '@/components/dashboard/PendingValidations'
 import { ReputationRanking } from '@/components/dashboard/ReputationRanking'
+import { ReferralTracker } from '@/components/dashboard/ReferralTracker'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import {
   Activity,
@@ -20,12 +20,9 @@ import {
   Home,
   Search,
   AlertCircle,
-  Copy,
-  Crown,
   ChevronRight,
   ShieldCheck,
   BellRing,
-  Share2,
 } from 'lucide-react'
 import useAppStore from '@/stores/main'
 import type { Tier, Plan } from '@/stores/main'
@@ -163,20 +160,6 @@ export default function DashboardPage() {
 
   const refCode = profileReferralCode || authUser?.id || user?.id || 'founder-123'
   const referralLink = `https://prime-circle-migration-fd549.goskip.app/apply?ref=${refCode}`
-
-  const copyLink = () => {
-    navigator.clipboard.writeText(referralLink)
-    toast({
-      title: 'Copiado!',
-      description: 'Link de indicação copiado para a área de transferência.',
-    })
-  }
-
-  const handleWhatsappShare = () => {
-    const text = `Olá! Faço parte do Prime Circle, uma rede privada de liquidez imobiliária para corretores de alto padrão. Gostaria de te convidar para o meu círculo. Cadastre-se por este link para ter prioridade na análise: ${referralLink}`
-    const encodedText = encodeURIComponent(text)
-    window.open(`https://wa.me/?text=${encodedText}`, '_blank')
-  }
 
   const formatPlanName = (plan: string) => {
     if (plan === 'Founder') return 'Fundador'
@@ -352,48 +335,9 @@ export default function DashboardPage() {
 
       <div className="grid gap-6 md:grid-cols-3 pt-6 border-t border-border/50">
         <div className="md:col-span-2 space-y-6">
-          <Card className="bg-card border-primary/30 shadow-[0_0_30px_rgba(201,168,76,0.1)] relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-[80px] pointer-events-none" />
-            <CardHeader>
-              <CardTitle className="text-2xl text-primary flex items-center gap-2">
-                <Crown className="w-6 h-6" /> Indique Parceiros
-              </CardTitle>
-              <CardDescription className="text-base text-muted-foreground max-w-2xl">
-                Convide corretores alinhados à política 50/50 e receba meses grátis. Parceiros com
-                seu código têm prioridade na análise e você pode validá-los diretamente caso possua
-                alta reputação.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="flex flex-col sm:flex-row gap-4 mt-2 relative z-10">
-                <div className="relative flex-1">
-                  <Input
-                    readOnly
-                    value={referralLink}
-                    className="bg-background/80 border-primary/20 text-muted-foreground font-mono h-12 pr-12 focus-visible:ring-primary w-full"
-                  />
-                  <Button
-                    onClick={copyLink}
-                    size="icon"
-                    variant="ghost"
-                    className="absolute right-1 top-1 h-10 w-10 text-muted-foreground hover:text-primary hover:bg-primary/10"
-                    title="Copiar Link"
-                  >
-                    <Copy className="w-4 h-4" />
-                  </Button>
-                </div>
-                <Button
-                  onClick={handleWhatsappShare}
-                  size="lg"
-                  className="gold-gradient text-black font-bold h-12 shadow-[0_0_15px_rgba(201,168,76,0.2)] w-full sm:w-auto shrink-0"
-                >
-                  <Share2 className="w-5 h-5 mr-2" /> Convidar Parceiro
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+          <ReferralTracker userId={authUser?.id || ''} referralLink={referralLink} />
 
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid gap-4 sm:grid-cols-2 mt-6">
             {stats.map((stat, i) => (
               <Card key={i} className="bg-card border-border">
                 <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
