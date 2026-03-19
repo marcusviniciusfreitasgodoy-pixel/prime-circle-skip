@@ -4,8 +4,7 @@ import { createClient } from 'npm:@supabase/supabase-js@2'
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-  'Access-Control-Allow-Headers':
-    'authorization, x-client-info, x-supabase-client-platform, apikey, content-type',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, x-supabase-client-platform, apikey, content-type',
 }
 
 Deno.serve(async (req: Request) => {
@@ -42,29 +41,29 @@ Deno.serve(async (req: Request) => {
     }
 
     const endpoint = `${apiUrl}/message/sendText/${instanceName}`
-
+    
     // Support both standard text and textMessage structure for V2 compatibility
     const payload = {
       number: formattedNumber,
       text: text,
       textMessage: {
-        text: text,
+        text: text
       },
       options: {
         delay: 1200,
-        presence: 'composing',
-        linkPreview: false,
-      },
+        presence: "composing",
+        linkPreview: false
+      }
     }
-
+    
     const response = await fetch(endpoint, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        apikey: apiKey,
-        Authorization: `Bearer ${apiKey}`,
+        'apikey': apiKey,
+        'Authorization': `Bearer ${apiKey}`
       },
-      body: JSON.stringify(payload),
+      body: JSON.stringify(payload)
     })
 
     const responseText = await response.text()
@@ -96,7 +95,7 @@ Deno.serve(async (req: Request) => {
 
     return new Response(JSON.stringify({ success, data }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      status: response.ok ? 200 : response.status,
+      status: response.ok ? 200 : response.status
     })
   } catch (error: any) {
     return new Response(JSON.stringify({ error: error.message }), {
