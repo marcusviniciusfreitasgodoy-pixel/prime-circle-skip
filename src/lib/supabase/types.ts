@@ -557,8 +557,8 @@ export const Constants = {
 //   Policy "authenticated_select_documents" (SELECT, PERMISSIVE) roles={authenticated}
 //     USING: true
 //   Policy "authenticated_update_documents" (UPDATE, PERMISSIVE) roles={authenticated}
-//     USING: true
-//     WITH CHECK: true
+//     USING: (((auth.uid())::text = (metadata ->> 'user_id'::text)) OR is_admin())
+//     WITH CHECK: (((auth.uid())::text = (metadata ->> 'user_id'::text)) OR is_admin())
 // Table: match_feedback
 //   Policy "Users can insert own feedback" (INSERT, PERMISSIVE) roles={authenticated}
 //     WITH CHECK: (auth.uid() = user_id)

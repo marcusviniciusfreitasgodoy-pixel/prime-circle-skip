@@ -5,7 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
-import { MapPin, Building, UserSearch } from 'lucide-react'
+import { MapPin, Building, UserSearch, Image as ImageIcon } from 'lucide-react'
 import { EditPropertySheet } from './EditPropertySheet'
 
 export function PortfolioTabs({ refreshKey }: { refreshKey: number }) {
@@ -63,7 +63,7 @@ export function PortfolioTabs({ refreshKey }: { refreshKey: number }) {
           {loading ? (
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {[1, 2, 3].map((i) => (
-                <Skeleton key={i} className="h-40 w-full bg-card rounded-xl border border-border" />
+                <Skeleton key={i} className="h-48 w-full bg-card rounded-xl border border-border" />
               ))}
             </div>
           ) : properties.length === 0 ? (
@@ -80,22 +80,48 @@ export function PortfolioTabs({ refreshKey }: { refreshKey: number }) {
               {properties.map((p) => (
                 <Card
                   key={p.id}
-                  className="bg-card border-border hover:border-primary/50 transition-all cursor-pointer group"
+                  className="bg-card border-border hover:border-primary/50 transition-all cursor-pointer group flex flex-col"
                   onClick={() => setEditingProperty(p)}
                 >
-                  <CardHeader className="pb-3">
+                  <CardHeader className="pb-3 flex-none">
+                    {p.metadata.photos && p.metadata.photos.length > 0 ? (
+                      <div className="w-full h-32 mb-3 rounded-md overflow-hidden bg-secondary border border-border relative">
+                        <img
+                          src={p.metadata.photos[0]}
+                          alt="Imóvel"
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        />
+                        {p.metadata.photos.length > 1 && (
+                          <div className="absolute bottom-2 right-2 bg-black/70 px-2 py-0.5 rounded text-xs font-medium text-white flex items-center gap-1 backdrop-blur-sm">
+                            <ImageIcon className="w-3 h-3" />
+                            {p.metadata.photos.length}
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="w-full h-32 mb-3 rounded-md overflow-hidden bg-secondary/50 border border-border border-dashed flex items-center justify-center">
+                        <Building className="w-8 h-8 text-muted-foreground/30" />
+                      </div>
+                    )}
                     <div className="flex justify-between items-start gap-2 mb-1">
                       <CardTitle className="text-lg text-white line-clamp-1">
                         {p.metadata.title || p.metadata.tipo_imovel || 'Imóvel'}
                       </CardTitle>
-                      <Badge
-                        variant="outline"
-                        className="gold-gradient text-black shrink-0 border-0"
-                      >
-                        {p.metadata.property_type || p.metadata.tipo_imovel || 'Apartamento'}
-                      </Badge>
+                      <div className="flex flex-col gap-1 items-end shrink-0">
+                        <Badge variant="outline" className="gold-gradient text-black border-0">
+                          {p.metadata.property_type || p.metadata.tipo_imovel || 'Apartamento'}
+                        </Badge>
+                        {p.metadata.status && p.metadata.status !== 'Ativo' && (
+                          <Badge
+                            variant="outline"
+                            className={`text-[10px] uppercase font-bold tracking-wider ${p.metadata.status === 'Vendido' ? 'bg-green-500/20 text-green-500 border-green-500/30' : 'bg-yellow-500/20 text-yellow-500 border-yellow-500/30'}`}
+                          >
+                            {p.metadata.status}
+                          </Badge>
+                        )}
+                      </div>
                     </div>
-                    <CardDescription className="text-primary font-bold text-lg">
+                    <CardDescription className="text-primary font-bold text-lg mt-1">
                       {p.metadata.price ||
                         new Intl.NumberFormat('pt-BR', {
                           style: 'currency',
@@ -103,7 +129,7 @@ export function PortfolioTabs({ refreshKey }: { refreshKey: number }) {
                         }).format(p.metadata.valor || 0)}
                     </CardDescription>
                   </CardHeader>
-                  <CardContent>
+                  <CardContent className="flex-1 flex flex-col">
                     <div className="flex items-center gap-2 text-sm text-muted-foreground mb-3">
                       <MapPin className="w-4 h-4 text-primary/70 shrink-0" />
                       <span className="truncate">
@@ -113,7 +139,9 @@ export function PortfolioTabs({ refreshKey }: { refreshKey: number }) {
                           'Não informado'}
                       </span>
                     </div>
-                    <p className="text-sm text-muted-foreground line-clamp-2">{p.content}</p>
+                    <p className="text-sm text-muted-foreground line-clamp-2 mt-auto">
+                      {p.content}
+                    </p>
                   </CardContent>
                 </Card>
               ))}

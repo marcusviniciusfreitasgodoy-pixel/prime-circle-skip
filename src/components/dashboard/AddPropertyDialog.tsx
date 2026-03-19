@@ -62,6 +62,8 @@ export function AddPropertyDialog({ onSuccess }: { onSuccess: () => void }) {
       nome_condominio: fd.get('nome_condominio'),
       link_imovel: fd.get('link_imovel'),
       description: fd.get('description'),
+      status: 'Ativo',
+      photos: [],
     }
 
     const content = `Tipo: ${md.tipo_imovel}\nBairro: ${md.bairro}\nEndereço: ${md.endereco}\nValor: R$ ${md.valor}\nQuartos: ${md.quartos}\nSuítes: ${md.suites}\nDetalhes: ${md.description}`
@@ -198,7 +200,7 @@ export function AddPropertyDialog({ onSuccess }: { onSuccess: () => void }) {
             </div>
             <Switch checked={isOffMarket} onCheckedChange={setIsOffMarket} />
           </div>
-          <Button type="submit" className="w-full" disabled={loading}>
+          <Button type="submit" className="w-full mt-4" disabled={loading}>
             {loading ? 'Salvando...' : 'Publicar Imóvel'}
           </Button>
         </form>
