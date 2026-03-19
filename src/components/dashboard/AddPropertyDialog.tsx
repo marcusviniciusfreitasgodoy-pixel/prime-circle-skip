@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useAuth } from '@/hooks/use-auth'
 import { supabase } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
@@ -22,7 +22,7 @@ import {
   DialogDescription,
 } from '@/components/ui/dialog'
 import { useToast } from '@/hooks/use-toast'
-import { PlusCircle, Lock } from 'lucide-react'
+import { PlusCircle, Lock, Image as ImageIcon, X } from 'lucide-react'
 
 const formatCurrency = (value: string) => {
   const digits = value.replace(/\D/g, '')
@@ -40,6 +40,51 @@ export function AddPropertyDialog({ onSuccess }: { onSuccess: () => void }) {
   const [loading, setLoading] = useState(false)
   const [isOffMarket, setIsOffMarket] = useState(false)
   const [valor, setValor] = useState('')
+  const [photos, setPhotos] = useState<string[]>([])
+  const [uploadingPhotos, setUploadingPhotos] = useState(false)
+
+  useEffect(() => {
+    if (!open) {
+      setPhotos([])
+      setValor('')
+      setIsOffMarket(false)
+    }
+  }, [open])
+
+  const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files
+    if (!files || files.length === 0 || !user) return
+
+    if (photos.length + files.length > 5) {
+      toast({
+        title: 'Limite excedido',
+        description: 'Você pode carregar no máximo 5 imagens.',
+        variant: 'destructive',
+      })
+      e.target.value = ''
+      return
+    }
+
+    setUploadingPhotos(true)
+    try {
+      const newPhotos: string[] = []
+      for (const file of Array.from(files)) {
+        const ext = file.name.split('.').pop()
+        const path = `${user.id}/${Date.now()}_${Math.random().toString(36).substring(7)}.${ext}`
+        const { error } = await supabase.storage.from('property_photos').upload(path, file)
+        if (error) throw error
+        const { data } = supabase.storage.from('property_photos').getPublicUrl(path)
+        newPhotos.push(data.publicUrl)
+      }
+      setPhotos((prev) => [...prev, ...newPhotos])
+      toast({ title: 'Sucesso', description: 'Fotos adicionadas.' })
+    } catch (error) {
+      toast({ title: 'Erro', description: 'Falha no upload.', variant: 'destructive' })
+    } finally {
+      setUploadingPhotos(false)
+      e.target.value = ''
+    }
+  }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -64,7 +109,7 @@ export function AddPropertyDialog({ onSuccess }: { onSuccess: () => void }) {
       link_imovel: fd.get('link_imovel'),
       description: fd.get('description'),
       status: 'Ativo',
-      photos: [],
+      photos,
     }
 
     const content = `Tipo: ${md.tipo_imovel}\nBairro: ${md.bairro}\nEndereço: ${md.endereco} ${md.complemento ? `- ${md.complemento}` : ''}\nValor: R$ ${md.valor}\nQuartos: ${md.quartos}\nSuítes: ${md.suites}\nDetalhes: ${md.description}`
@@ -100,6 +145,48 @@ export function AddPropertyDialog({ onSuccess }: { onSuccess: () => void }) {
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4 mt-4">
+          <div className="space-y-3">
+            <Label>Fotos do Imóvel (Máx. 5)</Label>
+            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
+              {photos.map((url, i) => (
+                <div
+                  key={i}
+                  className="relative aspect-square rounded-md overflow-hidden bg-secondary border border-border group"
+                >
+                  <img src={url} alt={`Foto ${i + 1}`} className="object-cover w-full h-full" />
+                  <button
+                    type="button"
+                    onClick={() => setPhotos((p) => p.filter((u) => u !== url))}
+                    className="absolute top-1 right-1 bg-black/60 hover:bg-black p-1.5 rounded-full text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                </div>
+              ))}
+              {photos.length < 5 && (
+                <label className="relative aspect-square rounded-md border-2 border-dashed border-border flex flex-col items-center justify-center cursor-pointer hover:border-primary/50 hover:bg-secondary/20 transition-colors">
+                  <input
+                    type="file"
+                    accept="image/png, image/jpeg, image/jpg"
+                    multiple
+                    className="hidden"
+                    onChange={handlePhotoUpload}
+                    disabled={uploadingPhotos}
+                  />
+                  {uploadingPhotos ? (
+                    <span className="text-xs text-muted-foreground animate-pulse text-center px-1">
+                      Enviando...
+                    </span>
+                  ) : (
+                    <>
+                      <ImageIcon className="w-6 h-6 text-muted-foreground mb-1" />
+                      <span className="text-xs text-muted-foreground">Adicionar</span>
+                    </>
+                  )}
+                </label>
+              )}
+            </div>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label>Tipo de Imóvel</Label>
@@ -205,7 +292,7 @@ export function AddPropertyDialog({ onSuccess }: { onSuccess: () => void }) {
             </div>
             <Switch checked={isOffMarket} onCheckedChange={setIsOffMarket} />
           </div>
-          <Button type="submit" className="w-full mt-4" disabled={loading}>
+          <Button type="submit" className="w-full mt-4" disabled={loading || uploadingPhotos}>
             {loading ? 'Salvando...' : 'Publicar Imóvel'}
           </Button>
         </form>

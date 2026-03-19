@@ -84,38 +84,31 @@ export function EditPropertySheet({
     const files = e.target.files
     if (!files || files.length === 0 || !user) return
 
+    if (photos.length + files.length > 5) {
+      toast({
+        title: 'Limite excedido',
+        description: 'Você pode carregar no máximo 5 imagens.',
+        variant: 'destructive',
+      })
+      e.target.value = ''
+      return
+    }
+
     setUploadingPhotos(true)
     try {
       const newPhotos: string[] = []
-      for (let i = 0; i < files.length; i++) {
-        const file = files[i]
-        const fileExt = file.name.split('.').pop()
-        const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`
-        const filePath = `${user.id}/${fileName}`
-
-        const { error: uploadError } = await supabase.storage
-          .from('property_photos')
-          .upload(filePath, file)
-
-        if (uploadError) throw uploadError
-
-        const { data: publicUrlData } = supabase.storage
-          .from('property_photos')
-          .getPublicUrl(filePath)
-
-        newPhotos.push(publicUrlData.publicUrl)
+      for (const file of Array.from(files)) {
+        const ext = file.name.split('.').pop()
+        const path = `${user.id}/${Date.now()}_${Math.random().toString(36).substring(7)}.${ext}`
+        const { error } = await supabase.storage.from('property_photos').upload(path, file)
+        if (error) throw error
+        const { data } = supabase.storage.from('property_photos').getPublicUrl(path)
+        newPhotos.push(data.publicUrl)
       }
       setPhotos((prev) => [...prev, ...newPhotos])
-      toast({
-        title: 'Upload concluído',
-        description: `${files.length} foto(s) adicionada(s) com sucesso.`,
-      })
+      toast({ title: 'Sucesso', description: 'Fotos adicionadas.' })
     } catch (error) {
-      toast({
-        title: 'Erro no Upload',
-        description: 'Não foi possível fazer upload das imagens.',
-        variant: 'destructive',
-      })
+      toast({ title: 'Erro', description: 'Falha no upload.', variant: 'destructive' })
     } finally {
       setUploadingPhotos(false)
       e.target.value = ''
@@ -227,7 +220,7 @@ export function EditPropertySheet({
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div className="space-y-3">
-            <Label>Fotos do Imóvel</Label>
+            <Label>Fotos do Imóvel (Máx. 5)</Label>
             <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
               {photos.map((url, i) => (
                 <div
@@ -244,26 +237,28 @@ export function EditPropertySheet({
                   </button>
                 </div>
               ))}
-              <label className="relative aspect-square rounded-md border-2 border-dashed border-border flex flex-col items-center justify-center cursor-pointer hover:border-primary/50 hover:bg-secondary/20 transition-colors">
-                <input
-                  type="file"
-                  accept="image/*"
-                  multiple
-                  className="hidden"
-                  onChange={handlePhotoUpload}
-                  disabled={uploadingPhotos}
-                />
-                {uploadingPhotos ? (
-                  <span className="text-xs text-muted-foreground animate-pulse text-center px-1">
-                    Enviando...
-                  </span>
-                ) : (
-                  <>
-                    <ImageIcon className="w-6 h-6 text-muted-foreground mb-1" />
-                    <span className="text-xs text-muted-foreground">Adicionar</span>
-                  </>
-                )}
-              </label>
+              {photos.length < 5 && (
+                <label className="relative aspect-square rounded-md border-2 border-dashed border-border flex flex-col items-center justify-center cursor-pointer hover:border-primary/50 hover:bg-secondary/20 transition-colors">
+                  <input
+                    type="file"
+                    accept="image/png, image/jpeg, image/jpg"
+                    multiple
+                    className="hidden"
+                    onChange={handlePhotoUpload}
+                    disabled={uploadingPhotos}
+                  />
+                  {uploadingPhotos ? (
+                    <span className="text-xs text-muted-foreground animate-pulse text-center px-1">
+                      Enviando...
+                    </span>
+                  ) : (
+                    <>
+                      <ImageIcon className="w-6 h-6 text-muted-foreground mb-1" />
+                      <span className="text-xs text-muted-foreground">Adicionar</span>
+                    </>
+                  )}
+                </label>
+              )}
             </div>
           </div>
 
