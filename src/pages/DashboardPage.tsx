@@ -161,7 +161,7 @@ export default function DashboardPage() {
   const activeMatches = matches.filter((m) => m.status !== 'Fechado')
 
   const refCode = profileReferralCode || authUser?.id || user?.id || 'founder-123'
-  const referralLink = `https://prime-circle-migration-fd549.goskip.app/apply?ref=${refCode}`
+  const referralLink = `https://www.primecircle.app.br/apply?ref=${refCode}`
 
   const formatPlanName = (plan: string) => {
     if (plan === 'Founder') return 'Fundador'
@@ -232,7 +232,7 @@ export default function DashboardPage() {
       <div className="flex flex-col md:flex-row gap-6 md:items-center justify-between">
         <div className="flex items-center gap-4">
           <Avatar className="w-16 h-16 border-2 border-primary/50 shadow-md">
-            <AvatarImage src={profileAvatar} />
+            {profileAvatar && <AvatarImage src={profileAvatar} />}
             <AvatarFallback className="bg-secondary text-muted-foreground text-xl">
               {profileName ? profileName.substring(0, 2).toUpperCase() : 'US'}
             </AvatarFallback>

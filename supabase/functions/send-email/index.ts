@@ -4,7 +4,8 @@ import { createClient } from 'npm:@supabase/supabase-js@2'
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, x-supabase-client-platform, apikey, content-type',
+  'Access-Control-Allow-Headers':
+    'authorization, x-client-info, x-supabase-client-platform, apikey, content-type',
 }
 
 Deno.serve(async (req: Request) => {
@@ -15,7 +16,7 @@ Deno.serve(async (req: Request) => {
   try {
     const { to, subject, text, html, user_id } = await req.json()
     const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY')
-    
+
     if (!to) {
       return new Response(JSON.stringify({ error: 'Missing recipient email' }), {
         status: 400,
@@ -24,7 +25,7 @@ Deno.serve(async (req: Request) => {
     }
 
     if (!RESEND_API_KEY) {
-      console.warn("RESEND_API_KEY is not set. Simulating successful email send.")
+      console.warn('RESEND_API_KEY is not set. Simulating successful email send.')
       return new Response(JSON.stringify({ success: true, simulated: true, to, subject }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         status: 200,
