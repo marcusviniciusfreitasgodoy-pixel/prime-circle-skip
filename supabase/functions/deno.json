@@ -6,6 +6,7 @@
     "support-ticket-webhook": 2,
     "match-property-webhook": 6,
     "functions": 4,
-    "demand-push-webhook": 3
+    "demand-push-webhook": 3,
+    "monitor-partnerships": 1
   }
 }

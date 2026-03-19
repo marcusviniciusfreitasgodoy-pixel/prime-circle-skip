@@ -30,8 +30,8 @@ export function OpportunityRadar({
   const { user } = useAuth()
   const { toast } = useToast()
 
-  const ELITE_THRESHOLD = 70
-  const isElite = reputationScore >= ELITE_THRESHOLD
+  const ELITE_THRESHOLD = 80
+  const isElite = reputationScore > ELITE_THRESHOLD
 
   useEffect(() => {
     if (!user) return
@@ -92,7 +92,7 @@ export function OpportunityRadar({
   const handleRequestAccess = () => {
     toast({
       title: 'Acesso Restrito',
-      description: 'Você precisa de uma pontuação maior que 70 para acessar.',
+      description: 'Você precisa de uma pontuação maior que 80 para acessar.',
       variant: 'destructive',
     })
   }
@@ -303,8 +303,9 @@ export function OpportunityRadar({
                 <p className="text-red-300/80 text-sm mt-1">
                   Sua Pontuação PrimeCircle atual é{' '}
                   <strong className="text-white">{reputationScore}</strong>. É necessário atingir{' '}
-                  <strong>{ELITE_THRESHOLD} pontos</strong> para visualizar detalhes de propriedades
-                  Reservadas exclusivas. Continue fechando parcerias para aumentar sua reputação.
+                  <strong>mais de {ELITE_THRESHOLD} pontos</strong> para visualizar detalhes de
+                  propriedades Reservadas exclusivas. Continue fechando parcerias para aumentar sua
+                  reputação.
                 </p>
               </div>
             </div>
@@ -384,7 +385,7 @@ export function OpportunityRadar({
                         className="w-full border-red-900/50 text-red-400 pointer-events-auto"
                         onClick={handleRequestAccess}
                       >
-                        <Lock className="w-4 h-4 mr-2" /> Bloqueado (Pontuação &lt;{' '}
+                        <Lock className="w-4 h-4 mr-2" /> Bloqueado (Pontuação &lt;={' '}
                         {ELITE_THRESHOLD})
                       </Button>
                     ) : (

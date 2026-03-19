@@ -25,12 +25,15 @@ import {
   ChevronRight,
   ShieldCheck,
   BellRing,
+  Loader2,
+  MessageSquarePlus,
 } from 'lucide-react'
 import useAppStore from '@/stores/main'
 import type { Tier, Plan } from '@/stores/main'
 import { useToast } from '@/hooks/use-toast'
 import { useAuth } from '@/hooks/use-auth'
 import { supabase } from '@/lib/supabase/client'
+import { sendWhatsappMessage } from '@/services/whatsapp'
 
 export default function DashboardPage() {
   const { user, listings, needs, matches, updateMatchStatus, updateUser } = useAppStore()
@@ -49,6 +52,7 @@ export default function DashboardPage() {
   const [recentMatchAlerts, setRecentMatchAlerts] = useState<any[]>([])
   const [referralsCount, setReferralsCount] = useState<number>(0)
   const [userTier, setUserTier] = useState<Tier>('None')
+  const [isTestingWa, setIsTestingWa] = useState(false)
 
   const triggerRefresh = () => setRefreshKey((prev) => prev + 1)
 
@@ -169,6 +173,38 @@ export default function DashboardPage() {
     return plan
   }
 
+  const handleTestWhatsApp = async () => {
+    setIsTestingWa(true)
+    try {
+      const res = await sendWhatsappMessage(
+        '5521964075124',
+        'Teste de conectividade WhatsApp Prime Circle! Sua integração está funcionando perfeitamente. 🚀',
+        authUser?.id,
+      )
+      if (res.error || res.data?.error) {
+        toast({
+          title: 'Erro de Conexão',
+          description: 'Não foi possível enviar a mensagem. Verifique os logs.',
+          variant: 'destructive',
+        })
+      } else {
+        toast({
+          title: 'Sucesso',
+          description: 'Mensagem de teste enviada com sucesso para 5521964075124',
+          className: 'bg-card border-primary/50 text-white',
+        })
+      }
+    } catch (e) {
+      toast({
+        title: 'Erro',
+        description: 'Ocorreu um erro ao testar a conexão.',
+        variant: 'destructive',
+      })
+    } finally {
+      setIsTestingWa(false)
+    }
+  }
+
   const stats = [
     {
       title: 'Demandas do Círculo',
@@ -241,7 +277,7 @@ export default function DashboardPage() {
             <h2 className="text-3xl font-bold tracking-tight text-white flex items-center flex-wrap gap-2 min-h-9">
               Bem-vindo,{' '}
               {isLoadingName ? <Skeleton className="h-8 w-32 bg-muted/20" /> : profileName}
-              {!isLoadingName && profileScore >= 70 && (
+              {!isLoadingName && profileScore > 80 && (
                 <Badge className="ml-2 bg-primary/20 text-primary border-primary/30 hover:bg-primary/30 flex items-center gap-1 shadow-sm">
                   <ShieldCheck className="w-3 h-3" /> Status de Elite
                 </Badge>
@@ -261,7 +297,7 @@ export default function DashboardPage() {
               <span className="text-sm border-l border-border pl-3 flex items-center gap-1">
                 Pontuação PrimeCircle:{' '}
                 <strong
-                  className={`text-white px-2 py-0.5 rounded-md border border-border ${profileScore >= 70 ? 'bg-primary/20 border-primary/50 text-primary' : 'bg-secondary/80'}`}
+                  className={`text-white px-2 py-0.5 rounded-md border border-border ${profileScore > 80 ? 'bg-primary/20 border-primary/50 text-primary' : 'bg-secondary/80'}`}
                 >
                   {isLoadingName ? '-' : profileScore}
                 </strong>
@@ -270,6 +306,20 @@ export default function DashboardPage() {
           </div>
         </div>
         <div className="flex flex-wrap items-center gap-3">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleTestWhatsApp}
+            disabled={isTestingWa}
+            className="border-primary/50 text-primary hover:bg-primary/10 bg-card h-10 shadow-sm"
+          >
+            {isTestingWa ? (
+              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+            ) : (
+              <MessageSquarePlus className="w-4 h-4 mr-2" />
+            )}
+            Testar Conexão WhatsApp
+          </Button>
           <AddPropertyDialog onSuccess={triggerRefresh} />
         </div>
       </div>
