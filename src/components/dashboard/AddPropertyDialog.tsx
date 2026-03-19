@@ -102,27 +102,41 @@ export function AddPropertyDialog({ onSuccess }: { onSuccess: () => void }) {
     setLoading(true)
 
     const fd = new FormData(e.currentTarget)
+
+    const tipo_imovel = String(fd.get('tipo_imovel') || '')
+    const complemento = String(fd.get('complemento') || '')
+    const quartos = String(fd.get('quartos') || '')
+    const suites = String(fd.get('suites') || '')
+    const tamanho_imovel = Number(fd.get('tamanho_imovel'))
+    const tamanho_terreno_val = fd.get('tamanho_terreno')
+    const tamanho_terreno = tamanho_terreno_val ? Number(tamanho_terreno_val) : null
+    const nome_condominio = String(fd.get('nome_condominio') || '')
+    const link_imovel = String(fd.get('link_imovel') || '')
+    const video_url_val = fd.get('video_url')
+    const video_url = video_url_val ? String(video_url_val) : null
+    const description = String(fd.get('description') || '')
+
     const md = {
       type: 'oferta',
       user_id: user.id,
       is_off_market: isOffMarket,
       valor: parseCurrency(valor),
-      tipo_imovel: fd.get('tipo_imovel'),
-      endereco: endereco,
-      bairro: bairro,
+      tipo_imovel,
+      endereco,
+      bairro,
       street: endereco,
       neighborhood: bairro,
-      city: city,
+      city,
       state: stateLocation,
-      complemento: fd.get('complemento') || '',
-      quartos: fd.get('quartos'),
-      suites: fd.get('suites'),
-      tamanho_imovel: Number(fd.get('tamanho_imovel')),
-      tamanho_terreno: fd.get('tamanho_terreno') ? Number(fd.get('tamanho_terreno')) : null,
-      nome_condominio: fd.get('nome_condominio'),
-      link_imovel: fd.get('link_imovel'),
-      video_url: fd.get('video_url') || null,
-      description: fd.get('description'),
+      complemento,
+      quartos,
+      suites,
+      tamanho_imovel,
+      tamanho_terreno,
+      nome_condominio,
+      link_imovel,
+      video_url,
+      description,
       status: 'Ativo',
       photos,
     }
