@@ -32,7 +32,7 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
 import { useToast } from '@/hooks/use-toast'
-import { Lock, Image as ImageIcon, X } from 'lucide-react'
+import { Lock, Image as ImageIcon, X, Eye } from 'lucide-react'
 
 const formatCurrency = (value: string | number) => {
   if (typeof value === 'number') {
@@ -399,7 +399,14 @@ export function EditPropertySheet({
           </div>
 
           <div className="space-y-2">
-            <Label>Link do Vídeo (Opcional)</Label>
+            <div className="flex justify-between items-end mb-1">
+              <Label>Link do Vídeo (Opcional)</Label>
+              {property.metadata?.video_views !== undefined && property.metadata?.video_url && (
+                <span className="text-xs font-medium text-primary flex items-center gap-1 bg-primary/10 px-2 py-0.5 rounded-full border border-primary/20">
+                  <Eye className="w-3 h-3" /> {property.metadata.video_views} visualizações
+                </span>
+              )}
+            </div>
             <Input
               name="video_url"
               type="url"

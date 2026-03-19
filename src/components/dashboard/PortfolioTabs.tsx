@@ -5,9 +5,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
-import { MapPin, Building, UserSearch, Image as ImageIcon, Video } from 'lucide-react'
+import { MapPin, Building, UserSearch, Image as ImageIcon, PlayCircle, Eye } from 'lucide-react'
 import { EditPropertySheet } from './EditPropertySheet'
 import { Button } from '@/components/ui/button'
+import { VideoPlayerModal } from './VideoPlayerModal'
 
 export function PortfolioTabs({ refreshKey }: { refreshKey: number }) {
   const { user } = useAuth()
@@ -15,6 +16,7 @@ export function PortfolioTabs({ refreshKey }: { refreshKey: number }) {
   const [needs, setNeeds] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [editingProperty, setEditingProperty] = useState<any>(null)
+  const [playingVideoUrl, setPlayingVideoUrl] = useState<string | null>(null)
 
   const fetchPortfolio = useCallback(async () => {
     if (!user) return
@@ -38,6 +40,32 @@ export function PortfolioTabs({ refreshKey }: { refreshKey: number }) {
     fetchPortfolio()
   }, [fetchPortfolio, refreshKey])
 
+  const handlePlayVideo = async (e: React.MouseEvent, p: any) => {
+    e.stopPropagation()
+    if (!p.metadata?.video_url) return
+    setPlayingVideoUrl(p.metadata.video_url)
+
+    try {
+      await supabase.rpc('increment_video_views', { doc_id: p.id })
+      setProperties((prev) =>
+        prev.map((prop) => {
+          if (prop.id === p.id) {
+            return {
+              ...prop,
+              metadata: {
+                ...prop.metadata,
+                video_views: (prop.metadata.video_views || 0) + 1,
+              },
+            }
+          }
+          return prop
+        }),
+      )
+    } catch (err) {
+      console.error('Failed to increment video views', err)
+    }
+  }
+
   return (
     <div className="w-full">
       <EditPropertySheet
@@ -48,6 +76,12 @@ export function PortfolioTabs({ refreshKey }: { refreshKey: number }) {
           setEditingProperty(null)
           fetchPortfolio()
         }}
+      />
+
+      <VideoPlayerModal
+        open={!!playingVideoUrl}
+        onOpenChange={(open) => !open && setPlayingVideoUrl(null)}
+        url={playingVideoUrl}
       />
 
       <Tabs defaultValue="imoveis" className="w-full">
@@ -92,16 +126,34 @@ export function PortfolioTabs({ refreshKey }: { refreshKey: number }) {
                           alt="Imóvel"
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         />
+                        {p.metadata.video_url && (
+                          <button
+                            type="button"
+                            onClick={(e) => handlePlayVideo(e, p)}
+                            className="absolute top-2 left-2 bg-primary/90 hover:bg-primary text-black px-2 py-1 rounded text-xs font-bold flex items-center gap-1 shadow-md z-10 backdrop-blur-sm transition-colors"
+                          >
+                            <PlayCircle className="w-3 h-3 fill-black/20" /> Vídeo
+                          </button>
+                        )}
                         {p.metadata.photos.length > 1 && (
-                          <div className="absolute bottom-2 right-2 bg-black/70 px-2 py-0.5 rounded text-xs font-medium text-white flex items-center gap-1 backdrop-blur-sm">
+                          <div className="absolute bottom-2 right-2 bg-black/70 px-2 py-0.5 rounded text-xs font-medium text-white flex items-center gap-1 backdrop-blur-sm z-10">
                             <ImageIcon className="w-3 h-3" />
                             {p.metadata.photos.length}
                           </div>
                         )}
                       </div>
                     ) : (
-                      <div className="w-full h-32 mb-3 rounded-md overflow-hidden bg-secondary/50 border border-border border-dashed flex items-center justify-center">
+                      <div className="w-full h-32 mb-3 rounded-md overflow-hidden bg-secondary/50 border border-border border-dashed flex items-center justify-center relative">
                         <Building className="w-8 h-8 text-muted-foreground/30" />
+                        {p.metadata.video_url && (
+                          <button
+                            type="button"
+                            onClick={(e) => handlePlayVideo(e, p)}
+                            className="absolute top-2 left-2 bg-primary/90 hover:bg-primary text-black px-2 py-1 rounded text-xs font-bold flex items-center gap-1 shadow-md z-10 backdrop-blur-sm transition-colors"
+                          >
+                            <PlayCircle className="w-3 h-3 fill-black/20" /> Vídeo
+                          </button>
+                        )}
                       </div>
                     )}
                     <div className="flex justify-between items-start gap-2 mb-1">
@@ -145,17 +197,22 @@ export function PortfolioTabs({ refreshKey }: { refreshKey: number }) {
                     </p>
 
                     {p.metadata.video_url && (
-                      <Button
-                        size="sm"
-                        variant="secondary"
-                        className="mt-3 w-full bg-secondary/50 hover:bg-secondary text-white"
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          window.open(p.metadata.video_url, '_blank', 'noopener,noreferrer')
-                        }}
-                      >
-                        <Video className="w-4 h-4 mr-2" /> Ver Vídeo
-                      </Button>
+                      <div className="mt-3 flex items-center justify-between w-full gap-2 bg-secondary/20 p-1.5 rounded-md border border-border/50">
+                        <Button
+                          size="sm"
+                          variant="secondary"
+                          className="bg-primary/10 hover:bg-primary/20 text-primary border border-primary/20 flex-1"
+                          onClick={(e) => handlePlayVideo(e, p)}
+                        >
+                          <PlayCircle className="w-4 h-4 mr-2" /> Assistir Vídeo
+                        </Button>
+                        <div
+                          className="flex items-center gap-1 text-xs text-muted-foreground px-2"
+                          title="Visualizações do vídeo"
+                        >
+                          <Eye className="w-3 h-3" /> {p.metadata.video_views || 0}
+                        </div>
+                      </div>
                     )}
                   </CardContent>
                 </Card>
