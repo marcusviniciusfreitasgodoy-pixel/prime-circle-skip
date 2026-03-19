@@ -181,6 +181,7 @@ export type Database = {
           avatar_url: string | null
           company_name: string | null
           creci: string | null
+          email: string | null
           full_name: string | null
           id: string
           plan: string
@@ -200,6 +201,7 @@ export type Database = {
           avatar_url?: string | null
           company_name?: string | null
           creci?: string | null
+          email?: string | null
           full_name?: string | null
           id: string
           plan?: string
@@ -219,6 +221,7 @@ export type Database = {
           avatar_url?: string | null
           company_name?: string | null
           creci?: string | null
+          email?: string | null
           full_name?: string | null
           id?: string
           plan?: string
@@ -505,6 +508,7 @@ export const Constants = {
 //   status: text (not null, default: 'pending_validation'::text)
 //   validated_by: uuid (nullable)
 //   validation_date: timestamp with time zone (nullable)
+//   email: text (nullable)
 // Table: support_tickets
 //   id: uuid (not null, default: gen_random_uuid())
 //   user_id: uuid (nullable)
@@ -574,6 +578,9 @@ export const Constants = {
 //   Policy "Admins and Elite can update other profiles" (UPDATE, PERMISSIVE) roles={authenticated}
 //     USING: (EXISTS ( SELECT 1    FROM profiles p   WHERE ((p.id = auth.uid()) AND ((p.role = 'admin'::text) OR (p.reputation_score > 80)))))
 //     WITH CHECK: (EXISTS ( SELECT 1    FROM profiles p   WHERE ((p.id = auth.uid()) AND ((p.role = 'admin'::text) OR (p.reputation_score > 80)))))
+//   Policy "Admins can update all profiles" (UPDATE, PERMISSIVE) roles={authenticated}
+//     USING: is_admin()
+//     WITH CHECK: is_admin()
 //   Policy "Admins can view all profiles" (SELECT, PERMISSIVE) roles={authenticated}
 //     USING: is_admin()
 //   Policy "Authenticated users can select active profiles" (SELECT, PERMISSIVE) roles={authenticated}
@@ -648,7 +655,8 @@ export const Constants = {
 //         region,
 //         ticket_value,
 //         referral_code,
-//         company_name
+//         company_name,
+//         email
 //       )
 //       VALUES (
 //         NEW.id,
@@ -662,12 +670,14 @@ export const Constants = {
 //         NEW.raw_user_meta_data->>'region',
 //         NEW.raw_user_meta_data->>'ticket_value',
 //         NEW.raw_user_meta_data->>'referral_code',
-//         NEW.raw_user_meta_data->>'company_name'
+//         NEW.raw_user_meta_data->>'company_name',
+//         NEW.email
 //       )
 //       ON CONFLICT (id) DO UPDATE SET
 //         role = EXCLUDED.role,
 //         plan = EXCLUDED.plan,
-//         status = EXCLUDED.status;
+//         status = EXCLUDED.status,
+//         email = EXCLUDED.email;
 //     EXCEPTION WHEN OTHERS THEN
 //       RAISE WARNING 'Error in handle_new_user trigger: %', SQLERRM;
 //     END;

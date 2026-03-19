@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useAuth } from '@/hooks/use-auth'
 import { supabase } from '@/lib/supabase/client'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -6,38 +6,49 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { MapPin, Building, UserSearch } from 'lucide-react'
+import { EditPropertySheet } from './EditPropertySheet'
 
 export function PortfolioTabs({ refreshKey }: { refreshKey: number }) {
   const { user } = useAuth()
   const [properties, setProperties] = useState<any[]>([])
   const [needs, setNeeds] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
+  const [editingProperty, setEditingProperty] = useState<any>(null)
+
+  const fetchPortfolio = useCallback(async () => {
+    if (!user) return
+    setLoading(true)
+    const { data, error } = await supabase
+      .from('documents')
+      .select('*')
+      .contains('metadata', { user_id: user.id })
+      .order('id', { ascending: false })
+
+    if (!error && data) {
+      const props = data.filter((d) => d.metadata?.type === 'oferta')
+      const nds = data.filter((d) => d.metadata?.type === 'demanda')
+      setProperties(props)
+      setNeeds(nds)
+    }
+    setLoading(false)
+  }, [user])
 
   useEffect(() => {
-    if (!user) return
-
-    const fetchPortfolio = async () => {
-      setLoading(true)
-      const { data, error } = await supabase
-        .from('documents')
-        .select('*')
-        .contains('metadata', { user_id: user.id })
-        .order('id', { ascending: false })
-
-      if (!error && data) {
-        const props = data.filter((d) => d.metadata?.type === 'oferta')
-        const nds = data.filter((d) => d.metadata?.type === 'demanda')
-        setProperties(props)
-        setNeeds(nds)
-      }
-      setLoading(false)
-    }
-
     fetchPortfolio()
-  }, [user, refreshKey])
+  }, [fetchPortfolio, refreshKey])
 
   return (
     <div className="w-full">
+      <EditPropertySheet
+        property={editingProperty}
+        open={!!editingProperty}
+        onOpenChange={(open) => !open && setEditingProperty(null)}
+        onSuccess={() => {
+          setEditingProperty(null)
+          fetchPortfolio()
+        }}
+      />
+
       <Tabs defaultValue="imoveis" className="w-full">
         <TabsList className="grid w-full max-w-md grid-cols-2 bg-background border border-border h-12">
           <TabsTrigger value="imoveis" className="data-[state=active]:bg-card rounded-sm h-10">
@@ -69,28 +80,38 @@ export function PortfolioTabs({ refreshKey }: { refreshKey: number }) {
               {properties.map((p) => (
                 <Card
                   key={p.id}
-                  className="bg-card border-border hover:border-primary/50 transition-all group"
+                  className="bg-card border-border hover:border-primary/50 transition-all cursor-pointer group"
+                  onClick={() => setEditingProperty(p)}
                 >
                   <CardHeader className="pb-3">
                     <div className="flex justify-between items-start gap-2 mb-1">
                       <CardTitle className="text-lg text-white line-clamp-1">
-                        {p.metadata.title}
+                        {p.metadata.title || p.metadata.tipo_imovel || 'Imóvel'}
                       </CardTitle>
                       <Badge
                         variant="outline"
                         className="gold-gradient text-black shrink-0 border-0"
                       >
-                        {p.metadata.property_type}
+                        {p.metadata.property_type || p.metadata.tipo_imovel || 'Apartamento'}
                       </Badge>
                     </div>
                     <CardDescription className="text-primary font-bold text-lg">
-                      {p.metadata.price}
+                      {p.metadata.price ||
+                        new Intl.NumberFormat('pt-BR', {
+                          style: 'currency',
+                          currency: 'BRL',
+                        }).format(p.metadata.valor || 0)}
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="flex items-center gap-2 text-sm text-muted-foreground mb-3">
                       <MapPin className="w-4 h-4 text-primary/70 shrink-0" />
-                      <span className="truncate">{p.metadata.location}</span>
+                      <span className="truncate">
+                        {p.metadata.location ||
+                          p.metadata.bairro ||
+                          p.metadata.endereco ||
+                          'Não informado'}
+                      </span>
                     </div>
                     <p className="text-sm text-muted-foreground line-clamp-2">{p.content}</p>
                   </CardContent>
