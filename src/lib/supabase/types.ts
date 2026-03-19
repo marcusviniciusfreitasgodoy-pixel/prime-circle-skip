@@ -186,6 +186,7 @@ export type Database = {
           id: string
           plan: string
           referral_code: string | null
+          referred_by_id: string | null
           region: string | null
           reputation_score: number
           role: string
@@ -206,6 +207,7 @@ export type Database = {
           id: string
           plan?: string
           referral_code?: string | null
+          referred_by_id?: string | null
           region?: string | null
           reputation_score?: number
           role?: string
@@ -226,6 +228,7 @@ export type Database = {
           id?: string
           plan?: string
           referral_code?: string | null
+          referred_by_id?: string | null
           region?: string | null
           reputation_score?: number
           role?: string
@@ -238,8 +241,41 @@ export type Database = {
         }
         Relationships: [
           {
+            foreignKeyName: 'profiles_referred_by_id_fkey'
+            columns: ['referred_by_id']
+            isOneToOne: false
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
+          },
+          {
             foreignKeyName: 'profiles_validated_by_fkey'
             columns: ['validated_by']
+            isOneToOne: false
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
+          },
+        ]
+      }
+      referral_clicks: {
+        Row: {
+          created_at: string
+          id: string
+          referrer_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          referrer_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          referrer_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'referral_clicks_referrer_id_fkey'
+            columns: ['referrer_id']
             isOneToOne: false
             referencedRelation: 'profiles'
             referencedColumns: ['id']
@@ -510,6 +546,11 @@ export const Constants = {
 //   validated_by: uuid (nullable)
 //   validation_date: timestamp with time zone (nullable)
 //   email: text (nullable)
+//   referred_by_id: uuid (nullable)
+// Table: referral_clicks
+//   id: uuid (not null, default: gen_random_uuid())
+//   referrer_id: uuid (not null)
+//   created_at: timestamp with time zone (not null, default: now())
 // Table: support_tickets
 //   id: uuid (not null, default: gen_random_uuid())
 //   user_id: uuid (nullable)
@@ -542,8 +583,12 @@ export const Constants = {
 // Table: profiles
 //   FOREIGN KEY profiles_id_fkey: FOREIGN KEY (id) REFERENCES auth.users(id) ON DELETE CASCADE
 //   PRIMARY KEY profiles_pkey: PRIMARY KEY (id)
+//   FOREIGN KEY profiles_referred_by_id_fkey: FOREIGN KEY (referred_by_id) REFERENCES profiles(id) ON DELETE SET NULL
 //   CHECK profiles_status_check: CHECK ((status = ANY (ARRAY['pending_validation'::text, 'active'::text, 'rejected'::text])))
 //   FOREIGN KEY profiles_validated_by_fkey: FOREIGN KEY (validated_by) REFERENCES profiles(id) ON DELETE SET NULL
+// Table: referral_clicks
+//   PRIMARY KEY referral_clicks_pkey: PRIMARY KEY (id)
+//   FOREIGN KEY referral_clicks_referrer_id_fkey: FOREIGN KEY (referrer_id) REFERENCES profiles(id) ON DELETE CASCADE
 // Table: support_tickets
 //   PRIMARY KEY support_tickets_pkey: PRIMARY KEY (id)
 //   CHECK support_tickets_status_check: CHECK ((status = ANY (ARRAY['open'::text, 'pending'::text, 'resolved'::text])))
@@ -595,6 +640,13 @@ export const Constants = {
 //     WITH CHECK: (auth.uid() = id)
 //   Policy "Users can view own profile" (SELECT, PERMISSIVE) roles={authenticated}
 //     USING: (auth.uid() = id)
+//   Policy "Users can view referred profiles" (SELECT, PERMISSIVE) roles={authenticated}
+//     USING: (referred_by_id = auth.uid())
+// Table: referral_clicks
+//   Policy "Anyone can insert referral clicks" (INSERT, PERMISSIVE) roles={public}
+//     WITH CHECK: true
+//   Policy "Users can view own referral clicks" (SELECT, PERMISSIVE) roles={authenticated}
+//     USING: (referrer_id = auth.uid())
 // Table: support_tickets
 //   Policy "Admins can update tickets" (UPDATE, PERMISSIVE) roles={authenticated}
 //     USING: (EXISTS ( SELECT 1    FROM profiles   WHERE ((profiles.id = auth.uid()) AND (profiles.role = 'admin'::text))))
@@ -630,8 +682,8 @@ export const Constants = {
 //     assigned_role TEXT := 'user';
 //     assigned_plan TEXT := 'Free';
 //     assigned_status TEXT := 'pending_validation';
+//     ref_by_id UUID := NULL;
 //   BEGIN
-//     -- Fast count to assign Founder to first 20 users
 //     SELECT COUNT(*) INTO user_count FROM public.profiles;
 //
 //     IF user_count = 0 THEN
@@ -642,6 +694,14 @@ export const Constants = {
 //       assigned_plan := 'Founder';
 //       assigned_status := 'active';
 //     END IF;
+//
+//     BEGIN
+//       IF NEW.raw_user_meta_data->>'referred_by_id' IS NOT NULL AND NEW.raw_user_meta_data->>'referred_by_id' != '' THEN
+//         ref_by_id := (NEW.raw_user_meta_data->>'referred_by_id')::uuid;
+//       END IF;
+//     EXCEPTION WHEN OTHERS THEN
+//       ref_by_id := NULL;
+//     END;
 //
 //     BEGIN
 //       INSERT INTO public.profiles (
@@ -657,7 +717,8 @@ export const Constants = {
 //         ticket_value,
 //         referral_code,
 //         company_name,
-//         email
+//         email,
+//         referred_by_id
 //       )
 //       VALUES (
 //         NEW.id,
@@ -672,7 +733,8 @@ export const Constants = {
 //         NEW.raw_user_meta_data->>'ticket_value',
 //         NEW.raw_user_meta_data->>'referral_code',
 //         NEW.raw_user_meta_data->>'company_name',
-//         NEW.email
+//         NEW.email,
+//         ref_by_id
 //       )
 //       ON CONFLICT (id) DO UPDATE SET
 //         role = EXCLUDED.role,

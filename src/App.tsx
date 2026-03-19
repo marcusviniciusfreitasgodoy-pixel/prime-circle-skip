@@ -27,6 +27,7 @@ import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
 import { ProtectedRoute } from '@/components/ProtectedRoute'
 import { AnalyticsTracker } from '@/components/AnalyticsTracker'
+import { PwaUpdater } from '@/components/PwaUpdater'
 import useAppStore, { AppProvider } from '@/stores/main'
 import { useToast } from '@/hooks/use-toast'
 import { AuthProvider } from '@/hooks/use-auth'
@@ -72,6 +73,7 @@ function App() {
           <Toaster />
           <Router>
             <AnalyticsTracker />
+            <PwaUpdater />
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/apply" element={<ApplyPage />} />

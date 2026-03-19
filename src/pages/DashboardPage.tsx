@@ -13,6 +13,7 @@ import { OpportunityRadar } from '@/components/dashboard/OpportunityRadar'
 import { PendingValidations } from '@/components/dashboard/PendingValidations'
 import { ReputationRanking } from '@/components/dashboard/ReputationRanking'
 import { ReferralTracker } from '@/components/dashboard/ReferralTracker'
+import { PwaInstallPrompt } from '@/components/dashboard/PwaInstallPrompt'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import {
   Activity,
@@ -211,6 +212,7 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-8 animate-fade-in-up">
+      <PwaInstallPrompt />
       <FounderExpiryBanner />
 
       {profileStatus === 'pending_validation' && (
