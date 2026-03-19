@@ -293,6 +293,7 @@ export type Database = {
     }
     Functions: {
       get_user_id_by_email: { Args: { p_email: string }; Returns: string }
+      increment_video_views: { Args: { doc_id: number }; Returns: undefined }
       is_admin: { Args: never; Returns: boolean }
       log_notification: {
         Args: {
@@ -737,6 +738,23 @@ export const Constants = {
 //     END;
 //
 //     RETURN NEW;
+//   END;
+//   $function$
+//
+// FUNCTION increment_video_views(bigint)
+//   CREATE OR REPLACE FUNCTION public.increment_video_views(doc_id bigint)
+//    RETURNS void
+//    LANGUAGE plpgsql
+//    SECURITY DEFINER
+//   AS $function$
+//   BEGIN
+//     UPDATE public.documents
+//     SET metadata = jsonb_set(
+//       metadata,
+//       '{video_views}',
+//       to_jsonb(COALESCE((metadata->>'video_views')::int, 0) + 1)
+//     )
+//     WHERE id = doc_id;
 //   END;
 //   $function$
 //

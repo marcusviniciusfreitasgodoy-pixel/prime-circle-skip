@@ -54,7 +54,7 @@ export function AddNeedDialog({ onSuccess }: { onSuccess: () => void }) {
       quartos: fd.get('quartos'),
       suites: fd.get('suites'),
       tamanho_imovel: Number(fd.get('tamanho_imovel')),
-      tamanho_terreno: Number(fd.get('tamanho_terreno')),
+      tamanho_terreno: fd.get('tamanho_terreno') ? Number(fd.get('tamanho_terreno')) : null,
       nome_condominio: fd.get('nome_condominio'),
       link_imovel: fd.get('link_imovel'),
       description: fd.get('description'),
@@ -169,8 +169,8 @@ export function AddNeedDialog({ onSuccess }: { onSuccess: () => void }) {
               <Input name="tamanho_imovel" type="number" required placeholder="120" />
             </div>
             <div className="space-y-2">
-              <Label>Terreno Mínimo (m²)</Label>
-              <Input name="tamanho_terreno" type="number" required placeholder="200" />
+              <Label>Terreno Mínimo (m²) (Opcional)</Label>
+              <Input name="tamanho_terreno" type="number" placeholder="200" />
             </div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
