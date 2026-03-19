@@ -44,20 +44,23 @@ export function AddNeedDialog({ onSuccess }: { onSuccess: () => void }) {
     setLoading(true)
 
     const fd = new FormData(e.currentTarget)
+
+    // Explicitly cast to prevent TypeScript from evaluating FormDataEntryValue (which includes File)
+    // against Supabase's recursive Json type, avoiding a known type-checking OOM during build.
     const md = {
       type: 'demanda',
       user_id: user.id,
       valor: parseCurrency(valor),
-      tipo_imovel: fd.get('tipo_imovel'),
-      endereco: fd.get('endereco'),
-      bairro: fd.get('bairro'),
-      quartos: fd.get('quartos'),
-      suites: fd.get('suites'),
-      tamanho_imovel: Number(fd.get('tamanho_imovel')),
+      tipo_imovel: String(fd.get('tipo_imovel') || ''),
+      endereco: String(fd.get('endereco') || ''),
+      bairro: String(fd.get('bairro') || ''),
+      quartos: String(fd.get('quartos') || ''),
+      suites: String(fd.get('suites') || ''),
+      tamanho_imovel: Number(fd.get('tamanho_imovel') || 0),
       tamanho_terreno: fd.get('tamanho_terreno') ? Number(fd.get('tamanho_terreno')) : null,
-      nome_condominio: fd.get('nome_condominio'),
-      link_imovel: fd.get('link_imovel'),
-      description: fd.get('description'),
+      nome_condominio: fd.get('nome_condominio') ? String(fd.get('nome_condominio')) : null,
+      link_imovel: fd.get('link_imovel') ? String(fd.get('link_imovel')) : null,
+      description: String(fd.get('description') || ''),
     }
 
     const content = `Busca: ${md.tipo_imovel}\nBairro: ${md.bairro}\nEndereço: ${md.endereco}\nValor Max: R$ ${md.valor}\nQuartos: ${md.quartos}\nDetalhes: ${md.description}`
