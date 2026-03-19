@@ -551,7 +551,7 @@ export const Constants = {
 // --- ROW LEVEL SECURITY POLICIES ---
 // Table: documents
 //   Policy "authenticated_delete_documents" (DELETE, PERMISSIVE) roles={authenticated}
-//     USING: true
+//     USING: (((auth.uid())::text = (metadata ->> 'user_id'::text)) OR is_admin())
 //   Policy "authenticated_insert_documents" (INSERT, PERMISSIVE) roles={authenticated}
 //     WITH CHECK: true
 //   Policy "authenticated_select_documents" (SELECT, PERMISSIVE) roles={authenticated}

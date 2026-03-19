@@ -54,11 +54,12 @@ export function AddPropertyDialog({ onSuccess }: { onSuccess: () => void }) {
       valor: parseCurrency(valor),
       tipo_imovel: fd.get('tipo_imovel'),
       endereco: fd.get('endereco'),
+      complemento: fd.get('complemento') || '',
       bairro: fd.get('bairro'),
       quartos: fd.get('quartos'),
       suites: fd.get('suites'),
       tamanho_imovel: Number(fd.get('tamanho_imovel')),
-      tamanho_terreno: Number(fd.get('tamanho_terreno')),
+      tamanho_terreno: fd.get('tamanho_terreno') ? Number(fd.get('tamanho_terreno')) : null,
       nome_condominio: fd.get('nome_condominio'),
       link_imovel: fd.get('link_imovel'),
       description: fd.get('description'),
@@ -66,7 +67,7 @@ export function AddPropertyDialog({ onSuccess }: { onSuccess: () => void }) {
       photos: [],
     }
 
-    const content = `Tipo: ${md.tipo_imovel}\nBairro: ${md.bairro}\nEndereço: ${md.endereco}\nValor: R$ ${md.valor}\nQuartos: ${md.quartos}\nSuítes: ${md.suites}\nDetalhes: ${md.description}`
+    const content = `Tipo: ${md.tipo_imovel}\nBairro: ${md.bairro}\nEndereço: ${md.endereco} ${md.complemento ? `- ${md.complemento}` : ''}\nValor: R$ ${md.valor}\nQuartos: ${md.quartos}\nSuítes: ${md.suites}\nDetalhes: ${md.description}`
 
     const { error } = await supabase.from('documents').insert({ content, metadata: md })
 
@@ -125,10 +126,14 @@ export function AddPropertyDialog({ onSuccess }: { onSuccess: () => void }) {
               />
             </div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="space-y-2">
               <Label>Rua/Avenida</Label>
               <Input name="endereco" required placeholder="Ex: Av. das Américas" />
+            </div>
+            <div className="space-y-2">
+              <Label>Complemento (Opcional)</Label>
+              <Input name="complemento" placeholder="Ex: Apto 101" />
             </div>
             <div className="space-y-2">
               <Label>Bairro</Label>
@@ -171,8 +176,8 @@ export function AddPropertyDialog({ onSuccess }: { onSuccess: () => void }) {
               <Input name="tamanho_imovel" type="number" required placeholder="120" />
             </div>
             <div className="space-y-2">
-              <Label>Terreno (m²)</Label>
-              <Input name="tamanho_terreno" type="number" required placeholder="200" />
+              <Label>Terreno (m²) (Opcional)</Label>
+              <Input name="tamanho_terreno" type="number" placeholder="200" />
             </div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

@@ -139,11 +139,12 @@ export function EditPropertySheet({
       valor: parseCurrency(valor),
       tipo_imovel: fd.get('tipo_imovel'),
       endereco: fd.get('endereco'),
+      complemento: fd.get('complemento') || '',
       bairro: fd.get('bairro'),
       quartos: fd.get('quartos'),
       suites: fd.get('suites'),
       tamanho_imovel: Number(fd.get('tamanho_imovel')),
-      tamanho_terreno: Number(fd.get('tamanho_terreno')),
+      tamanho_terreno: fd.get('tamanho_terreno') ? Number(fd.get('tamanho_terreno')) : null,
       nome_condominio: fd.get('nome_condominio'),
       link_imovel: fd.get('link_imovel'),
       description: fd.get('description'),
@@ -156,7 +157,7 @@ export function EditPropertySheet({
     md.location = md.bairro || md.endereco
     md.property_type = md.tipo_imovel
 
-    const content = `Tipo: ${md.tipo_imovel}\nBairro: ${md.bairro}\nEndereço: ${md.endereco}\nValor: R$ ${md.valor}\nQuartos: ${md.quartos}\nSuítes: ${md.suites}\nDetalhes: ${md.description}`
+    const content = `Tipo: ${md.tipo_imovel}\nBairro: ${md.bairro}\nEndereço: ${md.endereco} ${md.complemento ? `- ${md.complemento}` : ''}\nValor: R$ ${md.valor}\nQuartos: ${md.quartos}\nSuítes: ${md.suites}\nDetalhes: ${md.description}`
 
     const { error } = await supabase
       .from('documents')
@@ -316,9 +317,10 @@ export function EditPropertySheet({
                 defaultValue={property.metadata?.endereco || property.metadata?.location || ''}
               />
             </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label>Complemento (Opcional)</Label>
+              <Input name="complemento" defaultValue={property.metadata?.complemento || ''} />
+            </div>
             <div className="space-y-2">
               <Label>Bairro</Label>
               <Input
@@ -327,41 +329,39 @@ export function EditPropertySheet({
                 defaultValue={property.metadata?.bairro || property.metadata?.location || ''}
               />
             </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label>Quartos</Label>
-                <Select name="quartos" required defaultValue={getSelectValue('quartos', '1')}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {['1', '2', '3', '4', '5 ou mais'].map((o) => (
-                      <SelectItem key={o} value={o}>
-                        {o}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-2">
-                <Label>Suítes</Label>
-                <Select name="suites" required defaultValue={getSelectValue('suites', '1')}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {['1', '2', '3', '4', '5 ou mais'].map((o) => (
-                      <SelectItem key={o} value={o}>
-                        {o}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="space-y-2">
+              <Label>Quartos</Label>
+              <Select name="quartos" required defaultValue={getSelectValue('quartos', '1')}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {['1', '2', '3', '4', '5 ou mais'].map((o) => (
+                    <SelectItem key={o} value={o}>
+                      {o}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label>Suítes</Label>
+              <Select name="suites" required defaultValue={getSelectValue('suites', '1')}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {['1', '2', '3', '4', '5 ou mais'].map((o) => (
+                    <SelectItem key={o} value={o}>
+                      {o}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
             <div className="space-y-2">
               <Label>Área Útil (m²)</Label>
               <Input
@@ -372,11 +372,10 @@ export function EditPropertySheet({
               />
             </div>
             <div className="space-y-2">
-              <Label>Terreno (m²)</Label>
+              <Label>Terreno (m²) (Opcional)</Label>
               <Input
                 name="tamanho_terreno"
                 type="number"
-                required
                 defaultValue={property.metadata?.tamanho_terreno || ''}
               />
             </div>
