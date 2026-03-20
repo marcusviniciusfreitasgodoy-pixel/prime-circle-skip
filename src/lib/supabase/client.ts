@@ -1,12 +1,9 @@
 // AVOID UPDATING THIS FILE DIRECTLY. It is automatically generated.
-import { createClient } from '@supabase/supabase-js'
-import type { Database } from './types'
+import { createClient } from '@supabase/supabase-js';
+import type { Database } from './types';
 
-const SUPABASE_URL =
-  (import.meta.env.VITE_SUPABASE_URL as string) || 'https://lortaowlmktdnttoykfl.supabase.co'
-const SUPABASE_PUBLISHABLE_KEY =
-  (import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string) ||
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxvcnRhb3dsbWt0ZG50dG95a2ZsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDcxNDY5ODYsImV4cCI6MjA2MjcyMjk4Nn0.lM0TpuX2sbuIb2oOxJ99ZpO2X2rSrgJnZ3WtxJcd4gk'
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string;
+const SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string;
 
 // Import the supabase client like this:
 // import { supabase } from "@/lib/supabase/client";
@@ -16,5 +13,5 @@ export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABL
     storage: localStorage,
     persistSession: true,
     autoRefreshToken: true,
-  },
-})
+  }
+});
