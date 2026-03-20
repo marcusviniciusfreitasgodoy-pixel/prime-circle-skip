@@ -7,6 +7,7 @@
     "match-property-webhook": 10,
     "functions": 8,
     "demand-push-webhook": 7,
-    "monitor-partnerships": 6
+    "monitor-partnerships": 6,
+    "calculate-plan-price": 1
   }
 }
