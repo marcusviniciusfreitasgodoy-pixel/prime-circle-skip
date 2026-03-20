@@ -9,6 +9,7 @@
     "demand-push-webhook": 7,
     "monitor-partnerships": 6,
     "calculate-plan-price": 1,
-    "record-match": 1
+    "record-match": 1,
+    "send-founder-transition-email": 1
   }
 }
