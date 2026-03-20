@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom'
 import {
   LayoutDashboard,
@@ -37,13 +37,23 @@ import { useAuth } from '@/hooks/use-auth'
 import { useToast } from '@/hooks/use-toast'
 import { cn } from '@/lib/utils'
 import { PlanLimitModal } from '@/components/PlanLimitModal'
+import { supabase } from '@/lib/supabase/client'
 
 export function AppLayout() {
-  const { user, logout, suggestions, notifications, clearNotifications } = useAppStore()
-  const { signOut } = useAuth()
+  const {
+    user: storeUser,
+    logout,
+    suggestions,
+    notifications,
+    clearNotifications,
+    updateUser,
+  } = useAppStore()
+  const { user: authUser, signOut } = useAuth()
   const location = useLocation()
   const navigate = useNavigate()
   const { toast } = useToast()
+
+  const [profileAvatar, setProfileAvatar] = useState('')
 
   const clearRef = useRef(clearNotifications)
 
@@ -64,6 +74,28 @@ export function AppLayout() {
     }
   }, [notifications, toast])
 
+  useEffect(() => {
+    if (authUser) {
+      if (storeUser?.avatar) {
+        setProfileAvatar(storeUser.avatar)
+      } else if (authUser.user_metadata?.avatar_url) {
+        setProfileAvatar(authUser.user_metadata.avatar_url)
+      } else {
+        supabase
+          .from('profiles')
+          .select('avatar_url')
+          .eq('id', authUser.id)
+          .single()
+          .then(({ data }) => {
+            if (data?.avatar_url) {
+              setProfileAvatar(data.avatar_url)
+              updateUser({ avatar: data.avatar_url })
+            }
+          })
+      }
+    }
+  }, [authUser, storeUser?.avatar, updateUser])
+
   const handleLogout = async () => {
     try {
       const { error } = await signOut()
@@ -82,8 +114,8 @@ export function AppLayout() {
   const unseenSuggestionsCount = suggestions.filter(
     (s) =>
       ['Em Desenvolvimento', 'Entregue'].includes(s.status) &&
-      (!user?.lastViewedSuggestionsAt ||
-        new Date(s.updatedAt) > new Date(user.lastViewedSuggestionsAt)),
+      (!storeUser?.lastViewedSuggestionsAt ||
+        new Date(s.updatedAt) > new Date(storeUser.lastViewedSuggestionsAt)),
   ).length
 
   const navItems = [
@@ -97,9 +129,15 @@ export function AppLayout() {
     { title: 'Planos', icon: Crown, url: '/plans' },
   ]
 
-  if (user?.status === 'admin') {
+  if (storeUser?.status === 'admin' || authUser?.email?.includes('admin')) {
     navItems.push({ title: 'Admin', icon: Settings, url: '/admin' })
   }
+
+  const userName =
+    storeUser?.name ||
+    authUser?.user_metadata?.full_name ||
+    authUser?.email?.split('@')[0] ||
+    'Usuário'
 
   return (
     <SidebarProvider>
@@ -149,14 +187,16 @@ export function AppLayout() {
                 <DropdownMenuTrigger asChild>
                   <button className="flex items-center gap-3 w-full px-2 hover:bg-secondary/50 p-2 rounded-lg transition-colors outline-none focus:ring-2 focus:ring-primary/50">
                     <Avatar className="ring-2 ring-primary/20">
-                      <AvatarImage src={user?.avatar} />
-                      <AvatarFallback className="bg-secondary text-primary">
-                        {user?.name?.charAt(0)?.toUpperCase() || 'U'}
+                      <AvatarImage src={profileAvatar} />
+                      <AvatarFallback className="bg-secondary text-primary font-semibold">
+                        {userName.substring(0, 2).toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col min-w-0 text-left">
-                      <span className="text-sm font-medium text-white truncate">{user?.name}</span>
-                      <span className="text-xs text-primary truncate">Tier {user?.tier}</span>
+                      <span className="text-sm font-medium text-white truncate">{userName}</span>
+                      <span className="text-xs text-primary truncate">
+                        Tier {storeUser?.tier || 'None'}
+                      </span>
                     </div>
                   </button>
                 </DropdownMenuTrigger>
@@ -168,8 +208,8 @@ export function AppLayout() {
                 >
                   <div className="flex items-center justify-start gap-2 p-3 md:hidden">
                     <div className="flex flex-col space-y-1 leading-none">
-                      <p className="font-medium text-sm text-white truncate">{user?.name}</p>
-                      <p className="text-xs text-muted-foreground truncate">{user?.email}</p>
+                      <p className="font-medium text-sm text-white truncate">{userName}</p>
+                      <p className="text-xs text-muted-foreground truncate">{authUser?.email}</p>
                     </div>
                   </div>
                   <DropdownMenuItem
@@ -216,17 +256,17 @@ export function AppLayout() {
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" size="icon" className="rounded-full relative h-8 w-8">
                       <Avatar className="h-8 w-8 ring-1 ring-primary/20">
-                        <AvatarImage src={user?.avatar} />
-                        <AvatarFallback className="bg-secondary text-primary text-xs">
-                          {user?.name?.charAt(0)?.toUpperCase() || 'U'}
+                        <AvatarImage src={profileAvatar} />
+                        <AvatarFallback className="bg-secondary text-primary text-xs font-semibold">
+                          {userName.substring(0, 2).toUpperCase()}
                         </AvatarFallback>
                       </Avatar>
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-56 bg-card border-border mt-2">
                     <div className="flex flex-col space-y-1 p-3 border-b border-border">
-                      <p className="font-medium text-sm text-white truncate">{user?.name}</p>
-                      <p className="text-xs text-muted-foreground truncate">{user?.email}</p>
+                      <p className="font-medium text-sm text-white truncate">{userName}</p>
+                      <p className="text-xs text-muted-foreground truncate">{authUser?.email}</p>
                     </div>
                     <DropdownMenuItem
                       asChild

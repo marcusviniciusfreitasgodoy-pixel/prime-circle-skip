@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
@@ -11,7 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Check, X } from 'lucide-react'
+import { Check, X, MessageSquarePlus, Loader2, Settings } from 'lucide-react'
 import { toast } from 'sonner'
 import useAppStore, { SuggestionStatus } from '@/stores/main'
 import { simulateBiWeeklyReview } from '@/lib/email'
@@ -19,6 +19,8 @@ import { supabase } from '@/lib/supabase/client'
 import { cn } from '@/lib/utils'
 import { useAuth } from '@/hooks/use-auth'
 import { UsersManagementTab } from '@/components/admin/UsersManagementTab'
+import { TemplatesTab } from '@/components/notifications/TemplatesTab'
+import { sendWhatsappMessage } from '@/services/whatsapp'
 
 interface SupportTicket {
   id: string
@@ -37,6 +39,7 @@ export default function AdminPage() {
 
   const [tickets, setTickets] = useState<SupportTicket[]>([])
   const [profiles, setProfiles] = useState<any[]>([])
+  const [isTestingWa, setIsTestingWa] = useState(false)
 
   const pendingProfiles = profiles.filter((p) => p.status === 'pending_validation')
 
@@ -102,12 +105,34 @@ export default function AdminPage() {
     }
   }
 
+  const handleTestWhatsApp = async () => {
+    setIsTestingWa(true)
+    try {
+      const res = await sendWhatsappMessage(
+        '5521964075124',
+        'Teste de conectividade WhatsApp Prime Circle (Admin)! Sua integração está funcionando perfeitamente. 🚀',
+        authUser?.id,
+      )
+      if (res.error || res.data?.error) {
+        toast.error('Não foi possível enviar a mensagem. Verifique os logs de notificação.')
+      } else {
+        toast.success('Mensagem de teste enviada com sucesso para 5521964075124')
+      }
+    } catch (e) {
+      toast.error('Ocorreu um erro ao testar a conexão.')
+    } finally {
+      setIsTestingWa(false)
+    }
+  }
+
   return (
     <div className="space-y-6 animate-fade-in-up pb-8">
       <div>
-        <h2 className="text-2xl font-bold text-white">Governança & Admin</h2>
+        <h2 className="text-2xl font-bold text-white flex items-center gap-2">
+          <Settings className="w-6 h-6 text-primary" /> Governança & Admin
+        </h2>
         <p className="text-muted-foreground text-sm">
-          Revisão manual, logs de status, chamados e monitoramento.
+          Revisão manual, logs de status, chamados, templates e monitoramento.
         </p>
       </div>
 
@@ -118,6 +143,9 @@ export default function AdminPage() {
           </TabsTrigger>
           <TabsTrigger value="users" className="data-[state=active]:bg-secondary">
             Todos os Usuários
+          </TabsTrigger>
+          <TabsTrigger value="comms" className="data-[state=active]:bg-secondary">
+            Comunicações
           </TabsTrigger>
           <TabsTrigger value="tickets" className="data-[state=active]:bg-secondary">
             Chamados
@@ -206,6 +234,46 @@ export default function AdminPage() {
             refetchProfiles={fetchProfiles}
             authUser={authUser}
           />
+        </TabsContent>
+
+        <TabsContent value="comms" className="mt-6 space-y-8">
+          <Card className="bg-card border-border">
+            <CardHeader className="pb-4">
+              <CardTitle className="text-lg text-white flex items-center gap-2">
+                Conectividade WhatsApp (Evolution API)
+              </CardTitle>
+              <CardDescription>
+                Utilize esta ferramenta para garantir que a sua conexão e webhook com o provedor de
+                WhatsApp estão operacionais.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button
+                onClick={handleTestWhatsApp}
+                disabled={isTestingWa}
+                className="border-primary/50 text-primary hover:bg-primary/10 bg-secondary h-10 shadow-sm"
+                variant="outline"
+              >
+                {isTestingWa ? (
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                ) : (
+                  <MessageSquarePlus className="w-4 h-4 mr-2" />
+                )}
+                Disparar Mensagem de Teste
+              </Button>
+            </CardContent>
+          </Card>
+
+          <div className="pt-2">
+            <h3 className="text-xl font-bold text-white mb-2">Templates Globais</h3>
+            <p className="text-sm text-muted-foreground mb-6">
+              Como administrador, as edições realizadas nestes templates serão utilizadas como
+              padrão pelo sistema (Ex: Notificações de Match Automático).
+            </p>
+            <div className="bg-card p-6 rounded-lg border border-border">
+              <TemplatesTab />
+            </div>
+          </div>
         </TabsContent>
 
         <TabsContent value="tickets" className="mt-6 space-y-4">

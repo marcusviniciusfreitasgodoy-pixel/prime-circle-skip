@@ -15,6 +15,7 @@ import { ReputationRanking } from '@/components/dashboard/ReputationRanking'
 import { ReferralTracker } from '@/components/dashboard/ReferralTracker'
 import { DeliveryStatusWidget } from '@/components/dashboard/DeliveryStatusWidget'
 import { PwaInstallPrompt } from '@/components/dashboard/PwaInstallPrompt'
+import { MatchesChartWidget } from '@/components/dashboard/MatchesChartWidget'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import {
   Activity,
@@ -25,15 +26,12 @@ import {
   ChevronRight,
   ShieldCheck,
   BellRing,
-  Loader2,
-  MessageSquarePlus,
 } from 'lucide-react'
 import useAppStore from '@/stores/main'
 import type { Tier, Plan } from '@/stores/main'
 import { useToast } from '@/hooks/use-toast'
 import { useAuth } from '@/hooks/use-auth'
 import { supabase } from '@/lib/supabase/client'
-import { sendWhatsappMessage } from '@/services/whatsapp'
 
 export default function DashboardPage() {
   const { user, listings, needs, matches, updateMatchStatus, updateUser } = useAppStore()
@@ -52,7 +50,6 @@ export default function DashboardPage() {
   const [recentMatchAlerts, setRecentMatchAlerts] = useState<any[]>([])
   const [referralsCount, setReferralsCount] = useState<number>(0)
   const [userTier, setUserTier] = useState<Tier>('None')
-  const [isTestingWa, setIsTestingWa] = useState(false)
 
   const triggerRefresh = () => setRefreshKey((prev) => prev + 1)
 
@@ -78,15 +75,23 @@ export default function DashboardPage() {
 
         if (!error && data) {
           setProfileName(data.full_name || authUser.email || 'Usuário')
-          setProfileAvatar(data.avatar_url || '')
+
+          // Improved fallback for avatar
+          const avatar =
+            data.avatar_url ||
+            authUser.user_metadata?.avatar_url ||
+            authUser.user_metadata?.picture ||
+            ''
+          setProfileAvatar(avatar)
+
           setProfileScore(data.reputation_score || 0)
           setProfileStatus(data.status || 'active')
           setProfilePlan(data.plan || 'Free')
           setProfileReferralCode(data.referral_code || '')
 
           const storeUpdates: any = {}
-          if (data.avatar_url && data.avatar_url !== user?.avatar) {
-            storeUpdates.avatar = data.avatar_url
+          if (avatar && avatar !== user?.avatar) {
+            storeUpdates.avatar = avatar
           }
           if (data.plan && data.plan !== user?.plan) {
             storeUpdates.plan = data.plan as Plan
@@ -171,38 +176,6 @@ export default function DashboardPage() {
     if (plan === 'Founder') return 'Fundador'
     if (plan === 'Free') return 'Gratuito'
     return plan
-  }
-
-  const handleTestWhatsApp = async () => {
-    setIsTestingWa(true)
-    try {
-      const res = await sendWhatsappMessage(
-        '5521964075124',
-        'Teste de conectividade WhatsApp Prime Circle! Sua integração está funcionando perfeitamente. 🚀',
-        authUser?.id,
-      )
-      if (res.error || res.data?.error) {
-        toast({
-          title: 'Erro de Conexão',
-          description: 'Não foi possível enviar a mensagem. Verifique os logs.',
-          variant: 'destructive',
-        })
-      } else {
-        toast({
-          title: 'Sucesso',
-          description: 'Mensagem de teste enviada com sucesso para 5521964075124',
-          className: 'bg-card border-primary/50 text-white',
-        })
-      }
-    } catch (e) {
-      toast({
-        title: 'Erro',
-        description: 'Ocorreu um erro ao testar a conexão.',
-        variant: 'destructive',
-      })
-    } finally {
-      setIsTestingWa(false)
-    }
   }
 
   const stats = [
@@ -306,20 +279,6 @@ export default function DashboardPage() {
           </div>
         </div>
         <div className="flex flex-wrap items-center gap-3">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleTestWhatsApp}
-            disabled={isTestingWa}
-            className="border-primary/50 text-primary hover:bg-primary/10 bg-card h-10 shadow-sm"
-          >
-            {isTestingWa ? (
-              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-            ) : (
-              <MessageSquarePlus className="w-4 h-4 mr-2" />
-            )}
-            Testar Conexão WhatsApp
-          </Button>
           <AddPropertyDialog onSuccess={triggerRefresh} />
         </div>
       </div>
@@ -406,6 +365,10 @@ export default function DashboardPage() {
                 </CardContent>
               </Card>
             ))}
+          </div>
+
+          <div className="mt-6">
+            <MatchesChartWidget />
           </div>
         </div>
 
