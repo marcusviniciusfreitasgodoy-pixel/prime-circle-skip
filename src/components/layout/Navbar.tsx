@@ -2,7 +2,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { useAuth } from '@/hooks/use-auth'
 import useAppStore from '@/stores/main'
-import { Crown, LogOut, Menu, User as UserIcon, LayoutDashboard } from 'lucide-react'
+import { LogOut, Menu, User as UserIcon, LayoutDashboard } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import {
   DropdownMenu,
@@ -71,10 +71,12 @@ export function Navbar() {
   return (
     <header className="fixed top-0 w-full z-50 glass-header border-b border-border/50">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-        <Link to={authUser ? '/dashboard' : '/'} className="flex items-center gap-2">
-          <Crown className="w-6 h-6 text-primary drop-shadow-[0_0_8px_rgba(201,168,76,0.5)]" />
-          <span className="font-bold text-lg tracking-tight text-white hidden sm:block">
-            Prime Circle
+        <Link to={authUser ? '/dashboard' : '/'} className="flex items-center gap-2 group">
+          <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center shadow-[0_0_10px_rgba(201,168,76,0.3)] group-hover:scale-105 transition-transform">
+            <div className="w-2.5 h-2.5 rounded-full bg-background" />
+          </div>
+          <span className="text-lg font-bold tracking-widest text-white hidden sm:block">
+            PRIME<span className="text-primary">CIRCLE</span>
           </span>
         </Link>
 
