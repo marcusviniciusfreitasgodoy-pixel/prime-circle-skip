@@ -6,7 +6,6 @@ import { useSEO } from '@/hooks/use-seo'
 import { PlanCard, type PlanData } from '@/components/plans/PlanCard'
 import { PlansCalculator } from '@/components/plans/PlansCalculator'
 import { PlansTable } from '@/components/plans/PlansTable'
-import { PlansLimitBanner } from '@/components/plans/PlansLimitBanner'
 import { ActivePlanCard } from '@/components/plans/ActivePlanCard'
 
 export default function PlansPage() {
@@ -16,11 +15,10 @@ export default function PlansPage() {
       'Conheça nossos planos e invista na sua infraestrutura para evoluir no mercado imobiliário de alto padrão.',
   })
 
-  const { user, needs, getExpirationInfo } = useAppStore()
+  const { user, getExpirationInfo } = useAppStore()
   const expInfo = getExpirationInfo()
 
   const [matchesCount, setMatchesCount] = useState<number>(0)
-  const [isBannerVisible, setIsBannerVisible] = useState<boolean>(true)
 
   const getDiscount = (matches: number) => {
     if (matches >= 20) return 0.3
@@ -37,10 +35,6 @@ export default function PlansPage() {
       toast.success(`Checkout concluído (Simulação)! R$ ${amount.toFixed(2)} processado.`)
     }, 2000)
   }
-
-  // Identifica se o usuário Free atingiu o limite de 3 demandas cadastradas
-  const userDemandsCount = needs.filter((n) => n.ownerId === user?.id).length
-  const showLimitBanner = user?.plan === 'Free' && userDemandsCount >= 3 && isBannerVisible
 
   const plans: PlanData[] = [
     {
@@ -100,40 +94,34 @@ export default function PlansPage() {
   ]
 
   return (
-    <>
-      <PlansLimitBanner showLimitBanner={showLimitBanner} setIsBannerVisible={setIsBannerVisible} />
+    <div className="max-w-6xl mx-auto space-y-8 animate-fade-in-up">
+      <FounderExpiryBanner />
 
-      <div
-        className={`max-w-6xl mx-auto space-y-8 animate-fade-in-up ${showLimitBanner ? 'pt-8' : ''}`}
-      >
-        <FounderExpiryBanner />
-
-        <div className="text-center space-y-3 mb-12 mt-6">
-          <h2 className="text-4xl md:text-5xl font-bold text-white tracking-tight">
-            Invista na sua Infraestrutura
-          </h2>
-          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            Evolua seu plano e destrave os limites operacionais. Pague menos à medida que você
-            colabora mais com a rede.
-          </p>
-        </div>
-
-        {user && expInfo && <ActivePlanCard user={user} expInfo={expInfo} />}
-
-        <div className="grid lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
-          {plans.map((plan, i) => (
-            <PlanCard key={i} plan={plan} discount={discount} onCheckout={handleCheckout} />
-          ))}
-        </div>
-
-        <PlansCalculator
-          matchesCount={matchesCount}
-          setMatchesCount={setMatchesCount}
-          discount={discount}
-        />
-
-        <PlansTable />
+      <div className="text-center space-y-3 mb-12 mt-6">
+        <h2 className="text-4xl md:text-5xl font-bold text-white tracking-tight">
+          Invista na sua Infraestrutura
+        </h2>
+        <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+          Evolua seu plano e destrave os limites operacionais. Pague menos à medida que você
+          colabora mais com a rede.
+        </p>
       </div>
-    </>
+
+      {user && expInfo && <ActivePlanCard user={user} expInfo={expInfo} />}
+
+      <div className="grid lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
+        {plans.map((plan, i) => (
+          <PlanCard key={i} plan={plan} discount={discount} onCheckout={handleCheckout} />
+        ))}
+      </div>
+
+      <PlansCalculator
+        matchesCount={matchesCount}
+        setMatchesCount={setMatchesCount}
+        discount={discount}
+      />
+
+      <PlansTable />
+    </div>
   )
 }

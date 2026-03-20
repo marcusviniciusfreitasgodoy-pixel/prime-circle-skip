@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { BrowserRouter as Router, Routes, Route, Outlet, Navigate } from 'react-router-dom'
 import Index from './pages/Index'
 import ApplyPage from './pages/ApplyPage'
@@ -30,14 +30,17 @@ import { Footer } from '@/components/layout/Footer'
 import { ProtectedRoute } from '@/components/ProtectedRoute'
 import { AnalyticsTracker } from '@/components/AnalyticsTracker'
 import { PwaUpdater } from '@/components/PwaUpdater'
+import { PlansLimitBanner } from '@/components/plans/PlansLimitBanner'
 import useAppStore, { AppProvider } from '@/stores/main'
 import { useToast } from '@/hooks/use-toast'
 import { AuthProvider } from '@/hooks/use-auth'
 
 function DashboardLayout() {
-  const { notifications, clearNotifications } = useAppStore()
+  const { notifications, clearNotifications, user, needs } = useAppStore()
   const { toast } = useToast()
   const clearRef = useRef(clearNotifications)
+
+  const [isBannerVisible, setIsBannerVisible] = useState(true)
 
   useEffect(() => {
     clearRef.current = clearNotifications
@@ -56,6 +59,9 @@ function DashboardLayout() {
     }
   }, [notifications, toast])
 
+  const userDemandsCount = needs.filter((n) => n.ownerId === user?.id).length
+  const showLimitBanner = user?.plan === 'Free' && userDemandsCount >= 3 && isBannerVisible
+
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       <Navbar />
@@ -63,6 +69,7 @@ function DashboardLayout() {
         <Outlet />
       </main>
       <Footer />
+      <PlansLimitBanner showLimitBanner={showLimitBanner} setIsBannerVisible={setIsBannerVisible} />
     </div>
   )
 }
