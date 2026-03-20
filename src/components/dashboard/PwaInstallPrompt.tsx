@@ -32,20 +32,26 @@ export function PwaInstallPrompt() {
   return (
     <>
       <div className="mb-6 p-4 rounded-lg bg-primary/10 border border-primary/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 animate-fade-in">
-        <div>
-          <h4 className="text-primary font-semibold text-lg flex items-center gap-2">
-            <Download className="w-5 h-5" /> Instalar App Prime Circle
-          </h4>
-          <p className="text-white/80 text-sm mt-1">
-            Adicione o Prime Circle à tela inicial do seu celular para acesso rápido e notificações
-            em tempo real.
-          </p>
+        <div className="flex items-center gap-4">
+          <div className="w-12 h-12 rounded-xl bg-black border border-primary/50 shadow-[0_0_10px_rgba(201,168,76,0.2)] flex items-center justify-center flex-shrink-0 overflow-hidden">
+            <img src="/logo-icon.svg" alt="Prime Circle" className="w-full h-full object-cover" />
+          </div>
+          <div>
+            <h4 className="text-primary font-semibold text-lg flex items-center gap-2">
+              Instalar App Prime Circle
+            </h4>
+            <p className="text-white/80 text-sm mt-1">
+              Adicione o Prime Circle à tela inicial do seu celular para acesso rápido e
+              notificações em tempo real.
+            </p>
+          </div>
         </div>
-        <div className="flex items-center gap-2 w-full sm:w-auto">
+        <div className="flex items-center gap-2 w-full sm:w-auto ml-16 sm:ml-0">
           <Button
             onClick={() => setShowModal(true)}
             className="flex-1 sm:flex-none gold-gradient text-black font-semibold"
           >
+            <Download className="w-4 h-4 mr-2" />
             Ver Instruções
           </Button>
           <Button
@@ -64,8 +70,17 @@ export function PwaInstallPrompt() {
       <Dialog open={showModal} onOpenChange={setShowModal}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Como instalar o aplicativo</DialogTitle>
-            <DialogDescription>
+            <div className="flex justify-center mb-4">
+              <div className="w-16 h-16 rounded-2xl bg-black border border-primary/50 shadow-[0_0_15px_rgba(201,168,76,0.3)] flex items-center justify-center overflow-hidden">
+                <img
+                  src="/logo-icon.svg"
+                  alt="Prime Circle"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            </div>
+            <DialogTitle className="text-center">Como instalar o aplicativo</DialogTitle>
+            <DialogDescription className="text-center">
               Siga os passos abaixo de acordo com o seu sistema:
             </DialogDescription>
           </DialogHeader>
