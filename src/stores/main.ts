@@ -1,4 +1,6 @@
 import { createContext, createElement, useContext, useState, useEffect, ReactNode } from 'react'
+import { supabase } from '@/lib/supabase/client'
+import { toast } from 'sonner'
 
 export type UserStatus = 'pending' | 'approved' | 'admin' | null
 export type Tier = 'None' | 'Ambassador' | 'Silver' | 'Gold' | 'Elite' | 'Elite+'
@@ -429,6 +431,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
       setPlanLimitModalOpen(true)
       return false
     }
+
+    const matchToClose = matches.find((m) => m.id === matchId)
+
     setMatches((prev) =>
       prev.map((m) =>
         m.id === matchId ? { ...m, status: 'Fechado', finalValue, bilateralConfirmed } : m,
@@ -445,6 +450,40 @@ export function AppProvider({ children }: { children: ReactNode }) {
       },
     ])
     logEvent('Negócio Fechado', `Match: ${matchId}, Valor Final: ${finalValue}`)
+
+    // Record the accepted match and dynamically update matches performance
+    if (bilateralConfirmed && matchToClose) {
+      const matchedNeed = needs.find((n) => n.id === matchToClose.needId)
+      const matchedListing = listings.find((l) => l.id === matchToClose.listingId)
+
+      const broker1 = matchedNeed?.ownerId
+      const broker2 = matchedListing?.ownerId
+      const currentUserId = user?.id
+
+      const recordForBroker = async (bId: string) => {
+        if (!bId || bId === 'unknown') return
+        try {
+          const { data, error } = await supabase.functions.invoke('record-match', {
+            body: { user_id: bId },
+          })
+
+          if (data?.success && bId === currentUserId) {
+            toast.success(
+              `Você fez ${data.match_count} matches este mês. Seu desconto é ${data.discount_percentage}%!`,
+              {
+                duration: 6000,
+              },
+            )
+          }
+        } catch (e) {
+          console.error('Failed to record match:', e)
+        }
+      }
+
+      if (broker1) recordForBroker(broker1)
+      if (broker2 && broker2 !== broker1) recordForBroker(broker2)
+    }
+
     return true
   }
 

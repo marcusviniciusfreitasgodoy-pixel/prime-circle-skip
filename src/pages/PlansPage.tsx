@@ -78,6 +78,42 @@ export default function PlansPage() {
     }
   }, [user])
 
+  // Realtime updates for user_matches
+  useEffect(() => {
+    if (!user || plans.length === 0) return
+
+    const channel = supabase
+      .channel('user_matches_changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'user_matches',
+          filter: `user_id=eq.${user.id}`,
+        },
+        async () => {
+          const prices: Record<string, PlanPriceCalculation> = {}
+          let currentMatches = 0
+          for (const p of plans) {
+            const res = await calculatePlanPrice(user.id, p.id)
+            if (res) {
+              prices[p.id] = res
+              currentMatches = res.matches_this_month
+            }
+          }
+          setPricing(prices)
+          setMatchesThisMonth(currentMatches)
+          setSimulatedMatches(currentMatches)
+        },
+      )
+      .subscribe()
+
+    return () => {
+      supabase.removeChannel(channel)
+    }
+  }, [user, plans])
+
   const getDiscount = (matches: number) => {
     if (matches >= 20) return 0.3
     if (matches >= 10) return 0.2

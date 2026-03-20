@@ -8,6 +8,7 @@
     "functions": 8,
     "demand-push-webhook": 7,
     "monitor-partnerships": 6,
-    "calculate-plan-price": 1
+    "calculate-plan-price": 1,
+    "record-match": 1
   }
 }
