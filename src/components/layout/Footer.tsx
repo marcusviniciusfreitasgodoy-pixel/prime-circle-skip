@@ -71,6 +71,14 @@ export function Footer() {
                 </Link>
               </li>
               <li>
+                <Link
+                  to="/brand"
+                  className="text-muted-foreground hover:text-primary transition-colors"
+                >
+                  Ativos da Marca
+                </Link>
+              </li>
+              <li>
                 <ContactDialog>
                   <button className="text-muted-foreground hover:text-primary transition-colors text-left bg-transparent border-none p-0 cursor-pointer">
                     Contato

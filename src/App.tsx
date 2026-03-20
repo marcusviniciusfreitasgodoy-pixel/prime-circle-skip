@@ -22,6 +22,7 @@ import ProfilePage from './pages/ProfilePage'
 import NotificationsPage from './pages/NotificationsPage'
 import NotFound from './pages/NotFound'
 import QuickUpdatePage from './pages/QuickUpdatePage'
+import BrandAssetsPage from './pages/BrandAssetsPage'
 import { Toaster } from '@/components/ui/toaster'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import { Navbar } from '@/components/layout/Navbar'
@@ -87,6 +88,7 @@ function App() {
               <Route path="/politica-de-privacidade" element={<PrivacyPage />} />
               <Route path="/sugestoes" element={<PublicSuggestionsPage />} />
               <Route path="/quick-update" element={<QuickUpdatePage />} />
+              <Route path="/brand" element={<BrandAssetsPage />} />
 
               <Route element={<ProtectedRoute />}>
                 <Route path="/pending" element={<PendingPage />} />
