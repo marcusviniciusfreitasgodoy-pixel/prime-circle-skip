@@ -25,6 +25,7 @@ import {
 } from '@/components/ui/form'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Gift, Lightbulb, CheckCircle2, ArrowLeft, Loader2 } from 'lucide-react'
+import { useSEO } from '@/hooks/use-seo'
 
 const formSchema = z.object({
   name: z.string().min(2, 'Nome é obrigatório'),
@@ -36,6 +37,12 @@ const formSchema = z.object({
 })
 
 export default function PublicSuggestionsPage() {
+  useSEO({
+    title: 'Sugestões e Evolução | Prime Circle',
+    description:
+      'Compartilhe suas ideias e ajude a construir as próximas inovações do ecossistema Prime Circle.',
+  })
+
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 

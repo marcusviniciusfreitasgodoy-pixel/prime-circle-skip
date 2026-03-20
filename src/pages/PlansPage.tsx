@@ -11,8 +11,15 @@ import { Check, X, Gift, CalendarDays, Zap } from 'lucide-react'
 import { FounderExpiryBanner } from '@/components/FounderExpiryBanner'
 import useAppStore from '@/stores/main'
 import { toast } from 'sonner'
+import { useSEO } from '@/hooks/use-seo'
 
 export default function PlansPage() {
+  useSEO({
+    title: 'Planos e Preços | Prime Circle',
+    description:
+      'Conheça nossos planos e invista na sua infraestrutura para evoluir no mercado imobiliário de alto padrão.',
+  })
+
   const { user, getExpirationInfo } = useAppStore()
 
   const expInfo = getExpirationInfo()

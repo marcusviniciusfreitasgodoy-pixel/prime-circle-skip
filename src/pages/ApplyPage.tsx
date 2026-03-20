@@ -35,6 +35,7 @@ import {
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { useToast } from '@/hooks/use-toast'
 import { useAuth } from '@/hooks/use-auth'
+import { useSEO } from '@/hooks/use-seo'
 import { cn } from '@/lib/utils'
 import useAppStore from '@/stores/main'
 import { supabase } from '@/lib/supabase/client'
@@ -76,6 +77,12 @@ const formSchema = z.object({
 })
 
 export default function ApplyPage() {
+  useSEO({
+    title: 'Solicitar Acesso | Prime Circle',
+    description:
+      'Junte-se à rede privada definitiva para corretores de alto padrão e destrave o fluxo de parcerias com comissionamento 50/50.',
+  })
+
   const { signUp, user: authUser, loading: authLoading } = useAuth()
   const { login, updateUser, user: mockUser } = useAppStore()
   const [isLoading, setIsLoading] = useState(false)

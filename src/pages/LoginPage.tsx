@@ -7,10 +7,17 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Crown, Mail, KeyRound, Loader2 } from 'lucide-react'
 import useAppStore from '@/stores/main'
 import { useAuth } from '@/hooks/use-auth'
+import { useSEO } from '@/hooks/use-seo'
 import { supabase } from '@/lib/supabase/client'
 import { toast } from 'sonner'
 
 export default function LoginPage() {
+  useSEO({
+    title: 'Acesso Exclusivo | Prime Circle',
+    description:
+      'Autentique-se para acessar o seu painel do Prime Circle e gerenciar suas conexões de alto padrão.',
+  })
+
   const navigate = useNavigate()
   const location = useLocation()
   const { login, user: mockUser } = useAppStore()

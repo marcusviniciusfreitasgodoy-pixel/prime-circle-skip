@@ -31,9 +31,14 @@ import useAppStore from '@/stores/main'
 import type { Tier, Plan } from '@/stores/main'
 import { useToast } from '@/hooks/use-toast'
 import { useAuth } from '@/hooks/use-auth'
+import { useSEO } from '@/hooks/use-seo'
 import { supabase } from '@/lib/supabase/client'
 
 export default function DashboardPage() {
+  useSEO({
+    title: 'Painel de Controle | Prime Circle',
+  })
+
   const { user, listings, needs, matches, updateMatchStatus, updateUser } = useAppStore()
   const { user: authUser } = useAuth()
   const { toast } = useToast()

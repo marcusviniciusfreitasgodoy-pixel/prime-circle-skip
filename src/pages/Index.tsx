@@ -12,10 +12,17 @@ import { ReferralSection } from '@/components/home/ReferralSection'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
 import { useAuth } from '@/hooks/use-auth'
+import { useSEO } from '@/hooks/use-seo'
 import { Loader2 } from 'lucide-react'
 
 export default function Index() {
   const { loading } = useAuth()
+
+  useSEO({
+    title: 'Prime Circle | O Lado Exclusivo do Mercado Imobiliário',
+    description:
+      'A infraestrutura privada definitiva para corretores de alto padrão. Acesse imóveis reservados, publique demandas reais e feche negócios ágeis com divisão garantida de 50/50.',
+  })
 
   useEffect(() => {
     document.documentElement.classList.add('scroll-smooth')

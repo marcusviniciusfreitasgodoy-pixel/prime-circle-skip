@@ -4,8 +4,15 @@ import { Footer } from '@/components/layout/Footer'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Download } from 'lucide-react'
+import { useSEO } from '@/hooks/use-seo'
 
 export default function BrandAssetsPage() {
+  useSEO({
+    title: 'Ativos da Marca | Prime Circle',
+    description:
+      'Faça o download do logotipo oficial do Prime Circle para utilizar nas suas redes sociais e perfil do WhatsApp.',
+  })
+
   const fullLogoRef = useRef<HTMLCanvasElement>(null)
   const iconLogoRef = useRef<HTMLCanvasElement>(null)
 
