@@ -1,4 +1,4 @@
-import { AlertCircle, EyeOff, Handshake } from 'lucide-react'
+import { AlertCircle, EyeOff, Handshake, UserX } from 'lucide-react'
 
 export function ProblemSection() {
   return (
@@ -15,13 +15,13 @@ export function ProblemSection() {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
           <div className="bg-secondary/50 p-8 rounded-2xl border border-border">
             <div className="w-12 h-12 rounded-full bg-destructive/10 flex items-center justify-center mb-6">
               <EyeOff className="w-6 h-6 text-destructive" />
             </div>
             <h3 className="text-xl font-semibold text-white mb-3">
-              Uma opção à Ineficiência dos Portais Imobiliários
+              A Ineficiência dos Portais Imobiliários
             </h3>
             <p className="text-muted-foreground">
               Publicar imóveis premium em portais abertos desvaloriza o ativo, atrai curiosos e
@@ -48,6 +48,17 @@ export function ProblemSection() {
             <p className="text-muted-foreground">
               Acordos de boca não honrados, falta de governança e atravessamentos que minam a
               confiança e destroem negócios de alto ticket.
+            </p>
+          </div>
+
+          <div className="bg-secondary/50 p-8 rounded-2xl border border-border">
+            <div className="w-12 h-12 rounded-full bg-destructive/10 flex items-center justify-center mb-6">
+              <UserX className="w-6 h-6 text-destructive" />
+            </div>
+            <h3 className="text-xl font-semibold text-white mb-3">O Isolamento no Mercado</h3>
+            <p className="text-muted-foreground">
+              A porta de entrada definitiva para corretores que não possuem grupos exclusivos e
+              enfrentam dificuldades para dar vazão às suas demandas.
             </p>
           </div>
         </div>
