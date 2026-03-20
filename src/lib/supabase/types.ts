@@ -1,11 +1,17 @@
 // AVOID UPDATING THIS FILE DIRECTLY. It is automatically generated.
-export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[]
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[]
 
 export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: '12.2.3 (519615d)'
+    PostgrestVersion: "12.2.3 (519615d)"
   }
   public: {
     Tables: {
@@ -54,18 +60,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'match_feedback_document_id_fkey'
-            columns: ['document_id']
+            foreignKeyName: "match_feedback_document_id_fkey"
+            columns: ["document_id"]
             isOneToOne: false
-            referencedRelation: 'documents'
-            referencedColumns: ['id']
+            referencedRelation: "documents"
+            referencedColumns: ["id"]
           },
           {
-            foreignKeyName: 'match_feedback_user_id_fkey'
-            columns: ['user_id']
+            foreignKeyName: "match_feedback_user_id_fkey"
+            columns: ["user_id"]
             isOneToOne: false
-            referencedRelation: 'profiles'
-            referencedColumns: ['id']
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -102,11 +108,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'notification_logs_user_id_fkey'
-            columns: ['user_id']
+            foreignKeyName: "notification_logs_user_id_fkey"
+            columns: ["user_id"]
             isOneToOne: false
-            referencedRelation: 'profiles'
-            referencedColumns: ['id']
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -137,11 +143,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'notification_templates_user_id_fkey'
-            columns: ['user_id']
+            foreignKeyName: "notification_templates_user_id_fkey"
+            columns: ["user_id"]
             isOneToOne: false
-            referencedRelation: 'profiles'
-            referencedColumns: ['id']
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -211,34 +217,61 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'partnerships_broker_demand_id_fkey'
-            columns: ['broker_demand_id']
+            foreignKeyName: "partnerships_broker_demand_id_fkey"
+            columns: ["broker_demand_id"]
             isOneToOne: false
-            referencedRelation: 'profiles'
-            referencedColumns: ['id']
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
           },
           {
-            foreignKeyName: 'partnerships_broker_property_id_fkey'
-            columns: ['broker_property_id']
+            foreignKeyName: "partnerships_broker_property_id_fkey"
+            columns: ["broker_property_id"]
             isOneToOne: false
-            referencedRelation: 'profiles'
-            referencedColumns: ['id']
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
           },
           {
-            foreignKeyName: 'partnerships_demand_id_fkey'
-            columns: ['demand_id']
+            foreignKeyName: "partnerships_demand_id_fkey"
+            columns: ["demand_id"]
             isOneToOne: false
-            referencedRelation: 'documents'
-            referencedColumns: ['id']
+            referencedRelation: "documents"
+            referencedColumns: ["id"]
           },
           {
-            foreignKeyName: 'partnerships_property_id_fkey'
-            columns: ['property_id']
+            foreignKeyName: "partnerships_property_id_fkey"
+            columns: ["property_id"]
             isOneToOne: false
-            referencedRelation: 'documents'
-            referencedColumns: ['id']
+            referencedRelation: "documents"
+            referencedColumns: ["id"]
           },
         ]
+      }
+      plans: {
+        Row: {
+          created_at: string
+          description: string | null
+          features_json: Json | null
+          id: string
+          name: string
+          price_base: number
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          features_json?: Json | null
+          id?: string
+          name: string
+          price_base?: number
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          features_json?: Json | null
+          id?: string
+          name?: string
+          price_base?: number
+        }
+        Relationships: []
       }
       profiles: {
         Row: {
@@ -309,18 +342,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'profiles_referred_by_id_fkey'
-            columns: ['referred_by_id']
+            foreignKeyName: "profiles_referred_by_id_fkey"
+            columns: ["referred_by_id"]
             isOneToOne: false
-            referencedRelation: 'profiles'
-            referencedColumns: ['id']
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
           },
           {
-            foreignKeyName: 'profiles_validated_by_fkey'
-            columns: ['validated_by']
+            foreignKeyName: "profiles_validated_by_fkey"
+            columns: ["validated_by"]
             isOneToOne: false
-            referencedRelation: 'profiles'
-            referencedColumns: ['id']
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -342,11 +375,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'referral_clicks_referrer_id_fkey'
-            columns: ['referrer_id']
+            foreignKeyName: "referral_clicks_referrer_id_fkey"
+            columns: ["referrer_id"]
             isOneToOne: false
-            referencedRelation: 'profiles'
-            referencedColumns: ['id']
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -383,11 +416,94 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'support_tickets_user_id_fkey'
-            columns: ['user_id']
+            foreignKeyName: "support_tickets_user_id_fkey"
+            columns: ["user_id"]
             isOneToOne: false
-            referencedRelation: 'profiles'
-            referencedColumns: ['id']
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_matches: {
+        Row: {
+          created_at: string
+          id: string
+          match_count: number
+          month: number
+          user_id: string
+          year: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          match_count?: number
+          month: number
+          user_id: string
+          year: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          match_count?: number
+          month?: number
+          user_id?: string
+          year?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_matches_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_plans: {
+        Row: {
+          created_at: string
+          expires_at: string | null
+          id: string
+          is_founder: boolean
+          plan_id: string
+          started_at: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          is_founder?: boolean
+          plan_id: string
+          started_at?: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          is_founder?: boolean
+          plan_id?: string
+          started_at?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_plans_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "plans"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_plans_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -412,11 +528,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: 'user_push_subscriptions_user_id_fkey'
-            columns: ['user_id']
+            foreignKeyName: "user_push_subscriptions_user_id_fkey"
+            columns: ["user_id"]
             isOneToOne: false
-            referencedRelation: 'profiles'
-            referencedColumns: ['id']
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -462,31 +578,33 @@ export type Database = {
   }
 }
 
-type DatabaseWithoutInternals = Omit<Database, '__InternalSupabase'>
+type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
 
-type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, 'public'>]
+type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
 
 export type Tables<
   DefaultSchemaTableNameOrOptions extends
-    | keyof (DefaultSchema['Tables'] & DefaultSchema['Views'])
+    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
     | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'] &
-        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Views'])
+    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
     : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
-  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'] &
-      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Views'])[TableName] extends {
+  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
       Row: infer R
     }
     ? R
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema['Tables'] & DefaultSchema['Views'])
-    ? (DefaultSchema['Tables'] & DefaultSchema['Views'])[DefaultSchemaTableNameOrOptions] extends {
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])
+    ? (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
         Row: infer R
       }
       ? R
@@ -495,23 +613,23 @@ export type Tables<
 
 export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema['Tables']
+    | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables']
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
     : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
-  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'][TableName] extends {
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
       Insert: infer I
     }
     ? I
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema['Tables']
-    ? DefaultSchema['Tables'][DefaultSchemaTableNameOrOptions] extends {
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
         Insert: infer I
       }
       ? I
@@ -520,23 +638,23 @@ export type TablesInsert<
 
 export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema['Tables']
+    | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables']
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
     : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
-  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'][TableName] extends {
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
       Update: infer U
     }
     ? U
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema['Tables']
-    ? DefaultSchema['Tables'][DefaultSchemaTableNameOrOptions] extends {
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
         Update: infer U
       }
       ? U
@@ -545,36 +663,36 @@ export type TablesUpdate<
 
 export type Enums<
   DefaultSchemaEnumNameOrOptions extends
-    | keyof DefaultSchema['Enums']
+    | keyof DefaultSchema["Enums"]
     | { schema: keyof DatabaseWithoutInternals },
   EnumName extends DefaultSchemaEnumNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions['schema']]['Enums']
+    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
     : never = never,
 > = DefaultSchemaEnumNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
-  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions['schema']]['Enums'][EnumName]
-  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema['Enums']
-    ? DefaultSchema['Enums'][DefaultSchemaEnumNameOrOptions]
+  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
+  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
+    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
     : never
 
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
-    | keyof DefaultSchema['CompositeTypes']
+    | keyof DefaultSchema["CompositeTypes"]
     | { schema: keyof DatabaseWithoutInternals },
   CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions['schema']]['CompositeTypes']
+    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
     : never = never,
 > = PublicCompositeTypeNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
-  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions['schema']]['CompositeTypes'][CompositeTypeName]
-  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema['CompositeTypes']
-    ? DefaultSchema['CompositeTypes'][PublicCompositeTypeNameOrOptions]
+  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
+    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never
 
 export const Constants = {
@@ -582,6 +700,7 @@ export const Constants = {
     Enums: {},
   },
 } as const
+
 
 // ====== DATABASE EXTENDED CONTEXT (auto-generated) ======
 // This section contains actual PostgreSQL column types, constraints, RLS policies,
@@ -638,6 +757,13 @@ export const Constants = {
 //   last_interaction_at: timestamp with time zone (not null, default: now())
 //   created_at: timestamp with time zone (not null, default: now())
 //   update_token: uuid (not null, default: gen_random_uuid())
+// Table: plans
+//   id: uuid (not null, default: gen_random_uuid())
+//   name: text (not null)
+//   price_base: numeric (not null, default: 0)
+//   description: text (nullable)
+//   features_json: jsonb (nullable, default: '[]'::jsonb)
+//   created_at: timestamp with time zone (not null, default: now())
 // Table: profiles
 //   id: uuid (not null)
 //   full_name: text (nullable)
@@ -672,6 +798,22 @@ export const Constants = {
 //   message: text (not null)
 //   status: text (not null, default: 'open'::text)
 //   created_at: timestamp with time zone (not null, default: now())
+// Table: user_matches
+//   id: uuid (not null, default: gen_random_uuid())
+//   user_id: uuid (not null)
+//   match_count: integer (not null, default: 0)
+//   month: integer (not null)
+//   year: integer (not null)
+//   created_at: timestamp with time zone (not null, default: now())
+// Table: user_plans
+//   id: uuid (not null, default: gen_random_uuid())
+//   user_id: uuid (not null)
+//   plan_id: uuid (not null)
+//   status: text (not null, default: 'active'::text)
+//   started_at: timestamp with time zone (not null, default: now())
+//   expires_at: timestamp with time zone (nullable)
+//   is_founder: boolean (not null, default: false)
+//   created_at: timestamp with time zone (not null, default: now())
 // Table: user_push_subscriptions
 //   id: uuid (not null, default: gen_random_uuid())
 //   user_id: uuid (not null)
@@ -704,6 +846,9 @@ export const Constants = {
 //   PRIMARY KEY partnerships_pkey: PRIMARY KEY (id)
 //   FOREIGN KEY partnerships_property_id_fkey: FOREIGN KEY (property_id) REFERENCES documents(id) ON DELETE CASCADE
 //   CHECK partnerships_status_check: CHECK ((status = ANY (ARRAY['match'::text, 'contact'::text, 'visit'::text, 'proposal'::text, 'closed'::text, 'cancelled'::text])))
+// Table: plans
+//   UNIQUE plans_name_key: UNIQUE (name)
+//   PRIMARY KEY plans_pkey: PRIMARY KEY (id)
 // Table: profiles
 //   FOREIGN KEY profiles_id_fkey: FOREIGN KEY (id) REFERENCES auth.users(id) ON DELETE CASCADE
 //   PRIMARY KEY profiles_pkey: PRIMARY KEY (id)
@@ -717,6 +862,16 @@ export const Constants = {
 //   PRIMARY KEY support_tickets_pkey: PRIMARY KEY (id)
 //   CHECK support_tickets_status_check: CHECK ((status = ANY (ARRAY['open'::text, 'pending'::text, 'resolved'::text])))
 //   FOREIGN KEY support_tickets_user_id_fkey: FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE SET NULL
+// Table: user_matches
+//   CHECK user_matches_month_check: CHECK (((month >= 1) AND (month <= 12)))
+//   PRIMARY KEY user_matches_pkey: PRIMARY KEY (id)
+//   FOREIGN KEY user_matches_user_id_fkey: FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE CASCADE
+//   UNIQUE user_matches_user_id_month_year_key: UNIQUE (user_id, month, year)
+// Table: user_plans
+//   PRIMARY KEY user_plans_pkey: PRIMARY KEY (id)
+//   FOREIGN KEY user_plans_plan_id_fkey: FOREIGN KEY (plan_id) REFERENCES plans(id) ON DELETE RESTRICT
+//   CHECK user_plans_status_check: CHECK ((status = ANY (ARRAY['active'::text, 'cancelled'::text, 'expired'::text])))
+//   FOREIGN KEY user_plans_user_id_fkey: FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE CASCADE
 // Table: user_push_subscriptions
 //   PRIMARY KEY user_push_subscriptions_pkey: PRIMARY KEY (id)
 //   FOREIGN KEY user_push_subscriptions_user_id_fkey: FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE CASCADE
@@ -755,6 +910,9 @@ export const Constants = {
 //     WITH CHECK: ((auth.uid() = broker_demand_id) OR (auth.uid() = broker_property_id))
 //   Policy "Users can view their own partnerships" (SELECT, PERMISSIVE) roles={authenticated}
 //     USING: ((auth.uid() = broker_demand_id) OR (auth.uid() = broker_property_id))
+// Table: plans
+//   Policy "Anyone can select plans" (SELECT, PERMISSIVE) roles={public}
+//     USING: true
 // Table: profiles
 //   Policy "Admins and Elite can update other profiles" (UPDATE, PERMISSIVE) roles={authenticated}
 //     USING: (EXISTS ( SELECT 1    FROM profiles p   WHERE ((p.id = auth.uid()) AND ((p.role = 'admin'::text) OR (p.reputation_score > 80)))))
@@ -790,6 +948,18 @@ export const Constants = {
 //     USING: (EXISTS ( SELECT 1    FROM profiles   WHERE ((profiles.id = auth.uid()) AND (profiles.role = 'admin'::text))))
 //   Policy "Anyone can insert support tickets" (INSERT, PERMISSIVE) roles={public}
 //     WITH CHECK: true
+// Table: user_matches
+//   Policy "System can manage user_matches" (ALL, PERMISSIVE) roles={authenticated}
+//     USING: (auth.uid() = user_id)
+//     WITH CHECK: (auth.uid() = user_id)
+//   Policy "Users can view own matches" (SELECT, PERMISSIVE) roles={authenticated}
+//     USING: (auth.uid() = user_id)
+// Table: user_plans
+//   Policy "System can manage user_plans" (ALL, PERMISSIVE) roles={authenticated}
+//     USING: (auth.uid() = user_id)
+//     WITH CHECK: (auth.uid() = user_id)
+//   Policy "Users can view own plans" (SELECT, PERMISSIVE) roles={authenticated}
+//     USING: (auth.uid() = user_id)
 // Table: user_push_subscriptions
 //   Policy "Admins can view all push subscriptions" (SELECT, PERMISSIVE) roles={authenticated}
 //     USING: is_admin()
@@ -811,7 +981,7 @@ export const Constants = {
 //     RETURN v_user_id;
 //   END;
 //   $function$
-//
+//   
 // FUNCTION handle_new_user()
 //   CREATE OR REPLACE FUNCTION public.handle_new_user()
 //    RETURNS trigger
@@ -826,7 +996,7 @@ export const Constants = {
 //     ref_by_id UUID := NULL;
 //   BEGIN
 //     SELECT COUNT(*) INTO user_count FROM public.profiles;
-//
+//   
 //     IF user_count = 0 THEN
 //       assigned_role := 'admin';
 //       assigned_plan := 'Founder';
@@ -835,7 +1005,7 @@ export const Constants = {
 //       assigned_plan := 'Founder';
 //       assigned_status := 'active';
 //     END IF;
-//
+//   
 //     BEGIN
 //       IF NEW.raw_user_meta_data->>'referred_by_id' IS NOT NULL AND NEW.raw_user_meta_data->>'referred_by_id' != '' THEN
 //         ref_by_id := (NEW.raw_user_meta_data->>'referred_by_id')::uuid;
@@ -843,7 +1013,7 @@ export const Constants = {
 //     EXCEPTION WHEN OTHERS THEN
 //       ref_by_id := NULL;
 //     END;
-//
+//   
 //     BEGIN
 //       INSERT INTO public.profiles (
 //         id,
@@ -885,11 +1055,11 @@ export const Constants = {
 //     EXCEPTION WHEN OTHERS THEN
 //       RAISE WARNING 'Error in handle_new_user trigger: %', SQLERRM;
 //     END;
-//
+//   
 //     RETURN NEW;
 //   END;
 //   $function$
-//
+//   
 // FUNCTION handle_new_user_templates()
 //   CREATE OR REPLACE FUNCTION public.handle_new_user_templates()
 //    RETURNS trigger
@@ -898,49 +1068,49 @@ export const Constants = {
 //   AS $function$
 //   BEGIN
 //     INSERT INTO public.notification_templates (user_id, name, channel, content)
-//     VALUES
+//     VALUES 
 //       (NEW.id, 'Notificação de Match - WhatsApp', 'whatsapp', 'Olá {{partner_name}}! 🚀 Acabamos de encontrar um novo match para o imóvel {{property_details}}. Confira agora mesmo no seu painel da Prime Circle!'),
-//       (NEW.id, 'Notificação de Match - Email', 'email', 'Assunto: Novo Match Identificado! 🏠
-//
+//       (NEW.id, 'Notificação de Match - Email', 'email', 'Assunto: Novo Match Identificado! 🏠 
+//   
 //   Olá {{partner_name}},
-//
+//   
 //   Identificamos uma nova oportunidade de negócio! Um novo match foi gerado para o imóvel {{property_details}}.
-//
+//   
 //   Clique no link abaixo para ver os detalhes e entrar em contato:
 //   [Link do Sistema]
-//
+//   
 //   Boas vendas,
 //   Equipe Prime Circle'),
 //       (NEW.id, 'Solicitação de Parceria - WhatsApp', 'whatsapp', 'Olá {{partner_name}}! Você recebeu uma nova solicitação de parceria na Prime Circle. Acesse a plataforma para responder e iniciar essa nova colaboração. 🤝'),
 //       (NEW.id, 'Solicitação de Parceria - Email', 'email', 'Assunto: Você tem uma nova solicitação de parceria 🤝
-//
+//   
 //   Olá {{partner_name}},
-//
+//   
 //   Um colega de profissão enviou uma solicitação de parceria para você através da Prime Circle.
-//
+//   
 //   Parcerias aumentam suas chances de fechamento! Acesse seu dashboard para revisar a solicitação.
-//
+//   
 //   Atenciosamente,
 //   Equipe Prime Circle'),
 //       (NEW.id, 'Boas-vindas - WhatsApp', 'whatsapp', 'Olá {{full_name}}! 🚀 Bem-vindo à Prime Circle. Seu cadastro foi recebido com sucesso. Estamos muito felizes em ter você em nossa rede exclusiva de parcerias imobiliárias.'),
 //       (NEW.id, 'Boas-vindas - Email', 'email', 'Assunto: Bem-vindo à Prime Circle! 🏠
-//
+//   
 //   Olá {{full_name}},
-//
+//   
 //   Bem-vindo à Prime Circle! Agora que sua conta foi criada, utilize o link abaixo para acessar seu painel exclusivo e começar a gerar parcerias.
-//
+//   
 //   Acesse: https://www.primecircle.app.br/dashboard
-//
+//   
 //   Dica Prime: Para facilitar seu acesso, abra este link no seu celular (Safari no iOS ou Chrome no Android) e use a opção "Adicionar à Tela de Início". Assim, você terá o Prime Circle como um aplicativo sempre à mão e receberá nossas notificações em tempo real!
-//
+//   
 //   Boas vendas,
 //   Equipe Prime Circle'),
 //       (NEW.id, 'Nova Demanda - WhatsApp', 'whatsapp', 'Olá {{partner_name}}! 🚀 Uma nova demanda foi cadastrada na Prime Circle: {{demand_details}}. Acesse a plataforma para conferir e oferecer seus imóveis: https://www.primecircle.app.br/dashboard');
-//
+//       
 //     RETURN NEW;
 //   END;
 //   $function$
-//
+//   
 // FUNCTION increment_video_views(bigint)
 //   CREATE OR REPLACE FUNCTION public.increment_video_views(doc_id bigint)
 //    RETURNS void
@@ -957,7 +1127,7 @@ export const Constants = {
 //     WHERE id = doc_id;
 //   END;
 //   $function$
-//
+//   
 // FUNCTION is_admin()
 //   CREATE OR REPLACE FUNCTION public.is_admin()
 //    RETURNS boolean
@@ -967,7 +1137,7 @@ export const Constants = {
 //   AS $function$
 //     SELECT COALESCE((SELECT role = 'admin' FROM public.profiles WHERE id = auth.uid()), false);
 //   $function$
-//
+//   
 // FUNCTION log_notification(uuid, text, text, text, text, text)
 //   CREATE OR REPLACE FUNCTION public.log_notification(p_user_id uuid, p_recipient text, p_channel text, p_status text, p_message_body text, p_error_details text DEFAULT NULL::text)
 //    RETURNS void
@@ -982,7 +1152,7 @@ export const Constants = {
 //     );
 //   END;
 //   $function$
-//
+//   
 // FUNCTION match_documents(vector, integer, jsonb)
 //   CREATE OR REPLACE FUNCTION public.match_documents(query_embedding vector, match_count integer DEFAULT NULL::integer, filter jsonb DEFAULT '{}'::jsonb)
 //    RETURNS TABLE(id bigint, content text, metadata jsonb, similarity double precision)
@@ -1002,7 +1172,7 @@ export const Constants = {
 //     limit match_count;
 //   end;
 //   $function$
-//
+//   
 // FUNCTION quick_update_partnership(uuid, text, uuid)
 //   CREATE OR REPLACE FUNCTION public.quick_update_partnership(p_token uuid, p_status text, p_broker_id uuid)
 //    RETURNS boolean
@@ -1019,46 +1189,46 @@ export const Constants = {
 //     v_body JSONB;
 //   BEGIN
 //     SELECT * INTO v_partnership FROM public.partnerships WHERE update_token = p_token;
-//
+//     
 //     IF NOT FOUND THEN
 //       RETURN FALSE;
 //     END IF;
-//
+//   
 //     IF p_status NOT IN ('match', 'contact', 'visit', 'proposal', 'closed', 'cancelled') THEN
 //       RETURN FALSE;
 //     END IF;
-//
-//     UPDATE public.partnerships
-//     SET status = p_status, last_interaction_at = NOW()
+//   
+//     UPDATE public.partnerships 
+//     SET status = p_status, last_interaction_at = NOW() 
 //     WHERE id = v_partnership.id;
-//
+//   
 //     UPDATE public.profiles
 //     SET reputation_score = reputation_score + 5
 //     WHERE id = p_broker_id;
-//
+//   
 //     IF p_broker_id = v_partnership.broker_demand_id THEN
 //       v_other_broker_id := v_partnership.broker_property_id;
 //     ELSE
 //       v_other_broker_id := v_partnership.broker_demand_id;
 //     END IF;
-//
+//   
 //     SELECT full_name INTO v_broker_name FROM public.profiles WHERE id = p_broker_id;
 //     SELECT whatsapp_number INTO v_other_broker_phone FROM public.profiles WHERE id = v_other_broker_id;
 //     SELECT COALESCE(metadata->>'title', metadata->>'tipo_imovel', 'Imóvel') INTO v_property_title FROM public.documents WHERE id = v_partnership.property_id;
-//
+//   
 //     IF p_status IN ('visit', 'proposal', 'closed') AND v_other_broker_phone IS NOT NULL THEN
 //       v_url := current_setting('app.settings.supabase_url', true);
 //       IF v_url IS NULL OR v_url = '' THEN
 //         v_url := 'https://lortaowlmktdnttoykfl.supabase.co';
 //       END IF;
 //       v_url := v_url || '/functions/v1/send-whatsapp';
-//
+//   
 //       v_body := jsonb_build_object(
 //         'number', v_other_broker_phone,
 //         'text', 'Broker ' || COALESCE(v_broker_name, 'Parceiro') || ' informou que o status da negociação do imóvel ' || COALESCE(v_property_title, '') || ' mudou para: ' || p_status || '. Você confirma? Acesse o painel para validar: https://www.primecircle.app.br/dashboard',
 //         'user_id', v_other_broker_id
 //       );
-//
+//   
 //       BEGIN
 //         PERFORM net.http_post(
 //             url := v_url,
@@ -1070,11 +1240,11 @@ export const Constants = {
 //         RAISE WARNING 'Error scheduling double verification whatsapp: %', SQLERRM;
 //       END;
 //     END IF;
-//
+//   
 //     RETURN TRUE;
 //   END;
 //   $function$
-//
+//   
 // FUNCTION trigger_demand_push_webhook()
 //   CREATE OR REPLACE FUNCTION public.trigger_demand_push_webhook()
 //    RETURNS trigger
@@ -1089,9 +1259,9 @@ export const Constants = {
 //     IF v_url IS NULL OR v_url = '' THEN
 //       v_url := 'https://lortaowlmktdnttoykfl.supabase.co';
 //     END IF;
-//
+//     
 //     v_url := v_url || '/functions/v1/demand-push-webhook';
-//
+//   
 //     IF NEW.metadata->>'type' = 'demanda' THEN
 //       v_body := jsonb_build_object(
 //         'type', 'INSERT',
@@ -1099,7 +1269,7 @@ export const Constants = {
 //         'schema', 'public',
 //         'record', row_to_json(NEW)
 //       );
-//
+//       
 //       BEGIN
 //         PERFORM net.http_post(
 //             url := v_url,
@@ -1111,11 +1281,11 @@ export const Constants = {
 //         RAISE WARNING 'Error scheduling demand push webhook pg_net request: %', SQLERRM;
 //       END;
 //     END IF;
-//
+//     
 //     RETURN NEW;
 //   END;
 //   $function$
-//
+//   
 // FUNCTION trigger_match_property_webhook()
 //   CREATE OR REPLACE FUNCTION public.trigger_match_property_webhook()
 //    RETURNS trigger
@@ -1130,9 +1300,9 @@ export const Constants = {
 //     IF v_url IS NULL OR v_url = '' THEN
 //       v_url := 'https://lortaowlmktdnttoykfl.supabase.co';
 //     END IF;
-//
+//     
 //     v_url := v_url || '/functions/v1/match-property-webhook';
-//
+//   
 //     -- Only trigger matching logic if a new 'oferta' (property) is inserted
 //     IF NEW.metadata->>'type' = 'oferta' THEN
 //       v_body := jsonb_build_object(
@@ -1141,7 +1311,7 @@ export const Constants = {
 //         'schema', 'public',
 //         'record', row_to_json(NEW)
 //       );
-//
+//       
 //       BEGIN
 //         PERFORM net.http_post(
 //             url := v_url,
@@ -1153,11 +1323,11 @@ export const Constants = {
 //         RAISE WARNING 'Error scheduling match webhook pg_net request: %', SQLERRM;
 //       END;
 //     END IF;
-//
+//     
 //     RETURN NEW;
 //   END;
 //   $function$
-//
+//   
 // FUNCTION trigger_support_ticket_webhook()
 //   CREATE OR REPLACE FUNCTION public.trigger_support_ticket_webhook()
 //    RETURNS trigger
@@ -1169,19 +1339,19 @@ export const Constants = {
 //     v_body jsonb;
 //   BEGIN
 //     v_url := current_setting('app.settings.supabase_url', true);
-//
+//     
 //     IF v_url IS NULL OR v_url = '' THEN
 //       v_url := 'https://lortaowlmktdnttoykfl.supabase.co';
 //     END IF;
-//
+//     
 //     v_url := v_url || '/functions/v1/support-ticket-webhook';
 //     v_body := jsonb_build_object(
-//       'type', 'INSERT',
-//       'table', 'support_tickets',
-//       'schema', 'public',
+//       'type', 'INSERT', 
+//       'table', 'support_tickets', 
+//       'schema', 'public', 
 //       'record', row_to_json(NEW)
 //     );
-//
+//   
 //     BEGIN
 //       -- net.http_post puts the request in an async queue handled by the pg_net background worker
 //       -- This guarantees the transaction commits quickly regardless of the edge function's response time
@@ -1195,11 +1365,11 @@ export const Constants = {
 //       -- Completely swallow any pg_net scheduling errors to avoid aborting insert
 //       RAISE WARNING 'Error scheduling support ticket webhook pg_net request: %', SQLERRM;
 //     END;
-//
+//     
 //     RETURN NEW;
 //   END;
 //   $function$
-//
+//   
 // FUNCTION trigger_validation_whatsapp()
 //   CREATE OR REPLACE FUNCTION public.trigger_validation_whatsapp()
 //    RETURNS trigger
@@ -1213,29 +1383,29 @@ export const Constants = {
 //   BEGIN
 //     -- Only trigger when status changes from pending_validation to active and validated_by is populated
 //     IF OLD.status = 'pending_validation' AND NEW.status = 'active' AND NEW.validated_by IS NOT NULL THEN
-//
+//       
 //       -- Make sure the user has a whatsapp number
 //       IF NEW.whatsapp_number IS NULL OR NEW.whatsapp_number = '' THEN
 //         RETURN NEW;
 //       END IF;
-//
+//   
 //       v_url := current_setting('app.settings.supabase_url', true);
 //       IF v_url IS NULL OR v_url = '' THEN
 //         v_url := 'https://lortaowlmktdnttoykfl.supabase.co';
 //       END IF;
-//
+//       
 //       v_url := v_url || '/functions/v1/send-whatsapp';
-//
+//       
 //       -- Construct the exact message requested in Acceptance Criteria
 //       v_message := 'Olá ' || COALESCE(NEW.full_name, 'Parceiro(a)') || '! Sua conta no Prime Circle foi validada com sucesso por um de nossos membros sêniores. 🚀 Acesse agora para conferir as oportunidades exclusivas: https://www.primecircle.app.br/dashboard';
-//
+//   
 //       -- Build the payload for the edge function. Including user_id ensures it gets logged in notification_logs.
 //       v_body := jsonb_build_object(
 //         'number', NEW.whatsapp_number,
 //         'text', v_message,
 //         'user_id', NEW.id
 //       );
-//
+//       
 //       BEGIN
 //         PERFORM net.http_post(
 //             url := v_url,
@@ -1247,11 +1417,11 @@ export const Constants = {
 //         RAISE WARNING 'Error scheduling validation whatsapp pg_net request: %', SQLERRM;
 //       END;
 //     END IF;
-//
+//     
 //     RETURN NEW;
 //   END;
 //   $function$
-//
+//   
 // FUNCTION trigger_welcome_webhook()
 //   CREATE OR REPLACE FUNCTION public.trigger_welcome_webhook()
 //    RETURNS trigger
@@ -1263,19 +1433,19 @@ export const Constants = {
 //     v_body jsonb;
 //   BEGIN
 //     v_url := current_setting('app.settings.supabase_url', true);
-//
+//     
 //     IF v_url IS NULL OR v_url = '' THEN
 //       v_url := 'https://lortaowlmktdnttoykfl.supabase.co';
 //     END IF;
-//
+//     
 //     v_url := v_url || '/functions/v1/welcome-webhook';
 //     v_body := jsonb_build_object(
-//       'type', 'INSERT',
-//       'table', 'profiles',
-//       'schema', 'public',
+//       'type', 'INSERT', 
+//       'table', 'profiles', 
+//       'schema', 'public', 
 //       'record', row_to_json(NEW)
 //     );
-//
+//   
 //     BEGIN
 //       -- net.http_post puts the request in an async queue handled by the pg_net background worker
 //       -- This guarantees the transaction commits quickly regardless of the edge function's response time
@@ -1289,11 +1459,11 @@ export const Constants = {
 //       -- Completely swallow any pg_net scheduling errors to avoid aborting auth.users insert
 //       RAISE WARNING 'Error scheduling welcome webhook pg_net request: %', SQLERRM;
 //     END;
-//
+//     
 //     RETURN NEW;
 //   END;
 //   $function$
-//
+//   
 
 // --- TRIGGERS ---
 // Table: documents
@@ -1305,3 +1475,10 @@ export const Constants = {
 //   on_profile_validated_send_whatsapp: CREATE TRIGGER on_profile_validated_send_whatsapp AFTER UPDATE OF status ON public.profiles FOR EACH ROW EXECUTE FUNCTION trigger_validation_whatsapp()
 // Table: support_tickets
 //   on_support_ticket_created_send_notification: CREATE TRIGGER on_support_ticket_created_send_notification AFTER INSERT ON public.support_tickets FOR EACH ROW EXECUTE FUNCTION trigger_support_ticket_webhook()
+
+// --- INDEXES ---
+// Table: plans
+//   CREATE UNIQUE INDEX plans_name_key ON public.plans USING btree (name)
+// Table: user_matches
+//   CREATE UNIQUE INDEX user_matches_user_id_month_year_key ON public.user_matches USING btree (user_id, month, year)
+
