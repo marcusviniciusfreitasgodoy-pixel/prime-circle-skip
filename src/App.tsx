@@ -1,5 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
-import { BrowserRouter as Router, Routes, Route, Outlet, Navigate } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Index from './pages/Index'
 import ApplyPage from './pages/ApplyPage'
 import WaitlistPage from './pages/WaitlistPage'
@@ -25,54 +24,13 @@ import QuickUpdatePage from './pages/QuickUpdatePage'
 import BrandAssetsPage from './pages/BrandAssetsPage'
 import { Toaster } from '@/components/ui/toaster'
 import { TooltipProvider } from '@/components/ui/tooltip'
-import { Navbar } from '@/components/layout/Navbar'
-import { Footer } from '@/components/layout/Footer'
 import { ProtectedRoute } from '@/components/ProtectedRoute'
 import { AnalyticsTracker } from '@/components/AnalyticsTracker'
 import { PwaUpdater } from '@/components/PwaUpdater'
-import { PlansLimitBanner } from '@/components/plans/PlansLimitBanner'
-import useAppStore, { AppProvider } from '@/stores/main'
-import { useToast } from '@/hooks/use-toast'
+import { AppLayout } from '@/components/AppLayout'
+import { GlobalPlanLimitBanner } from '@/components/GlobalPlanLimitBanner'
+import { AppProvider } from '@/stores/main'
 import { AuthProvider } from '@/hooks/use-auth'
-
-function DashboardLayout() {
-  const { notifications, clearNotifications, user, needs } = useAppStore()
-  const { toast } = useToast()
-  const clearRef = useRef(clearNotifications)
-
-  const [isBannerVisible, setIsBannerVisible] = useState(true)
-
-  useEffect(() => {
-    clearRef.current = clearNotifications
-  }, [clearNotifications])
-
-  useEffect(() => {
-    if (notifications.length > 0) {
-      notifications.forEach((n) => {
-        toast({
-          title: n.title,
-          description: n.description,
-          className: 'border-primary/50 bg-card text-white shadow-elevation',
-        })
-      })
-      clearRef.current()
-    }
-  }, [notifications, toast])
-
-  const userDemandsCount = needs.filter((n) => n.ownerId === user?.id).length
-  const showLimitBanner = user?.plan === 'Free' && userDemandsCount >= 3 && isBannerVisible
-
-  return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col">
-      <Navbar />
-      <main className="flex-1 container mx-auto px-4 pt-32 pb-24">
-        <Outlet />
-      </main>
-      <Footer />
-      <PlansLimitBanner showLimitBanner={showLimitBanner} setIsBannerVisible={setIsBannerVisible} />
-    </div>
-  )
-}
 
 function App() {
   return (
@@ -83,6 +41,7 @@ function App() {
           <Router>
             <AnalyticsTracker />
             <PwaUpdater />
+            <GlobalPlanLimitBanner />
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/apply" element={<ApplyPage />} />
@@ -101,7 +60,7 @@ function App() {
                 <Route path="/pending" element={<PendingPage />} />
                 <Route path="/onboarding" element={<OnboardingPage />} />
                 <Route path="/match-feedback" element={<MatchFeedbackPage />} />
-                <Route element={<DashboardLayout />}>
+                <Route element={<AppLayout />}>
                   <Route path="/dashboard" element={<DashboardPage />} />
                   <Route path="/admin" element={<AdminPage />} />
                   <Route path="/profile" element={<ProfilePage />} />
