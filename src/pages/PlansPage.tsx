@@ -6,6 +6,8 @@ import { PlanCard, type PlanData } from '@/components/plans/PlanCard'
 import { PlansCalculator } from '@/components/plans/PlansCalculator'
 import { PlansTable } from '@/components/plans/PlansTable'
 import { ActivePlanCard } from '@/components/plans/ActivePlanCard'
+import { PlansTestimonials } from '@/components/plans/PlansTestimonials'
+import { PlansFAQ } from '@/components/plans/PlansFAQ'
 import { useAuth } from '@/hooks/use-auth'
 import { supabase } from '@/lib/supabase/client'
 import { calculatePlanPrice, type PlanPriceCalculation } from '@/services/pricing'
@@ -291,6 +293,10 @@ export default function PlansPage() {
       />
 
       <PlansTable />
+
+      <PlansTestimonials />
+
+      <PlansFAQ />
     </div>
   )
 }
