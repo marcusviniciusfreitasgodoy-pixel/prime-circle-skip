@@ -65,7 +65,7 @@ export function PlanCard({ plan, discount, onCheckout }: PlanCardProps) {
               Valor original: R$ {plan.basePrice}/mês
             </span>
           )}
-          {plan.basePrice > 0 && !plan.canBuy && plan.name === 'FOUNDER' && (
+          {plan.basePrice > 0 && !plan.canBuy && plan.name === 'FOUNDER' && !plan.active && (
             <span className="text-sm text-primary font-medium bg-primary/10 px-3 py-1 rounded-full mt-3 inline-block">
               Vagas Esgotadas
             </span>
