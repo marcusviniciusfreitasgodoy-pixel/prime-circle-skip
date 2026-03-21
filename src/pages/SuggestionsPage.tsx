@@ -5,6 +5,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Progress } from '@/components/ui/progress'
 import {
   Select,
   SelectContent,
@@ -20,7 +21,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { ThumbsUp, ArrowRight, Trophy, Map } from 'lucide-react'
+import { ThumbsUp, ArrowRight, Trophy, Map, BrainCircuit, Sparkles } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { toast } from 'sonner'
 import { sendTransactionalEmail } from '@/lib/email'
@@ -39,6 +40,7 @@ export default function SuggestionsPage() {
   const [newTitle, setNewTitle] = useState('')
   const [newDesc, setNewDesc] = useState('')
   const [newCategory, setNewCategory] = useState('')
+  const [isAnalyzing, setIsAnalyzing] = useState(false)
 
   const markRef = useRef(markSuggestionsAsViewed)
 
@@ -58,12 +60,19 @@ export default function SuggestionsPage() {
   const handleSubmit = async () => {
     if (!newTitle || !newDesc || !newCategory)
       return toast.error('Preencha título, descrição e categoria.')
-    await sendTransactionalEmail('new_suggestion', { subject: 'Nova Ideia Submetida' })
-    addSuggestion(newTitle, newDesc, newCategory)
-    setNewTitle('')
-    setNewDesc('')
-    setNewCategory('')
-    toast.success('Sugestão enviada para análise.')
+
+    setIsAnalyzing(true)
+
+    // Simulate AI evaluation delay
+    setTimeout(async () => {
+      setIsAnalyzing(false)
+      await sendTransactionalEmail('new_suggestion', { subject: 'Nova Ideia Submetida' })
+      addSuggestion(newTitle, newDesc, newCategory)
+      setNewTitle('')
+      setNewDesc('')
+      setNewCategory('')
+      toast.success('Sua sugestão foi avaliada pela IA e enviada para análise!')
+    }, 1500)
   }
 
   const getStatusColor = (status: string) => {
@@ -73,21 +82,23 @@ export default function SuggestionsPage() {
   }
 
   const sortedRanking = [...communityMembers].sort((a, b) => {
-    if (b.suggestionsImplemented !== a.suggestionsImplemented) {
-      return b.suggestionsImplemented - a.suggestionsImplemented
-    }
-    return b.suggestionsSubmitted - a.suggestionsSubmitted
+    const ptsA = (a.suggestionPoints || 0) + a.suggestionMonthsCredited * 100
+    const ptsB = (b.suggestionPoints || 0) + b.suggestionMonthsCredited * 100
+    if (ptsB !== ptsA) return ptsB - ptsA
+    return b.suggestionsImplemented - a.suggestionsImplemented
   })
 
+  const userPoints = user?.suggestionPoints || 0
+  const progressValue = Math.min(100, userPoints)
+
   return (
-    <div className="max-w-4xl mx-auto space-y-8 animate-fade-in-up">
+    <div className="max-w-4xl mx-auto space-y-8 animate-fade-in-up pb-8">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <div>
           <h2 className="text-3xl font-bold text-white mb-2">Comunidade e Sugestões</h2>
           <p className="text-muted-foreground text-base">
-            Ajudou a implementar? Ganhe{' '}
-            <strong className="text-primary">1 mês de crédito extra</strong> na sua assinatura do
-            Prime Circle.
+            Envie ideias, acumule pontos e ganhe{' '}
+            <strong className="text-primary">mensalidades grátis</strong> no Prime Circle.
           </p>
         </div>
         <Button
@@ -99,6 +110,40 @@ export default function SuggestionsPage() {
           </Link>
         </Button>
       </div>
+
+      <Card className="bg-gradient-to-r from-secondary to-background border-primary/20 shadow-[0_0_20px_rgba(201,168,76,0.1)] relative overflow-hidden mb-8">
+        <div className="absolute top-0 right-0 opacity-10 pointer-events-none p-4">
+          <Sparkles className="w-24 h-24 text-primary" />
+        </div>
+        <CardContent className="p-6 relative z-10">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
+            <div>
+              <h3 className="text-xl font-bold text-white flex items-center gap-2">
+                <BrainCircuit className="w-5 h-5 text-primary" />
+                Programa de Recompensas (AI Scoring)
+              </h3>
+              <p className="text-muted-foreground text-sm mt-1">
+                A IA do Prime Circle avalia a complexidade das suas ideias. A cada 100 pontos
+                acumulados com implementações, você ganha 1 mês grátis!
+              </p>
+            </div>
+            <div className="text-right">
+              <span className="text-3xl font-bold text-primary">{userPoints}</span>
+              <span className="text-muted-foreground">/100 pts</span>
+            </div>
+          </div>
+          <Progress
+            value={progressValue}
+            className="h-3 bg-background border border-border"
+            indicatorClassName="bg-primary"
+          />
+          <p className="text-xs text-muted-foreground mt-3 text-right">
+            {userPoints >= 100
+              ? 'Parabéns! Você já pode resgatar seu mês grátis.'
+              : `Faltam ${100 - userPoints} pontos para a próxima recompensa.`}
+          </p>
+        </CardContent>
+      </Card>
 
       <div className="grid lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-6">
@@ -133,9 +178,16 @@ export default function SuggestionsPage() {
               />
               <Button
                 onClick={handleSubmit}
-                className="gold-gradient text-black font-semibold mt-2"
+                disabled={isAnalyzing}
+                className="gold-gradient text-black font-semibold mt-2 min-w-[220px]"
               >
-                Enviar para Votação
+                {isAnalyzing ? (
+                  <>
+                    <BrainCircuit className="w-4 h-4 mr-2 animate-pulse" /> Analisando com IA...
+                  </>
+                ) : (
+                  'Enviar para Análise'
+                )}
               </Button>
             </CardContent>
           </Card>
@@ -158,15 +210,33 @@ export default function SuggestionsPage() {
                       <span className="font-bold text-white mt-1">{sug.votes}</span>
                     </div>
                     <div className="flex-1 p-4 space-y-3">
-                      <div className="flex justify-between items-start gap-4">
-                        <div>
-                          <Badge
-                            variant="outline"
-                            className="bg-background border-border text-[10px] uppercase text-muted-foreground mb-1"
-                          >
-                            {sug.category || 'Geral'}
-                          </Badge>
-                          <h3 className="font-semibold text-white text-lg leading-tight">
+                      <div className="flex justify-between items-start gap-4 flex-wrap sm:flex-nowrap">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-1 flex-wrap">
+                            <Badge
+                              variant="outline"
+                              className="bg-background border-border text-[10px] uppercase text-muted-foreground"
+                            >
+                              {sug.category || 'Geral'}
+                            </Badge>
+                            {sug.complexity && (
+                              <Badge
+                                variant="outline"
+                                className={cn(
+                                  'text-[10px] uppercase border',
+                                  sug.complexity === 'Alta'
+                                    ? 'bg-pink-500/10 text-pink-400 border-pink-500/20'
+                                    : sug.complexity === 'Média'
+                                      ? 'bg-blue-500/10 text-blue-400 border-blue-500/20'
+                                      : 'bg-green-500/10 text-green-400 border-green-500/20',
+                                )}
+                              >
+                                {sug.complexity === 'Alta' && <Sparkles className="w-3 h-3 mr-1" />}
+                                {sug.complexity} ({sug.points} pts)
+                              </Badge>
+                            )}
+                          </div>
+                          <h3 className="font-semibold text-white text-lg leading-tight mt-1">
                             {sug.title}
                           </h3>
                         </div>
@@ -178,10 +248,10 @@ export default function SuggestionsPage() {
                         </Badge>
                       </div>
                       <p className="text-sm text-muted-foreground leading-relaxed">{sug.desc}</p>
-                      {sug.status === 'Entregue' && (
+                      {sug.status === 'Entregue' && sug.points && (
                         <div className="text-xs text-primary font-medium flex items-center mt-2 bg-primary/10 p-2 rounded-md border border-primary/20 w-fit">
-                          <ArrowRight className="w-3 h-3 mr-1" /> Autor recompensado com +1 mês de
-                          acesso
+                          <ArrowRight className="w-3 h-3 mr-1" /> Autor recompensado com +
+                          {sug.points} pontos
                         </div>
                       )}
                     </div>
@@ -195,7 +265,7 @@ export default function SuggestionsPage() {
           <Card className="bg-card border-border sticky top-24">
             <CardHeader className="bg-secondary/50 border-b border-border pb-4">
               <CardTitle className="text-white text-lg flex items-center gap-2">
-                <Trophy className="w-5 h-5 text-primary" /> Ranking
+                <Trophy className="w-5 h-5 text-primary" /> Hall of Fame
               </CardTitle>
             </CardHeader>
             <CardContent className="p-0">
@@ -203,9 +273,7 @@ export default function SuggestionsPage() {
                 <TableHeader>
                   <TableRow className="border-border hover:bg-transparent">
                     <TableHead className="text-muted-foreground py-3">Membro</TableHead>
-                    <TableHead className="text-right text-muted-foreground py-3">
-                      Créditos
-                    </TableHead>
+                    <TableHead className="text-right text-muted-foreground py-3">Score</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -222,7 +290,7 @@ export default function SuggestionsPage() {
                         <TableCell className="font-medium text-white flex items-center gap-3 py-3">
                           <span
                             className={cn(
-                              'w-4 text-xs font-bold',
+                              'w-4 text-xs font-bold text-center',
                               i === 0
                                 ? 'text-yellow-400'
                                 : i === 1
@@ -248,15 +316,21 @@ export default function SuggestionsPage() {
                               )}
                             </span>
                             <span className="text-[10px] text-muted-foreground">
-                              {member.suggestionsImplemented} implementadas
+                              {member.suggestionsImplemented} aprovações
                             </span>
                           </div>
                         </TableCell>
                         <TableCell className="text-right py-3">
-                          <span className="text-primary font-bold">
-                            {member.suggestionMonthsCredited}
-                          </span>
-                          <span className="text-muted-foreground text-xs ml-1">mês</span>
+                          <div className="flex flex-col items-end">
+                            <span className="text-primary font-bold text-sm">
+                              {member.suggestionPoints || 0} pts
+                            </span>
+                            {member.suggestionMonthsCredited > 0 && (
+                              <span className="text-[10px] text-muted-foreground">
+                                +{member.suggestionMonthsCredited} mês
+                              </span>
+                            )}
+                          </div>
                         </TableCell>
                       </TableRow>
                     )

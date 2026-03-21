@@ -25,6 +25,7 @@ export type User = {
   suggestionMonthsCredited: number
   suggestionsSubmitted: number
   suggestionsImplemented: number
+  suggestionPoints?: number
   lastViewedSuggestionsAt?: string
 }
 
@@ -35,6 +36,7 @@ export type CommunityMember = {
   suggestionsSubmitted: number
   suggestionsImplemented: number
   suggestionMonthsCredited: number
+  suggestionPoints?: number
 }
 
 export type Candidate = {
@@ -101,6 +103,8 @@ export type Suggestion = {
   desc: string
   category: string
   status: SuggestionStatus
+  complexity?: 'Baixa' | 'Média' | 'Alta'
+  points?: number
   votes: number
   authorId: string
   updatedAt: string
@@ -223,6 +227,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       suggestionMonthsCredited: 0,
       suggestionsSubmitted: 0,
       suggestionsImplemented: 0,
+      suggestionPoints: 0,
       lastViewedSuggestionsAt: new Date(Date.now() - 86400000 * 5).toISOString(),
     })
     logEvent('Login', `User logged in via ${method}`)
@@ -451,7 +456,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
     ])
     logEvent('Negócio Fechado', `Match: ${matchId}, Valor Final: ${finalValue}`)
 
-    // Record the accepted match and dynamically update matches performance
     if (bilateralConfirmed && matchToClose) {
       const matchedNeed = needs.find((n) => n.id === matchToClose.needId)
       const matchedListing = listings.find((l) => l.id === matchToClose.listingId)
@@ -503,6 +507,28 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }
 
   const addSuggestion = (title: string, desc: string, category: string) => {
+    const text = (title + ' ' + desc).toLowerCase()
+    let complexity: 'Baixa' | 'Média' | 'Alta' = 'Média'
+    let points = 30
+
+    if (
+      text.includes('cor') ||
+      text.includes('botão') ||
+      text.includes('simples') ||
+      text.length < 50
+    ) {
+      complexity = 'Baixa'
+      points = 10
+    } else if (
+      text.includes('ia') ||
+      text.includes('automático') ||
+      text.includes('integração') ||
+      text.length > 150
+    ) {
+      complexity = 'Alta'
+      points = 100
+    }
+
     const id = Date.now().toString()
     setSuggestions((prev) => [
       ...prev,
@@ -512,11 +538,14 @@ export function AppProvider({ children }: { children: ReactNode }) {
         desc,
         category,
         status: 'Em Análise',
+        complexity,
+        points,
         votes: 1,
         authorId: user?.id || 'unknown',
         updatedAt: new Date().toISOString(),
       },
     ])
+
     if (user) {
       setUser((u) => (u ? { ...u, suggestionsSubmitted: (u.suggestionsSubmitted || 0) + 1 } : u))
       setCommunityMembers((members) =>
@@ -525,7 +554,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
         ),
       )
     }
-    logEvent('Sugestão Adicionada', `Título: ${title}`)
+    logEvent('Sugestão Adicionada', `Título: ${title}, Complexidade: ${complexity}`)
   }
 
   const voteSuggestion = (id: string) => {
@@ -549,36 +578,67 @@ export function AppProvider({ children }: { children: ReactNode }) {
       }
 
       if (status === 'Entregue' && suggestion.status !== 'Entregue') {
+        const earnedPoints = suggestion.points || 0
+
         if (user && user.id === suggestion.authorId) {
-          setUser((u) =>
-            u
-              ? {
-                  ...u,
-                  suggestionMonthsCredited: u.suggestionMonthsCredited + 1,
-                  suggestionsImplemented: (u.suggestionsImplemented || 0) + 1,
+          setUser((u) => {
+            if (!u) return u
+            let currentPoints = (u.suggestionPoints || 0) + earnedPoints
+            let extraMonths = 0
+
+            if (currentPoints >= 100) {
+              extraMonths = Math.floor(currentPoints / 100)
+              currentPoints = currentPoints % 100
+            }
+
+            if (extraMonths > 0) {
+              setNotifications((n) => [
+                ...n,
+                {
+                  id: Date.now().toString() + '-bonus',
+                  title: '🚀 Bônus Especial Atingido!',
+                  description: `Você atingiu 100 pontos e ganhou +${extraMonths} mês(es) de crédito grátis!`,
+                },
+              ])
+            } else {
+              setNotifications((n) => [
+                ...n,
+                {
+                  id: Date.now().toString() + '-points',
+                  title: '⭐ Pontos Adicionados!',
+                  description: `Sua sugestão foi Implementada. +${earnedPoints} pontos adicionados.`,
+                },
+              ])
+            }
+
+            return {
+              ...u,
+              suggestionPoints: currentPoints,
+              suggestionMonthsCredited: u.suggestionMonthsCredited + extraMonths,
+              suggestionsImplemented: (u.suggestionsImplemented || 0) + 1,
+            }
+          })
+
+          setCommunityMembers((members) =>
+            members.map((m) => {
+              if (m.id === suggestion.authorId) {
+                let currentPoints = (m.suggestionPoints || 0) + earnedPoints
+                let extraMonths = 0
+                if (currentPoints >= 100) {
+                  extraMonths = Math.floor(currentPoints / 100)
+                  currentPoints = currentPoints % 100
                 }
-              : u,
-          )
-          setNotifications((n) => [
-            ...n,
-            {
-              id: Date.now().toString() + '-bonus',
-              title: '🚀 Bônus Especial!',
-              description: `Sua sugestão foi Implementada. +1 mês de crédito adicionado à sua conta.`,
-            },
-          ])
-        }
-        setCommunityMembers((members) =>
-          members.map((m) =>
-            m.id === suggestion.authorId
-              ? {
+                return {
                   ...m,
+                  suggestionPoints: currentPoints,
                   suggestionsImplemented: m.suggestionsImplemented + 1,
-                  suggestionMonthsCredited: m.suggestionMonthsCredited + 1,
+                  suggestionMonthsCredited: m.suggestionMonthsCredited + extraMonths,
                 }
-              : m,
-          ),
-        )
+              }
+              return m
+            }),
+          )
+        }
       }
       return prev.map((s) =>
         s.id === id ? { ...s, status, updatedAt: new Date().toISOString() } : s,

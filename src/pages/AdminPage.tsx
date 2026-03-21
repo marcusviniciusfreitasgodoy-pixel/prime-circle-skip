@@ -334,14 +334,22 @@ export default function AdminPage() {
             <Card key={sug.id} className="bg-secondary border-border">
               <CardContent className="p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                 <div>
-                  <div className="flex items-center gap-2 mb-1">
+                  <div className="flex items-center gap-2 mb-1 flex-wrap">
                     <Badge
                       variant="outline"
                       className="bg-background border-border text-[10px] text-muted-foreground"
                     >
                       {sug.category || 'Geral'}
                     </Badge>
-                    <h3 className="font-semibold text-white">{sug.title}</h3>
+                    {sug.complexity && (
+                      <Badge
+                        variant="outline"
+                        className="text-[10px] border-border text-muted-foreground"
+                      >
+                        {sug.complexity} ({sug.points} pts)
+                      </Badge>
+                    )}
+                    <h3 className="font-semibold text-white ml-1">{sug.title}</h3>
                   </div>
                   <p className="text-sm text-muted-foreground">{sug.desc}</p>
                 </div>
@@ -350,9 +358,13 @@ export default function AdminPage() {
                     value={sug.status}
                     onValueChange={(val) => {
                       updateSuggestionStatus(sug.id, val as SuggestionStatus)
-                      if (val === 'Entregue')
-                        toast.success('Sugestão implementada! Autor recompensado com 1 mês extra.')
-                      else toast.success(`Status alterado para ${val}.`)
+                      if (val === 'Entregue') {
+                        toast.success(
+                          `Sugestão implementada! Autor recompensado com os pontos devidos.`,
+                        )
+                      } else {
+                        toast.success(`Status alterado para ${val}.`)
+                      }
                     }}
                   >
                     <SelectTrigger className="w-[160px] bg-background border-border text-xs text-white h-9">
