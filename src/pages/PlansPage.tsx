@@ -128,7 +128,7 @@ export default function PlansPage() {
     toast({
       title: 'Upgrade Indisponível',
       description:
-        'No momento não estamos realizando upgrades de contas. Essa funcionalidade estará disponível em breve.',
+        'No momento não estamos realizando upgrades de contas automáticos. Essa funcionalidade estará disponível em breve.',
     })
   }
 
@@ -196,6 +196,9 @@ export default function PlansPage() {
       canBuy,
       highlight: p.name === 'PROFESSIONAL',
       hideButton,
+      badge: p.name === 'FOUNDER' ? '6 Meses de Isenção' : undefined,
+      badgeColor:
+        p.name === 'FOUNDER' ? 'bg-green-500/20 text-green-400 border-green-500/30' : undefined,
     }
   })
 

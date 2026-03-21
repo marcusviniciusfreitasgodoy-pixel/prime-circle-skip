@@ -252,7 +252,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const getExpirationInfo = (): ExpirationInfo | null => {
     if (!user || (!user.wasFounder && user.plan === 'Free')) return null
     const start = new Date(user.planStartedAt || new Date())
-    const baseMonths = user.plan === 'Founder' || user.wasFounder ? 12 : 1
+    const baseMonths = user.plan === 'Founder' || user.wasFounder ? 6 : 1
     const totalCredits = (user.referralMonthsCredited || 0) + (user.suggestionMonthsCredited || 0)
 
     start.setMonth(start.getMonth() + baseMonths + totalCredits)
@@ -274,7 +274,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     if (!user || (!user.wasFounder && user.plan !== 'Founder')) return
 
     const start = new Date(user.planStartedAt || new Date())
-    const baseMonths = user.plan === 'Founder' || user.wasFounder ? 12 : 1
+    const baseMonths = user.plan === 'Founder' || user.wasFounder ? 6 : 1
     const totalCredits = (user.referralMonthsCredited || 0) + (user.suggestionMonthsCredited || 0)
     start.setMonth(start.getMonth() + baseMonths + totalCredits)
 

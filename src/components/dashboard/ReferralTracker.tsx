@@ -79,7 +79,7 @@ export function ReferralTracker({
   useEffect(() => {
     if (referralLink && !inviteMessage) {
       setInviteMessage(
-        `Olá! Faço parte do Prime Circle, uma rede privada de liquidez imobiliária para corretores de alto padrão. Gostaria de te convidar para o meu círculo. Cadastre-se por este link para ter prioridade na análise:\n\n${referralLink}`,
+        `Olá! Faço parte do Prime Circle, uma rede privada de liquidez imobiliária para corretores de alto padrão. Gostaria de te convidar para o meu círculo. Cadastre-se por este link para ter prioridade na análise e garantir sua vaga como membro Founder, com isenção total de cobrança pelos primeiros 6 meses:\n\n${referralLink}`,
       )
     }
   }, [referralLink])
@@ -112,7 +112,7 @@ export function ReferralTracker({
             <Textarea
               value={inviteMessage}
               onChange={(e) => setInviteMessage(e.target.value)}
-              className="bg-background/80 border-primary/20 text-muted-foreground min-h-[120px] focus-visible:ring-primary leading-relaxed"
+              className="bg-background/80 border-primary/20 text-muted-foreground min-h-[140px] focus-visible:ring-primary leading-relaxed"
             />
             <div className="flex flex-col sm:flex-row gap-4">
               <Button

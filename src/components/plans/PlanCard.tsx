@@ -25,6 +25,8 @@ export interface PlanData {
   canBuy: boolean
   highlight?: boolean
   hideButton?: boolean
+  badge?: string
+  badgeColor?: string
 }
 
 interface PlanCardProps {
@@ -42,12 +44,19 @@ export function PlanCard({ plan, discount, onCheckout }: PlanCardProps) {
           : 'hover:border-border/80 hover:shadow-elevation'
       }`}
     >
+      {plan.badge && (
+        <div
+          className={`absolute top-4 left-4 text-xs font-bold px-3 py-1 rounded-full border shadow-sm z-10 backdrop-blur-sm ${plan.badgeColor || 'bg-primary/20 text-primary border-primary/30'}`}
+        >
+          {plan.badge}
+        </div>
+      )}
       {plan.highlight && (
         <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-primary text-black text-xs font-bold px-4 py-1 rounded-full uppercase tracking-widest shadow-sm">
           Recomendado
         </div>
       )}
-      <CardHeader className="text-center pb-6 pt-8 px-6">
+      <CardHeader className="text-center pb-6 pt-10 px-6">
         <CardTitle className="text-2xl text-white font-bold tracking-tight">{plan.name}</CardTitle>
         <CardDescription className="text-muted-foreground mt-2 min-h-[44px] text-base">
           {plan.desc}

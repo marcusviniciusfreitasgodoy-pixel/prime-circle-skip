@@ -19,7 +19,7 @@ const faqs = [
   {
     question: 'O que é o plano Founder?',
     answer:
-      'O plano FOUNDER é uma modalidade destinada exclusivamente aos primeiros membros (pioneiros) da plataforma. Além do acesso ilimitado com um valor fixo reduzido, os Founders têm benefícios exclusivos, selo de autoridade e poder de voto nas atualizações do sistema. Atualmente, as vagas para este plano estão esgotadas.',
+      'O plano FOUNDER é uma modalidade destinada exclusivamente aos primeiros membros (pioneiros) da plataforma. Além do acesso ilimitado com um valor fixo reduzido de R$ 47/mês, os Founders têm benefícios exclusivos, selo de autoridade, poder de voto nas atualizações do sistema e isenção total de cobrança nos primeiros 6 meses de uso. Atualmente, as vagas para este plano são limitadíssimas.',
   },
   {
     question: 'Há contrato de longo prazo?',
