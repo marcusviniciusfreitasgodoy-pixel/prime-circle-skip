@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
-import { Crown, Sparkles, Loader2 } from 'lucide-react'
+import { Sparkles, Loader2 } from 'lucide-react'
 import useAppStore from '@/stores/main'
 import { useAuth } from '@/hooks/use-auth'
 import { supabase } from '@/lib/supabase/client'
@@ -117,7 +117,9 @@ export default function OnboardingPage() {
         {step === 1 && (
           <div className="animate-in fade-in-0 duration-500">
             <div className="text-center mb-8">
-              <Crown className="w-12 h-12 text-primary mx-auto mb-4" />
+              <div className="w-14 h-14 rounded-full bg-primary flex items-center justify-center shadow-[0_0_15px_rgba(201,168,76,0.3)] mx-auto mb-4 shrink-0">
+                <div className="w-6 h-6 rounded-full bg-card" />
+              </div>
               <h1 className="text-2xl font-bold text-white">Bem vindo Corretor</h1>
               <p className="text-muted-foreground text-sm mt-2">
                 Antes de acessar o painel, complete seus dados e confirme sua adesão às regras.

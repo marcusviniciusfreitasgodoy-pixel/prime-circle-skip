@@ -3,7 +3,7 @@ import { useNavigate, Link, useSearchParams } from 'react-router-dom'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
-import { Crown, Loader2, ArrowLeft, Check, ChevronsUpDown, Info, Camera } from 'lucide-react'
+import { Loader2, ArrowLeft, Check, ChevronsUpDown, Info, Camera } from 'lucide-react'
 import {
   Form,
   FormControl,
@@ -321,7 +321,9 @@ export default function ApplyPage() {
         </Button>
 
         <div className="flex flex-col items-center mb-6 mt-6">
-          <Crown className="w-10 h-10 text-primary mb-4" />
+          <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center shadow-[0_0_15px_rgba(201,168,76,0.3)] mb-4 shrink-0">
+            <div className="w-5 h-5 rounded-full bg-card" />
+          </div>
           <h1 className="text-2xl font-bold text-white text-center">Solicitar Acesso</h1>
           <p className="text-muted-foreground text-center text-sm mt-2">
             Junte-se ao círculo exclusivo.

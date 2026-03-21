@@ -144,9 +144,13 @@ export function AppLayout() {
       <div className="flex min-h-screen w-full bg-background selection:bg-primary/30">
         <Sidebar className="border-r border-border hidden sm:flex bg-card">
           <SidebarContent>
-            <div className="p-6 flex items-center gap-2">
-              <Crown className="text-primary w-8 h-8 drop-shadow-[0_0_8px_rgba(201,168,76,0.5)]" />
-              <span className="font-bold text-xl tracking-tight text-white">Prime Circle</span>
+            <div className="p-6 flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center shadow-[0_0_15px_rgba(201,168,76,0.3)] shrink-0">
+                <div className="w-3.5 h-3.5 rounded-full bg-card" />
+              </div>
+              <span className="font-bold text-xl tracking-widest text-white">
+                PRIME<span className="text-primary">CIRCLE</span>
+              </span>
             </div>
             <SidebarGroup>
               <SidebarMenu>

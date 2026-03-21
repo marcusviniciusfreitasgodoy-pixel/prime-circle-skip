@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Crown, Mail, KeyRound, Loader2 } from 'lucide-react'
+import { Mail, KeyRound, Loader2 } from 'lucide-react'
 import useAppStore from '@/stores/main'
 import { useAuth } from '@/hooks/use-auth'
 import { useSEO } from '@/hooks/use-seo'
@@ -174,7 +174,9 @@ export default function LoginPage() {
     <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4">
       <div className="w-full max-w-md bg-card p-8 rounded-2xl border border-border shadow-elevation animate-fade-in-up">
         <div className="flex flex-col items-center mb-8">
-          <Crown className="w-10 h-10 text-primary mb-4" />
+          <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center shadow-[0_0_15px_rgba(201,168,76,0.3)] mb-4 shrink-0">
+            <div className="w-5 h-5 rounded-full bg-card" />
+          </div>
           <h1 className="text-2xl font-bold text-white text-center">Acesso Exclusivo</h1>
           <p className="text-muted-foreground text-center text-sm mt-2">
             Autentique-se para entrar no seu círculo.
