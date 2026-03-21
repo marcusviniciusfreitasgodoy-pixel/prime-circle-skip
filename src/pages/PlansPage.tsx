@@ -124,11 +124,10 @@ export default function PlansPage() {
   const simulatedDiscount = getDiscount(simulatedMatches)
 
   const handleCheckout = (planName: string, amount: number) => {
-    toast.loading(`Iniciando checkout seguro para ${planName}...`)
-    setTimeout(() => {
-      toast.dismiss()
-      toast.success(`Checkout concluído (Simulação)! R$ ${amount.toFixed(2)} processado.`)
-    }, 2000)
+    toast('Upgrade Indisponível', {
+      description:
+        'No momento não estamos realizando upgrades de contas. Essa funcionalidade estará disponível em breve.',
+    })
   }
 
   const mappedPlans: PlanData[] = plans.map((p) => {
@@ -179,6 +178,11 @@ export default function PlansPage() {
       }
     }
 
+    let hideButton = false
+    if (p.name === 'FOUNDER' && !isActive) {
+      hideButton = true
+    }
+
     return {
       name: p.name,
       basePrice: basePrice,
@@ -189,6 +193,7 @@ export default function PlansPage() {
       btnText,
       canBuy,
       highlight: p.name === 'PROFESSIONAL',
+      hideButton,
     }
   })
 

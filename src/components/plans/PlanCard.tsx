@@ -24,6 +24,7 @@ export interface PlanData {
   btnText: string
   canBuy: boolean
   highlight?: boolean
+  hideButton?: boolean
 }
 
 interface PlanCardProps {
@@ -67,7 +68,7 @@ export function PlanCard({ plan, discount, onCheckout }: PlanCardProps) {
           )}
         </div>
       </CardHeader>
-      <CardContent className="flex-1 px-8">
+      <CardContent className="flex-1 px-8 pb-8">
         <ul className="space-y-4">
           {plan.features.map((feat, j) => (
             <li key={j} className="flex items-start gap-3 text-sm">
@@ -89,26 +90,28 @@ export function PlanCard({ plan, discount, onCheckout }: PlanCardProps) {
           ))}
         </ul>
       </CardContent>
-      <CardFooter className="px-8 pb-8 pt-4">
-        <Button
-          variant={plan.active ? 'outline' : 'default'}
-          disabled={!plan.canBuy || plan.active}
-          onClick={() =>
-            plan.canBuy && !plan.active
-              ? onCheckout(plan.name, plan.basePrice * (1 - discount))
-              : undefined
-          }
-          className={`w-full h-12 text-base font-bold transition-all ${
-            plan.highlight && !plan.active
-              ? 'gold-gradient text-black hover:shadow-[0_0_20px_rgba(201,168,76,0.3)] hover:scale-[1.02]'
-              : plan.active
-                ? 'border-border text-muted-foreground bg-secondary/50'
-                : 'bg-secondary text-white hover:bg-secondary/80'
-          }`}
-        >
-          {plan.btnText}
-        </Button>
-      </CardFooter>
+      {!plan.hideButton && (
+        <CardFooter className="px-8 pb-8 pt-0">
+          <Button
+            variant={plan.active ? 'outline' : 'default'}
+            disabled={!plan.canBuy || plan.active}
+            onClick={() =>
+              plan.canBuy && !plan.active
+                ? onCheckout(plan.name, plan.basePrice * (1 - discount))
+                : undefined
+            }
+            className={`w-full h-12 text-base font-bold transition-all ${
+              plan.highlight && !plan.active
+                ? 'gold-gradient text-black hover:shadow-[0_0_20px_rgba(201,168,76,0.3)] hover:scale-[1.02]'
+                : plan.active
+                  ? 'border-border text-muted-foreground bg-secondary/50'
+                  : 'bg-secondary text-white hover:bg-secondary/80'
+            }`}
+          >
+            {plan.btnText}
+          </Button>
+        </CardFooter>
+      )}
     </Card>
   )
 }
