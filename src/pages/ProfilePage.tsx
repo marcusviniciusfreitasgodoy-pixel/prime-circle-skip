@@ -7,10 +7,12 @@ import { Button } from '@/components/ui/button'
 import { Switch } from '@/components/ui/switch'
 import { AmbassadorWidget } from '@/components/AmbassadorWidget'
 import useAppStore from '@/stores/main'
+import type { Tier } from '@/stores/main'
 import { useAuth } from '@/hooks/use-auth'
 import { supabase } from '@/lib/supabase/client'
 import { useToast } from '@/hooks/use-toast'
-import { ShieldCheck, BellRing } from 'lucide-react'
+import { ShieldCheck, BellRing, Camera } from 'lucide-react'
+import { Skeleton } from '@/components/ui/skeleton'
 
 export default function ProfilePage() {
   const { user, updateUser } = useAppStore()
@@ -23,47 +25,84 @@ export default function ProfilePage() {
   const [fullName, setFullName] = useState('')
   const [isSaving, setIsSaving] = useState(false)
   const [validatedBy, setValidatedBy] = useState<{ name: string; date: string } | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [userTier, setUserTier] = useState<Tier>('None')
+  const [referralsCount, setReferralsCount] = useState(0)
 
   const [pushEnabled, setPushEnabled] = useState(false)
   const [isUpdatingPush, setIsUpdatingPush] = useState(false)
 
   useEffect(() => {
-    if (authUser) {
-      supabase
-        .from('profiles')
-        .select('whatsapp_number, full_name, validated_by, validation_date, avatar_url')
-        .eq('id', authUser.id)
-        .single()
-        .then(async ({ data }) => {
-          if (data) {
-            if (data.whatsapp_number) setWhatsapp(data.whatsapp_number)
-            if (data.full_name) setFullName(data.full_name)
-            if (data.avatar_url) setAvatarUrl(data.avatar_url)
+    let mounted = true
 
-            if (data.validated_by) {
+    if (authUser) {
+      setIsLoading(true)
+      Promise.all([
+        supabase
+          .from('profiles')
+          .select(
+            'whatsapp_number, full_name, validated_by, validation_date, avatar_url, referral_code',
+          )
+          .eq('id', authUser.id)
+          .single(),
+        supabase.from('user_push_subscriptions').select('id').eq('user_id', authUser.id).limit(1),
+        supabase
+          .from('profiles')
+          .select('id', { count: 'exact' })
+          .eq('referral_code', authUser.id)
+          .eq('status', 'active'),
+      ])
+        .then(async ([profileRes, pushRes, refRes]) => {
+          if (!mounted) return
+
+          if (profileRes.data) {
+            const d = profileRes.data
+            if (d.whatsapp_number) setWhatsapp(d.whatsapp_number)
+            if (d.full_name) setFullName(d.full_name)
+            if (d.avatar_url) setAvatarUrl(d.avatar_url)
+
+            if (d.validated_by) {
               const { data: valData } = await supabase
                 .from('profiles')
                 .select('full_name')
-                .eq('id', data.validated_by)
+                .eq('id', d.validated_by)
                 .single()
-              if (valData) {
+              if (valData && mounted) {
                 setValidatedBy({
                   name: valData.full_name || 'Membro Sênior',
-                  date: data.validation_date || new Date().toISOString(),
+                  date: d.validation_date || new Date().toISOString(),
                 })
               }
             }
           }
-        })
 
-      supabase
-        .from('user_push_subscriptions')
-        .select('id')
-        .eq('user_id', authUser.id)
-        .limit(1)
-        .then(({ data }) => {
-          if (data && data.length > 0) setPushEnabled(true)
+          if (pushRes.data && pushRes.data.length > 0) {
+            setPushEnabled(true)
+          }
+
+          if (refRes.count !== null) {
+            setReferralsCount(refRes.count)
+            let tier: Tier = 'None'
+            if (refRes.count >= 99) tier = 'Elite+'
+            else if (refRes.count >= 15) tier = 'Elite'
+            else if (refRes.count >= 10) tier = 'Gold'
+            else if (refRes.count >= 7) tier = 'Silver'
+            else if (refRes.count >= 5) tier = 'Ambassador'
+            setUserTier(tier)
+          }
+
+          setIsLoading(false)
         })
+        .catch((err) => {
+          console.error('Error loading profile data', err)
+          if (mounted) setIsLoading(false)
+        })
+    } else {
+      setIsLoading(false)
+    }
+
+    return () => {
+      mounted = false
     }
   }, [authUser])
 
@@ -73,7 +112,10 @@ export default function ProfilePage() {
 
     setIsSaving(true)
     const fileExt = file.name.split('.').pop()
-    const filePath = `${authUser.id}-${Math.random()}.${fileExt}`
+
+    // IMPORTANT: The path must be prefixed with the user ID to satisfy the RLS policy
+    // `(storage.foldername(name))[1] = auth.uid()::text`
+    const filePath = `${authUser.id}/avatar-${Date.now()}.${fileExt}`
 
     const { error: uploadError } = await supabase.storage
       .from('avatars')
@@ -129,7 +171,7 @@ export default function ProfilePage() {
     if (whatsapp && !phoneRegex.test(whatsapp)) {
       toast({
         title: 'Número inválido',
-        description: 'Por favor, insira um número válido (ex: +5511999999999)',
+        description: 'Por favor, insira um número válido (ex: 5511999999999)',
         variant: 'destructive',
       })
       return
@@ -238,10 +280,29 @@ export default function ProfilePage() {
     }
   }
 
-  if (!user) return null
+  if (isLoading) {
+    return (
+      <div className="max-w-4xl mx-auto space-y-8 animate-fade-in-up py-4">
+        <div className="space-y-3">
+          <Skeleton className="h-10 w-48" />
+          <Skeleton className="h-5 w-96" />
+        </div>
+        <div className="grid md:grid-cols-3 gap-8">
+          <Skeleton className="h-[300px] md:col-span-1 rounded-xl" />
+          <div className="md:col-span-2 space-y-6">
+            <Skeleton className="h-[200px] rounded-xl" />
+            <Skeleton className="h-[200px] rounded-xl" />
+          </div>
+        </div>
+      </div>
+    )
+  }
 
-  const displayInitial = (fullName || user.name || 'User').charAt(0).toUpperCase()
-  const displayName = fullName || user.name
+  const displayInitial = (fullName || user?.name || authUser?.email || 'U').charAt(0).toUpperCase()
+  const displayName = fullName || user?.name || authUser?.user_metadata?.full_name || 'Usuário'
+  const activeTier = user?.tier && user.tier !== 'None' ? user.tier : userTier
+  const activeReferrals = user?.referrals || referralsCount
+  const activeAvatarUrl = avatarUrl || user?.avatar || authUser?.user_metadata?.avatar_url
 
   return (
     <div className="max-w-4xl mx-auto space-y-8 animate-fade-in-up">
@@ -261,12 +322,13 @@ export default function ProfilePage() {
                 onClick={() => fileInputRef.current?.click()}
               >
                 <Avatar className="w-24 h-24 mb-4 ring-2 ring-primary ring-offset-4 ring-offset-background group-hover:opacity-80 transition-opacity">
-                  <AvatarImage src={avatarUrl || user.avatar} />
+                  <AvatarImage src={activeAvatarUrl} />
                   <AvatarFallback className="text-2xl">{displayInitial}</AvatarFallback>
                 </Avatar>
-                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none pb-4">
-                  <span className="text-xs font-bold text-white bg-black/60 px-2 py-1 rounded">
-                    Trocar
+                <div className="absolute inset-0 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none pb-4 bg-black/40 rounded-full h-24 w-24">
+                  <Camera className="w-6 h-6 text-white mb-1" />
+                  <span className="text-[10px] font-bold text-white px-2 py-0.5 rounded">
+                    Alterar
                   </span>
                 </div>
                 <input
@@ -278,7 +340,7 @@ export default function ProfilePage() {
                 />
               </div>
               <h3 className="text-xl font-bold text-white">{displayName}</h3>
-              <p className="text-sm text-primary mb-4">Corretor {user.tier}</p>
+              <p className="text-sm text-primary mb-4">Corretor {activeTier}</p>
 
               {validatedBy && (
                 <div className="flex items-center gap-1.5 bg-green-500/10 text-green-500 border border-green-500/20 px-3 py-1 rounded-full text-xs font-medium mb-4">
@@ -291,7 +353,7 @@ export default function ProfilePage() {
         </div>
 
         <div className="md:col-span-2 space-y-6">
-          <AmbassadorWidget tier={user.tier} referrals={user.referrals} />
+          <AmbassadorWidget tier={activeTier} referrals={activeReferrals} />
 
           <Card className="bg-card border-border">
             <CardHeader>
@@ -347,7 +409,7 @@ export default function ProfilePage() {
                   </Label>
                   <Input
                     id="whatsapp"
-                    placeholder="+5521999999999"
+                    placeholder="5521999999999"
                     value={whatsapp}
                     onChange={(e) => setWhatsapp(e.target.value)}
                     className="bg-background text-white"
