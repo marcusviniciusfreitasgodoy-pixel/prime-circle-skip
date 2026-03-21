@@ -22,6 +22,9 @@ import NotificationsPage from './pages/NotificationsPage'
 import NotFound from './pages/NotFound'
 import QuickUpdatePage from './pages/QuickUpdatePage'
 import BrandAssetsPage from './pages/BrandAssetsPage'
+import NeedsListPage from './pages/NeedsListPage'
+import ListingsListPage from './pages/ListingsListPage'
+import MatchesListPage from './pages/MatchesListPage'
 import { Toaster } from '@/components/ui/toaster'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import { ProtectedRoute } from '@/components/ProtectedRoute'
@@ -65,6 +68,9 @@ function App() {
                   <Route path="/admin" element={<AdminPage />} />
                   <Route path="/profile" element={<ProfilePage />} />
                   <Route path="/plans" element={<PlansPage />} />
+                  <Route path="/needs" element={<NeedsListPage />} />
+                  <Route path="/listings" element={<ListingsListPage />} />
+                  <Route path="/matches" element={<MatchesListPage />} />
                   <Route path="/suggestions" element={<SuggestionsPage />} />
                   <Route path="/roadmap" element={<RoadmapPage />} />
                   <Route path="/notifications" element={<NotificationsPage />} />

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -8,37 +8,75 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Plus, Search, Link as LinkIcon } from 'lucide-react'
-import { NeedCard } from '@/components/NeedCard'
-import { MatchModal } from '@/components/MatchModal'
-import useAppStore, { Need } from '@/stores/main'
-import { toast } from 'sonner'
+import { Search, FileText } from 'lucide-react'
+import { useAuth } from '@/hooks/use-auth'
+import { supabase } from '@/lib/supabase/client'
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { MapPin } from 'lucide-react'
+import { Skeleton } from '@/components/ui/skeleton'
+import { AddNeedDialog } from '@/components/dashboard/AddNeedDialog'
+import { EditNeedSheet } from '@/components/dashboard/EditNeedSheet'
 
 export default function NeedsListPage() {
-  const { needs, user, addNeed } = useAppStore()
-  const [selectedNeed, setSelectedNeed] = useState<Need | null>(null)
+  const [demands, setDemands] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
   const [bairro, setBairro] = useState('all')
+  const [searchTerm, setSearchTerm] = useState('')
+  const [refreshKey, setRefreshKey] = useState(0)
+  const [editingNeed, setEditingNeed] = useState<any>(null)
 
-  const filteredNeeds = needs.filter((n) => {
-    if (bairro !== 'all' && !n.neighborhood.includes(bairro)) return false
-    return true
+  const { user } = useAuth()
+
+  useEffect(() => {
+    const fetchDemands = async () => {
+      setLoading(true)
+      const { data, error } = await supabase
+        .from('documents')
+        .select('*')
+        .contains('metadata', { type: 'demanda' })
+        .order('id', { ascending: false })
+
+      if (!error && data) {
+        setDemands(data)
+      }
+      setLoading(false)
+    }
+    fetchDemands()
+  }, [refreshKey])
+
+  const filteredDemands = demands.filter((d) => {
+    const demandBairro = (
+      d.metadata?.bairro ||
+      d.metadata?.region ||
+      d.metadata?.endereco ||
+      ''
+    ).toLowerCase()
+    const matchBairro = bairro === 'all' || demandBairro.includes(bairro.toLowerCase())
+
+    const searchString =
+      `${d.metadata?.title || ''} ${d.metadata?.tipo_imovel || ''} ${d.content || ''}`.toLowerCase()
+    const matchSearch = searchTerm === '' || searchString.includes(searchTerm.toLowerCase())
+
+    return matchBairro && matchSearch
   })
 
-  const handleAddMockNeed = () => {
-    const success = addNeed({
-      title: 'Cliente Investidor Gringo',
-      type: 'Cobertura',
-      priceRange: 'Até R$ 12M',
-      neighborhood: 'Lúcio Costa',
-      urgency: 'Alta',
-    })
-    if (success) {
-      toast.success('Demanda adicionada com sucesso!')
-    }
-  }
+  const uniqueRegions = Array.from(
+    new Set(demands.map((d) => d.metadata?.region || d.metadata?.bairro).filter(Boolean)),
+  )
 
   return (
     <div className="space-y-6 animate-fade-in-up">
+      <EditNeedSheet
+        need={editingNeed}
+        open={!!editingNeed}
+        onOpenChange={(open) => !open && setEditingNeed(null)}
+        onSuccess={() => {
+          setEditingNeed(null)
+          setRefreshKey((prev) => prev + 1)
+        }}
+      />
+
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h2 className="text-2xl font-bold text-white">Demandas Ativas</h2>
@@ -46,10 +84,7 @@ export default function NeedsListPage() {
             Descubra o que os clientes dos parceiros estão buscando.
           </p>
         </div>
-        <Button className="gold-gradient text-black w-full sm:w-auto" onClick={handleAddMockNeed}>
-          <Plus className="w-4 h-4 mr-2" />
-          <span className="font-medium">Nova Demanda</span>
-        </Button>
+        <AddNeedDialog onSuccess={() => setRefreshKey((prev) => prev + 1)} />
       </div>
 
       <div className="flex flex-col sm:flex-row gap-4 p-4 bg-card rounded-lg border border-border">
@@ -57,6 +92,8 @@ export default function NeedsListPage() {
           <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Buscar demandas..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
             className="pl-9 bg-background border-border text-white h-10"
           />
         </div>
@@ -66,57 +103,121 @@ export default function NeedsListPage() {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">Todas as Regiões</SelectItem>
-            <SelectItem value="Barra da Tijuca">Barra da Tijuca</SelectItem>
-            <SelectItem value="Jardim Oceânico">Jardim Oceânico</SelectItem>
-            <SelectItem value="Santa Mônica">Santa Mônica</SelectItem>
+            {uniqueRegions.map((region) => (
+              <SelectItem key={region as string} value={region as string}>
+                {region as string}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
       </div>
 
-      {filteredNeeds.length === 0 ? (
-        <div className="text-center py-12 text-muted-foreground bg-card border border-border rounded-xl">
-          Nenhuma demanda encontrada.
-        </div>
-      ) : (
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredNeeds.map((need, i) => (
-            <div
-              key={need.id}
-              className="animate-fade-in-up"
-              style={{ animationDelay: `${i * 100}ms` }}
-            >
-              <NeedCard
-                need={need}
-                action={
-                  need.ownerId !== user?.id ? (
-                    <Button
-                      className="w-full gold-outline mt-4 font-semibold"
-                      onClick={() => setSelectedNeed(need)}
-                    >
-                      <LinkIcon className="w-4 h-4 mr-2" />
-                      Vincular Imóvel
-                    </Button>
-                  ) : (
-                    <Button
-                      variant="secondary"
-                      className="w-full mt-4 bg-secondary/50 text-muted-foreground cursor-not-allowed"
-                      disabled
-                    >
-                      Sua Demanda
-                    </Button>
-                  )
-                }
-              />
-            </div>
+      {loading ? (
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {[1, 2, 3].map((i) => (
+            <Skeleton key={i} className="h-48 w-full bg-card rounded-xl border border-border" />
           ))}
         </div>
-      )}
+      ) : filteredDemands.length === 0 ? (
+        <div className="flex flex-col items-center justify-center p-12 bg-card/50 rounded-xl border border-dashed border-border text-center">
+          <FileText className="w-12 h-12 text-muted-foreground/50 mb-4" />
+          <p className="text-lg font-medium text-white mb-2">Nenhuma demanda encontrada</p>
+          <p className="text-muted-foreground text-sm max-w-sm mb-6">
+            Não há demandas cadastradas para os filtros selecionados no momento.
+          </p>
+          {(bairro !== 'all' || searchTerm !== '') && (
+            <Button
+              variant="outline"
+              className="border-border hover:bg-secondary"
+              onClick={() => {
+                setBairro('all')
+                setSearchTerm('')
+              }}
+            >
+              Limpar Filtros
+            </Button>
+          )}
+        </div>
+      ) : (
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {filteredDemands.map((d) => {
+            const isMine = d.metadata?.user_id === user?.id
+            return (
+              <Card
+                key={d.id}
+                className="bg-card/80 border-border relative overflow-hidden transition-all group flex flex-col h-full hover:border-primary/50"
+              >
+                <CardHeader className="pb-3 pt-5 flex-none">
+                  <CardTitle
+                    className="text-lg text-white font-semibold line-clamp-1 pr-4"
+                    title={d.metadata?.profile || d.metadata?.tipo_imovel || 'Demanda'}
+                  >
+                    {d.metadata?.profile || d.metadata?.tipo_imovel || 'Demanda'}
+                  </CardTitle>
+                  <CardDescription className="text-primary font-bold text-base mt-1">
+                    {d.metadata?.budget ||
+                      (d.metadata?.valor
+                        ? new Intl.NumberFormat('pt-BR', {
+                            style: 'currency',
+                            currency: 'BRL',
+                          }).format(d.metadata.valor)
+                        : 'Não informado')}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="flex flex-col flex-1">
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground mb-3 bg-background/50 p-2 rounded-md">
+                    <MapPin className="w-4 h-4 text-primary/70 shrink-0" />
+                    <span className="font-medium truncate">
+                      {d.metadata?.region ||
+                        d.metadata?.bairro ||
+                        d.metadata?.endereco ||
+                        'Região não informada'}
+                    </span>
+                  </div>
 
-      <MatchModal
-        need={selectedNeed}
-        isOpen={!!selectedNeed}
-        onClose={() => setSelectedNeed(null)}
-      />
+                  {d.metadata?.condominiums && d.metadata.condominiums.length > 0 && (
+                    <div className="flex flex-wrap gap-1.5 mb-3">
+                      {d.metadata.condominiums.map((condo: string, idx: number) => (
+                        <Badge
+                          key={idx}
+                          variant="secondary"
+                          className="text-[10px] py-0 font-medium bg-secondary/50 border-border"
+                        >
+                          {condo}
+                        </Badge>
+                      ))}
+                    </div>
+                  )}
+
+                  <p className="text-sm text-muted-foreground line-clamp-3 mb-5 leading-relaxed min-h-[60px] flex-1">
+                    {d.content}
+                  </p>
+
+                  <div className="mt-auto pt-2">
+                    {isMine && (
+                      <div className="flex gap-2">
+                        <Badge
+                          variant="outline"
+                          className="justify-center bg-secondary/20 py-2 border-dashed text-muted-foreground flex-1"
+                        >
+                          Sua Publicação
+                        </Badge>
+                        <Button
+                          variant="outline"
+                          className="shrink-0 border-border hover:bg-secondary hover:text-white"
+                          onClick={() => setEditingNeed(d)}
+                        >
+                          Editar
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            )
+          })}
+        </div>
+      )}
     </div>
   )
 }
