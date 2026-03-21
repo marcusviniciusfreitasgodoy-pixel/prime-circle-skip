@@ -5,14 +5,28 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
 import { Switch } from '@/components/ui/switch'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { AmbassadorWidget } from '@/components/AmbassadorWidget'
 import useAppStore from '@/stores/main'
 import type { Tier } from '@/stores/main'
 import { useAuth } from '@/hooks/use-auth'
 import { supabase } from '@/lib/supabase/client'
 import { useToast } from '@/hooks/use-toast'
-import { ShieldCheck, BellRing, Camera } from 'lucide-react'
+import { ShieldCheck, BellRing, Camera, Save, Loader2 } from 'lucide-react'
 import { Skeleton } from '@/components/ui/skeleton'
+
+const TICKET_RANGES = [
+  'R$ 1.000.000,00 - R$ 2.000.000,00',
+  'R$ 2.000.001,00 - R$ 5.000.000,00',
+  'R$ 5.000.001,00 - R$ 10.000.000,00',
+  'Acima de R$ 10.000.000,00',
+]
 
 export default function ProfilePage() {
   const { user, updateUser } = useAppStore()
@@ -23,6 +37,11 @@ export default function ProfilePage() {
   const [avatarUrl, setAvatarUrl] = useState('')
   const [whatsapp, setWhatsapp] = useState('')
   const [fullName, setFullName] = useState('')
+  const [companyName, setCompanyName] = useState('')
+  const [creci, setCreci] = useState('')
+  const [region, setRegion] = useState('')
+  const [ticketValue, setTicketValue] = useState('')
+
   const [isSaving, setIsSaving] = useState(false)
   const [validatedBy, setValidatedBy] = useState<{ name: string; date: string } | null>(null)
   const [isLoading, setIsLoading] = useState(true)
@@ -41,7 +60,7 @@ export default function ProfilePage() {
         supabase
           .from('profiles')
           .select(
-            'whatsapp_number, full_name, validated_by, validation_date, avatar_url, referral_code',
+            'whatsapp_number, full_name, validated_by, validation_date, avatar_url, referral_code, company_name, creci, region, ticket_value',
           )
           .eq('id', authUser.id)
           .single(),
@@ -57,9 +76,13 @@ export default function ProfilePage() {
 
           if (profileRes.data) {
             const d = profileRes.data
-            if (d.whatsapp_number) setWhatsapp(d.whatsapp_number)
-            if (d.full_name) setFullName(d.full_name)
-            if (d.avatar_url) setAvatarUrl(d.avatar_url)
+            setWhatsapp(d.whatsapp_number || '')
+            setFullName(d.full_name || '')
+            setAvatarUrl(d.avatar_url || '')
+            setCompanyName(d.company_name || '')
+            setCreci(d.creci || '')
+            setRegion(d.region || '')
+            setTicketValue(d.ticket_value || '')
 
             if (d.validated_by) {
               const { data: valData } = await supabase
@@ -113,8 +136,6 @@ export default function ProfilePage() {
     setIsSaving(true)
     const fileExt = file.name.split('.').pop()
 
-    // IMPORTANT: The path must be prefixed with the user ID to satisfy the RLS policy
-    // `(storage.foldername(name))[1] = auth.uid()::text`
     const filePath = `${authUser.id}/avatar-${Date.now()}.${fileExt}`
 
     const { error: uploadError } = await supabase.storage
@@ -179,12 +200,18 @@ export default function ProfilePage() {
 
     setIsSaving(true)
 
-    const { error } = await supabase.from('profiles').upsert({
-      id: authUser.id,
-      full_name: fullName,
-      whatsapp_number: whatsapp,
-      updated_at: new Date().toISOString(),
-    })
+    const { error } = await supabase
+      .from('profiles')
+      .update({
+        full_name: fullName,
+        whatsapp_number: whatsapp,
+        company_name: companyName,
+        creci: creci,
+        region: region,
+        ticket_value: ticketValue,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', authUser.id)
 
     setIsSaving(false)
 
@@ -305,7 +332,7 @@ export default function ProfilePage() {
   const activeAvatarUrl = avatarUrl || user?.avatar || authUser?.user_metadata?.avatar_url
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8 animate-fade-in-up">
+    <div className="max-w-4xl mx-auto space-y-8 animate-fade-in-up pb-12">
       <div>
         <h2 className="text-3xl font-bold tracking-tight text-white">Meu Perfil</h2>
         <p className="text-muted-foreground mt-2">
@@ -343,7 +370,7 @@ export default function ProfilePage() {
               <p className="text-sm text-primary mb-4">Corretor {activeTier}</p>
 
               {validatedBy && (
-                <div className="flex items-center gap-1.5 bg-green-500/10 text-green-500 border border-green-500/20 px-3 py-1 rounded-full text-xs font-medium mb-4">
+                <div className="flex items-center justify-center gap-1.5 bg-green-500/10 text-green-500 border border-green-500/20 px-3 py-1 rounded-full text-xs font-medium mb-4">
                   <ShieldCheck className="w-3.5 h-3.5" />
                   Verificado por {validatedBy.name}
                 </div>
@@ -357,12 +384,105 @@ export default function ProfilePage() {
 
           <Card className="bg-card border-border">
             <CardHeader>
+              <CardTitle className="text-lg text-white">Informações Pessoais</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="fullName" className="text-white">
+                  Nome Completo
+                </Label>
+                <Input
+                  id="fullName"
+                  placeholder="Seu Nome Completo"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  className="bg-background text-white"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="whatsapp" className="text-white">
+                  Número do WhatsApp (com código do país)
+                </Label>
+                <Input
+                  id="whatsapp"
+                  placeholder="5521999999999"
+                  value={whatsapp}
+                  onChange={(e) => setWhatsapp(e.target.value)}
+                  className="bg-background text-white"
+                />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-card border-border">
+            <CardHeader>
+              <CardTitle className="text-lg text-white">Atuação Profissional</CardTitle>
+              <CardDescription>Informações sobre seu foco de atuação e mercado.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="companyName" className="text-white">
+                  Imobiliária / Agência
+                </Label>
+                <Input
+                  id="companyName"
+                  placeholder="Autônomo ou Nome da Imobiliária"
+                  value={companyName}
+                  onChange={(e) => setCompanyName(e.target.value)}
+                  className="bg-background text-white"
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="creci" className="text-white">
+                    CRECI
+                  </Label>
+                  <Input
+                    id="creci"
+                    placeholder="00000"
+                    value={creci}
+                    onChange={(e) => setCreci(e.target.value)}
+                    className="bg-background text-white"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="ticketValue" className="text-white">
+                    Ticket Médio
+                  </Label>
+                  <Select value={ticketValue} onValueChange={setTicketValue}>
+                    <SelectTrigger className="bg-background text-white border-border">
+                      <SelectValue placeholder="Selecione..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {TICKET_RANGES.map((r) => (
+                        <SelectItem key={r} value={r}>
+                          {r}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="region" className="text-white">
+                  Regiões de Atuação
+                </Label>
+                <Input
+                  id="region"
+                  placeholder="Barra da Tijuca, Leblon, etc..."
+                  value={region}
+                  onChange={(e) => setRegion(e.target.value)}
+                  className="bg-background text-white"
+                />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-card border-border">
+            <CardHeader>
               <CardTitle className="text-lg text-white flex items-center gap-2">
                 <BellRing className="w-5 h-5 text-primary" /> Notificações e Sistema
               </CardTitle>
-              <CardDescription>
-                Receba alertas em tempo real sobre novas demandas no seu navegador ou celular.
-              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="flex items-center justify-between rounded-lg border border-border p-4 bg-secondary/30">
@@ -381,46 +501,21 @@ export default function ProfilePage() {
             </CardContent>
           </Card>
 
-          <Card className="bg-card border-border">
-            <CardHeader>
-              <CardTitle className="text-lg text-white">Informações Pessoais e Contato</CardTitle>
-              <CardDescription>
-                Atualize seu nome e adicione seu número para receber notificações de conexões via
-                Evolution API.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="fullName" className="text-white">
-                    Nome Completo
-                  </Label>
-                  <Input
-                    id="fullName"
-                    placeholder="Seu Nome Completo"
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
-                    className="bg-background text-white"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="whatsapp" className="text-white">
-                    Número do WhatsApp (com código do país)
-                  </Label>
-                  <Input
-                    id="whatsapp"
-                    placeholder="5521999999999"
-                    value={whatsapp}
-                    onChange={(e) => setWhatsapp(e.target.value)}
-                    className="bg-background text-white"
-                  />
-                </div>
-                <Button onClick={handleSaveProfile} disabled={isSaving}>
-                  {isSaving ? 'Salvando...' : 'Salvar Alterações'}
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+          <Button
+            onClick={handleSaveProfile}
+            disabled={isSaving}
+            className="w-full h-14 text-lg font-bold gold-gradient gold-glow text-black transition-all flex items-center justify-center gap-2"
+          >
+            {isSaving ? (
+              <>
+                <Loader2 className="w-5 h-5 animate-spin" /> Salvando...
+              </>
+            ) : (
+              <>
+                <Save className="w-5 h-5" /> Salvar Alterações
+              </>
+            )}
+          </Button>
         </div>
       </div>
     </div>
