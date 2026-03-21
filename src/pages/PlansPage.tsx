@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { FounderExpiryBanner } from '@/components/FounderExpiryBanner'
-import { toast } from 'sonner'
+import { useToast } from '@/hooks/use-toast'
 import { useSEO } from '@/hooks/use-seo'
 import { PlanCard, type PlanData } from '@/components/plans/PlanCard'
 import { PlansCalculator } from '@/components/plans/PlansCalculator'
@@ -20,6 +20,7 @@ export default function PlansPage() {
   })
 
   const { user } = useAuth()
+  const { toast } = useToast()
 
   const [plans, setPlans] = useState<any[]>([])
   const [userPlan, setUserPlan] = useState<any>(null)
@@ -124,7 +125,8 @@ export default function PlansPage() {
   const simulatedDiscount = getDiscount(simulatedMatches)
 
   const handleCheckout = (planName: string, amount: number) => {
-    toast('Upgrade Indisponível', {
+    toast({
+      title: 'Upgrade Indisponível',
       description:
         'No momento não estamos realizando upgrades de contas. Essa funcionalidade estará disponível em breve.',
     })
