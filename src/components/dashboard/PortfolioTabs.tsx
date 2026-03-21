@@ -5,7 +5,15 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
-import { MapPin, Building, UserSearch, Image as ImageIcon, PlayCircle, Eye } from 'lucide-react'
+import {
+  MapPin,
+  Building,
+  UserSearch,
+  Image as ImageIcon,
+  PlayCircle,
+  Eye,
+  Lock,
+} from 'lucide-react'
 import { EditPropertySheet } from './EditPropertySheet'
 import { EditNeedSheet } from './EditNeedSheet'
 import { Button } from '@/components/ui/button'
@@ -176,10 +184,18 @@ export function PortfolioTabs({ refreshKey }: { refreshKey: number }) {
                         <Badge variant="outline" className="gold-gradient text-black border-0">
                           {p.metadata.property_type || p.metadata.tipo_imovel || 'Apartamento'}
                         </Badge>
+                        {p.metadata.is_off_market && (
+                          <Badge
+                            variant="outline"
+                            className="bg-primary/20 text-primary border-primary/30 text-[10px] uppercase font-bold flex items-center gap-1 mt-1"
+                          >
+                            <Lock className="w-3 h-3" /> Off-Market
+                          </Badge>
+                        )}
                         {p.metadata.status && p.metadata.status !== 'Ativo' && (
                           <Badge
                             variant="outline"
-                            className={`text-[10px] uppercase font-bold tracking-wider ${p.metadata.status === 'Vendido' ? 'bg-green-500/20 text-green-500 border-green-500/30' : 'bg-yellow-500/20 text-yellow-500 border-yellow-500/30'}`}
+                            className={`text-[10px] uppercase font-bold tracking-wider mt-1 ${p.metadata.status === 'Vendido' ? 'bg-green-500/20 text-green-500 border-green-500/30' : 'bg-yellow-500/20 text-yellow-500 border-yellow-500/30'}`}
                           >
                             {p.metadata.status}
                           </Badge>

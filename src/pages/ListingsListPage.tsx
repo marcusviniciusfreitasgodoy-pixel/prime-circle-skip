@@ -8,7 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Search, Building, MapPin, PlayCircle, Eye, Image as ImageIcon } from 'lucide-react'
+import { Search, Building, MapPin, PlayCircle, Eye, Image as ImageIcon, Lock } from 'lucide-react'
 import { useAuth } from '@/hooks/use-auth'
 import { supabase } from '@/lib/supabase/client'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
@@ -87,9 +87,8 @@ export default function ListingsListPage() {
 
     const isActive = p.metadata?.status !== 'Vendido' && p.metadata?.status !== 'Cancelado'
     const isMine = p.metadata?.user_id === user?.id
-    const isOffMarket = p.metadata?.is_off_market
 
-    return matchBairro && matchSearch && (isActive || isMine) && (!isOffMarket || isMine)
+    return matchBairro && matchSearch && (isActive || isMine)
   })
 
   const uniqueRegions = Array.from(
@@ -229,6 +228,14 @@ export default function ListingsListPage() {
                       <Badge variant="outline" className="gold-gradient text-black border-0">
                         {p.metadata.property_type || p.metadata.tipo_imovel || 'Apartamento'}
                       </Badge>
+                      {p.metadata.is_off_market && (
+                        <Badge
+                          variant="outline"
+                          className="bg-primary/20 text-primary border-primary/30 text-[10px] uppercase font-bold flex items-center gap-1 mt-1"
+                        >
+                          <Lock className="w-3 h-3" /> Off-Market
+                        </Badge>
+                      )}
                     </div>
                   </div>
                   <CardDescription className="text-primary font-bold text-lg mt-1">

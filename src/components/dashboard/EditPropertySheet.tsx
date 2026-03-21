@@ -463,10 +463,10 @@ export function EditPropertySheet({
           <div className="flex items-center justify-between rounded-lg border border-border p-3 bg-secondary/30">
             <div>
               <Label className="flex items-center gap-2">
-                <Lock className="w-4 h-4 text-primary" /> Exclusivo / Reservado
+                <Lock className="w-4 h-4 text-primary" /> Off-Market
               </Label>
               <p className="text-xs text-muted-foreground">
-                Restringir visibilidade para corretores de alta pontuação.
+                Sinaliza que o imóvel não está em portais públicos, apenas para redes privadas.
               </p>
             </div>
             <Switch checked={isOffMarket} onCheckedChange={setIsOffMarket} />
