@@ -16,13 +16,6 @@ import {
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import {
   Command,
@@ -53,12 +46,7 @@ const REGIONS = [
   'Zona Oeste',
 ]
 
-const TICKET_RANGES = [
-  'R$ 1.000.000,00 - R$ 2.000.000,00',
-  'R$ 2.000.001,00 - R$ 5.000.000,00',
-  'R$ 5.000.001,00 - R$ 10.000.000,00',
-  'Acima de R$ 10.000.000,00',
-]
+const SPECIALTIES = ['Casas', 'Apartamentos', 'Coberturas', 'Lançamentos']
 
 const formSchema = z.object({
   name: z.string().min(2, 'Nome é obrigatório'),
@@ -67,7 +55,7 @@ const formSchema = z.object({
   phone: z.string().min(10, 'Telefone inválido'),
   creci: z.string().min(4, 'CRECI inválido'),
   region: z.array(z.string()).min(1, 'Informe pelo menos uma região'),
-  ticket: z.string().min(1, 'Informe seu ticket médio'),
+  specialties: z.array(z.string()).min(1, 'Selecione pelo menos uma especialidade'),
   workType: z.enum(['autonomo', 'imobiliaria']).default('autonomo'),
   companyName: z.string().max(100, 'Nome muito longo').optional(),
   referral: z.string().optional(),
@@ -175,7 +163,7 @@ export default function ApplyPage() {
       phone: '',
       creci: '',
       region: [],
-      ticket: '',
+      specialties: [],
       workType: 'autonomo',
       companyName: '',
       referral: refCode,
@@ -193,7 +181,7 @@ export default function ApplyPage() {
         whatsapp_number: values.phone,
         creci: values.creci,
         region: values.region.join(', '),
-        ticket_value: values.ticket,
+        specialties: values.specialties.join(', '),
         referral_code: values.referral,
         company_name:
           values.workType === 'autonomo'
@@ -547,28 +535,67 @@ export default function ApplyPage() {
               />
               <FormField
                 control={form.control}
-                name="ticket"
+                name="specialties"
                 render={({ field }) => (
                   <FormItem className="flex flex-col pt-1">
-                    <FormLabel className="text-white">Ticket Médio</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                      disabled={isLoading}
-                    >
-                      <FormControl>
-                        <SelectTrigger className="bg-background">
-                          <SelectValue placeholder="Selecione..." />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {TICKET_RANGES.map((range) => (
-                          <SelectItem key={range} value={range}>
-                            {range}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <FormLabel className="text-white">Especialista em</FormLabel>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            variant="outline"
+                            role="combobox"
+                            disabled={isLoading}
+                            className={cn(
+                              'w-full justify-between bg-background border-input font-normal hover:bg-background/90 hover:text-white px-3 overflow-hidden',
+                              !field.value?.length && 'text-muted-foreground',
+                            )}
+                          >
+                            <span className="truncate block flex-1 text-left">
+                              {field.value?.length > 0 ? field.value.join(', ') : 'Selecione...'}
+                            </span>
+                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent
+                        className="p-0"
+                        style={{ width: 'var(--radix-popover-trigger-width)' }}
+                      >
+                        <Command>
+                          <CommandInput placeholder="Buscar..." />
+                          <CommandList>
+                            <CommandEmpty>Nenhuma especialidade encontrada.</CommandEmpty>
+                            <CommandGroup>
+                              {SPECIALTIES.map((spec) => (
+                                <CommandItem
+                                  key={spec}
+                                  value={spec}
+                                  onSelect={() => {
+                                    const curr = field.value || []
+                                    form.setValue(
+                                      'specialties',
+                                      curr.includes(spec)
+                                        ? curr.filter((s) => s !== spec)
+                                        : [...curr, spec],
+                                      { shouldValidate: true },
+                                    )
+                                  }}
+                                >
+                                  <Check
+                                    className={cn(
+                                      'mr-2 h-4 w-4',
+                                      field.value?.includes(spec) ? 'opacity-100' : 'opacity-0',
+                                    )}
+                                  />
+                                  {spec}
+                                </CommandItem>
+                              ))}
+                            </CommandGroup>
+                          </CommandList>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
                     <FormMessage />
                   </FormItem>
                 )}

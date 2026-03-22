@@ -45,8 +45,8 @@ export type Candidate = {
   email: string
   phone: string
   creci: string
-  region: string
-  ticket: string
+  region?: string
+  specialties?: string
   referredBy?: string
   status: 'approved' | 'waitlist' | 'pending'
 }
