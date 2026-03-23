@@ -12,6 +12,7 @@ import {
   Bell,
   Map,
   User as UserIcon,
+  Palette,
 } from 'lucide-react'
 import {
   SidebarProvider,
@@ -74,6 +75,45 @@ export function AppLayout() {
     }
   }, [notifications, toast])
 
+  // Real-time match notifications
+  useEffect(() => {
+    if (!authUser) return
+
+    const channel = supabase
+      .channel('notification_logs_changes')
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'notification_logs',
+          filter: `user_id=eq.${authUser.id}`,
+        },
+        (payload) => {
+          const newLog = payload.new as any
+          if (
+            newLog &&
+            newLog.message_body &&
+            newLog.message_body.toLowerCase().includes('match')
+          ) {
+            toast({
+              title: 'Novo Match Encontrado! 🚀',
+              description:
+                'Uma oportunidade compatível com sua carteira acabou de ser identificada.',
+              className:
+                'border-primary/50 bg-card text-white shadow-[0_0_15px_rgba(201,168,76,0.2)]',
+              duration: 8000,
+            })
+          }
+        },
+      )
+      .subscribe()
+
+    return () => {
+      supabase.removeChannel(channel)
+    }
+  }, [authUser, toast])
+
   useEffect(() => {
     if (authUser) {
       if (storeUser?.avatar) {
@@ -127,6 +167,7 @@ export function AppLayout() {
     { title: 'Sugestões', icon: Lightbulb, url: '/suggestions' },
     { title: 'Cronograma de Evolução', icon: Map, url: '/roadmap' },
     { title: 'Planos', icon: Crown, url: '/plans' },
+    { title: 'Ativos da Marca', icon: Palette, url: '/brand' },
   ]
 
   if (storeUser?.status === 'admin' || authUser?.email?.includes('admin')) {

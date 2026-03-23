@@ -57,7 +57,6 @@ function App() {
               <Route path="/politica-de-privacidade" element={<PrivacyPage />} />
               <Route path="/sugestoes" element={<PublicSuggestionsPage />} />
               <Route path="/quick-update" element={<QuickUpdatePage />} />
-              <Route path="/brand" element={<BrandAssetsPage />} />
 
               <Route element={<ProtectedRoute />}>
                 <Route path="/pending" element={<PendingPage />} />
@@ -74,6 +73,7 @@ function App() {
                   <Route path="/suggestions" element={<SuggestionsPage />} />
                   <Route path="/roadmap" element={<RoadmapPage />} />
                   <Route path="/notifications" element={<NotificationsPage />} />
+                  <Route path="/brand" element={<BrandAssetsPage />} />
                   <Route path="/matches/:id/close" element={<MatchClosePage />} />
                 </Route>
               </Route>

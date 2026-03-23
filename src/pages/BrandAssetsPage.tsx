@@ -1,6 +1,4 @@
 import { useEffect, useRef } from 'react'
-import { Navbar } from '@/components/layout/Navbar'
-import { Footer } from '@/components/layout/Footer'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Download } from 'lucide-react'
@@ -96,66 +94,59 @@ export default function BrandAssetsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col">
-      <Navbar />
-      <main className="flex-1 container mx-auto px-4 pt-32 pb-24 max-w-5xl">
-        <div className="mb-8 animate-fade-in-up">
-          <h1 className="text-4xl font-bold text-white mb-4">Ativos da Marca</h1>
-          <p className="text-muted-foreground text-lg">
-            Faça o download do logotipo oficial do Prime Circle para utilizar nas suas redes sociais
-            ou perfil do WhatsApp.
-          </p>
-        </div>
+    <div className="max-w-5xl mx-auto space-y-8 animate-fade-in-up">
+      <div>
+        <h2 className="text-3xl font-bold text-white mb-2">Ativos da Marca</h2>
+        <p className="text-muted-foreground text-lg">
+          Faça o download do logotipo oficial do Prime Circle para utilizar nas suas redes sociais
+          ou perfil do WhatsApp.
+        </p>
+      </div>
 
-        <div
-          className="grid md:grid-cols-2 gap-8 animate-fade-in-up"
-          style={{ animationDelay: '100ms' }}
-        >
-          <Card className="bg-card border-border shadow-elevation">
-            <CardHeader>
-              <CardTitle className="text-white text-xl">Ícone (WhatsApp / Instagram)</CardTitle>
-              <CardDescription>
-                Proporção perfeita para avatares de redes sociais onde o nome já aparece na conta.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6 flex flex-col items-center">
-              <div className="w-48 h-48 rounded-full overflow-hidden border-2 border-primary/50 shadow-[0_0_20px_rgba(201,168,76,0.15)] bg-black">
-                <canvas ref={iconLogoRef} className="w-full h-full object-contain" />
-              </div>
-              <Button
-                onClick={() => handleDownload(iconLogoRef, 'prime-circle-icon.png')}
-                className="w-full gold-gradient text-black font-bold h-12"
-              >
-                <Download className="w-4 h-4 mr-2" />
-                Baixar para WhatsApp
-              </Button>
-            </CardContent>
-          </Card>
+      <div className="grid md:grid-cols-2 gap-8">
+        <Card className="bg-card border-border shadow-elevation">
+          <CardHeader>
+            <CardTitle className="text-white text-xl">Ícone (WhatsApp / Instagram)</CardTitle>
+            <CardDescription>
+              Proporção perfeita para avatares de redes sociais onde o nome já aparece na conta.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6 flex flex-col items-center">
+            <div className="w-48 h-48 rounded-full overflow-hidden border-2 border-primary/50 shadow-[0_0_20px_rgba(201,168,76,0.15)] bg-black">
+              <canvas ref={iconLogoRef} className="w-full h-full object-contain" />
+            </div>
+            <Button
+              onClick={() => handleDownload(iconLogoRef, 'prime-circle-icon.png')}
+              className="w-full gold-gradient text-black font-bold h-12"
+            >
+              <Download className="w-4 h-4 mr-2" />
+              Baixar para WhatsApp
+            </Button>
+          </CardContent>
+        </Card>
 
-          <Card className="bg-card border-border shadow-elevation">
-            <CardHeader>
-              <CardTitle className="text-white text-xl">Logotipo Completo</CardTitle>
-              <CardDescription>
-                Ideal para uso em materiais, publicações e assinaturas onde a marca precisa ser lida
-                claramente.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6 flex flex-col items-center">
-              <div className="w-48 h-48 rounded-2xl overflow-hidden border border-border shadow-[0_0_20px_rgba(201,168,76,0.15)] bg-black">
-                <canvas ref={fullLogoRef} className="w-full h-full object-contain" />
-              </div>
-              <Button
-                onClick={() => handleDownload(fullLogoRef, 'prime-circle-logo.png')}
-                className="w-full bg-secondary text-white hover:bg-secondary/80 border border-border font-bold h-12"
-              >
-                <Download className="w-4 h-4 mr-2" />
-                Baixar Logotipo Completo
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
-      </main>
-      <Footer />
+        <Card className="bg-card border-border shadow-elevation">
+          <CardHeader>
+            <CardTitle className="text-white text-xl">Logotipo Completo</CardTitle>
+            <CardDescription>
+              Ideal para uso em materiais, publicações e assinaturas onde a marca precisa ser lida
+              claramente.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6 flex flex-col items-center">
+            <div className="w-48 h-48 rounded-2xl overflow-hidden border border-border shadow-[0_0_20px_rgba(201,168,76,0.15)] bg-black">
+              <canvas ref={fullLogoRef} className="w-full h-full object-contain" />
+            </div>
+            <Button
+              onClick={() => handleDownload(fullLogoRef, 'prime-circle-logo.png')}
+              className="w-full bg-secondary text-white hover:bg-secondary/80 border border-border font-bold h-12"
+            >
+              <Download className="w-4 h-4 mr-2" />
+              Baixar Logotipo Completo
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   )
 }
