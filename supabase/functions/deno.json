@@ -12,6 +12,6 @@
     "record-match": 1,
     "send-founder-transition-email": 1,
     "send-status-check": 2,
-    "process-quick-action": 1
+    "process-quick-action": 2
   }
 }
