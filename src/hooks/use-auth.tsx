@@ -34,27 +34,50 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setLoading(false)
     })
 
-    // Validate session robustly using getUser() to ensure token is valid and user wasn't deleted by DB reset
-    supabase.auth
-      .getUser()
-      .then(({ data: { user }, error }) => {
-        if (error || !user) {
+    const checkAuth = async () => {
+      try {
+        const {
+          data: { session },
+          error: sessionError,
+        } = await supabase.auth.getSession()
+
+        if (sessionError) {
+          await supabase.auth.signOut().catch(() => {})
           setSession(null)
           setUser(null)
           setLoading(false)
-        } else {
-          supabase.auth.getSession().then(({ data: { session } }) => {
-            setSession(session)
-            setUser(user)
-            setLoading(false)
-          })
+          return
         }
-      })
-      .catch(() => {
+
+        if (!session) {
+          setSession(null)
+          setUser(null)
+          setLoading(false)
+          return
+        }
+
+        const {
+          data: { user },
+          error: userError,
+        } = await supabase.auth.getUser()
+
+        if (userError || !user) {
+          await supabase.auth.signOut().catch(() => {})
+          setSession(null)
+          setUser(null)
+        } else {
+          setSession(session)
+          setUser(user)
+        }
+      } catch (err) {
         setSession(null)
         setUser(null)
+      } finally {
         setLoading(false)
-      })
+      }
+    }
+
+    checkAuth()
 
     return () => subscription.unsubscribe()
   }, [])
