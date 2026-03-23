@@ -1,7 +1,7 @@
 import 'jsr:@supabase/functions-js/edge-runtime.d.ts'
 import { createClient } from 'npm:@supabase/supabase-js@2'
 
-declare const EdgeRuntime: any
+declare const EdgeRuntime: any;
 
 Deno.serve(async (req: Request) => {
   try {
@@ -11,31 +11,29 @@ Deno.serve(async (req: Request) => {
       const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? ''
       const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
       const supabase = createClient(supabaseUrl, supabaseKey)
-
+      
       try {
         const profile = payload.record
-
+        
         if (!profile || !profile.id) {
           console.error('No valid record found')
           return
         }
 
         // Delay slightly to ensure DB transactions have fully committed
-        await new Promise((res) => setTimeout(res, 1000))
+        await new Promise(res => setTimeout(res, 1000))
 
-        const { data: userData, error: userError } = await supabase.auth.admin.getUserById(
-          profile.id,
-        )
+        const { data: userData, error: userError } = await supabase.auth.admin.getUserById(profile.id)
         if (userError || !userData?.user) {
           console.error('Failed to fetch user auth data:', userError)
           return
         }
-
+        
         const email = userData.user.email
         const fullName = profile.full_name || 'Parceiro(a)'
         const companyName = profile.company_name || 'sua imobiliária'
         const region = profile.region || 'sua região'
-
+        
         // Clean and format WhatsApp number for API
         let recipientPhone = profile.whatsapp_number
         if (recipientPhone) {
@@ -44,7 +42,7 @@ Deno.serve(async (req: Request) => {
             recipientPhone = '55' + recipientPhone
           }
         }
-
+        
         const recipientEmail = email
 
         if (!recipientEmail) {
@@ -73,17 +71,13 @@ Deno.serve(async (req: Request) => {
               .from('notification_templates')
               .select('*')
               .eq('user_id', adminProfile.id)
-            if (!waTemplate)
-              waTemplate = adminTemplates?.find((t) => t.name === 'Boas-vindas - WhatsApp')
-            if (!emailTemplate)
-              emailTemplate = adminTemplates?.find((t) => t.name === 'Boas-vindas - Email')
+            if (!waTemplate) waTemplate = adminTemplates?.find((t) => t.name === 'Boas-vindas - WhatsApp')
+            if (!emailTemplate) emailTemplate = adminTemplates?.find((t) => t.name === 'Boas-vindas - Email')
           }
         }
 
-        const defaultWaContent =
-          'Olá {{full_name}}! 🚀 Bem-vindo à Prime Circle. Seu cadastro foi recebido com sucesso. Estamos muito felizes em ter você em nossa rede exclusiva de parcerias imobiliárias.'
-        const defaultEmailContent =
-          'Assunto: Bem-vindo à Prime Circle! 🏠\n\nOlá {{full_name}},\n\nBem-vindo à Prime Circle! Agora que sua conta foi criada, acesse o nosso Dashboard para começar a gerar parcerias:\nDashboard: https://www.primecircle.app.br/dashboard\n\nCaso precise entrar novamente, você pode solicitar um Magic Link na página de Acesso Exclusivo:\nAcesso Exclusivo: https://www.primecircle.app.br/\n\nBoas vendas,\nEquipe Prime Circle'
+        const defaultWaContent = 'Olá {{full_name}}! 🚀 Bem-vindo à Prime Circle. Seu cadastro foi recebido com sucesso. Estamos muito felizes em ter você em nossa rede exclusiva de parcerias imobiliárias.'
+        const defaultEmailContent = 'Assunto: Bem-vindo à Prime Circle! 🏠\n\nOlá {{full_name}},\n\nBem-vindo à Prime Circle! Agora que sua conta foi criada, acesse o nosso Dashboard para começar a gerar parcerias:\nDashboard: https://www.primecircle.app.br/dashboard\n\nCaso precise entrar novamente, você pode solicitar um Magic Link na página de Acesso Exclusivo:\nAcesso Exclusivo: https://www.primecircle.app.br/\n\nBoas vendas,\nEquipe Prime Circle'
 
         const buildMessage = (content: string) => {
           return content
@@ -93,9 +87,7 @@ Deno.serve(async (req: Request) => {
         }
 
         const waMessage = buildMessage(waTemplate ? waTemplate.content : defaultWaContent)
-        const emailMessage = buildMessage(
-          emailTemplate ? emailTemplate.content : defaultEmailContent,
-        )
+        const emailMessage = buildMessage(emailTemplate ? emailTemplate.content : defaultEmailContent)
 
         let subject = 'Bem-vindo à Prime Circle! 🏠'
         let bodyText = emailMessage
@@ -109,46 +101,40 @@ Deno.serve(async (req: Request) => {
 
         if (recipientPhone) {
           notificationPromises.push(
-            supabase.functions
-              .invoke('send-whatsapp', {
-                body: { number: recipientPhone, text: waMessage, user_id: profile.id },
-              })
-              .then((res) => {
-                if (res.error) throw res.error
-                return res
-              })
-              .catch(async (err) => {
+            supabase.functions.invoke('send-whatsapp', {
+              body: { number: recipientPhone, text: waMessage, user_id: profile.id }
+            }).then(res => {
+                if (res.error) throw res.error;
+                return res;
+            }).catch(async (err) => {
                 await supabase.rpc('log_notification', {
-                  p_user_id: profile.id,
-                  p_recipient: recipientPhone,
-                  p_channel: 'whatsapp',
-                  p_status: 'failed',
-                  p_message_body: waMessage,
-                  p_error_details: err.message || JSON.stringify(err),
-                })
-              }),
+                    p_user_id: profile.id,
+                    p_recipient: recipientPhone,
+                    p_channel: 'whatsapp',
+                    p_status: 'failed',
+                    p_message_body: waMessage,
+                    p_error_details: err.message || JSON.stringify(err)
+                });
+            })
           )
         }
 
         notificationPromises.push(
-          supabase.functions
-            .invoke('send-email', {
-              body: { to: recipientEmail, subject, text: bodyText, user_id: profile.id },
-            })
-            .then((res) => {
-              if (res.error) throw res.error
-              return res
-            })
-            .catch(async (err) => {
+          supabase.functions.invoke('send-email', {
+            body: { to: recipientEmail, subject, text: bodyText, user_id: profile.id }
+          }).then(res => {
+              if (res.error) throw res.error;
+              return res;
+          }).catch(async (err) => {
               await supabase.rpc('log_notification', {
-                p_user_id: profile.id,
-                p_recipient: recipientEmail,
-                p_channel: 'email',
-                p_status: 'failed',
-                p_message_body: bodyText,
-                p_error_details: err.message || JSON.stringify(err),
-              })
-            }),
+                  p_user_id: profile.id,
+                  p_recipient: recipientEmail,
+                  p_channel: 'email',
+                  p_status: 'failed',
+                  p_message_body: bodyText,
+                  p_error_details: err.message || JSON.stringify(err)
+              });
+          })
         )
 
         // --- Notificação para o Corretor Indicador (Referral) ---
@@ -160,53 +146,45 @@ Deno.serve(async (req: Request) => {
             .single()
 
           if (!referrerError && referrerProfile?.whatsapp_number) {
-            const referrerFirstName = referrerProfile.full_name
-              ? referrerProfile.full_name.split(' ')[0]
-              : 'Parceiro'
+            const referrerFirstName = referrerProfile.full_name ? referrerProfile.full_name.split(' ')[0] : 'Parceiro'
             const newMemberName = profile.full_name || 'um novo corretor'
-
+            
             const refWaMessage = `Olá ${referrerFirstName}! 🌟 Excelente notícia da Prime Circle!\n\nO corretor *${newMemberName}* acabou de se cadastrar usando o seu link exclusivo de indicação. 🤝\n\nComo membro de Alta Reputação, você tem o poder de curadoria. Para garantir a qualidade do nosso círculo, precisamos que você valide este novo membro.\n\n*Passo a passo para validar:*\n1️⃣ Acesse seu Dashboard na Prime Circle\n2️⃣ Vá até o card "Curadoria da Rede"\n3️⃣ Clique em "Validar Membro"\n\n🔗 Acesse agora e libere o acesso: https://www.primecircle.app.br/dashboard\n\nLembre-se: Cada membro validado reforça nossa rede de alto padrão e você ganha +5 pontos de reputação! 🏆`
 
             notificationPromises.push(
-              supabase.functions
-                .invoke('send-whatsapp', {
-                  body: {
-                    number: referrerProfile.whatsapp_number,
-                    text: refWaMessage,
-                    user_id: referrerProfile.id,
-                  },
-                })
-                .then((res) => {
-                  if (res.error) throw res.error
-                  return res
-                })
-                .catch(async (err) => {
+              supabase.functions.invoke('send-whatsapp', {
+                body: { number: referrerProfile.whatsapp_number, text: refWaMessage, user_id: referrerProfile.id }
+              }).then(res => {
+                  if (res.error) throw res.error;
+                  return res;
+              }).catch(async (err) => {
                   await supabase.rpc('log_notification', {
-                    p_user_id: referrerProfile.id,
-                    p_recipient: referrerProfile.whatsapp_number,
-                    p_channel: 'whatsapp',
-                    p_status: 'failed',
-                    p_message_body: refWaMessage,
-                    p_error_details: err.message || JSON.stringify(err),
-                  })
-                }),
+                      p_user_id: referrerProfile.id,
+                      p_recipient: referrerProfile.whatsapp_number,
+                      p_channel: 'whatsapp',
+                      p_status: 'failed',
+                      p_message_body: refWaMessage,
+                      p_error_details: err.message || JSON.stringify(err)
+                  });
+              })
             )
           }
         }
         // --- Fim Notificação Referral ---
 
         await Promise.allSettled(notificationPromises)
+
       } catch (err: any) {
         console.error('Webhook processing error:', err)
         if (payload?.record?.id) {
-          await supabase.rpc('log_notification', {
-            p_user_id: payload.record.id,
-            p_recipient: 'system',
-            p_channel: 'email',
-            p_status: 'failed',
-            p_message_body: 'Webhook execution failed',
-            p_error_details: err.message || JSON.stringify(err),
-          })
+           await supabase.rpc('log_notification', {
+              p_user_id: payload.record.id,
+              p_recipient: 'system',
+              p_channel: 'email',
+              p_status: 'failed',
+              p_message_body: 'Webhook execution failed',
+              p_error_details: err.message || JSON.stringify(err)
+          });
         }
       }
     }
@@ -217,15 +195,15 @@ Deno.serve(async (req: Request) => {
       processWebhook(payload).catch(console.error)
     }
 
-    return new Response(JSON.stringify({ success: true, message: 'Processing asynchronously' }), {
-      status: 202,
-      headers: { 'Content-Type': 'application/json' },
+    return new Response(JSON.stringify({ success: true, message: 'Processing asynchronously' }), { 
+      status: 202, 
+      headers: { 'Content-Type': 'application/json' } 
     })
   } catch (err: any) {
     console.error('Welcome webhook parse error:', err)
-    return new Response(JSON.stringify({ error: err.message }), {
-      status: 400,
-      headers: { 'Content-Type': 'application/json' },
+    return new Response(JSON.stringify({ error: err.message }), { 
+      status: 400, 
+      headers: { 'Content-Type': 'application/json' } 
     })
   }
 })
