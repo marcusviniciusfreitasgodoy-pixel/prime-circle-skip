@@ -1,4 +1,4 @@
-const CACHE_NAME = 'prime-circle-v1'
+const CACHE_NAME = 'prime-circle-v2'
 
 self.addEventListener('install', (event) => {
   self.skipWaiting()
@@ -34,8 +34,8 @@ self.addEventListener('push', (event) => {
 
   const options = {
     body: data.body,
-    icon: 'https://img.usecurling.com/i?q=app-icon&color=gradient&shape=fill',
-    badge: 'https://img.usecurling.com/i?q=app-icon&color=gradient&shape=fill',
+    icon: '/logo-icon.svg',
+    badge: '/logo-icon.svg',
     data: { url: data.url || '/dashboard' },
   }
 
