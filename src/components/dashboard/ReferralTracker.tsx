@@ -105,7 +105,7 @@ export function ReferralTracker({
   useEffect(() => {
     if (referralLink && !inviteMessage) {
       setInviteMessage(
-        `Olá, como você é um corretor do meu relacionamento, estou te indicando pessoalmente para a Prime Circle — uma rede fechada de corretores de alto padrão aqui em Barra da Tijuca e Recreio.\n\nA ideia é simples: substituir a bagunça dos grupos de WhatsApp por um ambiente estruturado onde você publica seus imóveis, cadastrar as suas necessidades específicas e ter acesso a oportunidades que outros membros estão trazendo — tudo com regras claras de co-intermediação, sem atravessamento e sem discussão.\n\nAs vagas são limitadas e passam por curadoria. Se fizer sentido pra você, é só acessar o link abaixo que eu já garanto sua análise com prioridade.\n\n${referralLink}`,
+        `[Nome], acabei de lançar a *Prime Circle* e selecionei você pessoalmente para ser um dos *Membros Fundadores*.\n\nÉ uma rede privada exclusiva para corretores de alto padrão na *Barra e Recreio*, feita para profissionalizar nossas parcerias e eliminar de vez o caos e a informalidade dos grupos de WhatsApp.\n\nAo entrar, você terá acesso imediato à nossa *Área de Membros*, uma plataforma completa onde você pode:\n\n— *Gerenciar sua carteira:* Publique seus imóveis para que outros membros encontrem compradores qualificados rapidamente.\n— *Radar de Demandas:* Cadastre o que seus clientes buscam e receba alertas automáticos de match na rede.\n— *Acesso Off-Market:* Visualize oportunidades exclusivas que ainda não chegaram aos portais.\n— *Painel de Conexões:* Acompanhe o status das suas parcerias em um ambiente profissional.\n\nDentro da sua área logada, você também encontrará seu *Link de Embaixador*. Como a rede cresce por curadoria, você poderá usá-lo para convidar os corretores da sua total confiança, fortalecendo seu círculo e ganhando benefícios por cada indicação aprovada.\n\n*Isso não é apenas mais um grupo; é a oportunidade de construirmos juntos uma comunidade selecionada, com regras claras e foco total em fechar negócios de alto nível.* É o novo padrão de colaboração para quem opera no topo do mercado.\n\nAs vagas de Fundador são limitadas para garantirmos essa qualidade desde o início.\n\nGaranta seu lugar e acesse as ferramentas aqui:\n${referralLink}`,
       )
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -139,7 +139,7 @@ export function ReferralTracker({
             <Textarea
               value={inviteMessage}
               onChange={(e) => setInviteMessage(e.target.value)}
-              className="bg-background/80 border-primary/20 text-muted-foreground min-h-[240px] focus-visible:ring-primary leading-relaxed"
+              className="bg-background/80 border-primary/20 text-muted-foreground min-h-[320px] focus-visible:ring-primary leading-relaxed"
             />
             <div className="flex flex-col sm:flex-row gap-4">
               <Button
