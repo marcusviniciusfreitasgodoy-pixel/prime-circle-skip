@@ -31,6 +31,7 @@ export default function ProfilePage() {
 
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [avatarUrl, setAvatarUrl] = useState('')
+  const [email, setEmail] = useState('')
   const [whatsapp, setWhatsapp] = useState('')
   const [fullName, setFullName] = useState('')
   const [companyName, setCompanyName] = useState('')
@@ -57,7 +58,7 @@ export default function ProfilePage() {
         supabase
           .from('profiles')
           .select(
-            'whatsapp_number, full_name, validated_by, validation_date, avatar_url, referral_code, company_name, creci, region, specialties',
+            'whatsapp_number, full_name, validated_by, validation_date, avatar_url, referral_code, company_name, creci, region, specialties, email',
           )
           .eq('id', authUser.id)
           .single(),
@@ -75,6 +76,7 @@ export default function ProfilePage() {
             const d = profileRes.data
             setWhatsapp(d.whatsapp_number || '')
             setFullName(d.full_name || '')
+            setEmail(d.email || authUser.email || '')
             setAvatarUrl(d.avatar_url || '')
             setCompanyName(d.company_name || '')
             setCreci(d.creci || '')
@@ -218,6 +220,16 @@ export default function ProfilePage() {
       return
     }
 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (email && !emailRegex.test(email)) {
+      toast({
+        title: 'E-mail inválido',
+        description: 'Por favor, insira um endereço de e-mail válido.',
+        variant: 'destructive',
+      })
+      return
+    }
+
     const phoneRegex = /^\+?[1-9]\d{1,14}$/
     if (whatsapp && !phoneRegex.test(whatsapp)) {
       toast({
@@ -229,6 +241,21 @@ export default function ProfilePage() {
     }
 
     setIsSaving(true)
+
+    let emailMessage = ''
+    if (email !== authUser.email) {
+      const { error: authError } = await supabase.auth.updateUser({ email })
+      if (authError) {
+        toast({
+          title: 'Erro ao atualizar e-mail',
+          description: authError.message,
+          variant: 'destructive',
+        })
+        setIsSaving(false)
+        return
+      }
+      emailMessage = ' Verifique sua caixa de entrada para confirmar o novo e-mail.'
+    }
 
     let finalSpecialtiesStr = null
     if (selectedSpecialties.length > 0) {
@@ -245,6 +272,7 @@ export default function ProfilePage() {
       .from('profiles')
       .update({
         full_name: fullName,
+        email: email,
         whatsapp_number: whatsapp,
         company_name: companyName,
         creci: creci,
@@ -265,7 +293,7 @@ export default function ProfilePage() {
     } else {
       toast({
         title: 'Sucesso',
-        description: 'Perfil atualizado com sucesso.',
+        description: 'Perfil atualizado com sucesso.' + emailMessage,
       })
     }
   }
@@ -437,6 +465,19 @@ export default function ProfilePage() {
                   placeholder="Seu Nome Completo"
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
+                  className="bg-background text-white"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="email" className="text-white">
+                  E-mail
+                </Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="Seu E-mail"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   className="bg-background text-white"
                 />
               </div>
