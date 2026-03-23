@@ -11,7 +11,8 @@
     "calculate-plan-price": 1,
     "record-match": 1,
     "send-founder-transition-email": 1,
-    "send-status-check": 3,
-    "process-quick-action": 3
+    "send-status-check": 4,
+    "process-quick-action": 3,
+    "send-reminder-24h": 1
   }
 }
