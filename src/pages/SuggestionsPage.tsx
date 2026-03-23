@@ -111,40 +111,6 @@ export default function SuggestionsPage() {
         </Button>
       </div>
 
-      <Card className="bg-gradient-to-r from-secondary to-background border-primary/20 shadow-[0_0_20px_rgba(201,168,76,0.1)] relative overflow-hidden mb-8">
-        <div className="absolute top-0 right-0 opacity-10 pointer-events-none p-4">
-          <Sparkles className="w-24 h-24 text-primary" />
-        </div>
-        <CardContent className="p-6 relative z-10">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
-            <div>
-              <h3 className="text-xl font-bold text-white flex items-center gap-2">
-                <BrainCircuit className="w-5 h-5 text-primary" />
-                Programa de Recompensas (AI Scoring)
-              </h3>
-              <p className="text-muted-foreground text-sm mt-1">
-                A IA do Prime Circle avalia a complexidade das suas ideias. A cada 100 pontos
-                acumulados com implementações, você ganha 1 mês grátis!
-              </p>
-            </div>
-            <div className="text-right">
-              <span className="text-3xl font-bold text-primary">{userPoints}</span>
-              <span className="text-muted-foreground">/100 pts</span>
-            </div>
-          </div>
-          <Progress
-            value={progressValue}
-            className="h-3 bg-background border border-border"
-            indicatorClassName="bg-primary"
-          />
-          <p className="text-xs text-muted-foreground mt-3 text-right">
-            {userPoints >= 100
-              ? 'Parabéns! Você já pode resgatar seu mês grátis.'
-              : `Faltam ${100 - userPoints} pontos para a próxima recompensa.`}
-          </p>
-        </CardContent>
-      </Card>
-
       <div className="grid lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-6">
           <Card className="bg-card border-primary/20 shadow-[0_0_15px_rgba(201,168,76,0.05)]">
@@ -262,83 +228,119 @@ export default function SuggestionsPage() {
         </div>
 
         <div className="lg:col-span-1">
-          <Card className="bg-card border-border sticky top-24">
-            <CardHeader className="bg-secondary/50 border-b border-border pb-4">
-              <CardTitle className="text-white text-lg flex items-center gap-2">
-                <Trophy className="w-5 h-5 text-primary" /> Hall of Fame
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-0">
-              <Table>
-                <TableHeader>
-                  <TableRow className="border-border hover:bg-transparent">
-                    <TableHead className="text-muted-foreground py-3">Membro</TableHead>
-                    <TableHead className="text-right text-muted-foreground py-3">Score</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {sortedRanking.map((member, i) => {
-                    const isCurrentUser = member.id === user?.id
-                    return (
-                      <TableRow
-                        key={member.id}
-                        className={cn(
-                          'border-border hover:bg-secondary/50',
-                          isCurrentUser && 'bg-primary/5',
-                        )}
-                      >
-                        <TableCell className="font-medium text-white flex items-center gap-3 py-3">
-                          <span
-                            className={cn(
-                              'w-4 text-xs font-bold text-center',
-                              i === 0
-                                ? 'text-yellow-400'
-                                : i === 1
-                                  ? 'text-gray-300'
-                                  : i === 2
-                                    ? 'text-amber-600'
-                                    : 'text-muted-foreground',
-                            )}
-                          >
-                            {i + 1}º
-                          </span>
-                          <Avatar className="h-8 w-8 ring-1 ring-primary/20">
-                            <AvatarImage src={member.avatar} />
-                            <AvatarFallback>{member.name[0]}</AvatarFallback>
-                          </Avatar>
-                          <div className="flex flex-col min-w-0">
-                            <span className="truncate text-sm flex items-center gap-2">
-                              {member.name.split(' ')[0]}
-                              {isCurrentUser && (
-                                <Badge className="bg-primary/20 text-primary hover:bg-primary/30 px-1 py-0 text-[9px]">
-                                  Você
-                                </Badge>
+          <div className="sticky top-24 space-y-6">
+            <Card className="bg-card border-border">
+              <CardHeader className="bg-secondary/50 border-b border-border pb-4">
+                <CardTitle className="text-white text-lg flex items-center gap-2">
+                  <Trophy className="w-5 h-5 text-primary" /> Hall of Fame
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-0">
+                <Table>
+                  <TableHeader>
+                    <TableRow className="border-border hover:bg-transparent">
+                      <TableHead className="text-muted-foreground py-3">Membro</TableHead>
+                      <TableHead className="text-right text-muted-foreground py-3">Score</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {sortedRanking.map((member, i) => {
+                      const isCurrentUser = member.id === user?.id
+                      return (
+                        <TableRow
+                          key={member.id}
+                          className={cn(
+                            'border-border hover:bg-secondary/50',
+                            isCurrentUser && 'bg-primary/5',
+                          )}
+                        >
+                          <TableCell className="font-medium text-white flex items-center gap-3 py-3">
+                            <span
+                              className={cn(
+                                'w-4 text-xs font-bold text-center',
+                                i === 0
+                                  ? 'text-yellow-400'
+                                  : i === 1
+                                    ? 'text-gray-300'
+                                    : i === 2
+                                      ? 'text-amber-600'
+                                      : 'text-muted-foreground',
                               )}
+                            >
+                              {i + 1}º
                             </span>
-                            <span className="text-[10px] text-muted-foreground">
-                              {member.suggestionsImplemented} aprovações
-                            </span>
-                          </div>
-                        </TableCell>
-                        <TableCell className="text-right py-3">
-                          <div className="flex flex-col items-end">
-                            <span className="text-primary font-bold text-sm">
-                              {member.suggestionPoints || 0} pts
-                            </span>
-                            {member.suggestionMonthsCredited > 0 && (
-                              <span className="text-[10px] text-muted-foreground">
-                                +{member.suggestionMonthsCredited} mês
+                            <Avatar className="h-8 w-8 ring-1 ring-primary/20">
+                              <AvatarImage src={member.avatar} />
+                              <AvatarFallback>{member.name[0]}</AvatarFallback>
+                            </Avatar>
+                            <div className="flex flex-col min-w-0">
+                              <span className="truncate text-sm flex items-center gap-2">
+                                {member.name.split(' ')[0]}
+                                {isCurrentUser && (
+                                  <Badge className="bg-primary/20 text-primary hover:bg-primary/30 px-1 py-0 text-[9px]">
+                                    Você
+                                  </Badge>
+                                )}
                               </span>
-                            )}
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    )
-                  })}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
+                              <span className="text-[10px] text-muted-foreground">
+                                {member.suggestionsImplemented} aprovações
+                              </span>
+                            </div>
+                          </TableCell>
+                          <TableCell className="text-right py-3">
+                            <div className="flex flex-col items-end">
+                              <span className="text-primary font-bold text-sm">
+                                {member.suggestionPoints || 0} pts
+                              </span>
+                              {member.suggestionMonthsCredited > 0 && (
+                                <span className="text-[10px] text-muted-foreground">
+                                  +{member.suggestionMonthsCredited} mês
+                                </span>
+                              )}
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      )
+                    })}
+                  </TableBody>
+                </Table>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-gradient-to-br from-secondary to-background border-primary/20 shadow-[0_0_20px_rgba(201,168,76,0.1)] relative overflow-hidden">
+              <div className="absolute top-0 right-0 opacity-10 pointer-events-none p-4">
+                <Sparkles className="w-24 h-24 text-primary" />
+              </div>
+              <CardContent className="p-6 relative z-10">
+                <div className="flex flex-col gap-4 mb-4">
+                  <div>
+                    <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                      <BrainCircuit className="w-5 h-5 text-primary" />
+                      Programa de Recompensas
+                    </h3>
+                    <p className="text-muted-foreground text-sm mt-2">
+                      A IA avalia suas ideias. A cada 100 pontos acumulados com implementações, você
+                      ganha 1 mês grátis!
+                    </p>
+                  </div>
+                  <div>
+                    <span className="text-3xl font-bold text-primary">{userPoints}</span>
+                    <span className="text-muted-foreground text-sm ml-1">/100 pts</span>
+                  </div>
+                </div>
+                <Progress
+                  value={progressValue}
+                  className="h-3 bg-background border border-border"
+                  indicatorClassName="bg-primary"
+                />
+                <p className="text-xs text-muted-foreground mt-3 text-right">
+                  {userPoints >= 100
+                    ? 'Parabéns! Você já pode resgatar.'
+                    : `Faltam ${100 - userPoints} pontos para a recompensa.`}
+                </p>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
     </div>
