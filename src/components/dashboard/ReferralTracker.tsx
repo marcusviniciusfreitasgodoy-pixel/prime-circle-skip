@@ -105,7 +105,7 @@ export function ReferralTracker({
   useEffect(() => {
     if (referralLink && !inviteMessage) {
       setInviteMessage(
-        `Olá, como você é um corretor do meu relacionamento, estou te indicando pessoalmente para a Prime Circle — uma rede fechada de corretores de alto padrão aqui em Barra da Tijuca e Recreio.\n\nA ideia é simples: substituir a bagunça dos grupos de WhatsApp por um ambiente estruturado onde você publica seus imóveis, cadastra as necessidades específicas dos seus clientes e busca ativamente nas oportunidades que outros membros estão trazendo — tudo com regras claras de co-intermediação, sem atravessamento e sem discussão.\n\nAs vagas são limitadas e passam por curadoria. Se fizer sentido pra você, é só acessar o link abaixo que eu já garanto sua análise com prioridade.\n\n${referralLink}`,
+        `Olá, como você é um corretor do meu relacionamento, estou te indicando pessoalmente para a Prime Circle — uma rede fechada de corretores de alto padrão aqui em Barra da Tijuca e Recreio.\n\nA ideia é simples: substituir a bagunça dos grupos de WhatsApp por um ambiente estruturado onde você publica seus imóveis, cadastrar as suas necessidades específicas e ter acesso a oportunidades que outros membros estão trazendo — tudo com regras claras de co-intermediação, sem atravessamento e sem discussão.\n\nAs vagas são limitadas e passam por curadoria. Se fizer sentido pra você, é só acessar o link abaixo que eu já garanto sua análise com prioridade.\n\n${referralLink}`,
       )
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
