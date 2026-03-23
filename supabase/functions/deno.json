@@ -1,18 +1,17 @@
 {
   "_versions": {
-    "send-whatsapp": 11,
-    "send-email": 9,
-    "functions": 10,
-    "welcome-webhook": 7,
-    "support-ticket-webhook": 1
-  }
-}
-ook": 10,
+    "send-whatsapp": 24,
+    "send-email": 18,
+    "welcome-webhook": 19,
+    "support-ticket-webhook": 6,
+    "match-property-webhook": 10,
     "functions": 8,
     "demand-push-webhook": 7,
     "monitor-partnerships": 6,
     "calculate-plan-price": 1,
     "record-match": 1,
-    "send-founder-transition-email": 1
+    "send-founder-transition-email": 1,
+    "send-status-check": 1,
+    "process-quick-action": 1
   }
 }

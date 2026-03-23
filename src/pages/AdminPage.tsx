@@ -20,6 +20,7 @@ import { cn } from '@/lib/utils'
 import { useAuth } from '@/hooks/use-auth'
 import { UsersManagementTab } from '@/components/admin/UsersManagementTab'
 import { TemplatesTab } from '@/components/notifications/TemplatesTab'
+import { WhatsAppCollectionTab } from '@/components/admin/WhatsAppCollectionTab'
 import { sendWhatsappMessage } from '@/services/whatsapp'
 
 interface SupportTicket {
@@ -146,6 +147,9 @@ export default function AdminPage() {
           </TabsTrigger>
           <TabsTrigger value="comms" className="data-[state=active]:bg-secondary">
             Comunicações
+          </TabsTrigger>
+          <TabsTrigger value="whatsapp_collection" className="data-[state=active]:bg-secondary">
+            Coleta WhatsApp
           </TabsTrigger>
           <TabsTrigger value="tickets" className="data-[state=active]:bg-secondary">
             Chamados
@@ -274,6 +278,10 @@ export default function AdminPage() {
               <TemplatesTab />
             </div>
           </div>
+        </TabsContent>
+
+        <TabsContent value="whatsapp_collection" className="mt-6 space-y-4">
+          <WhatsAppCollectionTab />
         </TabsContent>
 
         <TabsContent value="tickets" className="mt-6 space-y-4">
