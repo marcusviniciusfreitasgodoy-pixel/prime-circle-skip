@@ -244,17 +244,58 @@ export default function ProfilePage() {
 
     let emailMessage = ''
     if (email !== authUser.email) {
-      const { error: authError } = await supabase.auth.updateUser({ email })
-      if (authError) {
+      try {
+        // Validação Preventiva
+        const { data: existingProfile } = await supabase
+          .from('profiles')
+          .select('id')
+          .eq('email', email)
+          .maybeSingle()
+
+        if (existingProfile && existingProfile.id !== authUser.id) {
+          toast({
+            title: 'E-mail indisponível',
+            description: 'Este e-mail já está sendo utilizado por outra conta.',
+            variant: 'destructive',
+          })
+          setIsSaving(false)
+          return
+        }
+
+        const { error: authError } = await supabase.auth.updateUser({ email })
+        if (authError) {
+          const isEmailExists =
+            authError.status === 422 ||
+            authError.message.includes('already been registered') ||
+            (authError as any).code === 'email_exists'
+          toast({
+            title: 'Erro ao atualizar e-mail',
+            description: isEmailExists
+              ? 'Este e-mail já está sendo utilizado por outra conta.'
+              : authError.message,
+            variant: 'destructive',
+          })
+          setIsSaving(false)
+          return
+        }
+        emailMessage = ' Verifique sua caixa de entrada para confirmar o novo e-mail.'
+      } catch (err: any) {
+        console.error('Update email error:', err)
+        const isEmailExists =
+          err?.status === 422 ||
+          err?.message?.includes('already been registered') ||
+          err?.code === 'email_exists' ||
+          err?.message?.includes('HTTP 422')
         toast({
           title: 'Erro ao atualizar e-mail',
-          description: authError.message,
+          description: isEmailExists
+            ? 'Este e-mail já está sendo utilizado por outra conta.'
+            : 'Ocorreu um erro inesperado ao atualizar o e-mail.',
           variant: 'destructive',
         })
         setIsSaving(false)
         return
       }
-      emailMessage = ' Verifique sua caixa de entrada para confirmar o novo e-mail.'
     }
 
     let finalSpecialtiesStr = null
