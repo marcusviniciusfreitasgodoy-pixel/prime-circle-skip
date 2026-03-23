@@ -12,7 +12,17 @@ import {
 } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Copy, Share2, Crown, Activity, UserCheck } from 'lucide-react'
+import {
+  Copy,
+  Share2,
+  Crown,
+  Activity,
+  UserCheck,
+  CheckCircle2,
+  XCircle,
+  Clock,
+} from 'lucide-react'
+import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip'
 import { supabase } from '@/lib/supabase/client'
 import { useToast } from '@/hooks/use-toast'
 import { cn } from '@/lib/utils'
@@ -28,6 +38,7 @@ export function ReferralTracker({
   const [clicksCount, setClicksCount] = useState(0)
   const [registrationsCount, setRegistrationsCount] = useState(0)
   const [myCircle, setMyCircle] = useState<any[]>([])
+  const [notificationLogs, setNotificationLogs] = useState<any[]>([])
   const [inviteMessage, setInviteMessage] = useState('')
 
   useEffect(() => {
@@ -66,6 +77,21 @@ export function ReferralTracker({
         }
       } catch (err) {
         console.warn('Exception fetching referrals handled safely:', err)
+      }
+
+      try {
+        const { data: logs, error: logsError } = await supabase
+          .from('notification_logs')
+          .select('id, created_at, message_body, status')
+          .eq('user_id', userId)
+          .eq('channel', 'whatsapp')
+          .ilike('message_body', '%acabou de se cadastrar%')
+
+        if (!logsError && logs && mounted) {
+          setNotificationLogs(logs)
+        }
+      } catch (err) {
+        console.warn('Error fetching logs', err)
       }
     }
 
@@ -175,47 +201,88 @@ export function ReferralTracker({
                     <TableHead className="text-muted-foreground font-semibold">Nome</TableHead>
                     <TableHead className="text-muted-foreground font-semibold">Status</TableHead>
                     <TableHead className="text-muted-foreground font-semibold">
-                      Data de Cadastro
+                      Notificação
+                    </TableHead>
+                    <TableHead className="text-muted-foreground font-semibold text-right">
+                      Data
                     </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {myCircle.map((partner) => (
-                    <TableRow key={partner.id} className="border-border/50 hover:bg-secondary/30">
-                      <TableCell>
-                        <Avatar className="w-8 h-8 border border-border bg-background">
-                          <AvatarImage src={partner.avatar_url} />
-                          <AvatarFallback className="bg-secondary text-muted-foreground text-xs">
-                            {partner.full_name?.substring(0, 2).toUpperCase() || 'US'}
-                          </AvatarFallback>
-                        </Avatar>
-                      </TableCell>
-                      <TableCell className="font-medium text-white">
-                        {partner.full_name || 'Usuário'}
-                      </TableCell>
-                      <TableCell>
-                        <Badge
-                          variant="outline"
-                          className={cn(
-                            partner.status === 'active'
-                              ? 'bg-green-500/10 text-green-500 border-green-500/20'
+                  {myCircle.map((partner) => {
+                    const partnerName = partner.full_name || 'um novo corretor'
+                    const log = notificationLogs.find((l) =>
+                      l.message_body.includes(`*${partnerName}*`),
+                    )
+
+                    return (
+                      <TableRow key={partner.id} className="border-border/50 hover:bg-secondary/30">
+                        <TableCell>
+                          <Avatar className="w-8 h-8 border border-border bg-background">
+                            <AvatarImage src={partner.avatar_url} />
+                            <AvatarFallback className="bg-secondary text-muted-foreground text-xs">
+                              {partner.full_name?.substring(0, 2).toUpperCase() || 'US'}
+                            </AvatarFallback>
+                          </Avatar>
+                        </TableCell>
+                        <TableCell className="font-medium text-white">
+                          {partner.full_name || 'Usuário'}
+                        </TableCell>
+                        <TableCell>
+                          <Badge
+                            variant="outline"
+                            className={cn(
+                              partner.status === 'active'
+                                ? 'bg-green-500/10 text-green-500 border-green-500/20'
+                                : partner.status === 'pending_validation'
+                                  ? 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20'
+                                  : 'bg-secondary text-muted-foreground',
+                            )}
+                          >
+                            {partner.status === 'active'
+                              ? 'Ativo'
                               : partner.status === 'pending_validation'
-                                ? 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20'
-                                : 'bg-secondary text-muted-foreground',
+                                ? 'Pendente'
+                                : partner.status}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          {log ? (
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <div className="flex items-center gap-1.5 cursor-help">
+                                    {log.status === 'success' ? (
+                                      <CheckCircle2 className="w-4 h-4 text-green-500" />
+                                    ) : (
+                                      <XCircle className="w-4 h-4 text-red-500" />
+                                    )}
+                                    <span className="text-xs text-muted-foreground">
+                                      {log.status === 'success' ? 'Enviada' : 'Falha'}
+                                    </span>
+                                  </div>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  <p className="text-xs">
+                                    Notificação de indicação:{' '}
+                                    {new Date(log.created_at).toLocaleString('pt-BR')}
+                                  </p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
+                          ) : (
+                            <div className="flex items-center gap-1.5 text-muted-foreground/50">
+                              <Clock className="w-4 h-4" />
+                              <span className="text-xs">Aguardando</span>
+                            </div>
                           )}
-                        >
-                          {partner.status === 'active'
-                            ? 'Ativo'
-                            : partner.status === 'pending_validation'
-                              ? 'Pendente'
-                              : partner.status}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-muted-foreground text-sm">
-                        {new Date(partner.created_at || Date.now()).toLocaleDateString('pt-BR')}
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                        </TableCell>
+                        <TableCell className="text-muted-foreground text-sm text-right">
+                          {new Date(partner.created_at || Date.now()).toLocaleDateString('pt-BR')}
+                        </TableCell>
+                      </TableRow>
+                    )
+                  })}
                 </TableBody>
               </Table>
             </div>
