@@ -105,9 +105,10 @@ export function ReferralTracker({
   useEffect(() => {
     if (referralLink && !inviteMessage) {
       setInviteMessage(
-        `Olá! Faço parte do Prime Circle, uma rede privada de liquidez imobiliária para corretores de alto padrão. Gostaria de te convidar para o meu círculo. Cadastre-se por este link para ter prioridade na análise e garantir sua vaga como membro Founder, com isenção total de cobrança pelos primeiros 6 meses:\n\n${referralLink}`,
+        `Olá, como você é um corretor do meu relacionamento, estou te indicando pessoalmente para a Prime Circle — uma rede fechada de corretores de alto padrão aqui em Barra da Tijuca e Recreio.\n\nA ideia é simples: substituir a bagunça dos grupos de WhatsApp por um ambiente estruturado onde você publica seus imóveis, cadastra as necessidades específicas dos seus clientes e busca ativamente nas oportunidades que outros membros estão trazendo — tudo com regras claras de co-intermediação, sem atravessamento e sem discussão.\n\nAs vagas são limitadas e passam por curadoria. Se fizer sentido pra você, é só acessar o link abaixo que eu já garanto sua análise com prioridade.\n\n${referralLink}`,
       )
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [referralLink])
 
   const handleCopy = () => {
@@ -138,7 +139,7 @@ export function ReferralTracker({
             <Textarea
               value={inviteMessage}
               onChange={(e) => setInviteMessage(e.target.value)}
-              className="bg-background/80 border-primary/20 text-muted-foreground min-h-[140px] focus-visible:ring-primary leading-relaxed"
+              className="bg-background/80 border-primary/20 text-muted-foreground min-h-[240px] focus-visible:ring-primary leading-relaxed"
             />
             <div className="flex flex-col sm:flex-row gap-4">
               <Button
