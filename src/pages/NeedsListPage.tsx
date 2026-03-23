@@ -8,15 +8,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Search, FileText } from 'lucide-react'
+import { Search, FileText, MapPin, Info, HelpCircle } from 'lucide-react'
 import { useAuth } from '@/hooks/use-auth'
 import { supabase } from '@/lib/supabase/client'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { MapPin } from 'lucide-react'
 import { Skeleton } from '@/components/ui/skeleton'
 import { AddNeedDialog } from '@/components/dashboard/AddNeedDialog'
 import { EditNeedSheet } from '@/components/dashboard/EditNeedSheet'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
 export default function NeedsListPage() {
   const [demands, setDemands] = useState<any[]>([])
@@ -37,9 +38,7 @@ export default function NeedsListPage() {
         .contains('metadata', { type: 'demanda' })
         .order('id', { ascending: false })
 
-      if (!error && data) {
-        setDemands(data)
-      }
+      if (!error && data) setDemands(data)
       setLoading(false)
     }
     fetchDemands()
@@ -53,11 +52,9 @@ export default function NeedsListPage() {
       ''
     ).toLowerCase()
     const matchBairro = bairro === 'all' || demandBairro.includes(bairro.toLowerCase())
-
     const searchString =
       `${d.metadata?.title || ''} ${d.metadata?.tipo_imovel || ''} ${d.content || ''}`.toLowerCase()
     const matchSearch = searchTerm === '' || searchString.includes(searchTerm.toLowerCase())
-
     return matchBairro && matchSearch
   })
 
@@ -79,13 +76,45 @@ export default function NeedsListPage() {
 
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-white">Demandas Ativas</h2>
-          <p className="text-muted-foreground text-sm">
-            Descubra o que os clientes dos parceiros estão buscando.
+          <h2 className="text-2xl font-bold text-white">
+            Central de Demandas: O que meus clientes buscam
+          </h2>
+          <p className="text-muted-foreground text-sm mt-1">
+            Poste aqui as necessidades específicas dos seus clientes que você não possui em sua base
+            para encontrar parceiros com o imóvel ideal.
           </p>
         </div>
-        <AddNeedDialog onSuccess={() => setRefreshKey((prev) => prev + 1)} />
+        <div className="flex items-center gap-3">
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  type="button"
+                  className="text-muted-foreground hover:text-primary transition-colors flex items-center justify-center"
+                >
+                  <HelpCircle className="w-5 h-5" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent className="max-w-[250px] text-center" side="bottom">
+                <p>
+                  Use este botão para solicitar imóveis de outros membros quando não tiver uma opção
+                  compatível em sua base.
+                </p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+          <AddNeedDialog onSuccess={() => setRefreshKey((prev) => prev + 1)} />
+        </div>
       </div>
+
+      <Alert className="bg-primary/5 border-primary/20">
+        <Info className="h-4 w-4 text-primary" />
+        <AlertTitle className="text-primary font-semibold">Como usar as Demandas?</AlertTitle>
+        <AlertDescription className="text-primary/80 mt-1">
+          Não encontrou o imóvel em seu portfólio? Poste a demanda aqui e deixe a rede ajudar você a
+          fechar negócio através de parcerias.
+        </AlertDescription>
+      </Alert>
 
       <div className="flex flex-col sm:flex-row gap-4 p-4 bg-card rounded-lg border border-border">
         <div className="relative flex-1">
@@ -121,22 +150,27 @@ export default function NeedsListPage() {
       ) : filteredDemands.length === 0 ? (
         <div className="flex flex-col items-center justify-center p-12 bg-card/50 rounded-xl border border-dashed border-border text-center">
           <FileText className="w-12 h-12 text-muted-foreground/50 mb-4" />
-          <p className="text-lg font-medium text-white mb-2">Nenhuma demanda encontrada</p>
+          <p className="text-lg font-medium text-white mb-2">Nenhuma demanda ativa?</p>
           <p className="text-muted-foreground text-sm max-w-sm mb-6">
-            Não há demandas cadastradas para os filtros selecionados no momento.
+            Se você tem um cliente buscando algo específico, publique agora e notifique a rede.
           </p>
-          {(bairro !== 'all' || searchTerm !== '') && (
-            <Button
-              variant="outline"
-              className="border-border hover:bg-secondary"
-              onClick={() => {
-                setBairro('all')
-                setSearchTerm('')
-              }}
-            >
-              Limpar Filtros
-            </Button>
-          )}
+          <div className="flex flex-wrap gap-4 justify-center">
+            {(bairro !== 'all' || searchTerm !== '') && (
+              <Button
+                variant="outline"
+                className="border-border hover:bg-secondary"
+                onClick={() => {
+                  setBairro('all')
+                  setSearchTerm('')
+                }}
+              >
+                Limpar Filtros
+              </Button>
+            )}
+            {bairro === 'all' && searchTerm === '' && (
+              <AddNeedDialog onSuccess={() => setRefreshKey((prev) => prev + 1)} />
+            )}
+          </div>
         </div>
       ) : (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
