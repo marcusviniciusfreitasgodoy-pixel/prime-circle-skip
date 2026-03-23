@@ -21,11 +21,13 @@ import { useToast } from '@/hooks/use-toast'
 import { ShieldCheck, BellRing, Camera, Save, Loader2 } from 'lucide-react'
 import { Skeleton } from '@/components/ui/skeleton'
 
-const TICKET_RANGES = [
-  'R$ 1.000.000,00 - R$ 2.000.000,00',
-  'R$ 2.000.001,00 - R$ 5.000.000,00',
-  'R$ 5.000.001,00 - R$ 10.000.000,00',
-  'Acima de R$ 10.000.000,00',
+const SPECIALTIES = [
+  'Não especificado',
+  'Casas de Alto Padrão',
+  'Apartamentos',
+  'Coberturas',
+  'Terrenos',
+  'Condomínios',
 ]
 
 export default function ProfilePage() {
@@ -40,7 +42,8 @@ export default function ProfilePage() {
   const [companyName, setCompanyName] = useState('')
   const [creci, setCreci] = useState('')
   const [region, setRegion] = useState('')
-  const [ticketValue, setTicketValue] = useState('')
+  const [specialty, setSpecialty] = useState('Não especificado')
+  const [condominiumName, setCondominiumName] = useState('')
 
   const [isSaving, setIsSaving] = useState(false)
   const [validatedBy, setValidatedBy] = useState<{ name: string; date: string } | null>(null)
@@ -60,7 +63,7 @@ export default function ProfilePage() {
         supabase
           .from('profiles')
           .select(
-            'whatsapp_number, full_name, validated_by, validation_date, avatar_url, referral_code, company_name, creci, region, ticket_value',
+            'whatsapp_number, full_name, validated_by, validation_date, avatar_url, referral_code, company_name, creci, region, specialties',
           )
           .eq('id', authUser.id)
           .single(),
@@ -82,7 +85,19 @@ export default function ProfilePage() {
             setCompanyName(d.company_name || '')
             setCreci(d.creci || '')
             setRegion(d.region || '')
-            setTicketValue(d.ticket_value || '')
+
+            if (d.specialties) {
+              if (d.specialties.startsWith('Condomínios: ')) {
+                setSpecialty('Condomínios')
+                setCondominiumName(d.specialties.replace('Condomínios: ', ''))
+              } else if (SPECIALTIES.includes(d.specialties)) {
+                setSpecialty(d.specialties)
+              } else {
+                setSpecialty('Não especificado')
+              }
+            } else {
+              setSpecialty('Não especificado')
+            }
 
             if (d.validated_by) {
               const { data: valData } = await supabase
@@ -200,6 +215,15 @@ export default function ProfilePage() {
 
     setIsSaving(true)
 
+    let finalSpecialties = null
+    if (specialty && specialty !== 'Não especificado') {
+      if (specialty === 'Condomínios' && condominiumName.trim()) {
+        finalSpecialties = `Condomínios: ${condominiumName.trim()}`
+      } else {
+        finalSpecialties = specialty
+      }
+    }
+
     const { error } = await supabase
       .from('profiles')
       .update({
@@ -208,7 +232,7 @@ export default function ProfilePage() {
         company_name: companyName,
         creci: creci,
         region: region,
-        ticket_value: ticketValue,
+        specialties: finalSpecialties,
         updated_at: new Date().toISOString(),
       })
       .eq('id', authUser.id)
@@ -446,15 +470,15 @@ export default function ProfilePage() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="ticketValue" className="text-white">
-                    Ticket Médio
+                  <Label htmlFor="specialty" className="text-white">
+                    Especializado em (Opcional)
                   </Label>
-                  <Select value={ticketValue} onValueChange={setTicketValue}>
+                  <Select value={specialty} onValueChange={setSpecialty}>
                     <SelectTrigger className="bg-background text-white border-border">
                       <SelectValue placeholder="Selecione..." />
                     </SelectTrigger>
                     <SelectContent>
-                      {TICKET_RANGES.map((r) => (
+                      {SPECIALTIES.map((r) => (
                         <SelectItem key={r} value={r}>
                           {r}
                         </SelectItem>
@@ -463,6 +487,22 @@ export default function ProfilePage() {
                   </Select>
                 </div>
               </div>
+
+              {specialty === 'Condomínios' && (
+                <div className="space-y-2 animate-fade-in-down">
+                  <Label htmlFor="condominiumName" className="text-white">
+                    Nome do Condomínio
+                  </Label>
+                  <Input
+                    id="condominiumName"
+                    placeholder="Ex: Alphaville, Malibu..."
+                    value={condominiumName}
+                    onChange={(e) => setCondominiumName(e.target.value)}
+                    className="bg-background text-white"
+                  />
+                </div>
+              )}
+
               <div className="space-y-2">
                 <Label htmlFor="region" className="text-white">
                   Regiões de Atuação
