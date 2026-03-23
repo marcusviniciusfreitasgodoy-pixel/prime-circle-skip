@@ -67,10 +67,12 @@ export default function QuickUpdatePage() {
   }
 
   const displayStatusMap: Record<string, string> = {
+    match: 'MATCH',
     contact: 'CONTATO',
     visit: 'VISITA',
     proposal: 'PROPOSTA',
     closed: 'FECHAMENTO',
+    cancelled: 'CANCELADO',
   }
 
   return (
@@ -104,7 +106,7 @@ export default function QuickUpdatePage() {
                   onClick={handleConfirm}
                   className="w-full gold-gradient text-black font-semibold h-12"
                 >
-                  Confirmar Avanço de Status
+                  Confirmar Atualização
                 </Button>
                 <Button asChild variant="outline" className="w-full h-12">
                   <Link to="/dashboard">Cancelar e ir para o Painel</Link>
