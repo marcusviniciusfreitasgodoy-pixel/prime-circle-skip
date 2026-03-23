@@ -5,24 +5,18 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
 import { Switch } from '@/components/ui/switch'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { AmbassadorWidget } from '@/components/AmbassadorWidget'
 import useAppStore from '@/stores/main'
 import type { Tier } from '@/stores/main'
 import { useAuth } from '@/hooks/use-auth'
 import { supabase } from '@/lib/supabase/client'
 import { useToast } from '@/hooks/use-toast'
-import { ShieldCheck, BellRing, Camera, Save, Loader2 } from 'lucide-react'
+import { ShieldCheck, BellRing, Camera, Save, Loader2, ChevronDown } from 'lucide-react'
 import { Skeleton } from '@/components/ui/skeleton'
 
-const SPECIALTIES = [
-  'Não especificado',
+const AVAILABLE_SPECIALTIES = [
   'Casas de Alto Padrão',
   'Apartamentos',
   'Coberturas',
@@ -42,7 +36,7 @@ export default function ProfilePage() {
   const [companyName, setCompanyName] = useState('')
   const [creci, setCreci] = useState('')
   const [region, setRegion] = useState('')
-  const [specialty, setSpecialty] = useState('Não especificado')
+  const [selectedSpecialties, setSelectedSpecialties] = useState<string[]>([])
   const [condominiumName, setCondominiumName] = useState('')
 
   const [isSaving, setIsSaving] = useState(false)
@@ -87,16 +81,37 @@ export default function ProfilePage() {
             setRegion(d.region || '')
 
             if (d.specialties) {
-              if (d.specialties.startsWith('Condomínios: ')) {
-                setSpecialty('Condomínios')
-                setCondominiumName(d.specialties.replace('Condomínios: ', ''))
-              } else if (SPECIALTIES.includes(d.specialties)) {
-                setSpecialty(d.specialties)
-              } else {
-                setSpecialty('Não especificado')
+              try {
+                const parsed = JSON.parse(d.specialties)
+                if (Array.isArray(parsed)) {
+                  const specs: string[] = []
+                  parsed.forEach((s: string) => {
+                    if (s.startsWith('Condomínios: ')) {
+                      specs.push('Condomínios')
+                      setCondominiumName(s.replace('Condomínios: ', '').trim())
+                    } else if (s === 'Condomínios') {
+                      specs.push('Condomínios')
+                    } else {
+                      specs.push(s)
+                    }
+                  })
+                  setSelectedSpecialties(specs)
+                } else {
+                  throw new Error('Not an array')
+                }
+              } catch (e) {
+                // Fallback para o formato antigo de string única
+                if (d.specialties.startsWith('Condomínios: ')) {
+                  setSelectedSpecialties(['Condomínios'])
+                  setCondominiumName(d.specialties.replace('Condomínios: ', '').trim())
+                } else if (d.specialties !== 'Não especificado') {
+                  setSelectedSpecialties([d.specialties])
+                } else {
+                  setSelectedSpecialties([])
+                }
               }
             } else {
-              setSpecialty('Não especificado')
+              setSelectedSpecialties([])
             }
 
             if (d.validated_by) {
@@ -215,13 +230,15 @@ export default function ProfilePage() {
 
     setIsSaving(true)
 
-    let finalSpecialties = null
-    if (specialty && specialty !== 'Não especificado') {
-      if (specialty === 'Condomínios' && condominiumName.trim()) {
-        finalSpecialties = `Condomínios: ${condominiumName.trim()}`
-      } else {
-        finalSpecialties = specialty
-      }
+    let finalSpecialtiesStr = null
+    if (selectedSpecialties.length > 0) {
+      const finalArray = selectedSpecialties.map((s) => {
+        if (s === 'Condomínios' && condominiumName.trim()) {
+          return `Condomínios: ${condominiumName.trim()}`
+        }
+        return s
+      })
+      finalSpecialtiesStr = JSON.stringify(finalArray)
     }
 
     const { error } = await supabase
@@ -232,7 +249,7 @@ export default function ProfilePage() {
         company_name: companyName,
         creci: creci,
         region: region,
-        specialties: finalSpecialties,
+        specialties: finalSpecialtiesStr,
         updated_at: new Date().toISOString(),
       })
       .eq('id', authUser.id)
@@ -473,25 +490,54 @@ export default function ProfilePage() {
                   <Label htmlFor="specialty" className="text-white">
                     Especializado em (Opcional)
                   </Label>
-                  <Select value={specialty} onValueChange={setSpecialty}>
-                    <SelectTrigger className="bg-background text-white border-border">
-                      <SelectValue placeholder="Selecione..." />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {SPECIALTIES.map((r) => (
-                        <SelectItem key={r} value={r}>
-                          {r}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        role="combobox"
+                        className="w-full justify-between bg-background text-white border-border hover:bg-secondary hover:text-white"
+                      >
+                        <span className="truncate mr-2">
+                          {selectedSpecialties.length === 0
+                            ? 'Selecione...'
+                            : selectedSpecialties.length <= 2
+                              ? selectedSpecialties.join(', ')
+                              : `${selectedSpecialties.length} selecionados`}
+                        </span>
+                        <ChevronDown className="h-4 w-4 shrink-0 opacity-50" />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-2 bg-popover border-border shadow-md">
+                      <div className="space-y-3 p-1">
+                        {AVAILABLE_SPECIALTIES.map((sp) => (
+                          <div key={sp} className="flex items-center space-x-2">
+                            <Checkbox
+                              id={`specialty-${sp}`}
+                              checked={selectedSpecialties.includes(sp)}
+                              onCheckedChange={(checked) => {
+                                setSelectedSpecialties((prev) =>
+                                  checked ? [...prev, sp] : prev.filter((s) => s !== sp),
+                                )
+                              }}
+                            />
+                            <label
+                              htmlFor={`specialty-${sp}`}
+                              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-white cursor-pointer"
+                            >
+                              {sp}
+                            </label>
+                          </div>
+                        ))}
+                      </div>
+                    </PopoverContent>
+                  </Popover>
                 </div>
               </div>
 
-              {specialty === 'Condomínios' && (
+              {selectedSpecialties.includes('Condomínios') && (
                 <div className="space-y-2 animate-fade-in-down">
                   <Label htmlFor="condominiumName" className="text-white">
-                    Nome do Condomínio
+                    Nome do Condomínio (Opcional)
                   </Label>
                   <Input
                     id="condominiumName"
