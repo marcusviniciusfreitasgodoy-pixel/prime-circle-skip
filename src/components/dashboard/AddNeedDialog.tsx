@@ -156,21 +156,37 @@ export function AddNeedDialog({ onSuccess }: { onSuccess: () => void }) {
               />
             </div>
           </div>
+
+          <div className="space-y-2">
+            <Label>Logradouro / Rua Preferencial (Opcional)</Label>
+            <AddressAutocomplete
+              name="endereco"
+              value={endereco}
+              onChange={setEndereco}
+              onSelect={(details) => {
+                setEndereco(details.street || details.formattedAddress)
+                if (details.neighborhood) setBairro(details.neighborhood)
+                if (details.city) setCity(details.city)
+                if (details.state) setStateLocation(details.state)
+              }}
+              placeholder="Ex: Av. Lúcio Costa"
+            />
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label>Logradouro / Rua Preferencial</Label>
+              <Label>Cidade</Label>
               <AddressAutocomplete
-                name="endereco"
+                name="cidade"
                 required
-                value={endereco}
-                onChange={setEndereco}
+                types={['(cities)']}
+                value={city}
+                onChange={setCity}
                 onSelect={(details) => {
-                  setEndereco(details.street || details.formattedAddress)
-                  if (details.neighborhood) setBairro(details.neighborhood)
-                  if (details.city) setCity(details.city)
+                  setCity(details.city || details.formattedAddress.split(',')[0])
                   if (details.state) setStateLocation(details.state)
                 }}
-                placeholder="Ex: Av. Lúcio Costa"
+                placeholder="Ex: Rio de Janeiro"
               />
             </div>
             <div className="space-y-2">
@@ -183,11 +199,14 @@ export function AddNeedDialog({ onSuccess }: { onSuccess: () => void }) {
                 onChange={setBairro}
                 onSelect={(details) => {
                   setBairro(details.neighborhood || details.street || details.formattedAddress)
+                  if (details.city) setCity(details.city)
+                  if (details.state) setStateLocation(details.state)
                 }}
                 placeholder="Ex: Barra da Tijuca ou Recreio"
               />
             </div>
           </div>
+
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="space-y-2">
               <Label>Quartos (Mín)</Label>

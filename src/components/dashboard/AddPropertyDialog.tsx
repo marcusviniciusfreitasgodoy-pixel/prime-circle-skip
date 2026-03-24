@@ -253,21 +253,38 @@ export function AddPropertyDialog({
               />
             </div>
           </div>
+
+          <div className="space-y-2">
+            <Label>Logradouro / Rua</Label>
+            <AddressAutocomplete
+              name="endereco"
+              required
+              value={endereco}
+              onChange={setEndereco}
+              onSelect={(details) => {
+                setEndereco(details.street || details.formattedAddress)
+                if (details.neighborhood) setBairro(details.neighborhood)
+                if (details.city) setCity(details.city)
+                if (details.state) setStateLocation(details.state)
+              }}
+              placeholder="Ex: Av. das Américas"
+            />
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="space-y-2">
-              <Label>Logradouro / Rua</Label>
+              <Label>Cidade</Label>
               <AddressAutocomplete
-                name="endereco"
+                name="cidade"
                 required
-                value={endereco}
-                onChange={setEndereco}
+                types={['(cities)']}
+                value={city}
+                onChange={setCity}
                 onSelect={(details) => {
-                  setEndereco(details.street || details.formattedAddress)
-                  if (details.neighborhood) setBairro(details.neighborhood)
-                  if (details.city) setCity(details.city)
+                  setCity(details.city || details.formattedAddress.split(',')[0])
                   if (details.state) setStateLocation(details.state)
                 }}
-                placeholder="Ex: Av. das Américas"
+                placeholder="Ex: Rio de Janeiro"
               />
             </div>
             <div className="space-y-2">
@@ -280,6 +297,8 @@ export function AddPropertyDialog({
                 onChange={setBairro}
                 onSelect={(details) => {
                   setBairro(details.neighborhood || details.street || details.formattedAddress)
+                  if (details.city) setCity(details.city)
+                  if (details.state) setStateLocation(details.state)
                 }}
                 placeholder="Ex: Barra da Tijuca"
               />
@@ -289,6 +308,7 @@ export function AddPropertyDialog({
               <Input name="complemento" placeholder="Ex: Apto 101" />
             </div>
           </div>
+
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="space-y-2">
               <Label>Quartos</Label>

@@ -289,6 +289,22 @@ export function EditPropertySheet({
           </div>
 
           <div className="space-y-2">
+            <Label>Cidade</Label>
+            <AddressAutocomplete
+              name="cidade"
+              required
+              types={['(cities)']}
+              value={city}
+              onChange={setCity}
+              onSelect={(details) => {
+                setCity(details.city || details.formattedAddress.split(',')[0])
+                if (details.state) setStateLocation(details.state)
+              }}
+              placeholder="Ex: Rio de Janeiro"
+            />
+          </div>
+
+          <div className="space-y-2">
             <Label>Bairro</Label>
             <AddressAutocomplete
               name="bairro"
@@ -298,6 +314,8 @@ export function EditPropertySheet({
               onChange={setBairro}
               onSelect={(details) => {
                 setBairro(details.neighborhood || details.street || details.formattedAddress)
+                if (details.city) setCity(details.city)
+                if (details.state) setStateLocation(details.state)
               }}
               placeholder="Ex: Barra da Tijuca"
             />
