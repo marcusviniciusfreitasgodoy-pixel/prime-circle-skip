@@ -250,11 +250,13 @@ export function EditPropertySheet({
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {['Apartamento', 'Cobertura', 'Casa', 'Terreno', 'Sala Comercial'].map((o) => (
-                    <SelectItem key={o} value={o}>
-                      {o}
-                    </SelectItem>
-                  ))}
+                  {['Apartamento', 'Cobertura', 'Casa', 'Terreno', 'Sala Comercial', 'Flat'].map(
+                    (o) => (
+                      <SelectItem key={o} value={o}>
+                        {o}
+                      </SelectItem>
+                    ),
+                  )}
                 </SelectContent>
               </Select>
             </div>
