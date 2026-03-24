@@ -96,7 +96,7 @@ export function MatchModal({
     if (error) {
       toast.error('Erro ao vincular imóvel.')
     } else {
-      toast.success('Parceria proposta! O negócio foi adicionado ao seu funil.')
+      let notificationMsg = 'O negócio foi adicionado ao seu funil.'
 
       if (brokerDemandId) {
         const { data: partnerProfile } = await supabase
@@ -109,16 +109,37 @@ export function MatchModal({
           const partnerName = partnerProfile.full_name || 'Corretor'
           const propertyDetails = property.metadata?.tipo_imovel || 'Imóvel'
 
-          await processNotification({
-            userId: brokerDemandId,
-            type: 'match',
-            partnerName,
-            propertyDetails,
-            recipientPhone: partnerProfile.whatsapp_number || '',
-            recipientEmail: partnerProfile.email || '',
-          })
+          if (!partnerProfile.whatsapp_number && !partnerProfile.email) {
+            notificationMsg =
+              'Corretor sem contatos válidos. Ele será notificado apenas no sistema.'
+          } else {
+            try {
+              const res = await processNotification({
+                userId: brokerDemandId,
+                type: 'match',
+                partnerName,
+                propertyDetails,
+                recipientPhone: partnerProfile.whatsapp_number || '',
+                recipientEmail: partnerProfile.email || '',
+              })
+
+              if (res?.partial) {
+                notificationMsg =
+                  'Notificações enviadas com falha parcial (E-mail ou WhatsApp pode não ter chegado).'
+              } else if (res?.success) {
+                notificationMsg = 'O corretor foi notificado via E-mail e WhatsApp!'
+              }
+            } catch (err: any) {
+              console.error('Notification error:', err)
+              notificationMsg = 'Erro ao disparar notificações externas, mas o match foi salvo.'
+            }
+          }
         }
       }
+
+      toast.success('Parceria proposta!', {
+        description: notificationMsg,
+      })
 
       onClose()
       setSelectedProperty('')

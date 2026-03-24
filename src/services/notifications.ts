@@ -107,6 +107,7 @@ export const processNotification = async ({
     return content
       .replace(/\{\{partner_name\}\}/g, partnerName)
       .replace(/\{\{property_details\}\}/g, propertyDetails)
+      .replace(/\[Link do Sistema\]/g, 'https://www.primecircle.app.br/dashboard')
   }
 
   const waMessage = buildMessage(waTemplate ? waTemplate.content : defaultWaContent)
@@ -116,8 +117,8 @@ export const processNotification = async ({
 
   if (recipientPhone) {
     notificationPromises.push(
-      sendWhatsappMessage(recipientPhone, waMessage, userId).catch((err: any) => {
-        console.error('WA Notification Error:', err)
+      sendWhatsappMessage(recipientPhone, waMessage, userId).then((res) => {
+        if (res?.error) throw new Error(res.error)
       }),
     )
   }
@@ -128,13 +129,28 @@ export const processNotification = async ({
         to: recipientEmail,
         body: emailMessage,
         userId,
-      }).catch((err: any) => {
-        console.error('Email Notification Error:', err)
+      }).then((res) => {
+        if (res?.error || res?.success === false) throw new Error(res?.error || 'Email error')
       }),
     )
   }
 
-  await Promise.allSettled(notificationPromises)
+  if (notificationPromises.length === 0) {
+    return { success: false, partial: false }
+  }
+
+  const results = await Promise.allSettled(notificationPromises)
+  const failed = results.filter((r) => r.status === 'rejected')
+  const succeeded = results.filter((r) => r.status === 'fulfilled')
+
+  if (failed.length > 0 && succeeded.length === 0) {
+    throw new Error('Falha ao enviar notificações. Verifique os contatos.')
+  }
+
+  return {
+    success: succeeded.length > 0,
+    partial: failed.length > 0 && succeeded.length > 0,
+  }
 }
 
 export const sendWelcomeNotifications = async ({

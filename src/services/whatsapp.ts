@@ -4,5 +4,14 @@ export const sendWhatsappMessage = async (number: string, text: string, userId?:
   const { data, error } = await supabase.functions.invoke('send-whatsapp', {
     body: { number, text, user_id: userId },
   })
-  return { data, error }
+
+  if (error) {
+    throw error
+  }
+
+  if (data?.error) {
+    throw new Error(data.error)
+  }
+
+  return data
 }

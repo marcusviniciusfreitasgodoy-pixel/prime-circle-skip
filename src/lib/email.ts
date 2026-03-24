@@ -28,10 +28,15 @@ export const sendTransactionalEmail = async (type: string, payload: any) => {
       console.error('Error invoking send-email edge function:', error)
       throw error
     }
+
+    if (data?.error) {
+      throw new Error(data.error)
+    }
+
     return data
   } catch (error) {
-    console.error('Email send failed (silent fallback):', error)
-    return { success: false, error }
+    console.error('Email send failed:', error)
+    throw error
   }
 }
 
