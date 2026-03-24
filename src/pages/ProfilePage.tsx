@@ -8,6 +8,7 @@ import { Switch } from '@/components/ui/switch'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Textarea } from '@/components/ui/textarea'
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { AmbassadorWidget } from '@/components/AmbassadorWidget'
 import useAppStore from '@/stores/main'
 import type { Tier } from '@/stores/main'
@@ -44,6 +45,7 @@ export default function ProfilePage() {
   const [email, setEmail] = useState('')
   const [whatsapp, setWhatsapp] = useState('')
   const [fullName, setFullName] = useState('')
+  const [profileType, setProfileType] = useState<'autonomo' | 'imobiliaria'>('autonomo')
   const [companyName, setCompanyName] = useState('')
   const [creci, setCreci] = useState('')
   const [region, setRegion] = useState('')
@@ -89,10 +91,25 @@ export default function ProfilePage() {
             setFullName(d.full_name || '')
             setEmail(d.email || authUser.email || '')
             setAvatarUrl(d.avatar_url || '')
-            setCompanyName(d.company_name || '')
             setCreci(d.creci || '')
             setRegion(d.region || '')
             setBio(d.bio || '')
+
+            if (d.company_name) {
+              if (
+                d.company_name.toLowerCase() === 'autônomo' ||
+                d.company_name.toLowerCase() === 'autonomo'
+              ) {
+                setProfileType('autonomo')
+                setCompanyName('')
+              } else {
+                setProfileType('imobiliaria')
+                setCompanyName(d.company_name)
+              }
+            } else {
+              setProfileType('autonomo')
+              setCompanyName('')
+            }
 
             if (d.specialties) {
               try {
@@ -258,8 +275,8 @@ export default function ProfilePage() {
 
     setIsSaving(true)
 
-    let emailMessage = ''
-    if (email !== authUser.email) {
+    // Pre-check for email existence without blocking the whole save if possible
+    if (email && authUser.email && email.toLowerCase() !== authUser.email.toLowerCase()) {
       try {
         const { data: existingProfile } = await supabase
           .from('profiles')
@@ -276,40 +293,8 @@ export default function ProfilePage() {
           setIsSaving(false)
           return
         }
-
-        const { error: authError } = await supabase.auth.updateUser({ email })
-        if (authError) {
-          const isEmailExists =
-            authError.status === 422 ||
-            authError.message.includes('already been registered') ||
-            (authError as any).code === 'email_exists'
-          toast({
-            title: 'Erro ao atualizar e-mail',
-            description: isEmailExists
-              ? 'Este e-mail já está sendo utilizado por outra conta.'
-              : authError.message,
-            variant: 'destructive',
-          })
-          setIsSaving(false)
-          return
-        }
-        emailMessage = ' Verifique sua caixa de entrada para confirmar o novo e-mail.'
       } catch (err: any) {
-        console.error('Update email error:', err)
-        const isEmailExists =
-          err?.status === 422 ||
-          err?.message?.includes('already been registered') ||
-          err?.code === 'email_exists' ||
-          err?.message?.includes('HTTP 422')
-        toast({
-          title: 'Erro ao atualizar e-mail',
-          description: isEmailExists
-            ? 'Este e-mail já está sendo utilizado por outra conta.'
-            : 'Ocorreu um erro inesperado ao atualizar o e-mail.',
-          variant: 'destructive',
-        })
-        setIsSaving(false)
-        return
+        console.error('Update email pre-check error:', err)
       }
     }
 
@@ -324,14 +309,18 @@ export default function ProfilePage() {
       finalSpecialtiesStr = JSON.stringify(finalArray)
     }
 
-    const { error } = await supabase
+    const finalCompanyName = profileType === 'autonomo' ? 'Autônomo' : companyName.trim()
+    const finalCreci = creci.trim()
+
+    // 1. Update Profiles Table First
+    const { error: profileError } = await supabase
       .from('profiles')
       .update({
         full_name: fullName,
         email: email,
         whatsapp_number: formattedWhatsapp,
-        company_name: companyName,
-        creci: creci,
+        company_name: finalCompanyName,
+        creci: finalCreci,
         region: region,
         specialties: finalSpecialtiesStr,
         bio: bio,
@@ -339,21 +328,54 @@ export default function ProfilePage() {
       })
       .eq('id', authUser.id)
 
-    setIsSaving(false)
-
-    if (error) {
+    if (profileError) {
+      setIsSaving(false)
       toast({
         title: 'Erro ao salvar',
-        description: error.message,
+        description: profileError.message,
         variant: 'destructive',
       })
-    } else {
-      setWhatsapp(formattedWhatsapp)
-      toast({
-        title: 'Sucesso',
-        description: 'Perfil atualizado com sucesso.' + emailMessage,
-      })
+      return
     }
+
+    // 2. Try to update Auth Email if it changed
+    let emailMessage = ''
+    if (email && authUser.email && email.toLowerCase() !== authUser.email.toLowerCase()) {
+      try {
+        const { error: authError } = await supabase.auth.updateUser({ email })
+        if (authError) {
+          const isEmailExists =
+            authError.status === 422 ||
+            authError.message.includes('already been registered') ||
+            (authError as any).code === 'email_exists'
+          toast({
+            title: 'Perfil salvo, mas ocorreu um erro no e-mail de acesso',
+            description: isEmailExists
+              ? 'Este e-mail já está sendo utilizado por outra conta.'
+              : authError.message,
+            variant: 'destructive',
+          })
+          setIsSaving(false)
+          return
+        }
+        emailMessage = ' Verifique sua caixa de entrada para confirmar o novo e-mail.'
+      } catch (err: any) {
+        toast({
+          title: 'Perfil salvo, mas erro ao atualizar e-mail',
+          description: 'Ocorreu um erro inesperado ao atualizar o e-mail de acesso.',
+          variant: 'destructive',
+        })
+        setIsSaving(false)
+        return
+      }
+    }
+
+    setIsSaving(false)
+    setWhatsapp(formattedWhatsapp)
+    toast({
+      title: 'Sucesso',
+      description: 'Perfil atualizado com sucesso.' + emailMessage,
+    })
   }
 
   const handleTogglePush = async (checked: boolean) => {
@@ -538,7 +560,9 @@ export default function ProfilePage() {
                 />
               </div>
               <h3 className="text-xl font-bold text-white">{displayName}</h3>
-              <p className="text-sm text-primary mb-4">{companyName || 'Corretor Autônomo'}</p>
+              <p className="text-sm text-primary mb-4">
+                {profileType === 'autonomo' ? 'Corretor Autônomo' : companyName || 'Imobiliária'}
+              </p>
 
               {validatedBy && (
                 <div className="flex items-center justify-center gap-1.5 bg-green-500/10 text-green-500 border border-green-500/20 px-3 py-1 rounded-full text-xs font-medium mb-4">
@@ -617,20 +641,59 @@ export default function ProfilePage() {
               <CardTitle className="text-lg text-white">Atuação Profissional</CardTitle>
               <CardDescription>Informações sobre seu foco de atuação e mercado.</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="companyName" className="text-white">
-                  Imobiliária / Agência
-                </Label>
-                <Input
-                  id="companyName"
-                  placeholder="Autônomo ou Nome da Imobiliária"
-                  value={companyName}
-                  onChange={(e) => setCompanyName(e.target.value)}
-                  className="bg-background text-white"
-                />
+            <CardContent className="space-y-6">
+              <div className="space-y-4 border border-border rounded-lg p-4 bg-secondary/10">
+                <div className="space-y-3">
+                  <Label className="text-white text-base">Tipo de Atuação</Label>
+                  <RadioGroup
+                    value={profileType}
+                    onValueChange={(val) => setProfileType(val as 'autonomo' | 'imobiliaria')}
+                    className="flex flex-col sm:flex-row gap-4"
+                  >
+                    <div
+                      className="flex items-center space-x-2 bg-background border border-border px-4 py-3 rounded-lg flex-1 cursor-pointer hover:bg-secondary/50 transition-colors"
+                      onClick={() => setProfileType('autonomo')}
+                    >
+                      <RadioGroupItem value="autonomo" id="autonomo" />
+                      <Label
+                        htmlFor="autonomo"
+                        className="text-white font-normal cursor-pointer flex-1"
+                      >
+                        Corretor Autônomo
+                      </Label>
+                    </div>
+                    <div
+                      className="flex items-center space-x-2 bg-background border border-border px-4 py-3 rounded-lg flex-1 cursor-pointer hover:bg-secondary/50 transition-colors"
+                      onClick={() => setProfileType('imobiliaria')}
+                    >
+                      <RadioGroupItem value="imobiliaria" id="imobiliaria" />
+                      <Label
+                        htmlFor="imobiliaria"
+                        className="text-white font-normal cursor-pointer flex-1"
+                      >
+                        Imobiliária / Agência
+                      </Label>
+                    </div>
+                  </RadioGroup>
+                </div>
+
+                {profileType === 'imobiliaria' && (
+                  <div className="space-y-2 animate-in fade-in slide-in-from-top-2 pt-2">
+                    <Label htmlFor="companyName" className="text-white">
+                      Nome da Imobiliária / Agência
+                    </Label>
+                    <Input
+                      id="companyName"
+                      placeholder="Ex: Prime Imóveis"
+                      value={companyName}
+                      onChange={(e) => setCompanyName(e.target.value)}
+                      className="bg-background text-white"
+                    />
+                  </div>
+                )}
               </div>
-              <div className="grid grid-cols-2 gap-4">
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="creci" className="text-white">
                     CRECI
