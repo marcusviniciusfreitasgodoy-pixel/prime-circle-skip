@@ -13,7 +13,16 @@ import type { Tier } from '@/stores/main'
 import { useAuth } from '@/hooks/use-auth'
 import { supabase } from '@/lib/supabase/client'
 import { useToast } from '@/hooks/use-toast'
-import { ShieldCheck, BellRing, Camera, Save, Loader2, ChevronDown } from 'lucide-react'
+import {
+  ShieldCheck,
+  BellRing,
+  Camera,
+  Save,
+  Loader2,
+  ChevronDown,
+  CheckCircle2,
+  AlertCircle,
+} from 'lucide-react'
 import { Skeleton } from '@/components/ui/skeleton'
 
 const AVAILABLE_SPECIALTIES = [
@@ -238,7 +247,7 @@ export default function ProfilePage() {
     if (formattedWhatsapp && !phoneRegex.test(formattedWhatsapp)) {
       toast({
         title: 'Número inválido',
-        description: 'Por favor, insira um número válido com DDD (ex: 21999999999)',
+        description: 'Por favor, insira um número válido de WhatsApp',
         variant: 'destructive',
       })
       return
@@ -440,6 +449,31 @@ export default function ProfilePage() {
     }
   }
 
+  const getWhatsappStatus = (val: string) => {
+    if (!val) return { status: 'idle', message: '' }
+    const digits = val.replace(/\D/g, '')
+    if (digits.length === 0) return { status: 'idle', message: '' }
+
+    if (digits.startsWith('55') && (digits.length === 12 || digits.length === 13)) {
+      return { status: 'success', message: 'Número formatado corretamente.' }
+    }
+
+    if (digits.length === 10 || digits.length === 11) {
+      return { status: 'success', message: 'Número formatado corretamente (+55 será adicionado).' }
+    }
+
+    if (digits.length > 13) {
+      return { status: 'error', message: 'Verifique o formato, parece ter dígitos extras.' }
+    }
+
+    return {
+      status: 'error',
+      message: 'Número incompleto. Insira DDD + telefone (10 ou 11 dígitos).',
+    }
+  }
+
+  const whatsappStatus = getWhatsappStatus(whatsapp)
+
   if (isLoading) {
     return (
       <div className="max-w-4xl mx-auto space-y-8 animate-fade-in-up py-4">
@@ -558,6 +592,18 @@ export default function ProfilePage() {
                   onChange={(e) => setWhatsapp(e.target.value)}
                   className="bg-background text-white"
                 />
+                {whatsappStatus.status === 'success' && (
+                  <p className="text-xs text-green-500 flex items-center gap-1.5 mt-1.5 animate-in fade-in slide-in-from-top-1">
+                    <CheckCircle2 className="w-3.5 h-3.5" />
+                    {whatsappStatus.message}
+                  </p>
+                )}
+                {whatsappStatus.status === 'error' && (
+                  <p className="text-xs text-destructive flex items-center gap-1.5 mt-1.5 animate-in fade-in slide-in-from-top-1">
+                    <AlertCircle className="w-3.5 h-3.5" />
+                    {whatsappStatus.message}
+                  </p>
+                )}
               </div>
             </CardContent>
           </Card>
