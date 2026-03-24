@@ -8,7 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Search, Building, MapPin, PlayCircle, Eye, Image as ImageIcon, Lock } from 'lucide-react'
+import { Search, Building, MapPin, PlayCircle, Image as ImageIcon, Lock } from 'lucide-react'
 import { useAuth } from '@/hooks/use-auth'
 import { supabase } from '@/lib/supabase/client'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
@@ -17,6 +17,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { AddPropertyDialog } from '@/components/dashboard/AddPropertyDialog'
 import { EditPropertySheet } from '@/components/dashboard/EditPropertySheet'
 import { VideoPlayerModal } from '@/components/dashboard/VideoPlayerModal'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
 export default function ListingsListPage() {
   const [properties, setProperties] = useState<any[]>([])
@@ -229,12 +230,24 @@ export default function ListingsListPage() {
                         {p.metadata.property_type || p.metadata.tipo_imovel || 'Apartamento'}
                       </Badge>
                       {p.metadata.is_off_market && (
-                        <Badge
-                          variant="outline"
-                          className="bg-primary/20 text-primary border-primary/30 text-[10px] uppercase font-bold flex items-center gap-1 mt-1"
-                        >
-                          <Lock className="w-3 h-3" /> Off-Market
-                        </Badge>
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Badge
+                                variant="outline"
+                                className="bg-primary/20 text-primary border-primary/30 text-[10px] uppercase font-bold flex items-center gap-1 mt-1 cursor-help"
+                              >
+                                <Lock className="w-3 h-3" /> Off-Market
+                              </Badge>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p className="max-w-[200px] text-xs">
+                                Imóvel Off-Market. Temporariamente visível para todos os membros da
+                                rede nesta fase.
+                              </p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
                       )}
                     </div>
                   </div>
