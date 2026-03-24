@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Switch } from '@/components/ui/switch'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { Textarea } from '@/components/ui/textarea'
 import { AmbassadorWidget } from '@/components/AmbassadorWidget'
 import useAppStore from '@/stores/main'
 import type { Tier } from '@/stores/main'
@@ -46,6 +47,7 @@ export default function ProfilePage() {
   const [companyName, setCompanyName] = useState('')
   const [creci, setCreci] = useState('')
   const [region, setRegion] = useState('')
+  const [bio, setBio] = useState('')
   const [selectedSpecialties, setSelectedSpecialties] = useState<string[]>([])
   const [condominiumName, setCondominiumName] = useState('')
 
@@ -67,7 +69,7 @@ export default function ProfilePage() {
         supabase
           .from('profiles')
           .select(
-            'whatsapp_number, full_name, validated_by, validation_date, avatar_url, referral_code, company_name, creci, region, specialties, email',
+            'whatsapp_number, full_name, validated_by, validation_date, avatar_url, referral_code, company_name, creci, region, specialties, email, bio',
           )
           .eq('id', authUser.id)
           .single(),
@@ -90,6 +92,7 @@ export default function ProfilePage() {
             setCompanyName(d.company_name || '')
             setCreci(d.creci || '')
             setRegion(d.region || '')
+            setBio(d.bio || '')
 
             if (d.specialties) {
               try {
@@ -331,6 +334,7 @@ export default function ProfilePage() {
         creci: creci,
         region: region,
         specialties: finalSpecialtiesStr,
+        bio: bio,
         updated_at: new Date().toISOString(),
       })
       .eq('id', authUser.id)
@@ -701,6 +705,19 @@ export default function ProfilePage() {
                   />
                 </div>
               )}
+
+              <div className="space-y-2">
+                <Label htmlFor="bio" className="text-white">
+                  Resumo Profissional (Bio - Opcional)
+                </Label>
+                <Textarea
+                  id="bio"
+                  placeholder="Escreva um breve resumo sobre sua trajetória, diferenciais..."
+                  value={bio}
+                  onChange={(e) => setBio(e.target.value)}
+                  className="bg-background text-white min-h-[100px]"
+                />
+              </div>
 
               <div className="space-y-2">
                 <Label htmlFor="region" className="text-white">
