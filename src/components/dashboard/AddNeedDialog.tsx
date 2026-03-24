@@ -156,7 +156,7 @@ export function AddNeedDialog({ onSuccess }: { onSuccess: () => void }) {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label>Região / Rua Preferencial</Label>
+              <Label>Logradouro / Rua Preferencial</Label>
               <AddressAutocomplete
                 name="endereco"
                 required

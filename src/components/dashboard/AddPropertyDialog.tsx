@@ -253,7 +253,7 @@ export function AddPropertyDialog({
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="space-y-2">
-              <Label>Buscar Endereço (Rua/Avenida)</Label>
+              <Label>Logradouro / Rua</Label>
               <AddressAutocomplete
                 name="endereco"
                 required

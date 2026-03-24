@@ -20,55 +20,38 @@ import {
   SheetTitle,
   SheetDescription,
 } from '@/components/ui/sheet'
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from '@/components/ui/alert-dialog'
 import { useToast } from '@/hooks/use-toast'
-import { Lock, Image as ImageIcon, X, Eye } from 'lucide-react'
+import { Save, Lock, Image as ImageIcon, X } from 'lucide-react'
 import { AddressAutocomplete } from '@/components/ui/address-autocomplete'
 
-const formatCurrency = (value: string | number) => {
-  if (typeof value === 'number') {
-    return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value)
-  }
+const formatCurrency = (value: string) => {
   const digits = value.replace(/\D/g, '')
   if (!digits) return ''
   return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(
     parseInt(digits, 10) / 100,
   )
 }
-const parseCurrency = (val: string) => parseInt(val.replace(/\D/g, '') || '0', 10) / 100
 
-interface EditPropertySheetProps {
-  property: any
-  open: boolean
-  onOpenChange: (open: boolean) => void
-  onSuccess: () => void
-}
+const parseCurrency = (val: string) => parseInt(val.replace(/\D/g, '') || '0', 10) / 100
 
 export function EditPropertySheet({
   property,
   open,
   onOpenChange,
   onSuccess,
-}: EditPropertySheetProps) {
+}: {
+  property: any
+  open: boolean
+  onOpenChange: (open: boolean) => void
+  onSuccess: () => void
+}) {
   const { user } = useAuth()
   const { toast } = useToast()
   const [loading, setLoading] = useState(false)
   const [isOffMarket, setIsOffMarket] = useState(false)
   const [valor, setValor] = useState('')
-  const [status, setStatus] = useState('Ativo')
   const [photos, setPhotos] = useState<string[]>([])
   const [uploadingPhotos, setUploadingPhotos] = useState(false)
-  const [isDeleting, setIsDeleting] = useState(false)
 
   const [endereco, setEndereco] = useState('')
   const [bairro, setBairro] = useState('')
@@ -77,23 +60,20 @@ export function EditPropertySheet({
 
   useEffect(() => {
     if (property && open) {
-      setIsOffMarket(!!property.metadata?.is_off_market)
-      setValor(formatCurrency(property.metadata?.valor || 0))
-      setStatus(property.metadata?.status || 'Ativo')
-      setPhotos(property.metadata?.photos || [])
-      setEndereco(
-        property.metadata?.endereco ||
-          property.metadata?.street ||
-          property.metadata?.location ||
-          '',
+      const md = property.metadata || {}
+      setValor(
+        md.valor
+          ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(md.valor)
+          : md.price || '',
       )
-      setBairro(property.metadata?.bairro || property.metadata?.neighborhood || '')
-      setCity(property.metadata?.city || '')
-      setStateLocation(property.metadata?.state || '')
+      setIsOffMarket(!!md.is_off_market)
+      setPhotos(md.photos || [])
+      setEndereco(md.endereco || md.street || md.location || '')
+      setBairro(md.bairro || md.neighborhood || md.location || '')
+      setCity(md.city || '')
+      setStateLocation(md.state || '')
     }
   }, [property, open])
-
-  if (!property) return null
 
   const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files
@@ -102,7 +82,7 @@ export function EditPropertySheet({
     if (photos.length + files.length > 5) {
       toast({
         title: 'Limite excedido',
-        description: 'Você pode carregar no máximo 5 imagens.',
+        description: 'Você pode ter no máximo 5 imagens.',
         variant: 'destructive',
       })
       e.target.value = ''
@@ -130,45 +110,48 @@ export function EditPropertySheet({
     }
   }
 
-  const handleRemovePhoto = (urlToRemove: string) => {
-    setPhotos((prev) => prev.filter((url) => url !== urlToRemove))
-  }
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    if (!user) return
+    if (!user || !property) return
     setLoading(true)
 
     const fd = new FormData(e.currentTarget)
 
+    const parsedVal = valor.includes('R$')
+      ? parseCurrency(valor)
+      : property.metadata.valor || parseCurrency(valor)
+
     const md = {
       ...property.metadata,
       is_off_market: isOffMarket,
-      valor: parseCurrency(valor),
-      tipo_imovel: fd.get('tipo_imovel'),
+      valor: parsedVal,
+      tipo_imovel: String(fd.get('tipo_imovel') || property.metadata.tipo_imovel || ''),
       endereco: endereco,
       bairro: bairro,
       street: endereco,
       neighborhood: bairro,
       city: city,
       state: stateLocation,
-      complemento: fd.get('complemento') || '',
-      quartos: fd.get('quartos'),
-      suites: fd.get('suites'),
-      tamanho_imovel: Number(fd.get('tamanho_imovel')),
-      tamanho_terreno: fd.get('tamanho_terreno') ? Number(fd.get('tamanho_terreno')) : null,
-      nome_condominio: fd.get('nome_condominio'),
-      link_imovel: fd.get('link_imovel'),
-      video_url: fd.get('video_url') || null,
-      description: fd.get('description'),
-      status,
+      complemento: String(fd.get('complemento') || property.metadata.complemento || ''),
+      quartos: String(fd.get('quartos') || property.metadata.quartos || ''),
+      suites: String(fd.get('suites') || property.metadata.suites || ''),
+      tamanho_imovel: Number(fd.get('tamanho_imovel') || property.metadata.tamanho_imovel || 0),
+      tamanho_terreno: fd.get('tamanho_terreno')
+        ? Number(fd.get('tamanho_terreno'))
+        : property.metadata.tamanho_terreno,
+      nome_condominio: String(fd.get('nome_condominio') || property.metadata.nome_condominio || ''),
+      link_imovel: fd.get('link_imovel')
+        ? String(fd.get('link_imovel'))
+        : property.metadata.link_imovel,
+      video_url: fd.get('video_url') ? String(fd.get('video_url')) : property.metadata.video_url,
+      description: String(fd.get('description') || property.metadata.description || ''),
       photos,
+      status: String(fd.get('status') || property.metadata.status || 'Ativo'),
     }
 
-    md.title = md.tipo_imovel
-    md.price = formatCurrency(md.valor)
-    md.location = md.bairro || md.endereco
-    md.property_type = md.tipo_imovel
+    if (valor.includes('R$')) {
+      md.price = valor
+    }
 
     const content = `Tipo: ${md.tipo_imovel}\nBairro: ${md.neighborhood}\nEndereço: ${md.street} ${md.complemento ? `- ${md.complemento}` : ''}\nCidade: ${md.city}\nEstado: ${md.state}\nValor: R$ ${md.valor}\nQuartos: ${md.quartos}\nSuítes: ${md.suites}\nDetalhes: ${md.description}`
 
@@ -176,47 +159,14 @@ export function EditPropertySheet({
       .from('documents')
       .update({ content, metadata: md })
       .eq('id', property.id)
-      .eq('metadata->>user_id', user.id)
 
     setLoading(false)
     if (error) {
-      toast({
-        title: 'Erro de Permissão',
-        description: 'Falha ao atualizar imóvel. Apenas o proprietário pode realizar alterações.',
-        variant: 'destructive',
-      })
+      toast({ title: 'Erro', description: 'Falha ao atualizar imóvel.', variant: 'destructive' })
     } else {
       toast({
         title: 'Sucesso',
-        description: 'Imóvel atualizado com sucesso!',
-        className: 'bg-card border-primary/50 text-white',
-      })
-      onSuccess()
-    }
-  }
-
-  const handleDelete = async () => {
-    if (!property || !user) return
-    setIsDeleting(true)
-
-    const { error } = await supabase
-      .from('documents')
-      .delete()
-      .eq('id', property.id)
-      .eq('metadata->>user_id', user.id)
-
-    setIsDeleting(false)
-
-    if (error) {
-      toast({
-        title: 'Erro ao excluir',
-        description: 'Não foi possível remover o imóvel. Verifique suas permissões.',
-        variant: 'destructive',
-      })
-    } else {
-      toast({
-        title: 'Imóvel removido',
-        description: 'O imóvel foi excluído permanentemente.',
+        description: 'Imóvel atualizado!',
         className: 'bg-card border-primary/50 text-white',
       })
       onOpenChange(false)
@@ -224,24 +174,19 @@ export function EditPropertySheet({
     }
   }
 
-  const getSelectValue = (key: string, fallback: string) => {
-    return property.metadata?.[key]?.toString() || fallback
-  }
+  if (!property) return null
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="w-full sm:max-w-xl overflow-y-auto">
-        <SheetHeader className="mb-6">
+      <SheetContent className="w-full sm:max-w-md overflow-y-auto">
+        <SheetHeader>
           <SheetTitle>Editar Imóvel</SheetTitle>
-          <SheetDescription>
-            Atualize as informações, fotos e status da sua oportunidade de negócio.
-          </SheetDescription>
+          <SheetDescription>Atualize as informações do seu imóvel divulgado.</SheetDescription>
         </SheetHeader>
-
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form onSubmit={handleSubmit} className="space-y-4 mt-6">
           <div className="space-y-3">
             <Label>Fotos do Imóvel (Máx. 5)</Label>
-            <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
+            <div className="grid grid-cols-4 gap-2">
               {photos.map((url, i) => (
                 <div
                   key={i}
@@ -250,8 +195,8 @@ export function EditPropertySheet({
                   <img src={url} alt={`Foto ${i + 1}`} className="object-cover w-full h-full" />
                   <button
                     type="button"
-                    onClick={() => handleRemovePhoto(url)}
-                    className="absolute top-1 right-1 bg-black/60 hover:bg-black p-1.5 rounded-full text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                    onClick={() => setPhotos((p) => p.filter((u) => u !== url))}
+                    className="absolute top-1 right-1 bg-black/60 hover:bg-black p-1 rounded-full text-white opacity-0 group-hover:opacity-100 transition-opacity"
                   >
                     <X className="w-3 h-3" />
                   </button>
@@ -268,40 +213,38 @@ export function EditPropertySheet({
                     disabled={uploadingPhotos}
                   />
                   {uploadingPhotos ? (
-                    <span className="text-xs text-muted-foreground animate-pulse text-center px-1">
+                    <span className="text-[10px] text-muted-foreground animate-pulse text-center">
                       Enviando...
                     </span>
                   ) : (
-                    <>
-                      <ImageIcon className="w-6 h-6 text-muted-foreground mb-1" />
-                      <span className="text-xs text-muted-foreground">Adicionar</span>
-                    </>
+                    <ImageIcon className="w-5 h-5 text-muted-foreground" />
                   )}
                 </label>
               )}
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label>Status do Imóvel</Label>
-              <Select value={status} onValueChange={setStatus}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Ativo">Ativo</SelectItem>
-                  <SelectItem value="Negociando">Negociando</SelectItem>
-                  <SelectItem value="Vendido">Vendido</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+          <div className="space-y-2">
+            <Label>Status do Imóvel</Label>
+            <Select name="status" defaultValue={property.metadata?.status || 'Ativo'}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Ativo">Ativo (Disponível)</SelectItem>
+                <SelectItem value="Vendido">Vendido</SelectItem>
+                <SelectItem value="Suspenso">Suspenso / Pausado</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label>Tipo de Imóvel</Label>
               <Select
                 name="tipo_imovel"
                 required
-                defaultValue={getSelectValue('tipo_imovel', 'Apartamento')}
+                defaultValue={property.metadata?.tipo_imovel || 'Apartamento'}
               >
                 <SelectTrigger>
                   <SelectValue />
@@ -324,46 +267,53 @@ export function EditPropertySheet({
                 onChange={(e) => setValor(formatCurrency(e.target.value))}
               />
             </div>
-            <div className="space-y-2">
-              <Label>Buscar Endereço (Rua/Avenida)</Label>
-              <AddressAutocomplete
-                name="endereco"
-                required
-                value={endereco}
-                onChange={setEndereco}
-                onSelect={(details) => {
-                  setEndereco(details.street || details.formattedAddress)
-                  if (details.neighborhood) setBairro(details.neighborhood)
-                  if (details.city) setCity(details.city)
-                  if (details.state) setStateLocation(details.state)
-                }}
-                placeholder="Ex: Av. das Américas"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label>Complemento (Opcional)</Label>
-              <Input name="complemento" defaultValue={property.metadata?.complemento || ''} />
-            </div>
-            <div className="space-y-2">
-              <Label>Bairro</Label>
-              <AddressAutocomplete
-                name="bairro"
-                required
-                types={['(regions)']}
-                value={bairro}
-                onChange={setBairro}
-                onSelect={(details) => {
-                  setBairro(details.neighborhood || details.street || details.formattedAddress)
-                }}
-                placeholder="Ex: Barra da Tijuca"
-              />
-            </div>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="space-y-2">
+            <Label>Logradouro / Rua</Label>
+            <AddressAutocomplete
+              name="endereco"
+              required
+              value={endereco}
+              onChange={setEndereco}
+              onSelect={(details) => {
+                setEndereco(details.street || details.formattedAddress)
+                if (details.neighborhood) setBairro(details.neighborhood)
+                if (details.city) setCity(details.city)
+                if (details.state) setStateLocation(details.state)
+              }}
+              placeholder="Ex: Av. das Américas"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label>Bairro</Label>
+            <AddressAutocomplete
+              name="bairro"
+              required
+              types={['(regions)']}
+              value={bairro}
+              onChange={setBairro}
+              onSelect={(details) => {
+                setBairro(details.neighborhood || details.street || details.formattedAddress)
+              }}
+              placeholder="Ex: Barra da Tijuca"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label>Complemento (Opcional)</Label>
+            <Input
+              name="complemento"
+              defaultValue={property.metadata?.complemento || ''}
+              placeholder="Ex: Apto 101"
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label>Quartos</Label>
-              <Select name="quartos" required defaultValue={getSelectValue('quartos', '1')}>
+              <Select name="quartos" required defaultValue={property.metadata?.quartos || '1'}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
@@ -378,7 +328,7 @@ export function EditPropertySheet({
             </div>
             <div className="space-y-2">
               <Label>Suítes</Label>
-              <Select name="suites" required defaultValue={getSelectValue('suites', '1')}>
+              <Select name="suites" required defaultValue={property.metadata?.suites || '1'}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
@@ -391,6 +341,9 @@ export function EditPropertySheet({
                 </SelectContent>
               </Select>
             </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label>Área Útil (m²)</Label>
               <Input
@@ -398,55 +351,46 @@ export function EditPropertySheet({
                 type="number"
                 required
                 defaultValue={property.metadata?.tamanho_imovel || ''}
+                placeholder="120"
               />
             </div>
             <div className="space-y-2">
-              <Label>Terreno (m²) (Opcional)</Label>
+              <Label>Terreno (m²)</Label>
               <Input
                 name="tamanho_terreno"
                 type="number"
                 defaultValue={property.metadata?.tamanho_terreno || ''}
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label>Nome do Condomínio (Opcional)</Label>
-              <Input
-                name="nome_condominio"
-                defaultValue={property.metadata?.nome_condominio || ''}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label>Link do Imóvel (Opcional)</Label>
-              <Input
-                name="link_imovel"
-                type="url"
-                placeholder="https://"
-                pattern="https?://.*"
-                title="O link deve começar com http:// ou https://"
-                defaultValue={property.metadata?.link_imovel || ''}
+                placeholder="200"
               />
             </div>
           </div>
 
           <div className="space-y-2">
-            <div className="flex justify-between items-end mb-1">
-              <Label>Link do Vídeo (Opcional)</Label>
-              {property.metadata?.video_views !== undefined && property.metadata?.video_url && (
-                <span className="text-xs font-medium text-primary flex items-center gap-1 bg-primary/10 px-2 py-0.5 rounded-full border border-primary/20">
-                  <Eye className="w-3 h-3" /> {property.metadata.video_views} visualizações
-                </span>
-              )}
-            </div>
+            <Label>Nome do Condomínio (Opcional)</Label>
+            <Input
+              name="nome_condominio"
+              defaultValue={property.metadata?.nome_condominio || ''}
+              placeholder="Ex: Condomínio Península"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label>Link do Imóvel (Opcional)</Label>
+            <Input
+              name="link_imovel"
+              type="url"
+              defaultValue={property.metadata?.link_imovel || ''}
+              placeholder="https://"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label>Link do Vídeo (Opcional)</Label>
             <Input
               name="video_url"
               type="url"
-              placeholder="https://youtube.com/... ou virtual tour"
-              pattern="https?://.*"
-              title="O link deve começar com http:// ou https://"
               defaultValue={property.metadata?.video_url || ''}
+              placeholder="https://youtube.com/..."
             />
           </div>
 
@@ -455,8 +399,9 @@ export function EditPropertySheet({
             <Textarea
               name="description"
               required
-              defaultValue={property.metadata?.description || property.content || ''}
-              className="h-32"
+              defaultValue={property.metadata?.description || ''}
+              placeholder="Diferenciais..."
+              className="h-20"
             />
           </div>
 
@@ -465,46 +410,25 @@ export function EditPropertySheet({
               <Label className="flex items-center gap-2">
                 <Lock className="w-4 h-4 text-primary" /> Off-Market
               </Label>
-              <p className="text-xs text-muted-foreground">
-                Sinaliza que o imóvel não está em portais públicos, apenas para redes privadas.
+              <p className="text-[10px] text-muted-foreground">
+                Não está em portais públicos, apenas para redes privadas.
               </p>
             </div>
             <Switch checked={isOffMarket} onCheckedChange={setIsOffMarket} />
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-3 pt-6 border-t border-border mt-4">
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button type="button" variant="destructive" className="w-full sm:w-auto">
-                  Remover Imóvel
-                </Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Tem certeza que deseja excluir este imóvel?</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    Esta ação não pode ser desfeita. O imóvel será permanentemente removido da
-                    plataforma.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                  <AlertDialogAction
-                    onClick={handleDelete}
-                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                  >
-                    {isDeleting ? 'Removendo...' : 'Sim, excluir imóvel'}
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-
+          <div className="pt-4 flex gap-3">
             <Button
-              type="submit"
-              className="w-full sm:flex-1 gold-gradient text-black font-semibold shadow-md"
-              disabled={loading || uploadingPhotos}
+              type="button"
+              variant="outline"
+              className="flex-1"
+              onClick={() => onOpenChange(false)}
             >
-              {loading ? 'Salvando...' : 'Salvar Alterações'}
+              Cancelar
+            </Button>
+            <Button type="submit" className="flex-1" disabled={loading || uploadingPhotos}>
+              <Save className="w-4 h-4 mr-2" />
+              {loading ? 'Salvando...' : 'Salvar'}
             </Button>
           </div>
         </form>

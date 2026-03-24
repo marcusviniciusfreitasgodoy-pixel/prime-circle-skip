@@ -58,23 +58,55 @@ export function OpportunityRadar({
     fetchRadarData()
   }, [user, refreshKey])
 
-  const checkMatch = (demand: any) => {
+  const getBestMatch = (demand: any) => {
+    let bestMatch: 'perfect' | 'partial' | null = null
     const demandRegion = (
       demand.metadata?.region ||
       demand.metadata?.bairro ||
       demand.metadata?.endereco ||
       ''
     ).toLowerCase()
-    return myProperties.some((p) => {
+    const demandType = (demand.metadata?.tipo_imovel || '').toLowerCase()
+    const demandValor = demand.metadata?.valor || 999999999
+
+    for (const p of myProperties) {
       const propLocation = (
         p.metadata?.location ||
         p.metadata?.bairro ||
         p.metadata?.endereco ||
         ''
       ).toLowerCase()
-      if (!demandRegion || !propLocation) return false
-      return propLocation.includes(demandRegion) || demandRegion.includes(propLocation)
-    })
+      const propBairro = (p.metadata?.bairro || '').toLowerCase()
+
+      const isLocationMatch =
+        (propBairro &&
+          demandRegion &&
+          (propBairro.includes(demandRegion) || demandRegion.includes(propBairro))) ||
+        (propLocation &&
+          demandRegion &&
+          (propLocation.includes(demandRegion) || demandRegion.includes(propLocation))) ||
+        (propBairro && demandRegion && demandRegion.includes(propBairro))
+
+      const propType = (p.metadata?.tipo_imovel || p.metadata?.property_type || '').toLowerCase()
+      const isTypeMatch =
+        !demandType || propType.includes(demandType) || demandType.includes(propType)
+
+      if (isLocationMatch && isTypeMatch) {
+        const propValor = p.metadata?.valor || 0
+        if (propValor <= demandValor) {
+          return 'perfect'
+        } else if (propValor <= demandValor * 1.1) {
+          bestMatch = 'partial'
+        }
+      } else if (!demandRegion || !propLocation) {
+        if (propLocation.includes(demandRegion) || demandRegion.includes(propLocation)) {
+          const propValor = p.metadata?.valor || 0
+          if (propValor <= demandValor) return 'perfect'
+          if (propValor <= demandValor * 1.1) bestMatch = 'partial'
+        }
+      }
+    }
+    return bestMatch
   }
 
   const handleMatchClick = () => {
@@ -179,16 +211,29 @@ export function OpportunityRadar({
           ) : (
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {demands.map((d) => {
-                const isMatch = checkMatch(d)
+                const matchType = getBestMatch(d)
+                const isPerfect = matchType === 'perfect'
+                const isPartial = matchType === 'partial'
+                const isMatch = isPerfect || isPartial
                 const isMine = d.metadata?.user_id === user?.id
+
+                const cardRingClass = isPerfect
+                  ? 'ring-1 ring-primary shadow-[0_0_15px_rgba(201,168,76,0.15)] hover:border-primary/50'
+                  : isPartial
+                    ? 'ring-1 ring-orange-500/50 shadow-[0_0_15px_rgba(249,115,22,0.15)] hover:border-orange-500/50'
+                    : 'hover:border-primary/50'
+
                 return (
                   <Card
                     key={d.id}
-                    className={`bg-card/80 border-border relative overflow-hidden transition-all group flex flex-col h-full ${isMatch && !isMine ? 'ring-1 ring-primary shadow-[0_0_15px_rgba(201,168,76,0.15)] hover:border-primary/50' : 'hover:border-primary/50'}`}
+                    className={`bg-card/80 border-border relative overflow-hidden transition-all group flex flex-col h-full ${!isMine ? cardRingClass : 'hover:border-primary/50'}`}
                   >
                     {isMatch && !isMine && (
-                      <div className="absolute top-0 right-0 bg-primary text-black text-xs font-bold px-3 py-1 rounded-bl-lg z-10 flex items-center gap-1 shadow-md">
-                        <Zap className="w-3 h-3 fill-black" /> Conexão Inteligente
+                      <div
+                        className={`absolute top-0 right-0 text-black text-xs font-bold px-3 py-1 rounded-bl-lg z-10 flex items-center gap-1 shadow-md ${isPerfect ? 'bg-primary' : 'bg-orange-500'}`}
+                      >
+                        <Zap className="w-3 h-3 fill-black" />{' '}
+                        {isPerfect ? 'Match Perfeito' : 'Match Parcial'}
                       </div>
                     )}
                     <CardHeader className="pb-3 pt-5 flex-none">
@@ -241,7 +286,7 @@ export function OpportunityRadar({
                         {!isMine ? (
                           <Button
                             variant={isMatch ? 'default' : 'outline'}
-                            className={`w-full font-semibold ${isMatch ? 'gold-gradient text-black shadow-md' : 'border-border hover:bg-secondary text-muted-foreground'}`}
+                            className={`w-full font-semibold ${isPerfect ? 'gold-gradient text-black shadow-md' : isPartial ? 'bg-orange-500 hover:bg-orange-600 text-black shadow-md border-none' : 'border-border hover:bg-secondary text-muted-foreground'}`}
                             onClick={handleMatchClick}
                           >
                             {isMatch ? 'Conectar Imóvel' : 'Sugerir Imóvel'}
