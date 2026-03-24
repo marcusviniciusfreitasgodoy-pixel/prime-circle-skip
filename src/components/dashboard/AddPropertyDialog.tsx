@@ -34,7 +34,13 @@ const formatCurrency = (value: string) => {
 }
 const parseCurrency = (val: string) => parseInt(val.replace(/\D/g, '') || '0', 10) / 100
 
-export function AddPropertyDialog({ onSuccess }: { onSuccess: () => void }) {
+export function AddPropertyDialog({
+  onSuccess,
+  trigger,
+}: {
+  onSuccess: () => void
+  trigger?: React.ReactNode
+}) {
   const { user } = useAuth()
   const { toast } = useToast()
   const [open, setOpen] = useState(false)
@@ -162,9 +168,11 @@ export function AddPropertyDialog({ onSuccess }: { onSuccess: () => void }) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="gold-gradient text-black font-semibold shadow-[0_0_15px_rgba(201,168,76,0.2)]">
-          <PlusCircle className="w-4 h-4 mr-2" /> Divulgar Imóvel
-        </Button>
+        {trigger || (
+          <Button className="gold-gradient text-black font-semibold shadow-[0_0_15px_rgba(201,168,76,0.2)]">
+            <PlusCircle className="w-4 h-4 mr-2" /> Divulgar Imóvel
+          </Button>
+        )}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[700px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>

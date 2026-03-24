@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
   Dialog,
   DialogContent,
@@ -14,54 +14,114 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import useAppStore, { Need } from '@/stores/main'
 import { useAuth } from '@/hooks/use-auth'
-import { processMatchNotification } from '@/services/notifications'
+import { supabase } from '@/lib/supabase/client'
 import { toast } from 'sonner'
+import { AddPropertyDialog } from '@/components/dashboard/AddPropertyDialog'
+import { PlusCircle } from 'lucide-react'
 
 export function MatchModal({
   need,
   isOpen,
   onClose,
 }: {
-  need: Need | null
+  need: any | null
   isOpen: boolean
   onClose: () => void
 }) {
-  const { listings, user: storeUser, addMatch } = useAppStore()
-  const { user: authUser } = useAuth()
-  const [selectedListing, setSelectedListing] = useState('')
+  const { user } = useAuth()
+  const [myProperties, setMyProperties] = useState<any[]>([])
+  const [selectedProperty, setSelectedProperty] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [refreshKey, setRefreshKey] = useState(0)
 
-  const myListings = listings.filter((l) => l.ownerId === storeUser?.id)
+  useEffect(() => {
+    if (isOpen && user) {
+      const fetchProps = async () => {
+        const { data } = await supabase
+          .from('documents')
+          .select('*')
+          .contains('metadata', { type: 'oferta', user_id: user.id })
 
-  const handleConfirm = () => {
-    if (!selectedListing || !need) return
-    const success = addMatch(need.id, selectedListing)
-    if (success) {
+        if (data) {
+          setMyProperties(data)
+        }
+      }
+      fetchProps()
+    }
+  }, [isOpen, user, refreshKey])
+
+  const handleConfirm = async () => {
+    if (!selectedProperty || !need || !user) return
+    setLoading(true)
+
+    const demandId = typeof need.id === 'string' && !need.metadata ? parseInt(need.id) : need.id
+    const brokerDemandId = need.metadata?.user_id || need.ownerId
+    const demandTitle = need.metadata?.tipo_imovel || need.title || 'Demanda'
+
+    if (isNaN(demandId) && !need.metadata) {
+      toast.success('Parceria proposta localmente!')
+      onClose()
+      setLoading(false)
+      return
+    }
+
+    const property = myProperties.find((p) => p.id.toString() === selectedProperty)
+    if (!property) {
+      setLoading(false)
+      return
+    }
+
+    const { data: existing } = await supabase
+      .from('partnerships')
+      .select('id')
+      .eq('demand_id', demandId)
+      .eq('property_id', property.id)
+      .single()
+
+    if (existing) {
+      toast.error('Você já vinculou este imóvel a esta demanda!')
+      setLoading(false)
+      return
+    }
+
+    const { error } = await supabase.from('partnerships').insert({
+      demand_id: demandId,
+      property_id: property.id,
+      broker_demand_id: brokerDemandId,
+      broker_property_id: user.id,
+      status: 'match',
+    })
+
+    if (error) {
+      toast.error('Erro ao vincular imóvel.')
+    } else {
       toast.success('Parceria proposta! O negócio foi adicionado ao seu funil.')
 
-      const listing = listings.find((l) => l.id === selectedListing)
-      const partnerName = need.ownerId === 'other' ? 'Parceiro Prime' : 'Corretor'
-      // Mock fallback data since full profiles aren't deeply populated in local state yet
-      const recipientPhone = '+5521999999999'
-      const recipientEmail = 'parceiro@primecircle.app.br'
+      if (brokerDemandId) {
+        const { data: partnerProfile } = await supabase
+          .from('profiles')
+          .select('full_name, whatsapp_number')
+          .eq('id', brokerDemandId)
+          .single()
 
-      if (authUser) {
-        processMatchNotification({
-          userId: authUser.id,
-          partnerName,
-          propertyDetails: `${listing?.title} (${listing?.price})`,
-          recipientPhone,
-          recipientEmail,
-        }).catch((err) => console.error('Notification process failed inline:', err))
+        if (partnerProfile?.whatsapp_number) {
+          const partnerName = partnerProfile.full_name || 'Corretor'
+          const propertyDetails = property.metadata?.tipo_imovel || 'Imóvel'
+          const msg = `Olá ${partnerName}! Um corretor da Prime Circle acaba de vincular o imóvel "${propertyDetails}" que atende à sua demanda ("${demandTitle}"). Acesse a plataforma para conferir os detalhes e iniciar a negociação: https://www.primecircle.app.br/dashboard`
+          await supabase.functions.invoke('send-whatsapp', {
+            body: { number: partnerProfile.whatsapp_number, text: msg, user_id: brokerDemandId },
+          })
+        }
       }
 
       onClose()
-      setSelectedListing('')
-    } else {
-      onClose()
+      setSelectedProperty('')
     }
+    setLoading(false)
   }
+
+  const demandTitle = need?.metadata?.tipo_imovel || need?.title || 'Demanda'
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
@@ -70,45 +130,86 @@ export function MatchModal({
           <DialogTitle className="text-white text-xl">Vincular Imóvel à Demanda</DialogTitle>
           <DialogDescription className="text-muted-foreground">
             Escolha um dos seus imóveis disponíveis para propor parceria (50/50) nesta demanda:{' '}
-            <span className="text-white font-medium">{need?.title}</span>
+            <span className="text-white font-medium">{demandTitle}</span>
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4 py-4">
-          {myListings.length === 0 ? (
-            <p className="text-sm text-red-400 bg-red-400/10 p-3 rounded-lg border border-red-400/20">
-              Você não tem imóveis cadastrados para vincular.
-            </p>
+          {myProperties.length === 0 ? (
+            <div className="flex flex-col items-center justify-center p-5 bg-secondary/20 rounded-lg border border-border border-dashed text-center space-y-4">
+              <p className="text-sm text-muted-foreground">
+                Você ainda não tem imóveis cadastrados para vincular.
+              </p>
+              <AddPropertyDialog
+                onSuccess={() => setRefreshKey((k) => k + 1)}
+                trigger={
+                  <Button
+                    variant="outline"
+                    className="border-primary/50 text-primary hover:bg-primary/10 w-full"
+                  >
+                    <PlusCircle className="w-4 h-4 mr-2" /> Cadastrar Novo Imóvel
+                  </Button>
+                }
+              />
+            </div>
           ) : (
-            <Select value={selectedListing} onValueChange={setSelectedListing}>
-              <SelectTrigger className="w-full bg-background border-border text-white">
-                <SelectValue placeholder="Selecione um imóvel" />
-              </SelectTrigger>
-              <SelectContent>
-                {myListings.map((l) => (
-                  <SelectItem key={l.id} value={l.id}>
-                    {l.title} - {l.price}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <div className="space-y-4">
+              <Select value={selectedProperty} onValueChange={setSelectedProperty}>
+                <SelectTrigger className="w-full bg-background border-border text-white">
+                  <SelectValue placeholder="Selecione um imóvel" />
+                </SelectTrigger>
+                <SelectContent>
+                  {myProperties.map((p) => {
+                    const title = p.metadata?.tipo_imovel || 'Imóvel'
+                    const bairro = p.metadata?.bairro || p.metadata?.region || ''
+                    const valor = p.metadata?.valor
+                      ? new Intl.NumberFormat('pt-BR', {
+                          style: 'currency',
+                          currency: 'BRL',
+                        }).format(p.metadata.valor)
+                      : ''
+                    return (
+                      <SelectItem key={p.id} value={p.id.toString()}>
+                        {title} {bairro ? `- ${bairro}` : ''} {valor ? `(${valor})` : ''}
+                      </SelectItem>
+                    )
+                  })}
+                </SelectContent>
+              </Select>
+
+              <div className="flex justify-end pt-1">
+                <AddPropertyDialog
+                  onSuccess={() => setRefreshKey((k) => k + 1)}
+                  trigger={
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-primary hover:text-primary hover:bg-primary/10"
+                    >
+                      <PlusCircle className="w-4 h-4 mr-2" /> Não é este? Cadastrar outro
+                    </Button>
+                  }
+                />
+              </div>
+            </div>
           )}
         </div>
 
-        <div className="flex justify-end gap-3 pt-2">
+        <div className="flex justify-end gap-3 pt-2 border-t border-border mt-2">
           <Button
             variant="ghost"
             onClick={onClose}
             className="text-muted-foreground hover:text-white"
+            disabled={loading}
           >
             Cancelar
           </Button>
           <Button
             onClick={handleConfirm}
-            disabled={!selectedListing}
+            disabled={!selectedProperty || loading}
             className="gold-gradient text-black"
           >
-            Confirmar Conexão
+            {loading ? 'Vinculando...' : 'Confirmar Conexão'}
           </Button>
         </div>
       </DialogContent>

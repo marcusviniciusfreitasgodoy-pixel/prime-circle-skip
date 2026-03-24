@@ -8,7 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Search, FileText, MapPin, Info, HelpCircle } from 'lucide-react'
+import { Search, FileText, MapPin, Info, HelpCircle, Link as LinkIcon } from 'lucide-react'
 import { useAuth } from '@/hooks/use-auth'
 import { supabase } from '@/lib/supabase/client'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
@@ -16,6 +16,7 @@ import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { AddNeedDialog } from '@/components/dashboard/AddNeedDialog'
 import { EditNeedSheet } from '@/components/dashboard/EditNeedSheet'
+import { MatchModal } from '@/components/MatchModal'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
@@ -26,6 +27,7 @@ export default function NeedsListPage() {
   const [searchTerm, setSearchTerm] = useState('')
   const [refreshKey, setRefreshKey] = useState(0)
   const [editingNeed, setEditingNeed] = useState<any>(null)
+  const [connectingNeed, setConnectingNeed] = useState<any>(null)
 
   const { user } = useAuth()
 
@@ -72,6 +74,12 @@ export default function NeedsListPage() {
           setEditingNeed(null)
           setRefreshKey((prev) => prev + 1)
         }}
+      />
+
+      <MatchModal
+        need={connectingNeed}
+        isOpen={!!connectingNeed}
+        onClose={() => setConnectingNeed(null)}
       />
 
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -228,7 +236,7 @@ export default function NeedsListPage() {
                   </p>
 
                   <div className="mt-auto pt-2">
-                    {isMine && (
+                    {isMine ? (
                       <div className="flex gap-2">
                         <Badge
                           variant="outline"
@@ -244,6 +252,14 @@ export default function NeedsListPage() {
                           Editar
                         </Button>
                       </div>
+                    ) : (
+                      <Button
+                        variant="outline"
+                        className="w-full border-primary/50 text-primary hover:bg-primary/10 transition-colors"
+                        onClick={() => setConnectingNeed(d)}
+                      >
+                        <LinkIcon className="w-4 h-4 mr-2" /> Tenho este imóvel
+                      </Button>
                     )}
                   </div>
                 </CardContent>
