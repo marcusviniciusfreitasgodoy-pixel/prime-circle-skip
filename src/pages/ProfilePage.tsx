@@ -538,9 +538,7 @@ export default function ProfilePage() {
                 />
               </div>
               <h3 className="text-xl font-bold text-white">{displayName}</h3>
-              <p className="text-sm text-primary mb-4">
-                Corretor {activeTier === 'Ambassador' ? 'Embaixador' : activeTier}
-              </p>
+              <p className="text-sm text-primary mb-4">{companyName || 'Corretor Autônomo'}</p>
 
               {validatedBy && (
                 <div className="flex items-center justify-center gap-1.5 bg-green-500/10 text-green-500 border border-green-500/20 px-3 py-1 rounded-full text-xs font-medium mb-4">
