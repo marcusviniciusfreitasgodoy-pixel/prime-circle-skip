@@ -102,7 +102,6 @@ export default function ProfilePage() {
                   throw new Error('Not an array')
                 }
               } catch (e) {
-                // Fallback para o formato antigo de string única
                 if (d.specialties.startsWith('Condomínios: ')) {
                   setSelectedSpecialties(['Condomínios'])
                   setCondominiumName(d.specialties.replace('Condomínios: ', '').trim())
@@ -245,7 +244,6 @@ export default function ProfilePage() {
     let emailMessage = ''
     if (email !== authUser.email) {
       try {
-        // Validação Preventiva
         const { data: existingProfile } = await supabase
           .from('profiles')
           .select('id')
@@ -350,24 +348,43 @@ export default function ProfilePage() {
       return
     }
 
-    if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+    if (
+      !('serviceWorker' in navigator) ||
+      !('PushManager' in window) ||
+      !('Notification' in window)
+    ) {
       toast({
-        title: 'Erro',
-        description: 'Push notifications não suportadas neste navegador/dispositivo.',
+        title: 'Não suportado',
+        description: 'As notificações Push não são suportadas neste navegador ou dispositivo.',
+        variant: 'default',
+      })
+      setPushEnabled(false)
+      setIsUpdatingPush(false)
+      return
+    }
+
+    if (Notification.permission === 'denied') {
+      toast({
+        title: 'Permissão Bloqueada',
+        description:
+          'Você bloqueou as notificações. Clique no ícone de cadeado na barra de endereços para permitir.',
         variant: 'destructive',
       })
+      setPushEnabled(false)
       setIsUpdatingPush(false)
       return
     }
 
     try {
       const permission = await Notification.requestPermission()
+
       if (permission !== 'granted') {
         toast({
-          title: 'Permissão negada',
-          description: 'Você negou as permissões de notificação.',
-          variant: 'destructive',
+          title: 'Permissão necessária',
+          description: 'Para ativar as notificações, você precisa aceitar o pedido do navegador.',
+          variant: 'default',
         })
+        setPushEnabled(false)
         setIsUpdatingPush(false)
         return
       }
@@ -402,7 +419,7 @@ export default function ProfilePage() {
       setPushEnabled(true)
       toast({ title: 'Sucesso', description: 'Notificações Push ativadas!' })
     } catch (err: any) {
-      console.warn('Simulating push subscription due to invalid VAPID key context', err)
+      console.warn('Simulating push subscription due to context error', err)
       await supabase.from('user_push_subscriptions').insert({
         user_id: authUser.id,
         subscription_data: {
