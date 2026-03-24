@@ -7,7 +7,7 @@ const TIER_DATA: Record<
   Tier,
   { icon: any; color: string; next: string; req: number; benefits: string[] }
 > = {
-  None: { icon: Shield, color: 'text-gray-400', next: 'Ambassador', req: 1, benefits: [] },
+  None: { icon: Shield, color: 'text-gray-400', next: 'Embaixador', req: 1, benefits: [] },
   Ambassador: {
     icon: Star,
     color: 'text-blue-400',
@@ -58,7 +58,10 @@ export function AmbassadorWidget({ tier, referrals = 0 }: { tier: Tier; referral
       <CardHeader className="pb-4">
         <CardTitle className="text-xl flex items-center gap-2 text-white">
           <Icon className={`w-6 h-6 ${data.color}`} />
-          Status: <span className={data.color}>{tier}</span>
+          Status:{' '}
+          <span className={data.color}>
+            {tier === 'Ambassador' ? 'Embaixador' : tier === 'None' ? 'Iniciante' : tier}
+          </span>
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-6 relative z-10">
