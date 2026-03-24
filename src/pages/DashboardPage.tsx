@@ -16,6 +16,8 @@ import { ReferralTracker } from '@/components/dashboard/ReferralTracker'
 import { DeliveryStatusWidget } from '@/components/dashboard/DeliveryStatusWidget'
 import { PwaInstallPrompt } from '@/components/dashboard/PwaInstallPrompt'
 import { MatchesChartWidget } from '@/components/dashboard/MatchesChartWidget'
+import { DashboardReferral } from '@/components/dashboard/DashboardReferral'
+import { DashboardCollaboration } from '@/components/dashboard/DashboardCollaboration'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import {
   Activity,
@@ -453,6 +455,9 @@ export default function DashboardPage() {
           </div>
         </CardContent>
       </Card>
+
+      <DashboardReferral />
+      <DashboardCollaboration />
     </div>
   )
 }

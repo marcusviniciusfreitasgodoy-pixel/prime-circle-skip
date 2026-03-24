@@ -7,8 +7,6 @@ import { NetworkDetailsSection } from '@/components/home/NetworkDetailsSection'
 import { ProcessTimeline } from '@/components/home/ProcessTimeline'
 import { PersonaSection } from '@/components/home/PersonaSection'
 import { CriteriaSection } from '@/components/home/CriteriaSection'
-import { CollaborationSection } from '@/components/home/CollaborationSection'
-import { ReferralSection } from '@/components/home/ReferralSection'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
 import { useAuth } from '@/hooks/use-auth'
@@ -51,8 +49,6 @@ export default function Index() {
         <ProcessTimeline />
         <PersonaSection />
         <CriteriaSection />
-        <CollaborationSection />
-        <ReferralSection />
       </main>
       <Footer />
     </div>
