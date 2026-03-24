@@ -20,10 +20,10 @@ export function Navbar() {
   const { user: storeUser, logout, updateUser } = useAppStore()
   const location = useLocation()
   const [profileAvatar, setProfileAvatar] = useState('')
+  const [newMatchesCount, setNewMatchesCount] = useState(0)
 
   useEffect(() => {
     if (authUser) {
-      // Prioritize store avatar, then metadata, then fetch from profile
       if (storeUser?.avatar) {
         setProfileAvatar(storeUser.avatar)
       } else if (authUser.user_metadata?.avatar_url) {
@@ -43,6 +43,30 @@ export function Navbar() {
       }
     }
   }, [authUser, storeUser?.avatar, updateUser])
+
+  useEffect(() => {
+    if (!authUser) return
+    const fetchCount = async () => {
+      const { count } = await supabase
+        .from('partnerships')
+        .select('id', { count: 'exact', head: true })
+        .eq('status', 'match')
+        .or(`broker_property_id.eq.${authUser.id},broker_demand_id.eq.${authUser.id}`)
+      setNewMatchesCount(count || 0)
+    }
+    fetchCount()
+
+    const channel = supabase
+      .channel('navbar-matches')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'partnerships' }, () => {
+        fetchCount()
+      })
+      .subscribe()
+
+    return () => {
+      supabase.removeChannel(channel)
+    }
+  }, [authUser])
 
   const handleLogout = async () => {
     await signOut()
@@ -85,11 +109,16 @@ export function Navbar() {
             <Link
               key={link.title}
               to={link.url}
-              className={`text-sm font-medium transition-colors hover:text-primary ${
+              className={`relative text-sm font-medium transition-colors hover:text-primary ${
                 location.pathname === link.url ? 'text-primary' : 'text-muted-foreground'
               }`}
             >
               {link.title}
+              {link.url === '/matches' && newMatchesCount > 0 && (
+                <span className="absolute -top-2 -right-3 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white shadow-sm">
+                  {newMatchesCount}
+                </span>
+              )}
             </Link>
           ))}
         </nav>
@@ -167,6 +196,9 @@ export function Navbar() {
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="md:hidden text-white">
                 <Menu className="w-5 h-5" />
+                {newMatchesCount > 0 && (
+                  <span className="absolute top-1 right-1 flex h-3 w-3 items-center justify-center rounded-full bg-red-500 ring-2 ring-background"></span>
+                )}
               </Button>
             </SheetTrigger>
             <SheetContent side="right" className="w-64 bg-card border-border p-6">
@@ -176,11 +208,16 @@ export function Navbar() {
                   <Link
                     key={link.title}
                     to={link.url}
-                    className={`text-lg font-medium transition-colors hover:text-primary ${
+                    className={`relative inline-flex w-fit text-lg font-medium transition-colors hover:text-primary ${
                       location.pathname === link.url ? 'text-primary' : 'text-muted-foreground'
                     }`}
                   >
                     {link.title}
+                    {link.url === '/matches' && newMatchesCount > 0 && (
+                      <span className="ml-2 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white shadow-sm">
+                        {newMatchesCount}
+                      </span>
+                    )}
                   </Link>
                 ))}
                 {!authUser && (

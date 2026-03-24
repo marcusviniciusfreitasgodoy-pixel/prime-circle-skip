@@ -24,6 +24,7 @@ import {
   ChevronDown,
   CheckCircle2,
   AlertCircle,
+  Star,
 } from 'lucide-react'
 import { Skeleton } from '@/components/ui/skeleton'
 
@@ -62,6 +63,9 @@ export default function ProfilePage() {
   const [pushEnabled, setPushEnabled] = useState(false)
   const [isUpdatingPush, setIsUpdatingPush] = useState(false)
 
+  const [reviews, setReviews] = useState<any[]>([])
+  const [averageRating, setAverageRating] = useState(0)
+
   useEffect(() => {
     let mounted = true
 
@@ -81,8 +85,15 @@ export default function ProfilePage() {
           .select('id', { count: 'exact' })
           .eq('referral_code', authUser.id)
           .eq('status', 'active'),
+        supabase
+          .from('broker_reviews')
+          .select(
+            'rating, comment, created_at, reviewer:profiles!broker_reviews_reviewer_id_fkey(full_name, avatar_url)',
+          )
+          .eq('reviewed_id', authUser.id)
+          .order('created_at', { ascending: false }),
       ])
-        .then(async ([profileRes, pushRes, refRes]) => {
+        .then(async ([profileRes, pushRes, refRes, reviewsRes]) => {
           if (!mounted) return
 
           if (profileRes.data) {
@@ -172,6 +183,14 @@ export default function ProfilePage() {
             else if (refRes.count >= 7) tier = 'Silver'
             else if (refRes.count >= 5) tier = 'Ambassador'
             setUserTier(tier)
+          }
+
+          if (reviewsRes && reviewsRes.data) {
+            setReviews(reviewsRes.data)
+            if (reviewsRes.data.length > 0) {
+              const sum = reviewsRes.data.reduce((acc: number, curr: any) => acc + curr.rating, 0)
+              setAverageRating(sum / reviewsRes.data.length)
+            }
           }
 
           setIsLoading(false)
@@ -275,7 +294,6 @@ export default function ProfilePage() {
 
     setIsSaving(true)
 
-    // Pre-check for email existence without blocking the whole save if possible
     if (email && authUser.email && email.toLowerCase() !== authUser.email.toLowerCase()) {
       try {
         const { data: existingProfile } = await supabase
@@ -312,7 +330,6 @@ export default function ProfilePage() {
     const finalCompanyName = profileType === 'autonomo' ? 'Autônomo' : companyName.trim()
     const finalCreci = creci.trim()
 
-    // 1. Update Profiles Table First
     const { error: profileError } = await supabase
       .from('profiles')
       .update({
@@ -338,7 +355,6 @@ export default function ProfilePage() {
       return
     }
 
-    // 2. Try to update Auth Email if it changed
     let emailMessage = ''
     if (email && authUser.email && email.toLowerCase() !== authUser.email.toLowerCase()) {
       try {
@@ -817,6 +833,71 @@ export default function ProfilePage() {
                   disabled={isUpdatingPush}
                 />
               </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-card border-border">
+            <CardHeader>
+              <CardTitle className="text-lg text-white flex items-center justify-between">
+                <span>Avaliações e Recomendações</span>
+                {reviews.length > 0 && (
+                  <div className="flex items-center gap-1 text-yellow-500 text-sm bg-yellow-500/10 px-2 py-1 rounded-full">
+                    <Star className="w-4 h-4 fill-current" />
+                    <span className="font-bold">{averageRating.toFixed(1)}</span>
+                    <span className="text-muted-foreground ml-1">({reviews.length})</span>
+                  </div>
+                )}
+              </CardTitle>
+              <CardDescription>O que seus parceiros de negócio dizem sobre você.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {reviews.length === 0 ? (
+                <div className="text-center p-6 bg-secondary/20 rounded-lg border border-border border-dashed">
+                  <p className="text-muted-foreground text-sm">
+                    Você ainda não recebeu nenhuma avaliação.
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Feche negócios para receber recomendações de seus parceiros.
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {reviews.map((review, idx) => (
+                    <div
+                      key={idx}
+                      className="p-4 bg-background rounded-lg border border-border space-y-2"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <Avatar className="w-8 h-8">
+                            <AvatarImage src={review.reviewer?.avatar_url} />
+                            <AvatarFallback>
+                              {review.reviewer?.full_name?.charAt(0) || 'P'}
+                            </AvatarFallback>
+                          </Avatar>
+                          <span className="font-medium text-white text-sm">
+                            {review.reviewer?.full_name || 'Parceiro'}
+                          </span>
+                        </div>
+                        <div className="flex gap-0.5">
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <Star
+                              key={star}
+                              className={`w-3.5 h-3.5 ${star <= review.rating ? 'text-yellow-500 fill-yellow-500' : 'text-muted-foreground'}`}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                      {review.comment && (
+                        <p className="text-sm text-muted-foreground italic">"{review.comment}"</p>
+                      )}
+                      <p className="text-[10px] text-muted-foreground/50">
+                        {new Date(review.created_at).toLocaleDateString('pt-BR')}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              )}
             </CardContent>
           </Card>
 

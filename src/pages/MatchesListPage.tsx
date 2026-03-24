@@ -2,11 +2,12 @@ import { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { GitMerge, ChevronRight } from 'lucide-react'
+import { GitMerge, ChevronRight, Star } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import { useAuth } from '@/hooks/use-auth'
 import { supabase } from '@/lib/supabase/client'
+import { ReviewDialog } from '@/components/dashboard/ReviewDialog'
 
 const WhatsAppIcon = ({ className }: { className?: string }) => (
   <svg
@@ -137,7 +138,14 @@ export default function MatchesListPage() {
     window.open(`https://wa.me/${phone}?text=${encodeURIComponent(text)}`, '_blank')
   }
 
-  const newMatchesCount = partnerships.filter((p) => p.status === 'match').length
+  const counts = {
+    match: partnerships.filter((p) => p.status === 'match').length,
+    contact: partnerships.filter((p) => p.status === 'contact').length,
+    visit: partnerships.filter((p) => p.status === 'visit').length,
+    proposal: partnerships.filter((p) => p.status === 'proposal').length,
+    closed: partnerships.filter((p) => p.status === 'closed' || p.status === 'aguardando_vgv')
+      .length,
+  }
 
   return (
     <div className="space-y-6 animate-fade-in-up">
@@ -150,14 +158,47 @@ export default function MatchesListPage() {
         </div>
       </div>
 
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+        <Card className="bg-card border-border">
+          <CardContent className="p-4 flex flex-col items-center justify-center text-center space-y-1">
+            <span className="text-3xl font-bold text-white">{counts.match}</span>
+            <span className="text-xs text-muted-foreground uppercase font-semibold">Novos</span>
+          </CardContent>
+        </Card>
+        <Card className="bg-card border-border">
+          <CardContent className="p-4 flex flex-col items-center justify-center text-center space-y-1">
+            <span className="text-3xl font-bold text-white">{counts.contact}</span>
+            <span className="text-xs text-muted-foreground uppercase font-semibold">Contato</span>
+          </CardContent>
+        </Card>
+        <Card className="bg-card border-border">
+          <CardContent className="p-4 flex flex-col items-center justify-center text-center space-y-1">
+            <span className="text-3xl font-bold text-white">{counts.visit}</span>
+            <span className="text-xs text-muted-foreground uppercase font-semibold">Visitas</span>
+          </CardContent>
+        </Card>
+        <Card className="bg-card border-border">
+          <CardContent className="p-4 flex flex-col items-center justify-center text-center space-y-1">
+            <span className="text-3xl font-bold text-white">{counts.proposal}</span>
+            <span className="text-xs text-muted-foreground uppercase font-semibold">Propostas</span>
+          </CardContent>
+        </Card>
+        <Card className="bg-card border-border bg-gradient-to-br from-primary/10 to-transparent">
+          <CardContent className="p-4 flex flex-col items-center justify-center text-center space-y-1">
+            <span className="text-3xl font-bold text-primary">{counts.closed}</span>
+            <span className="text-xs text-primary/80 uppercase font-semibold">Fechados</span>
+          </CardContent>
+        </Card>
+      </div>
+
       <Card className="bg-card border-border">
         <CardHeader>
           <CardTitle className="text-lg text-white">Funil de Negócios de Conexões</CardTitle>
           <CardDescription>
             Fluxo de validação obrigatório até o fechamento.
-            {newMatchesCount > 0 && (
+            {counts.match > 0 && (
               <span className="block mt-2 font-medium text-primary">
-                Você tem {newMatchesCount} {newMatchesCount === 1 ? 'novo match' : 'novos matches'}.
+                Você tem {counts.match} {counts.match === 1 ? 'novo match' : 'novos matches'}.
                 Clique no botão de WhatsApp para iniciar a parceria.
               </span>
             )}
@@ -224,9 +265,22 @@ export default function MatchesListPage() {
                             <ChevronRight className="w-4 h-4 ml-1" />
                           </Button>
                         ) : (
-                          <Badge className="bg-green-500/20 text-green-500 border-none hover:bg-green-500/30 px-3 py-1">
-                            Fechamento Validado
-                          </Badge>
+                          <div className="flex gap-2 w-full md:w-auto">
+                            <Badge className="bg-green-500/20 text-green-500 border-none hover:bg-green-500/30 px-3 py-1 flex items-center justify-center whitespace-nowrap">
+                              Fechamento Validado
+                            </Badge>
+                            {partner?.id && (
+                              <ReviewDialog partnerId={partner.id} partnerName={partnerName}>
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  className="border-primary/50 text-primary hover:bg-primary/10 whitespace-nowrap"
+                                >
+                                  <Star className="w-3.5 h-3.5 mr-1" /> Avaliar
+                                </Button>
+                              </ReviewDialog>
+                            )}
+                          </div>
                         )}
                       </div>
                     </div>
