@@ -1,10 +1,13 @@
 {
   "_versions": {
-    "send-whatsapp": 24,
-    "send-email": 19,
-    "welcome-webhook": 21,
-    "support-ticket-webhook": 6,
-    "match-property-webhook": 11,
+    "send-whatsapp": 11,
+    "send-email": 9,
+    "functions": 10,
+    "welcome-webhook": 7,
+    "support-ticket-webhook": 1
+  }
+}
+ook": 11,
     "functions": 8,
     "demand-push-webhook": 7,
     "monitor-partnerships": 6,
