@@ -19,6 +19,7 @@ import { supabase } from '@/lib/supabase/client'
 import { toast } from 'sonner'
 import { AddPropertyDialog } from '@/components/dashboard/AddPropertyDialog'
 import { PlusCircle } from 'lucide-react'
+import { processNotification } from '@/services/notifications'
 
 export function MatchModal({
   need,
@@ -57,7 +58,6 @@ export function MatchModal({
 
     const demandId = typeof need.id === 'string' && !need.metadata ? parseInt(need.id) : need.id
     const brokerDemandId = need.metadata?.user_id || need.ownerId
-    const demandTitle = need.metadata?.tipo_imovel || need.title || 'Demanda'
 
     if (isNaN(demandId) && !need.metadata) {
       toast.success('Parceria proposta localmente!')
@@ -80,7 +80,7 @@ export function MatchModal({
       .single()
 
     if (existing) {
-      toast.error('Você já vinculou este imóvel a esta demanda!')
+      toast.error('Você já vincou este imóvel a esta demanda!')
       setLoading(false)
       return
     }
@@ -101,16 +101,21 @@ export function MatchModal({
       if (brokerDemandId) {
         const { data: partnerProfile } = await supabase
           .from('profiles')
-          .select('full_name, whatsapp_number')
+          .select('full_name, whatsapp_number, email')
           .eq('id', brokerDemandId)
           .single()
 
-        if (partnerProfile?.whatsapp_number) {
+        if (partnerProfile) {
           const partnerName = partnerProfile.full_name || 'Corretor'
           const propertyDetails = property.metadata?.tipo_imovel || 'Imóvel'
-          const msg = `Olá ${partnerName}! Um corretor da Prime Circle acaba de vincular o imóvel "${propertyDetails}" que atende à sua demanda ("${demandTitle}"). Acesse a plataforma para conferir os detalhes e iniciar a negociação: https://www.primecircle.app.br/dashboard`
-          await supabase.functions.invoke('send-whatsapp', {
-            body: { number: partnerProfile.whatsapp_number, text: msg, user_id: brokerDemandId },
+
+          await processNotification({
+            userId: brokerDemandId,
+            type: 'match',
+            partnerName,
+            propertyDetails,
+            recipientPhone: partnerProfile.whatsapp_number || '',
+            recipientEmail: partnerProfile.email || '',
           })
         }
       }

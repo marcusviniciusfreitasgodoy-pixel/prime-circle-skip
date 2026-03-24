@@ -100,7 +100,7 @@ export const processNotification = async ({
 
   const defaultEmailContent =
     type === 'match'
-      ? 'Assunto: Novo Match Identificado! 🏠 \n\nOlá {{partner_name}},\n\nIdentificamos uma nova oportunidade de negócio! Um novo match foi gerado para o imóvel {{property_details}}.\n\nClique no link abaixo para ver os detalhes e entrar em contato:\n[Link do Sistema]\n\nBoas vendas,\nEquipe Prime Circle'
+      ? 'Assunto: Novo Match Identificado! 🏠 \n\nOlá {{partner_name}},\n\nIdentificamos uma nova oportunidade de negócio! Um novo match foi gerado para o imóvel {{property_details}}.\n\nClique no link abaixo para ver os detalhes e entrar em contato:\nhttps://www.primecircle.app.br/dashboard\n\nBoas vendas,\nEquipe Prime Circle'
       : 'Assunto: Você tem uma nova solicitação de parceria 🤝\n\nOlá {{partner_name}},\n\nUm colega de profissão enviou uma solicitação de parceria para você através da Prime Circle.\n\nParcerias aumentam suas chances de fechamento! Acesse seu dashboard para revisar a solicitação.\n\nAtenciosamente,\nEquipe Prime Circle'
 
   const buildMessage = (content: string) => {
@@ -110,29 +110,31 @@ export const processNotification = async ({
   }
 
   const waMessage = buildMessage(waTemplate ? waTemplate.content : defaultWaContent)
-  let waSuccess = false
+  const emailMessage = buildMessage(emailTemplate ? emailTemplate.content : defaultEmailContent)
 
-  try {
-    const res = await sendWhatsappMessage(recipientPhone, waMessage, userId)
-    if (res.error) throw new Error(res.error.message || 'Unknown error')
-    if (res.data?.error) throw new Error(res.data.error)
-    waSuccess = true
-  } catch (err: any) {
-    console.error('WA Notification Error:', err)
+  const notificationPromises = []
+
+  if (recipientPhone) {
+    notificationPromises.push(
+      sendWhatsappMessage(recipientPhone, waMessage, userId).catch((err: any) => {
+        console.error('WA Notification Error:', err)
+      }),
+    )
   }
 
-  if (!waSuccess) {
-    const emailMessage = buildMessage(emailTemplate ? emailTemplate.content : defaultEmailContent)
-    try {
-      await sendTransactionalEmail(type === 'match' ? 'match_fallback' : 'partnership_fallback', {
+  if (recipientEmail) {
+    notificationPromises.push(
+      sendTransactionalEmail(type === 'match' ? 'match_notification' : 'partnership_notification', {
         to: recipientEmail,
         body: emailMessage,
         userId,
-      })
-    } catch (err: any) {
-      console.error('Email Notification Error:', err)
-    }
+      }).catch((err: any) => {
+        console.error('Email Notification Error:', err)
+      }),
+    )
   }
+
+  await Promise.allSettled(notificationPromises)
 }
 
 export const sendWelcomeNotifications = async ({
