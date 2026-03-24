@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { AmbassadorWidget } from '@/components/AmbassadorWidget'
 import { FounderExpiryBanner } from '@/components/FounderExpiryBanner'
+import { DashboardGuideCard } from '@/components/dashboard/DashboardGuideCard'
 import { PortfolioTabs } from '@/components/dashboard/PortfolioTabs'
 import { AddPropertyDialog } from '@/components/dashboard/AddPropertyDialog'
 import { OpportunityRadar } from '@/components/dashboard/OpportunityRadar'
@@ -231,6 +232,7 @@ export default function DashboardPage() {
     <div className="space-y-8 animate-fade-in-up">
       <PwaInstallPrompt />
       <FounderExpiryBanner />
+      <DashboardGuideCard />
 
       {profileStatus === 'pending_validation' && (
         <Alert className="mb-6 bg-yellow-500/10 border-yellow-500/50 text-yellow-700 dark:text-yellow-400 shadow-[0_0_15px_rgba(234,179,8,0.1)]">

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
-import { Sparkles, Loader2 } from 'lucide-react'
+import { Sparkles, Loader2, BookOpen, Scale, Workflow } from 'lucide-react'
 import useAppStore from '@/stores/main'
 import { useAuth } from '@/hooks/use-auth'
 import { supabase } from '@/lib/supabase/client'
@@ -70,7 +70,7 @@ export default function OnboardingPage() {
     (hasWhatsapp || whatsapp.trim().length >= 10) &&
     (hasCreci || creci.trim().length >= 4)
 
-  const handleContinue = async () => {
+  const handleContinueToStep2 = async () => {
     setIsSubmitting(true)
     try {
       if (authUser) {
@@ -84,11 +84,6 @@ export default function OnboardingPage() {
           .eq('id', authUser.id)
 
         if (error) throw error
-
-        localStorage.setItem(`terms_accepted_${authUser.id}`, 'true')
-        completeOnboarding()
-      } else {
-        completeOnboarding()
       }
       setStep(2)
     } catch (error: any) {
@@ -99,7 +94,11 @@ export default function OnboardingPage() {
     }
   }
 
-  const handleComplete = (path: string) => {
+  const handleComplete = async (path: string) => {
+    if (authUser) {
+      localStorage.setItem(`terms_accepted_${authUser.id}`, 'true')
+    }
+    completeOnboarding()
     navigate(path)
   }
 
@@ -216,7 +215,7 @@ export default function OnboardingPage() {
             </div>
 
             <Button
-              onClick={handleContinue}
+              onClick={handleContinueToStep2}
               disabled={!canProceed || isSubmitting}
               className="w-full bg-primary hover:bg-primary/90 text-lg h-14 font-semibold text-black mt-8"
             >
@@ -226,6 +225,59 @@ export default function OnboardingPage() {
         )}
 
         {step === 2 && (
+          <div className="animate-in fade-in-0 duration-500 space-y-6">
+            <div className="text-center mb-6">
+              <div className="w-14 h-14 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-4">
+                <BookOpen className="w-6 h-6 text-primary" />
+              </div>
+              <h2 className="text-2xl font-bold text-white">Regras e Dinâmica</h2>
+              <p className="text-muted-foreground text-sm mt-2">
+                Entenda como extrair 100% de valor da nossa rede privada.
+              </p>
+            </div>
+
+            <div className="space-y-4">
+              <div className="bg-secondary/50 p-4 rounded-lg border border-border">
+                <h3 className="font-bold text-white flex items-center gap-2 mb-2">
+                  <Scale className="w-4 h-4 text-primary" /> 1. A Regra de Ouro
+                </h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  O Prime Circle é fundamentado na <strong>divisão exata de 50/50</strong> em todas
+                  as comissões. O descumprimento gera banimento irreversível.
+                </p>
+              </div>
+
+              <div className="bg-secondary/50 p-4 rounded-lg border border-border">
+                <h3 className="font-bold text-white flex items-center gap-2 mb-2">
+                  <Workflow className="w-4 h-4 text-primary" /> 2. Fluxo de Trabalho
+                </h3>
+                <ul className="text-sm text-muted-foreground space-y-2 leading-relaxed list-disc pl-4">
+                  <li>
+                    <strong>Demandas:</strong> Publique o que seu cliente busca.
+                  </li>
+                  <li>
+                    <strong>Imóveis:</strong> Cadastre opções abertas ou off-market.
+                  </li>
+                  <li>
+                    <strong>Matches:</strong> Nossa IA conecta e notifica as pontas.
+                  </li>
+                  <li>
+                    <strong>Conexões:</strong> Atualize o status até o Fechamento.
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <Button
+              onClick={() => setStep(3)}
+              className="w-full bg-primary hover:bg-primary/90 text-lg h-14 font-semibold text-black mt-8"
+            >
+              Entendi, prosseguir
+            </Button>
+          </div>
+        )}
+
+        {step === 3 && (
           <div className="animate-in fade-in-0 duration-500 text-center flex flex-col items-center">
             <div className="w-20 h-20 bg-primary/20 rounded-full flex items-center justify-center mb-6 relative">
               <Sparkles className="w-10 h-10 text-primary" />
@@ -262,7 +314,7 @@ export default function OnboardingPage() {
                 onClick={() => handleComplete('/dashboard')}
                 className="flex-1 h-14 font-semibold border-border hover:bg-secondary text-white"
               >
-                Painel de Controle
+                Ir para o Painel
               </Button>
               <Button
                 onClick={() => handleComplete('/suggestions')}

@@ -13,6 +13,7 @@ import {
   Map,
   User as UserIcon,
   Palette,
+  BookOpen,
 } from 'lucide-react'
 import {
   SidebarProvider,
@@ -160,6 +161,7 @@ export function AppLayout() {
 
   const navItems = [
     { title: 'Painel de Controle', icon: LayoutDashboard, url: '/dashboard' },
+    { title: 'Como Funciona (Guia)', icon: BookOpen, url: '/guide' },
     { title: 'Meu Perfil', icon: UserIcon, url: '/profile' },
     { title: 'Demandas', icon: FileText, url: '/needs' },
     { title: 'Imóveis', icon: Home, url: '/listings' },
@@ -341,7 +343,7 @@ export function AppLayout() {
 
         {/* Mobile Bottom Nav */}
         <div className="fixed bottom-0 w-full bg-card/90 backdrop-blur-md border-t border-border flex justify-around items-center h-16 sm:hidden z-50 pb-safe">
-          {[navItems[0], navItems[2], navItems[3], navItems[4]].map((item) => {
+          {[navItems[0], navItems[3], navItems[4], navItems[5]].map((item) => {
             const isActive = location.pathname.startsWith(item.url)
             return (
               <Link
@@ -361,7 +363,9 @@ export function AppLayout() {
                     isActive && 'drop-shadow-[0_0_8px_rgba(201,168,76,0.5)]',
                   )}
                 />
-                <span className="text-[10px] font-medium">{item.title}</span>
+                <span className="text-[10px] font-medium truncate max-w-[70px] text-center">
+                  {item.title}
+                </span>
               </Link>
             )
           })}

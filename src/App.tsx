@@ -25,6 +25,7 @@ import BrandAssetsPage from './pages/BrandAssetsPage'
 import NeedsListPage from './pages/NeedsListPage'
 import ListingsListPage from './pages/ListingsListPage'
 import MatchesListPage from './pages/MatchesListPage'
+import GuidePage from './pages/GuidePage'
 import { Toaster } from '@/components/ui/toaster'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import { ProtectedRoute } from '@/components/ProtectedRoute'
@@ -64,6 +65,7 @@ function App() {
                 <Route path="/match-feedback" element={<MatchFeedbackPage />} />
                 <Route element={<AppLayout />}>
                   <Route path="/dashboard" element={<DashboardPage />} />
+                  <Route path="/guide" element={<GuidePage />} />
                   <Route path="/admin" element={<AdminPage />} />
                   <Route path="/profile" element={<ProfilePage />} />
                   <Route path="/plans" element={<PlansPage />} />
