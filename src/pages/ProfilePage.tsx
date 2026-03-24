@@ -229,11 +229,16 @@ export default function ProfilePage() {
       return
     }
 
+    let formattedWhatsapp = whatsapp.replace(/\D/g, '')
+    if (formattedWhatsapp.length === 10 || formattedWhatsapp.length === 11) {
+      formattedWhatsapp = '55' + formattedWhatsapp
+    }
+
     const phoneRegex = /^\+?[1-9]\d{1,14}$/
-    if (whatsapp && !phoneRegex.test(whatsapp)) {
+    if (formattedWhatsapp && !phoneRegex.test(formattedWhatsapp)) {
       toast({
         title: 'Número inválido',
-        description: 'Por favor, insira um número válido (ex: 5511999999999)',
+        description: 'Por favor, insira um número válido com DDD (ex: 21999999999)',
         variant: 'destructive',
       })
       return
@@ -312,7 +317,7 @@ export default function ProfilePage() {
       .update({
         full_name: fullName,
         email: email,
-        whatsapp_number: whatsapp,
+        whatsapp_number: formattedWhatsapp,
         company_name: companyName,
         creci: creci,
         region: region,
@@ -330,6 +335,7 @@ export default function ProfilePage() {
         variant: 'destructive',
       })
     } else {
+      setWhatsapp(formattedWhatsapp)
       toast({
         title: 'Sucesso',
         description: 'Perfil atualizado com sucesso.' + emailMessage,
@@ -363,7 +369,6 @@ export default function ProfilePage() {
       return
     }
 
-    // Explicitly request permission only when the toggle is clicked to "true"
     if (Notification.permission === 'denied') {
       toast({
         title: 'Permissão Bloqueada',
@@ -544,11 +549,11 @@ export default function ProfilePage() {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="whatsapp" className="text-white">
-                  Número do WhatsApp (com código do país)
+                  Número do WhatsApp
                 </Label>
                 <Input
                   id="whatsapp"
-                  placeholder="5521999999999"
+                  placeholder="Ex: 21999999999"
                   value={whatsapp}
                   onChange={(e) => setWhatsapp(e.target.value)}
                   className="bg-background text-white"
