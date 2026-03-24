@@ -96,8 +96,9 @@ export default function GuidePage() {
               </h3>
               <p>
                 Cadastre suas captações na aba <strong>Imóveis</strong>. Você pode marcá-las como
-                "Off-Market", garantindo que não fiquem visíveis em portais abertos, mas disponíveis
-                para o cruzamento inteligente da nossa IA.
+                "Off-Market", assim saberemos que o imóvel tem uma condição diferenciada aqui na
+                plataforma ou que não está sendo divulgado em portais imobiliários. Ele ficará
+                disponível para o cruzamento inteligente da nossa IA.
               </p>
             </div>
 
