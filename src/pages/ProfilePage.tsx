@@ -551,7 +551,9 @@ export default function ProfilePage() {
         </div>
 
         <div className="md:col-span-2 space-y-6">
-          <AmbassadorWidget tier={activeTier} referrals={activeReferrals} />
+          {(activeTier !== 'None' || activeReferrals > 0) && (
+            <AmbassadorWidget tier={activeTier} referrals={activeReferrals} />
+          )}
 
           <Card className="bg-card border-border">
             <CardHeader>
