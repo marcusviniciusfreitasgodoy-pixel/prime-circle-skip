@@ -89,8 +89,7 @@ export function EditNeedSheet({
 
     const fd = new FormData(e.currentTarget)
 
-    const parsedVal = valor.includes('R
-)
+    const parsedVal = valor.includes('R$')
       ? parseCurrency(valor)
       : need.metadata.valor || parseCurrency(valor)
 
@@ -117,8 +116,7 @@ export function EditNeedSheet({
       description: String(fd.get('description') || need.metadata.description || ''),
     }
 
-    if (valor.includes('R
-)) {
+    if (valor.includes('R$')) {
       md.budget = valor
     }
 
@@ -348,4 +346,3 @@ export function EditNeedSheet({
     </Sheet>
   )
 }
-
