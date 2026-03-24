@@ -21,6 +21,7 @@ import {
   CheckCircle2,
   XCircle,
   Clock,
+  Save,
 } from 'lucide-react'
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip'
 import { supabase } from '@/lib/supabase/client'
@@ -40,6 +41,9 @@ export function ReferralTracker({
   const [myCircle, setMyCircle] = useState<any[]>([])
   const [notificationLogs, setNotificationLogs] = useState<any[]>([])
   const [inviteMessage, setInviteMessage] = useState('')
+  const [originalMessage, setOriginalMessage] = useState('')
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false)
+  const [isSaving, setIsSaving] = useState(false)
 
   useEffect(() => {
     if (!userId) return
@@ -93,6 +97,29 @@ export function ReferralTracker({
       } catch (err) {
         console.warn('Error fetching logs', err)
       }
+
+      try {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', userId)
+          .single()
+
+        if (mounted) {
+          const customMsg = (profile as any)?.custom_referral_message
+          if (customMsg) {
+            setInviteMessage(customMsg)
+            setOriginalMessage(customMsg)
+          } else if (referralLink) {
+            const defaultMsg = `[Nome], acabei de lançar a *Prime Circle* e selecionei você pessoalmente para ser um dos *Membros Fundadores*.\n\nÉ uma rede privada exclusiva para corretores de alto padrão na *Barra e Recreio*, feita para profissionalizar nossas parcerias e eliminar de vez o caos e a informalidade dos grupos de WhatsApp.\n\nAo entrar, você terá acesso imediato à nossa *Área de Membros*, uma plataforma completa onde você pode:\n\n— *Gerenciar sua carteira:* Publique seus imóveis para que outros membros encontrem compradores qualificados rapidamente.\n— *Radar de Demandas:* Cadastre o que seus clientes buscam e receba alertas automáticos de match na rede.\n— *Acesso Off-Market:* Visualize oportunidades exclusivas que ainda não chegaram aos portais.\n— *Painel de Conexões:* Acompanhe o status das suas parcerias em um ambiente profissional.\n\nDentro da sua área logada, você também encontrará seu *Link de Embaixador*. Como a rede cresce por curadoria, você poderá usá-lo para convidar os corretores da sua total confiança, fortalecendo seu círculo e ganhando benefícios por cada indicação aprovada.\n\n*Isso não é apenas mais um grupo; é a oportunidade de construirmos juntos uma comunidade selecionada, com regras claras e foco total em fechar negócios de alto nível.* É o novo padrão de colaboração para quem opera no topo do mercado.\n\nAs vagas de Fundador são limitadas para garantirmos essa qualidade desde o início.\n\nGaranta seu lugar e acesse as ferramentas aqui:\n${referralLink}`
+
+            setInviteMessage(defaultMsg)
+            setOriginalMessage(defaultMsg)
+          }
+        }
+      } catch (err) {
+        console.warn('Error fetching custom message', err)
+      }
     }
 
     fetchData()
@@ -100,16 +127,28 @@ export function ReferralTracker({
     return () => {
       mounted = false
     }
-  }, [userId])
+  }, [userId, referralLink])
 
-  useEffect(() => {
-    if (referralLink && !inviteMessage) {
-      setInviteMessage(
-        `[Nome], acabei de lançar a *Prime Circle* e selecionei você pessoalmente para ser um dos *Membros Fundadores*.\n\nÉ uma rede privada exclusiva para corretores de alto padrão na *Barra e Recreio*, feita para profissionalizar nossas parcerias e eliminar de vez o caos e a informalidade dos grupos de WhatsApp.\n\nAo entrar, você terá acesso imediato à nossa *Área de Membros*, uma plataforma completa onde você pode:\n\n— *Gerenciar sua carteira:* Publique seus imóveis para que outros membros encontrem compradores qualificados rapidamente.\n— *Radar de Demandas:* Cadastre o que seus clientes buscam e receba alertas automáticos de match na rede.\n— *Acesso Off-Market:* Visualize oportunidades exclusivas que ainda não chegaram aos portais.\n— *Painel de Conexões:* Acompanhe o status das suas parcerias em um ambiente profissional.\n\nDentro da sua área logada, você também encontrará seu *Link de Embaixador*. Como a rede cresce por curadoria, você poderá usá-lo para convidar os corretores da sua total confiança, fortalecendo seu círculo e ganhando benefícios por cada indicação aprovada.\n\n*Isso não é apenas mais um grupo; é a oportunidade de construirmos juntos uma comunidade selecionada, com regras claras e foco total em fechar negócios de alto nível.* É o novo padrão de colaboração para quem opera no topo do mercado.\n\nAs vagas de Fundador são limitadas para garantirmos essa qualidade desde o início.\n\nGaranta seu lugar e acesse as ferramentas aqui:\n${referralLink}`,
-      )
+  const handleSaveMessage = async () => {
+    setIsSaving(true)
+    const { error } = await supabase
+      .from('profiles')
+      .update({ custom_referral_message: inviteMessage } as any)
+      .eq('id', userId)
+
+    setIsSaving(false)
+    if (!error) {
+      toast({ title: 'Sucesso', description: 'Sua mensagem personalizada foi salva!' })
+      setOriginalMessage(inviteMessage)
+      setHasUnsavedChanges(false)
+    } else {
+      toast({
+        title: 'Erro',
+        description: 'Não foi possível salvar a mensagem.',
+        variant: 'destructive',
+      })
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [referralLink])
+  }
 
   const handleCopy = () => {
     navigator.clipboard.writeText(inviteMessage)
@@ -131,17 +170,33 @@ export function ReferralTracker({
           </CardTitle>
           <CardDescription className="text-base text-muted-foreground max-w-2xl">
             Convide corretores alinhados à política 50/50 e receba meses grátis. Personalize sua
-            mensagem abaixo e compartilhe com sua rede.
+            mensagem abaixo, salve-a como padrão e compartilhe com sua rede.
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4 relative z-10">
             <Textarea
               value={inviteMessage}
-              onChange={(e) => setInviteMessage(e.target.value)}
+              onChange={(e) => {
+                setInviteMessage(e.target.value)
+                setHasUnsavedChanges(e.target.value !== originalMessage)
+              }}
               className="bg-background/80 border-primary/20 text-muted-foreground min-h-[320px] focus-visible:ring-primary leading-relaxed"
             />
-            <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex flex-col sm:flex-row gap-3">
+              <Button
+                onClick={handleSaveMessage}
+                disabled={!hasUnsavedChanges || isSaving}
+                variant="outline"
+                className={cn(
+                  'flex-1 h-12 transition-colors',
+                  hasUnsavedChanges
+                    ? 'border-green-500/50 text-green-500 bg-green-500/10 hover:bg-green-500/20'
+                    : 'border-border text-muted-foreground',
+                )}
+              >
+                <Save className="w-4 h-4 mr-2" /> {isSaving ? 'Salvando...' : 'Salvar Padrão'}
+              </Button>
               <Button
                 onClick={handleCopy}
                 variant="outline"
@@ -151,9 +206,9 @@ export function ReferralTracker({
               </Button>
               <Button
                 onClick={handleShare}
-                className="flex-1 gold-gradient text-black font-bold h-12 shadow-[0_0_15px_rgba(201,168,76,0.2)]"
+                className="flex-[1.5] gold-gradient text-black font-bold h-12 shadow-[0_0_15px_rgba(201,168,76,0.2)]"
               >
-                <Share2 className="w-5 h-5 mr-2" /> Compartilhar no WhatsApp
+                <Share2 className="w-5 h-5 mr-2" /> Enviar WhatsApp
               </Button>
             </div>
           </div>
