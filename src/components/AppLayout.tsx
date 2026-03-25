@@ -57,6 +57,7 @@ export function AppLayout() {
   const { toast } = useToast()
 
   const [profileAvatar, setProfileAvatar] = useState('')
+  const [userRole, setUserRole] = useState('user')
 
   const clearRef = useRef(clearNotifications)
 
@@ -122,21 +123,26 @@ export function AppLayout() {
         setProfileAvatar(storeUser.avatar)
       } else if (authUser.user_metadata?.avatar_url) {
         setProfileAvatar(authUser.user_metadata.avatar_url)
-      } else {
-        supabase
-          .from('profiles')
-          .select('avatar_url')
-          .eq('id', authUser.id)
-          .single()
-          .then(({ data }) => {
-            if (data?.avatar_url) {
+      }
+
+      supabase
+        .from('profiles')
+        .select('avatar_url, role')
+        .eq('id', authUser.id)
+        .single()
+        .then(({ data }) => {
+          if (data) {
+            if (data.avatar_url && !profileAvatar) {
               setProfileAvatar(data.avatar_url)
               updateUser({ avatar: data.avatar_url })
             }
-          })
-      }
+            if (data.role) {
+              setUserRole(data.role)
+            }
+          }
+        })
     }
-  }, [authUser, storeUser?.avatar, updateUser])
+  }, [authUser, storeUser?.avatar, updateUser, profileAvatar])
 
   const handleLogout = async () => {
     try {
@@ -173,8 +179,19 @@ export function AppLayout() {
     { title: 'Ativos da Marca', icon: Palette, url: '/brand' },
   ]
 
-  if (storeUser?.status === 'admin' || authUser?.email?.includes('admin')) {
+  const isAdminRole =
+    storeUser?.status === 'admin' || authUser?.email?.includes('admin') || userRole === 'admin'
+  const isMarcusOnly =
+    authUser?.email === 'marcusviniciusfreitasgodoy@gmail.com' ||
+    authUser?.email === 'marcus@godoyprime.com.br' ||
+    storeUser?.id === 'admin-1'
+
+  if (isAdminRole || isMarcusOnly) {
     navItems.push({ title: 'Comunicações', icon: MessageSquare, url: '/notifications' })
+  }
+
+  // Acesso à página de Admin restrito ao perfil principal/solicitado
+  if (isMarcusOnly) {
     navItems.push({ title: 'Admin', icon: Settings, url: '/admin' })
   }
 
