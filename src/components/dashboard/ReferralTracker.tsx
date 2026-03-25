@@ -111,7 +111,7 @@ export function ReferralTracker({
             setInviteMessage(customMsg)
             setOriginalMessage(customMsg)
           } else if (referralLink) {
-            const defaultMsg = `[Nome], acabei de lançar a *Prime Circle* e selecionei você pessoalmente para ser um dos *Membros Fundadores*.\n\nÉ uma rede privada exclusiva para corretores de alto padrão na *Barra e Recreio*, feita para profissionalizar nossas parcerias e eliminar de vez o caos e a informalidade dos grupos de WhatsApp.\n\nAo entrar, você terá acesso imediato à nossa *Área de Membros*, uma plataforma completa onde você pode:\n\n— *Gerenciar sua carteira:* Publique seus imóveis para que outros membros encontrem compradores qualificados rapidamente.\n— *Radar de Demandas:* Cadastre o que seus clientes buscam e receba alertas automáticos de match na rede.\n— *Acesso Off-Market:* Visualize oportunidades exclusivas que ainda não chegaram aos portais.\n— *Painel de Conexões:* Acompanhe o status das suas parcerias em um ambiente profissional.\n\nDentro da sua área logada, você também encontrará seu *Link de Embaixador*. Como a rede cresce por curadoria, você poderá usá-lo para convidar os corretores da sua total confiança, fortalendo seu círculo e ganhando benefícios por cada indicação aprovada.\n\n*Isso não é apenas mais um grupo; é a oportunidade de construirmos juntos uma comunidade selecionada, com regras claras e foco total em fechar negócios de alto nível.* É o novo padrão de colaboração para quem opera no topo do mercado.\n\nAs vagas de Fundador são limitadas para garantirmos essa qualidade desde o início.\n\nGaranta seu lugar e acesse as ferramentas aqui:\n${referralLink}`
+            const defaultMsg = `[Nome], estou utilizando a *Prime Circle*, uma rede privada exclusiva para corretores de alto padrão.\n\nEstou te enviando este convite pois valorizo seu trabalho e acredito que podemos fechar excelentes parcerias por lá. A plataforma cruza automaticamente nossos imóveis e demandas, garantindo segurança na regra de 50/50 e acesso a oportunidades Off-Market.\n\nComo o acesso é restrito por curadoria, estou liberando meu link exclusivo de indicação para você entrar:\n\n${referralLink}\n\nFaça seu cadastro para conectarmos nossas carteiras e gerarmos mais negócios juntos!`
 
             setInviteMessage(defaultMsg)
             setOriginalMessage(defaultMsg)
@@ -169,8 +169,8 @@ export function ReferralTracker({
             <Crown className="w-5 h-5 sm:w-6 sm:h-6" /> Indique Parceiros
           </CardTitle>
           <CardDescription className="text-sm sm:text-base text-muted-foreground max-w-2xl mt-1.5 leading-relaxed">
-            Convide corretores alinhados à política 50/50 e receba meses grátis. Personalize sua
-            mensagem abaixo, salve-a como padrão e compartilhe com sua rede.
+            Convide corretores alinhados à política 50/50 e fortaleça nossa rede. Personalize sua
+            mensagem abaixo, salve-a como padrão e compartilhe com parceiros de confiança.
           </CardDescription>
         </CardHeader>
         <CardContent className="p-4 sm:p-6 pt-0 sm:pt-0 relative z-10 flex-1 flex flex-col">
@@ -353,7 +353,7 @@ export function ReferralTracker({
                 Você ainda não possui parceiros no seu círculo.
               </p>
               <p className="text-xs text-muted-foreground mt-1">
-                Compartilhe seu link para começar a construir sua rede.
+                Compartilhe seu link para começar a construir sua rede de sucesso.
               </p>
             </div>
           )}
