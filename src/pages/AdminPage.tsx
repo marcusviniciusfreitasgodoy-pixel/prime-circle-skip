@@ -24,6 +24,7 @@ import { LogsTab } from '@/components/notifications/LogsTab'
 import { WhatsAppCollectionTab } from '@/components/admin/WhatsAppCollectionTab'
 import { PropertyCurationTab } from '@/components/admin/PropertyCurationTab'
 import { QualityPerformanceTab } from '@/components/admin/QualityPerformanceTab'
+import { PartnerDetailsSheet } from '@/components/admin/PartnerDetailsSheet'
 import { sendWhatsappMessage } from '@/services/whatsapp'
 
 interface SupportTicket {
@@ -44,6 +45,7 @@ export default function AdminPage() {
   const [tickets, setTickets] = useState<SupportTicket[]>([])
   const [profiles, setProfiles] = useState<any[]>([])
   const [isTestingWa, setIsTestingWa] = useState(false)
+  const [selectedProfile, setSelectedProfile] = useState<any | null>(null)
 
   const pendingProfiles = profiles.filter((p) => p.status === 'pending_validation')
 
@@ -193,7 +195,8 @@ export default function AdminPage() {
           {pendingProfiles.map((req) => (
             <Card
               key={req.id}
-              className="bg-secondary border-border border-l-4 border-l-yellow-500/50"
+              className="bg-secondary border-border border-l-4 border-l-yellow-500/50 hover:bg-secondary/70 transition-colors cursor-pointer"
+              onClick={() => setSelectedProfile(req)}
             >
               <CardContent className="p-4 flex flex-col md:flex-row items-center justify-between gap-4">
                 <div className="flex items-center gap-4 w-full">
@@ -204,7 +207,9 @@ export default function AdminPage() {
                     </AvatarFallback>
                   </Avatar>
                   <div>
-                    <h3 className="font-semibold text-white">{req.full_name || 'Sem Nome'}</h3>
+                    <h3 className="font-semibold text-white hover:underline">
+                      {req.full_name || 'Sem Nome'}
+                    </h3>
                     <p className="text-sm text-muted-foreground">
                       Contato: {req.whatsapp_number || 'N/A'}
                     </p>
@@ -218,7 +223,7 @@ export default function AdminPage() {
                     </div>
                   </div>
                 </div>
-                <div className="flex gap-2 w-full md:w-auto">
+                <div className="flex gap-2 w-full md:w-auto" onClick={(e) => e.stopPropagation()}>
                   <Button
                     variant="outline"
                     className="flex-1 border-red-500/20 text-red-500 hover:bg-red-500/10"
@@ -474,6 +479,8 @@ export default function AdminPage() {
           </div>
         </TabsContent>
       </Tabs>
+
+      <PartnerDetailsSheet profile={selectedProfile} onClose={() => setSelectedProfile(null)} />
     </div>
   )
 }

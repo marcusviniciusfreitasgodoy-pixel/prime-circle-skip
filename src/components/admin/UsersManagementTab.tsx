@@ -34,6 +34,7 @@ import { Check, X, Key, Search } from 'lucide-react'
 import { toast } from 'sonner'
 import { supabase } from '@/lib/supabase/client'
 import { cn } from '@/lib/utils'
+import { PartnerDetailsSheet } from './PartnerDetailsSheet'
 
 interface Profile {
   id: string
@@ -44,6 +45,11 @@ interface Profile {
   status: string
   avatar_url?: string
   whatsapp_number?: string
+  creci?: string
+  region?: string
+  specialties?: string
+  bio?: string
+  reputation_score?: number
 }
 
 export function UsersManagementTab({
@@ -62,6 +68,7 @@ export function UsersManagementTab({
     null,
   )
   const [isProcessing, setIsProcessing] = useState(false)
+  const [selectedProfile, setSelectedProfile] = useState<Profile | null>(null)
 
   const filteredProfiles = useMemo(() => {
     return profiles.filter((p) => {
@@ -178,16 +185,16 @@ export function UsersManagementTab({
               {filteredProfiles.map((profile) => (
                 <TableRow
                   key={profile.id}
-                  className="border-border data-[state=selected]:bg-muted"
+                  className="border-border data-[state=selected]:bg-muted/50 hover:bg-secondary/30 transition-colors"
                   data-state={selectedUsers.includes(profile.id) ? 'selected' : undefined}
                 >
-                  <TableCell>
+                  <TableCell onClick={(e) => e.stopPropagation()}>
                     <Checkbox
                       checked={selectedUsers.includes(profile.id)}
                       onCheckedChange={(c) => handleSelectUser(profile.id, c as boolean)}
                     />
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="cursor-pointer" onClick={() => setSelectedProfile(profile)}>
                     <Avatar className="w-8 h-8">
                       <AvatarImage src={profile.avatar_url} />
                       <AvatarFallback className="bg-secondary text-xs">
@@ -195,9 +202,12 @@ export function UsersManagementTab({
                       </AvatarFallback>
                     </Avatar>
                   </TableCell>
-                  <TableCell className="font-medium text-white">
+                  <TableCell
+                    className="font-medium text-white cursor-pointer hover:underline"
+                    onClick={() => setSelectedProfile(profile)}
+                  >
                     {profile.full_name || 'Sem Nome'}
-                    <div className="text-xs text-muted-foreground font-normal mt-0.5">
+                    <div className="text-xs text-muted-foreground font-normal mt-0.5 no-underline hover:no-underline">
                       {profile.email || profile.whatsapp_number || 'Sem contato'}
                     </div>
                   </TableCell>
@@ -299,6 +309,8 @@ export function UsersManagementTab({
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      <PartnerDetailsSheet profile={selectedProfile} onClose={() => setSelectedProfile(null)} />
     </div>
   )
 }
