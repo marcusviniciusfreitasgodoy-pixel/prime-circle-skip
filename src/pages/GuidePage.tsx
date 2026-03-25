@@ -1,13 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import {
-  BookOpen,
-  Scale,
-  Workflow,
-  Lightbulb,
-  CheckCircle2,
-  ShieldCheck,
-  ArrowLeft,
-} from 'lucide-react'
+import { BookOpen, Scale, Workflow, Lightbulb, ShieldCheck, ArrowLeft, Star } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Link } from 'react-router-dom'
 import { useSEO } from '@/hooks/use-seo'
@@ -122,7 +114,48 @@ export default function GuidePage() {
         <Card className="bg-card border-border shadow-sm">
           <CardHeader>
             <CardTitle className="text-xl text-primary flex items-center gap-2">
-              <ShieldCheck className="w-5 h-5" /> 3. Programa Embaixador e Curadoria
+              <Star className="w-5 h-5" /> 3. Sistema de Reputação e Ranking
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4 text-muted-foreground leading-relaxed">
+            <p>
+              O ranking valoriza o engajamento e a eficiência. Quanto mais ativo você for nas
+              negociações, maior será sua autoridade e destaque no Top 10 da comunidade. Todos
+              iniciam com 0 pontos para garantir equidade.
+            </p>
+            <div className="grid gap-4 sm:grid-cols-2 mt-2">
+              <div className="bg-secondary/30 p-4 rounded-lg border border-border/50">
+                <h4 className="text-white text-sm font-semibold flex items-center gap-2 mb-2">
+                  <span className="bg-primary/20 text-primary px-2 py-0.5 rounded text-xs">
+                    +2 pts
+                  </span>
+                  Avanço de Negociações
+                </h4>
+                <p className="text-xs">
+                  Sempre que uma parceria progride (ex: visita ou proposta). Cancelamentos ou
+                  rejeições não pontuam.
+                </p>
+              </div>
+              <div className="bg-secondary/30 p-4 rounded-lg border border-border/50">
+                <h4 className="text-white text-sm font-semibold flex items-center gap-2 mb-2">
+                  <span className="bg-primary/20 text-primary px-2 py-0.5 rounded text-xs">
+                    +5 pts
+                  </span>
+                  Atualizações Rápidas
+                </h4>
+                <p className="text-xs">
+                  Uso dos links de atualização rápida recebidos via WhatsApp garante dados em tempo
+                  real e maior bonificação.
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-card border-border shadow-sm">
+          <CardHeader>
+            <CardTitle className="text-xl text-primary flex items-center gap-2">
+              <ShieldCheck className="w-5 h-5" /> 4. Programa Embaixador e Curadoria
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4 text-muted-foreground leading-relaxed">
@@ -143,7 +176,7 @@ export default function GuidePage() {
         <Card className="bg-card border-border shadow-sm">
           <CardHeader>
             <CardTitle className="text-xl text-primary flex items-center gap-2">
-              <Lightbulb className="w-5 h-5" /> 4. Cultura Colaborativa (Sugestões)
+              <Lightbulb className="w-5 h-5" /> 5. Cultura Colaborativa (Sugestões)
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4 text-muted-foreground leading-relaxed">
