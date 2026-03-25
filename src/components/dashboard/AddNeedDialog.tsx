@@ -76,6 +76,8 @@ export function AddNeedDialog({ onSuccess }: { onSuccess: () => void }) {
       state: stateLocation,
       quartos: String(fd.get('quartos') || ''),
       suites: String(fd.get('suites') || ''),
+      banheiros: String(fd.get('banheiros') || ''),
+      vagas: String(fd.get('vagas') || ''),
       tamanho_imovel: Number(fd.get('tamanho_imovel') || 0),
       tamanho_terreno: fd.get('tamanho_terreno') ? Number(fd.get('tamanho_terreno')) : null,
       condominiums: condominiums,
@@ -84,7 +86,7 @@ export function AddNeedDialog({ onSuccess }: { onSuccess: () => void }) {
     }
 
     const condosText = condominiums.length > 0 ? `\nCondomínios: ${condominiums.join(', ')}` : ''
-    const content = `Busca: ${md.tipo_imovel}\nBairro: ${md.neighborhood}\nEndereço: ${md.street}${condosText}\nCidade: ${md.city}\nEstado: ${md.state}\nValor Max: R$ ${md.valor}\nQuartos: ${md.quartos}\nDetalhes: ${md.description}`
+    const content = `Busca: ${md.tipo_imovel}\nBairro: ${md.neighborhood}\nEndereço: ${md.street}${condosText}\nCidade: ${md.city}\nEstado: ${md.state}\nValor Max: R$ ${md.valor}\nQuartos: ${md.quartos}\nSuítes: ${md.suites}\nBanheiros: ${md.banheiros}\nVagas: ${md.vagas}\nDetalhes: ${md.description}`
 
     const { error } = await supabase.from('documents').insert({ content, metadata: md })
 
@@ -230,6 +232,21 @@ export function AddNeedDialog({ onSuccess }: { onSuccess: () => void }) {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
+                  {['0', '1', '2', '3', '4', '5 ou mais'].map((o) => (
+                    <SelectItem key={o} value={o}>
+                      {o}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label>Banheiros (Mín)</Label>
+              <Select name="banheiros" required defaultValue="1">
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
                   {['1', '2', '3', '4', '5 ou mais'].map((o) => (
                     <SelectItem key={o} value={o}>
                       {o}
@@ -238,6 +255,23 @@ export function AddNeedDialog({ onSuccess }: { onSuccess: () => void }) {
                 </SelectContent>
               </Select>
             </div>
+            <div className="space-y-2">
+              <Label>Vagas (Mín)</Label>
+              <Select name="vagas" required defaultValue="1">
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {['0', '1', '2', '3', '4', '5 ou mais'].map((o) => (
+                    <SelectItem key={o} value={o}>
+                      {o}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label>Área Mínima (m²)</Label>
               <Input name="tamanho_imovel" type="number" required placeholder="120" />

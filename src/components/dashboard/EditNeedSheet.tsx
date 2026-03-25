@@ -105,6 +105,8 @@ export function EditNeedSheet({
       state: stateLocation,
       quartos: String(fd.get('quartos') || need.metadata.quartos || ''),
       suites: String(fd.get('suites') || need.metadata.suites || ''),
+      banheiros: String(fd.get('banheiros') || need.metadata.banheiros || ''),
+      vagas: String(fd.get('vagas') || need.metadata.vagas || ''),
       tamanho_imovel: Number(fd.get('tamanho_imovel') || need.metadata.tamanho_imovel || 0),
       tamanho_terreno: fd.get('tamanho_terreno')
         ? Number(fd.get('tamanho_terreno'))
@@ -121,7 +123,7 @@ export function EditNeedSheet({
     }
 
     const condosText = condominiums.length > 0 ? `\nCondomínios: ${condominiums.join(', ')}` : ''
-    const content = `Busca: ${md.tipo_imovel}\nBairro: ${md.neighborhood}\nEndereço: ${md.street}${condosText}\nCidade: ${md.city}\nEstado: ${md.state}\nValor Max: R$ ${md.valor}\nQuartos: ${md.quartos}\nDetalhes: ${md.description}`
+    const content = `Busca: ${md.tipo_imovel}\nBairro: ${md.neighborhood}\nEndereço: ${md.street}${condosText}\nCidade: ${md.city}\nEstado: ${md.state}\nValor Max: R$ ${md.valor}\nQuartos: ${md.quartos}\nSuítes: ${md.suites}\nBanheiros: ${md.banheiros}\nVagas: ${md.vagas}\nDetalhes: ${md.description}`
 
     const { error } = await supabase
       .from('documents')
@@ -258,7 +260,39 @@ export function EditNeedSheet({
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
+                  {['0', '1', '2', '3', '4', '5 ou mais'].map((o) => (
+                    <SelectItem key={o} value={o}>
+                      {o}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label>Banheiros (Mín)</Label>
+              <Select name="banheiros" required defaultValue={need.metadata?.banheiros || '1'}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
                   {['1', '2', '3', '4', '5 ou mais'].map((o) => (
+                    <SelectItem key={o} value={o}>
+                      {o}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label>Vagas (Mín)</Label>
+              <Select name="vagas" required defaultValue={need.metadata?.vagas || '1'}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {['0', '1', '2', '3', '4', '5 ou mais'].map((o) => (
                     <SelectItem key={o} value={o}>
                       {o}
                     </SelectItem>

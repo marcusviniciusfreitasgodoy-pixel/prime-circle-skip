@@ -210,6 +210,8 @@ export function AddPropertyDialog({
     const complemento = String(fd.get('complemento') || '')
     const quartos = String(fd.get('quartos') || '')
     const suitesVal = String(fd.get('suites') || suites)
+    const banheiros = String(fd.get('banheiros') || '')
+    const vagas = String(fd.get('vagas') || '')
     const tamanho_imovel_val = Number(fd.get('tamanho_imovel')) || Number(tamanhoImovel)
     const tamanho_terreno_val = fd.get('tamanho_terreno')
     const tamanho_terreno = tamanho_terreno_val ? Number(tamanho_terreno_val) : null
@@ -238,6 +240,8 @@ export function AddPropertyDialog({
       andar: andar_val,
       quartos,
       suites: suitesVal,
+      banheiros,
+      vagas,
       tamanho_imovel: tamanho_imovel_val,
       tamanho_terreno,
       nome_condominio: nome_condominio_val,
@@ -253,7 +257,7 @@ export function AddPropertyDialog({
       resolution: hasDups ? 'pending' : null,
     }
 
-    const content = `Tipo: ${md.tipo_imovel}\nBairro: ${md.neighborhood}\nEndereço: ${md.street} ${md.complemento ? `- ${md.complemento}` : ''}\nAndar: ${md.andar}\nCidade: ${md.city}\nEstado: ${md.state}\nValor: R$ ${md.valor}\nQuartos: ${md.quartos}\nSuítes: ${md.suites}\nDetalhes: ${md.description}`
+    const content = `Tipo: ${md.tipo_imovel}\nBairro: ${md.neighborhood}\nEndereço: ${md.street} ${md.complemento ? `- ${md.complemento}` : ''}\nAndar: ${md.andar}\nCidade: ${md.city}\nEstado: ${md.state}\nValor: R$ ${md.valor}\nQuartos: ${md.quartos}\nSuítes: ${md.suites}\nBanheiros: ${md.banheiros}\nVagas: ${md.vagas}\nDetalhes: ${md.description}`
 
     const { error } = await supabase.from('documents').insert({ content, metadata: md })
 
@@ -443,6 +447,21 @@ export function AddPropertyDialog({
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
+                  {['0', '1', '2', '3', '4', '5 ou mais'].map((o) => (
+                    <SelectItem key={o} value={o}>
+                      {o}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label>Banheiros</Label>
+              <Select name="banheiros" required defaultValue="1">
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
                   {['1', '2', '3', '4', '5 ou mais'].map((o) => (
                     <SelectItem key={o} value={o}>
                       {o}
@@ -451,6 +470,24 @@ export function AddPropertyDialog({
                 </SelectContent>
               </Select>
             </div>
+            <div className="space-y-2">
+              <Label>Vagas</Label>
+              <Select name="vagas" required defaultValue="1">
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {['0', '1', '2', '3', '4', '5 ou mais'].map((o) => (
+                    <SelectItem key={o} value={o}>
+                      {o}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label>Área Útil (m²)</Label>
               <Input

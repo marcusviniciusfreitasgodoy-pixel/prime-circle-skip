@@ -136,6 +136,8 @@ export function EditPropertySheet({
       andar: String(fd.get('andar') || property.metadata.andar || ''),
       quartos: String(fd.get('quartos') || property.metadata.quartos || ''),
       suites: String(fd.get('suites') || property.metadata.suites || ''),
+      banheiros: String(fd.get('banheiros') || property.metadata.banheiros || ''),
+      vagas: String(fd.get('vagas') || property.metadata.vagas || ''),
       tamanho_imovel: Number(fd.get('tamanho_imovel') || property.metadata.tamanho_imovel || 0),
       tamanho_terreno: fd.get('tamanho_terreno')
         ? Number(fd.get('tamanho_terreno'))
@@ -154,7 +156,7 @@ export function EditPropertySheet({
       md.price = valor
     }
 
-    const content = `Tipo: ${md.tipo_imovel}\nBairro: ${md.neighborhood}\nEndereço: ${md.street} ${md.complemento ? `- ${md.complemento}` : ''}\nAndar: ${md.andar}\nCidade: ${md.city}\nEstado: ${md.state}\nValor: R$ ${md.valor}\nQuartos: ${md.quartos}\nSuítes: ${md.suites}\nDetalhes: ${md.description}`
+    const content = `Tipo: ${md.tipo_imovel}\nBairro: ${md.neighborhood}\nEndereço: ${md.street} ${md.complemento ? `- ${md.complemento}` : ''}\nAndar: ${md.andar}\nCidade: ${md.city}\nEstado: ${md.state}\nValor: R$ ${md.valor}\nQuartos: ${md.quartos}\nSuítes: ${md.suites}\nBanheiros: ${md.banheiros}\nVagas: ${md.vagas}\nDetalhes: ${md.description}`
 
     const { error } = await supabase
       .from('documents')
@@ -364,7 +366,40 @@ export function EditPropertySheet({
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
+                  {['0', '1', '2', '3', '4', '5 ou mais'].map((o) => (
+                    <SelectItem key={o} value={o}>
+                      {o}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label>Banheiros</Label>
+              <Select name="banheiros" required defaultValue={property.metadata?.banheiros || '1'}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
                   {['1', '2', '3', '4', '5 ou mais'].map((o) => (
+                    <SelectItem key={o} value={o}>
+                      {o}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label>Vagas</Label>
+              <Select name="vagas" required defaultValue={property.metadata?.vagas || '1'}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {['0', '1', '2', '3', '4', '5 ou mais'].map((o) => (
                     <SelectItem key={o} value={o}>
                       {o}
                     </SelectItem>
