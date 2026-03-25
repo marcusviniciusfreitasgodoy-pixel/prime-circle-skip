@@ -10,12 +10,20 @@ export function DashboardReferral() {
 
   useEffect(() => {
     const fetchTotal = async () => {
-      const { count } = await supabase
-        .from('profiles')
-        .select('*', { count: 'exact', head: true })
-        .in('status', ['active', 'pending_validation'])
-      if (count !== null) {
-        setTotalMembers(count)
+      try {
+        const { count, error } = await supabase
+          .from('profiles')
+          .select('id', { count: 'exact' })
+          .in('status', ['active', 'pending_validation'])
+          .limit(1)
+
+        if (error) {
+          console.warn('Error fetching total members:', error)
+        } else if (count !== null) {
+          setTotalMembers(count)
+        }
+      } catch (err) {
+        console.warn('Exception fetching total members:', err)
       }
     }
     fetchTotal()
