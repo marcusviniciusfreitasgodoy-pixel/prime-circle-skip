@@ -164,16 +164,16 @@ export function ReferralTracker({
     <div className="space-y-6">
       <Card className="bg-card border-primary/30 shadow-[0_0_30px_rgba(201,168,76,0.1)] relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-[80px] pointer-events-none" />
-        <CardHeader>
-          <CardTitle className="text-2xl text-primary flex items-center gap-2">
-            <Crown className="w-6 h-6" /> Indique Parceiros
+        <CardHeader className="p-5 sm:p-6 pb-3 sm:pb-6">
+          <CardTitle className="text-xl sm:text-2xl text-primary flex items-center gap-2">
+            <Crown className="w-5 h-5 sm:w-6 sm:h-6" /> Indique Parceiros
           </CardTitle>
-          <CardDescription className="text-base text-muted-foreground max-w-2xl">
+          <CardDescription className="text-sm sm:text-base text-muted-foreground max-w-2xl mt-1.5">
             Convide corretores alinhados à política 50/50 e receba meses grátis. Personalize sua
             mensagem abaixo, salve-a como padrão e compartilhe com sua rede.
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-4 sm:p-6 pt-0 sm:pt-0">
           <div className="space-y-4 relative z-10">
             <Textarea
               value={inviteMessage}
@@ -181,34 +181,35 @@ export function ReferralTracker({
                 setInviteMessage(e.target.value)
                 setHasUnsavedChanges(e.target.value !== originalMessage)
               }}
-              className="bg-background/80 border-primary/20 text-muted-foreground min-h-[320px] focus-visible:ring-primary leading-relaxed"
+              className="bg-background/80 border-primary/20 text-muted-foreground text-sm sm:text-base min-h-[200px] sm:min-h-[320px] focus-visible:ring-primary leading-relaxed p-3 sm:p-4 resize-y"
             />
-            <div className="flex flex-col sm:flex-row gap-3">
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
               <Button
                 onClick={handleSaveMessage}
                 disabled={!hasUnsavedChanges || isSaving}
                 variant="outline"
                 className={cn(
-                  'flex-1 h-12 transition-colors',
+                  'flex-1 h-11 sm:h-12 transition-colors text-sm sm:text-base font-medium w-full',
                   hasUnsavedChanges
                     ? 'border-green-500/50 text-green-500 bg-green-500/10 hover:bg-green-500/20'
                     : 'border-border text-muted-foreground',
                 )}
               >
-                <Save className="w-4 h-4 mr-2" /> {isSaving ? 'Salvando...' : 'Salvar Padrão'}
+                <Save className="w-4 h-4 mr-2 shrink-0" />{' '}
+                {isSaving ? 'Salvando...' : 'Salvar Padrão'}
               </Button>
               <Button
                 onClick={handleCopy}
                 variant="outline"
-                className="flex-1 border-primary/50 text-primary hover:bg-primary/10 h-12"
+                className="flex-1 border-primary/50 text-primary hover:bg-primary/10 h-11 sm:h-12 text-sm sm:text-base font-medium w-full"
               >
-                <Copy className="w-4 h-4 mr-2" /> Copiar Mensagem
+                <Copy className="w-4 h-4 mr-2 shrink-0" /> Copiar Mensagem
               </Button>
               <Button
                 onClick={handleShare}
-                className="flex-[1.5] gold-gradient text-black font-bold h-12 shadow-[0_0_15px_rgba(201,168,76,0.2)]"
+                className="flex-[1.5] gold-gradient text-black font-bold h-11 sm:h-12 shadow-[0_0_15px_rgba(201,168,76,0.2)] text-sm sm:text-base w-full"
               >
-                <Share2 className="w-5 h-5 mr-2" /> Enviar WhatsApp
+                <Share2 className="w-5 h-5 mr-2 shrink-0" /> Enviar WhatsApp
               </Button>
             </div>
           </div>
@@ -217,25 +218,25 @@ export function ReferralTracker({
 
       <div className="grid gap-4 sm:grid-cols-2">
         <Card className="bg-card border-border">
-          <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+          <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0 p-4 sm:p-6">
             <CardTitle className="text-sm font-medium text-muted-foreground">
               Total de Cliques no Link
             </CardTitle>
             <Activity className="w-4 h-4 text-primary" />
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-4 sm:p-6 pt-0">
             <div className="text-2xl font-bold text-white">{clicksCount}</div>
             <p className="text-xs text-muted-foreground mt-1">Acessos registrados</p>
           </CardContent>
         </Card>
         <Card className="bg-card border-border">
-          <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+          <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0 p-4 sm:p-6">
             <CardTitle className="text-sm font-medium text-muted-foreground">
               Cadastros Realizados
             </CardTitle>
             <UserCheck className="w-4 h-4 text-primary" />
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-4 sm:p-6 pt-0">
             <div className="text-2xl font-bold text-white">{registrationsCount}</div>
             <p className="text-xs text-muted-foreground mt-1">Parceiros no seu círculo</p>
           </CardContent>
@@ -243,23 +244,25 @@ export function ReferralTracker({
       </div>
 
       <Card className="bg-card border-border">
-        <CardHeader>
+        <CardHeader className="p-4 sm:p-6 pb-4">
           <CardTitle className="text-lg text-white">Meu Círculo</CardTitle>
           <CardDescription>Acompanhe o status dos parceiros que usaram seu código.</CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-0 sm:p-6 sm:pt-0">
           {myCircle.length > 0 ? (
             <div className="overflow-x-auto">
               <Table>
                 <TableHeader>
                   <TableRow className="border-border/50 hover:bg-transparent">
-                    <TableHead className="w-[50px]"></TableHead>
-                    <TableHead className="text-muted-foreground font-semibold">Nome</TableHead>
+                    <TableHead className="w-[50px] pl-4 sm:pl-2"></TableHead>
+                    <TableHead className="text-muted-foreground font-semibold min-w-[120px]">
+                      Nome
+                    </TableHead>
                     <TableHead className="text-muted-foreground font-semibold">Status</TableHead>
                     <TableHead className="text-muted-foreground font-semibold">
                       Notificação
                     </TableHead>
-                    <TableHead className="text-muted-foreground font-semibold text-right">
+                    <TableHead className="text-muted-foreground font-semibold text-right pr-4 sm:pr-2">
                       Data
                     </TableHead>
                   </TableRow>
@@ -273,7 +276,7 @@ export function ReferralTracker({
 
                     return (
                       <TableRow key={partner.id} className="border-border/50 hover:bg-secondary/30">
-                        <TableCell>
+                        <TableCell className="pl-4 sm:pl-2">
                           <Avatar className="w-8 h-8 border border-border bg-background">
                             <AvatarImage src={partner.avatar_url} />
                             <AvatarFallback className="bg-secondary text-muted-foreground text-xs">
@@ -333,7 +336,7 @@ export function ReferralTracker({
                             </div>
                           )}
                         </TableCell>
-                        <TableCell className="text-muted-foreground text-sm text-right">
+                        <TableCell className="text-muted-foreground text-sm text-right pr-4 sm:pr-2">
                           {new Date(partner.created_at || Date.now()).toLocaleDateString('pt-BR')}
                         </TableCell>
                       </TableRow>
@@ -343,7 +346,7 @@ export function ReferralTracker({
               </Table>
             </div>
           ) : (
-            <div className="flex flex-col items-center justify-center py-8 text-center px-4 bg-secondary/20 rounded-lg border border-dashed border-border/50">
+            <div className="flex flex-col items-center justify-center py-8 text-center px-4 bg-secondary/20 rounded-lg border border-dashed border-border/50 mx-4 sm:mx-0 mb-4 sm:mb-0">
               <UserCheck className="w-8 h-8 text-muted-foreground/50 mb-3" />
               <p className="text-sm text-muted-foreground">
                 Você ainda não possui parceiros no seu círculo.
