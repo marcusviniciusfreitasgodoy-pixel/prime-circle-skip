@@ -190,14 +190,17 @@ export function OpportunityRadar({
 
       <Tabs defaultValue="demandas" className="w-full">
         <TabsList className="grid w-full max-w-md grid-cols-2 bg-background border border-border h-12 mb-6">
-          <TabsTrigger value="demandas" className="data-[state=active]:bg-card rounded-sm h-10">
-            Demandas da Rede ({demands.length})
+          <TabsTrigger
+            value="demandas"
+            className="data-[state=active]:bg-card rounded-sm h-10 text-xs sm:text-sm whitespace-nowrap"
+          >
+            Demandas ({demands.length})
           </TabsTrigger>
           <TabsTrigger
             value="offmarket"
-            className="data-[state=active]:bg-card rounded-sm h-10 flex items-center gap-1"
+            className="data-[state=active]:bg-card rounded-sm h-10 flex items-center justify-center gap-1 text-xs sm:text-sm whitespace-nowrap"
           >
-            Imóveis Off-Market
+            Off-Market
           </TabsTrigger>
         </TabsList>
 

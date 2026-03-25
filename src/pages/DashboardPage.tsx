@@ -250,24 +250,24 @@ export default function DashboardPage() {
 
       <div className="flex flex-col md:flex-row gap-6 md:items-center justify-between">
         <div className="flex items-center gap-4">
-          <Avatar className="w-16 h-16 border-2 border-primary/50 shadow-md">
+          <Avatar className="w-14 h-14 sm:w-16 sm:h-16 border-2 border-primary/50 shadow-md">
             {profileAvatar && <AvatarImage src={profileAvatar} />}
             <AvatarFallback className="bg-secondary text-muted-foreground text-xl">
               {profileName ? profileName.substring(0, 2).toUpperCase() : 'US'}
             </AvatarFallback>
           </Avatar>
           <div>
-            <h2 className="text-3xl font-bold tracking-tight text-white flex items-center flex-wrap gap-2 min-h-9">
+            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-white flex items-center flex-wrap gap-2 min-h-9">
               Bem-vindo,{' '}
               {isLoadingName ? <Skeleton className="h-8 w-32 bg-muted/20" /> : profileName}
               {!isLoadingName && profileScore > 80 && (
-                <Badge className="ml-2 bg-primary/20 text-primary border-primary/30 hover:bg-primary/30 flex items-center gap-1 shadow-sm">
+                <Badge className="bg-primary/20 text-primary border-primary/30 hover:bg-primary/30 flex items-center gap-1 shadow-sm mt-1 sm:mt-0">
                   <ShieldCheck className="w-3 h-3" /> Status de Elite
                 </Badge>
               )}
             </h2>
-            <div className="text-muted-foreground mt-2 flex items-center flex-wrap gap-3">
-              <span>
+            <div className="text-muted-foreground mt-2 flex items-center flex-wrap gap-2 sm:gap-3 text-sm">
+              <span className="flex items-center gap-2">
                 Plano atual:{' '}
                 <Badge variant="outline" className="border-primary/50 text-primary font-semibold">
                   {isLoadingName ? (
@@ -277,8 +277,9 @@ export default function DashboardPage() {
                   )}
                 </Badge>
               </span>
-              <span className="text-sm border-l border-border pl-3 flex items-center gap-1">
-                Pontuação PrimeCircle:{' '}
+              <span className="hidden sm:inline border-l border-border h-4" />
+              <span className="flex items-center gap-1">
+                Pontuação:{' '}
                 <strong
                   className={`text-white px-2 py-0.5 rounded-md border border-border ${profileScore > 80 ? 'bg-primary/20 border-primary/50 text-primary' : 'bg-secondary/80'}`}
                 >
@@ -288,7 +289,7 @@ export default function DashboardPage() {
             </div>
           </div>
         </div>
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
           <AddPropertyDialog onSuccess={triggerRefresh} />
         </div>
       </div>
@@ -301,9 +302,9 @@ export default function DashboardPage() {
           <Card className="bg-card border-border">
             <CardHeader className="pb-3">
               <CardTitle className="text-lg text-white flex items-center gap-2">
-                <BellRing className="w-5 h-5 text-primary" /> Meus Alertas de Conexão
+                <BellRing className="w-5 h-5 text-primary" /> Meus Alertas
               </CardTitle>
-              <CardDescription>Avisos enviados via WhatsApp recentemente</CardDescription>
+              <CardDescription>Avisos enviados via WhatsApp</CardDescription>
             </CardHeader>
             <CardContent>
               {recentMatchAlerts.length > 0 ? (
@@ -404,10 +405,10 @@ export default function DashboardPage() {
 
               return (
                 <div key={match.id} className="p-4 bg-background rounded-lg border border-border">
-                  <div className="flex justify-between items-start mb-4">
+                  <div className="flex justify-between items-start mb-6 flex-col sm:flex-row gap-3 sm:gap-0">
                     <div>
-                      <p className="text-white font-medium">
-                        {need?.title} <span className="text-muted-foreground mx-2">↔</span>{' '}
+                      <p className="text-white font-medium text-sm sm:text-base">
+                        {need?.title} <span className="text-muted-foreground mx-1 sm:mx-2">↔</span>{' '}
                         {listing?.title}
                       </p>
                       <p className="text-xs text-muted-foreground mt-1">Conexão ID: {match.id}</p>
@@ -416,39 +417,42 @@ export default function DashboardPage() {
                       <Button
                         size="sm"
                         variant="outline"
-                        className="border-primary/50 text-primary hover:bg-primary/10"
+                        className="border-primary/50 text-primary hover:bg-primary/10 w-full sm:w-auto"
                         onClick={() => advanceMatch(match.id, match.status)}
                       >
                         {match.status === 'Proposta' ? 'Registrar Fechamento' : 'Avançar Status'}{' '}
                         <ChevronRight className="w-4 h-4 ml-1" />
                       </Button>
                     ) : (
-                      <Badge className="bg-green-500/20 text-green-500 border-none hover:bg-green-500/30">
+                      <Badge className="bg-green-500/20 text-green-500 border-none hover:bg-green-500/30 self-start sm:self-auto">
                         Fechamento Validado
                       </Badge>
                     )}
                   </div>
-                  <div className="flex items-center w-full justify-between mt-6 relative">
-                    <div className="absolute top-1/2 left-0 w-full h-0.5 bg-secondary -translate-y-1/2 z-0" />
+                  <div className="flex items-center w-full justify-between mt-6 relative overflow-x-auto pb-8 sm:overflow-visible sm:pb-0 scrollbar-hide">
+                    <div className="absolute top-1/2 left-0 w-full h-0.5 bg-secondary -translate-y-1/2 z-0 min-w-[300px]" />
                     <div
-                      className="absolute top-1/2 left-0 h-0.5 bg-primary -translate-y-1/2 z-0 transition-all duration-500"
+                      className="absolute top-1/2 left-0 h-0.5 bg-primary -translate-y-1/2 z-0 transition-all duration-500 min-w-[300px]"
                       style={{ width: `${(currentIdx / (MATCH_STAGES.length - 1)) * 100}%` }}
                     />
 
                     {MATCH_STAGES.map((stage, i) => (
-                      <div key={stage} className="relative z-10 flex flex-col items-center gap-2">
+                      <div
+                        key={stage}
+                        className="relative z-10 flex flex-col items-center gap-2 min-w-[60px]"
+                      >
                         <div
                           className={`w-4 h-4 rounded-full border-2 transition-colors ${i <= currentIdx ? 'bg-primary border-primary' : 'bg-background border-border'} ${i === currentIdx ? 'shadow-[0_0_10px_rgba(201,168,76,0.5)] scale-125' : ''}`}
                         />
                         <span
-                          className={`text-[10px] uppercase font-bold tracking-wider absolute top-6 whitespace-nowrap ${i <= currentIdx ? 'text-white' : 'text-muted-foreground'}`}
+                          className={`text-[9px] sm:text-[10px] uppercase font-bold tracking-wider absolute top-6 whitespace-nowrap ${i <= currentIdx ? 'text-white' : 'text-muted-foreground'}`}
                         >
                           {stage}
                         </span>
                       </div>
                     ))}
                   </div>
-                  <div className="h-4" />
+                  <div className="h-2 sm:h-6" />
                 </div>
               )
             })}

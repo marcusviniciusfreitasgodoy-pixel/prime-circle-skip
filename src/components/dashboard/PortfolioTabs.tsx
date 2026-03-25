@@ -106,11 +106,17 @@ export function PortfolioTabs({ refreshKey }: { refreshKey: number }) {
 
       <Tabs defaultValue="imoveis" className="w-full">
         <TabsList className="grid w-full max-w-md grid-cols-2 bg-background border border-border h-12">
-          <TabsTrigger value="imoveis" className="data-[state=active]:bg-card rounded-sm h-10">
+          <TabsTrigger
+            value="imoveis"
+            className="data-[state=active]:bg-card rounded-sm h-10 text-xs sm:text-sm"
+          >
             Meus Imóveis ({properties.length})
           </TabsTrigger>
-          <TabsTrigger value="necessidades" className="data-[state=active]:bg-card rounded-sm h-10">
-            Minhas Publicações ({needs.length})
+          <TabsTrigger
+            value="necessidades"
+            className="data-[state=active]:bg-card rounded-sm h-10 text-xs sm:text-sm"
+          >
+            Publicações ({needs.length})
           </TabsTrigger>
         </TabsList>
 

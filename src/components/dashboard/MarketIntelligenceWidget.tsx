@@ -71,12 +71,12 @@ export function MarketIntelligenceWidget() {
             Inteligência de Mercado
           </h2>
           <p className="text-muted-foreground text-sm mt-1">
-            Visão consolidada de Oferta vs. Demanda por Condomínio (Radar de Prospecção).
+            Visão consolidada de Oferta vs. Demanda por Condomínio.
           </p>
         </div>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {mockData.map((condo) => {
           const isHighDemand =
             condo.totalDemands > condo.totalOffers * 1.5 ||
@@ -91,17 +91,17 @@ export function MarketIntelligenceWidget() {
               className={`bg-card/80 border-border relative overflow-hidden transition-all group flex flex-col h-full hover:border-primary/50 ${isHighDemand && condo.totalOffers === 0 ? 'ring-1 ring-red-500/50 shadow-[0_0_15px_rgba(239,68,68,0.1)]' : ''}`}
             >
               {isHighDemand && (
-                <div className="absolute top-0 right-0 bg-red-500/20 text-red-400 border-b border-l border-red-500/30 text-[10px] uppercase font-bold tracking-wider px-3 py-1 rounded-bl-lg z-10 flex items-center gap-1">
+                <div className="absolute top-0 right-0 bg-red-500/20 text-red-400 border-b border-l border-red-500/30 text-[9px] sm:text-[10px] uppercase font-bold tracking-wider px-2 py-1 rounded-bl-lg z-10 flex items-center gap-1">
                   <AlertCircle className="w-3 h-3" /> Alta Demanda
                 </div>
               )}
 
               <CardHeader className="pb-3 pt-6">
-                <CardTitle className="text-lg text-white font-semibold line-clamp-1 pr-24 flex items-center gap-2">
+                <CardTitle className="text-base sm:text-lg text-white font-semibold line-clamp-1 pr-24 flex items-center gap-2">
                   <Building2 className="w-4 h-4 text-primary shrink-0" />{' '}
                   <span className="truncate">{condo.name}</span>
                 </CardTitle>
-                <CardDescription className="flex items-center gap-1">
+                <CardDescription className="flex items-center gap-1 text-xs sm:text-sm">
                   {condo.neighborhood}
                 </CardDescription>
               </CardHeader>
@@ -129,20 +129,20 @@ export function MarketIntelligenceWidget() {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-2 text-sm bg-secondary/30 p-3 rounded-lg border border-border/50">
+                  <div className="grid grid-cols-2 gap-2 text-sm bg-secondary/30 p-2 sm:p-3 rounded-lg border border-border/50">
                     <div>
-                      <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">
+                      <p className="text-[9px] sm:text-[10px] uppercase tracking-wider text-muted-foreground mb-1">
                         Ticket Médio
                       </p>
-                      <p className="font-semibold text-white">
+                      <p className="font-semibold text-white text-xs sm:text-sm">
                         R$ {(condo.averageTicket / 1000000).toFixed(1)}M
                       </p>
                     </div>
                     <div>
-                      <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">
+                      <p className="text-[9px] sm:text-[10px] uppercase tracking-wider text-muted-foreground mb-1">
                         Hot Score
                       </p>
-                      <p className="font-semibold text-primary flex items-center gap-1">
+                      <p className="font-semibold text-primary flex items-center gap-1 text-xs sm:text-sm">
                         <TrendingUp className="w-3 h-3" /> {(condo.demandScore * 100).toFixed(0)}
                       </p>
                     </div>
@@ -244,7 +244,7 @@ export function MarketIntelligenceWidget() {
                       </div>
                     )}
 
-                  <div className="p-8 text-center bg-background/80 border border-dashed border-border rounded-lg mt-4">
+                  <div className="p-6 sm:p-8 text-center bg-background/80 border border-dashed border-border rounded-lg mt-4">
                     <p className="text-sm text-muted-foreground mb-4">
                       A listagem detalhada de unidades e demandas será ativada na Fase 2 da
                       Inteligência de Mercado.
@@ -254,7 +254,7 @@ export function MarketIntelligenceWidget() {
                       <AddPropertyDialog
                         onSuccess={() => {}}
                         trigger={
-                          <Button className="gold-gradient text-black font-bold shadow-[0_0_15px_rgba(201,168,76,0.2)]">
+                          <Button className="gold-gradient text-black font-bold shadow-[0_0_15px_rgba(201,168,76,0.2)] w-full sm:w-auto">
                             <Target className="w-4 h-4 mr-2" />
                             Prospectar & Divulgar Imóvel
                           </Button>
