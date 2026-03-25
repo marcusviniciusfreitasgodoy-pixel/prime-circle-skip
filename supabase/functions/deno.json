@@ -14,6 +14,7 @@
     "send-status-check": 4,
     "process-quick-action": 3,
     "send-reminder-24h": 1,
-    "process-market-intelligence": 1
+    "process-market-intelligence": 1,
+    "send-newsletter": 1
   }
 }

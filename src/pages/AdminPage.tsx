@@ -25,6 +25,8 @@ import { WhatsAppCollectionTab } from '@/components/admin/WhatsAppCollectionTab'
 import { PropertyCurationTab } from '@/components/admin/PropertyCurationTab'
 import { QualityPerformanceTab } from '@/components/admin/QualityPerformanceTab'
 import { PartnerDetailsSheet } from '@/components/admin/PartnerDetailsSheet'
+import { GrowthDashboardTab } from '@/components/admin/GrowthDashboardTab'
+import { NewsletterManagerTab } from '@/components/admin/NewsletterManagerTab'
 import { sendWhatsappMessage } from '@/services/whatsapp'
 
 interface SupportTicket {
@@ -150,6 +152,9 @@ export default function AdminPage() {
           <TabsTrigger value="users" className="data-[state=active]:bg-secondary">
             Todos os Usuários
           </TabsTrigger>
+          <TabsTrigger value="growth" className="data-[state=active]:bg-secondary">
+            Crescimento
+          </TabsTrigger>
           <TabsTrigger value="curation" className="data-[state=active]:bg-secondary">
             Curadoria de Imóveis
           </TabsTrigger>
@@ -158,6 +163,9 @@ export default function AdminPage() {
           </TabsTrigger>
           <TabsTrigger value="comms" className="data-[state=active]:bg-secondary">
             Comunicações
+          </TabsTrigger>
+          <TabsTrigger value="newsletter" className="data-[state=active]:bg-secondary">
+            Newsletter
           </TabsTrigger>
           <TabsTrigger value="whatsapp_collection" className="data-[state=active]:bg-secondary">
             Coleta WhatsApp
@@ -254,6 +262,10 @@ export default function AdminPage() {
           />
         </TabsContent>
 
+        <TabsContent value="growth" className="mt-6 space-y-4">
+          <GrowthDashboardTab />
+        </TabsContent>
+
         <TabsContent value="curation" className="mt-6 space-y-4">
           <PropertyCurationTab profiles={profiles} />
         </TabsContent>
@@ -310,6 +322,10 @@ export default function AdminPage() {
               <LogsTab />
             </div>
           </div>
+        </TabsContent>
+
+        <TabsContent value="newsletter" className="mt-6 space-y-4">
+          <NewsletterManagerTab />
         </TabsContent>
 
         <TabsContent value="whatsapp_collection" className="mt-6 space-y-4">
