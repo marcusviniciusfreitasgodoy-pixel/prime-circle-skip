@@ -22,6 +22,8 @@ import { UsersManagementTab } from '@/components/admin/UsersManagementTab'
 import { TemplatesTab } from '@/components/notifications/TemplatesTab'
 import { LogsTab } from '@/components/notifications/LogsTab'
 import { WhatsAppCollectionTab } from '@/components/admin/WhatsAppCollectionTab'
+import { PropertyCurationTab } from '@/components/admin/PropertyCurationTab'
+import { QualityPerformanceTab } from '@/components/admin/QualityPerformanceTab'
 import { sendWhatsappMessage } from '@/services/whatsapp'
 
 interface SupportTicket {
@@ -146,6 +148,12 @@ export default function AdminPage() {
           <TabsTrigger value="users" className="data-[state=active]:bg-secondary">
             Todos os Usuários
           </TabsTrigger>
+          <TabsTrigger value="curation" className="data-[state=active]:bg-secondary">
+            Curadoria de Imóveis
+          </TabsTrigger>
+          <TabsTrigger value="performance" className="data-[state=active]:bg-secondary">
+            Qualidade da Base
+          </TabsTrigger>
           <TabsTrigger value="comms" className="data-[state=active]:bg-secondary">
             Comunicações
           </TabsTrigger>
@@ -239,6 +247,14 @@ export default function AdminPage() {
             refetchProfiles={fetchProfiles}
             authUser={authUser}
           />
+        </TabsContent>
+
+        <TabsContent value="curation" className="mt-6 space-y-4">
+          <PropertyCurationTab profiles={profiles} />
+        </TabsContent>
+
+        <TabsContent value="performance" className="mt-6 space-y-4">
+          <QualityPerformanceTab profiles={profiles} />
         </TabsContent>
 
         <TabsContent value="comms" className="mt-6 space-y-8">

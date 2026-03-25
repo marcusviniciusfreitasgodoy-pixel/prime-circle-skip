@@ -220,6 +220,8 @@ export function AddPropertyDialog({
     const video_url = video_url_val ? String(video_url_val) : null
     const description = String(fd.get('description') || '')
 
+    const hasDups = potentialDuplicates.length > 0
+
     const md = {
       type: 'oferta',
       user_id: user.id,
@@ -246,6 +248,9 @@ export function AddPropertyDialog({
       photos,
       image_hashes: imageHashes,
       is_verified_unique: confirmedDuplicate,
+      has_duplicate_history: hasDups,
+      duplicate_of: hasDups ? potentialDuplicates.map((d) => d.id) : null,
+      resolution: hasDups ? 'pending' : null,
     }
 
     const content = `Tipo: ${md.tipo_imovel}\nBairro: ${md.neighborhood}\nEndereço: ${md.street} ${md.complemento ? `- ${md.complemento}` : ''}\nAndar: ${md.andar}\nCidade: ${md.city}\nEstado: ${md.state}\nValor: R$ ${md.valor}\nQuartos: ${md.quartos}\nSuítes: ${md.suites}\nDetalhes: ${md.description}`
@@ -259,7 +264,7 @@ export function AddPropertyDialog({
       toast({
         title: 'Sucesso',
         description: confirmedDuplicate
-          ? 'Unidade exclusiva publicada com sucesso!'
+          ? 'Imóvel publicado! Ele passará pela Curadoria da plataforma.'
           : 'Imóvel publicado!',
         className: 'bg-card border-primary/50 text-white',
       })
@@ -311,7 +316,7 @@ export function AddPropertyDialog({
                 <label className="relative aspect-square rounded-md border-2 border-dashed border-border flex flex-col items-center justify-center cursor-pointer hover:border-primary/50 hover:bg-secondary/20 transition-colors">
                   <input
                     type="file"
-                    accept="image/png, image/jpeg, image/jpg"
+                    accept="image/png, image/jpeg, image/jpg, image/webp"
                     multiple
                     className="hidden"
                     onChange={handlePhotoUpload}
