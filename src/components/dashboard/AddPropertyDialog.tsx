@@ -6,6 +6,8 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
+import { cn } from '@/lib/utils'
 import {
   Select,
   SelectContent,
@@ -22,7 +24,7 @@ import {
   DialogDescription,
 } from '@/components/ui/dialog'
 import { useToast } from '@/hooks/use-toast'
-import { PlusCircle, Lock, Image as ImageIcon, X } from 'lucide-react'
+import { PlusCircle, Lock, Image as ImageIcon, X, AlertCircle } from 'lucide-react'
 import { AddressAutocomplete } from '@/components/ui/address-autocomplete'
 
 const formatCurrency = (value: string) => {
@@ -33,6 +35,18 @@ const formatCurrency = (value: string) => {
   )
 }
 const parseCurrency = (val: string) => parseInt(val.replace(/\D/g, '') || '0', 10) / 100
+
+async function calculateHash(file: File): Promise<string> {
+  try {
+    const buffer = await file.arrayBuffer()
+    const hashBuffer = await crypto.subtle.digest('SHA-256', buffer)
+    const hashArray = Array.from(new Uint8Array(hashBuffer))
+    return hashArray.map((b) => b.toString(16).padStart(2, '0')).join('')
+  } catch (e) {
+    console.error('Failed to calculate image hash', e)
+    return Math.random().toString(36).substring(2)
+  }
+}
 
 export function AddPropertyDialog({
   onSuccess,
@@ -48,6 +62,7 @@ export function AddPropertyDialog({
   const [isOffMarket, setIsOffMarket] = useState(false)
   const [valor, setValor] = useState('')
   const [photos, setPhotos] = useState<string[]>([])
+  const [imageHashes, setImageHashes] = useState<string[]>([])
   const [uploadingPhotos, setUploadingPhotos] = useState(false)
 
   const [endereco, setEndereco] = useState('')
@@ -55,17 +70,92 @@ export function AddPropertyDialog({
   const [city, setCity] = useState('')
   const [stateLocation, setStateLocation] = useState('')
 
+  // Controlled states for duplicate detection
+  const [tamanhoImovel, setTamanhoImovel] = useState('')
+  const [nomeCondominio, setNomeCondominio] = useState('')
+  const [suites, setSuites] = useState('1')
+  const [andar, setAndar] = useState('')
+
+  // Duplication states
+  const [potentialDuplicates, setPotentialDuplicates] = useState<any[]>([])
+  const [showDuplicateWarning, setShowDuplicateWarning] = useState(false)
+  const [confirmedDuplicate, setConfirmedDuplicate] = useState(false)
+
   useEffect(() => {
     if (!open) {
       setPhotos([])
+      setImageHashes([])
       setValor('')
       setIsOffMarket(false)
       setEndereco('')
       setBairro('')
       setCity('')
       setStateLocation('')
+      setTamanhoImovel('')
+      setNomeCondominio('')
+      setSuites('1')
+      setAndar('')
+      setPotentialDuplicates([])
+      setShowDuplicateWarning(false)
+      setConfirmedDuplicate(false)
     }
   }, [open])
+
+  useEffect(() => {
+    const check = async () => {
+      if (!bairro || !tamanhoImovel) {
+        setPotentialDuplicates([])
+        setShowDuplicateWarning(false)
+        return
+      }
+
+      const { data } = await supabase
+        .from('documents')
+        .select('id, metadata')
+        .eq('metadata->>type', 'oferta')
+        .eq('metadata->>bairro', bairro)
+
+      if (data) {
+        const size = Number(tamanhoImovel)
+        const minSize = size * 0.95
+        const maxSize = size * 1.05
+
+        const duplicates = data.filter((d) => {
+          const md = d.metadata
+          const mdSize = Number(md.tamanho_imovel)
+          const sizeMatch = mdSize >= minSize && mdSize <= maxSize
+
+          const isSameCondo =
+            nomeCondominio &&
+            md.nome_condominio &&
+            md.nome_condominio.toLowerCase().trim() === nomeCondominio.toLowerCase().trim()
+          const isSameStreet =
+            endereco &&
+            md.endereco &&
+            md.endereco.toLowerCase().trim() === endereco.toLowerCase().trim()
+          const locationMatch = isSameCondo || isSameStreet
+
+          const suitesMatch = md.suites === suites
+
+          const mdHashes = md.image_hashes || []
+          const hashMatch =
+            imageHashes.length > 0 && mdHashes.some((h: string) => imageHashes.includes(h))
+
+          return hashMatch || (sizeMatch && locationMatch && suitesMatch)
+        })
+
+        setPotentialDuplicates(duplicates)
+        if (duplicates.length > 0) {
+          setShowDuplicateWarning(true)
+        } else {
+          setShowDuplicateWarning(false)
+        }
+      }
+    }
+
+    const timer = setTimeout(check, 800)
+    return () => clearTimeout(timer)
+  }, [bairro, endereco, tamanhoImovel, nomeCondominio, suites, imageHashes])
 
   const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files
@@ -84,7 +174,12 @@ export function AddPropertyDialog({
     setUploadingPhotos(true)
     try {
       const newPhotos: string[] = []
+      const newHashes: string[] = []
+
       for (const file of Array.from(files)) {
+        const hash = await calculateHash(file)
+        newHashes.push(hash)
+
         const ext = file.name.split('.').pop()
         const path = `${user.id}/${Date.now()}_${Math.random().toString(36).substring(7)}.${ext}`
         const { error } = await supabase.storage.from('property_photos').upload(path, file)
@@ -92,8 +187,10 @@ export function AddPropertyDialog({
         const { data } = supabase.storage.from('property_photos').getPublicUrl(path)
         newPhotos.push(data.publicUrl)
       }
+
       setPhotos((prev) => [...prev, ...newPhotos])
-      toast({ title: 'Sucesso', description: 'Fotos adicionadas.' })
+      setImageHashes((prev) => [...prev, ...newHashes])
+      toast({ title: 'Sucesso', description: 'Fotos adicionadas e validadas.' })
     } catch (error) {
       toast({ title: 'Erro', description: 'Falha no upload.', variant: 'destructive' })
     } finally {
@@ -112,11 +209,12 @@ export function AddPropertyDialog({
     const tipo_imovel = String(fd.get('tipo_imovel') || '')
     const complemento = String(fd.get('complemento') || '')
     const quartos = String(fd.get('quartos') || '')
-    const suites = String(fd.get('suites') || '')
-    const tamanho_imovel = Number(fd.get('tamanho_imovel'))
+    const suitesVal = String(fd.get('suites') || suites)
+    const tamanho_imovel_val = Number(fd.get('tamanho_imovel')) || Number(tamanhoImovel)
     const tamanho_terreno_val = fd.get('tamanho_terreno')
     const tamanho_terreno = tamanho_terreno_val ? Number(tamanho_terreno_val) : null
-    const nome_condominio = String(fd.get('nome_condominio') || '')
+    const nome_condominio_val = String(fd.get('nome_condominio') || nomeCondominio)
+    const andar_val = String(fd.get('andar') || andar)
     const link_imovel = String(fd.get('link_imovel') || '')
     const video_url_val = fd.get('video_url')
     const video_url = video_url_val ? String(video_url_val) : null
@@ -135,19 +233,22 @@ export function AddPropertyDialog({
       city,
       state: stateLocation,
       complemento,
+      andar: andar_val,
       quartos,
-      suites,
-      tamanho_imovel,
+      suites: suitesVal,
+      tamanho_imovel: tamanho_imovel_val,
       tamanho_terreno,
-      nome_condominio,
+      nome_condominio: nome_condominio_val,
       link_imovel,
       video_url,
       description,
       status: 'Ativo',
       photos,
+      image_hashes: imageHashes,
+      is_verified_unique: confirmedDuplicate,
     }
 
-    const content = `Tipo: ${md.tipo_imovel}\nBairro: ${md.neighborhood}\nEndereço: ${md.street} ${md.complemento ? `- ${md.complemento}` : ''}\nCidade: ${md.city}\nEstado: ${md.state}\nValor: R$ ${md.valor}\nQuartos: ${md.quartos}\nSuítes: ${md.suites}\nDetalhes: ${md.description}`
+    const content = `Tipo: ${md.tipo_imovel}\nBairro: ${md.neighborhood}\nEndereço: ${md.street} ${md.complemento ? `- ${md.complemento}` : ''}\nAndar: ${md.andar}\nCidade: ${md.city}\nEstado: ${md.state}\nValor: R$ ${md.valor}\nQuartos: ${md.quartos}\nSuítes: ${md.suites}\nDetalhes: ${md.description}`
 
     const { error } = await supabase.from('documents').insert({ content, metadata: md })
 
@@ -157,7 +258,9 @@ export function AddPropertyDialog({
     } else {
       toast({
         title: 'Sucesso',
-        description: 'Imóvel publicado!',
+        description: confirmedDuplicate
+          ? 'Unidade exclusiva publicada com sucesso!'
+          : 'Imóvel publicado!',
         className: 'bg-card border-primary/50 text-white',
       })
       setOpen(false)
@@ -194,7 +297,10 @@ export function AddPropertyDialog({
                   <img src={url} alt={`Foto ${i + 1}`} className="object-cover w-full h-full" />
                   <button
                     type="button"
-                    onClick={() => setPhotos((p) => p.filter((u) => u !== url))}
+                    onClick={() => {
+                      setPhotos((p) => p.filter((u) => u !== url))
+                      setImageHashes((h) => h.filter((_, idx) => idx !== i))
+                    }}
                     className="absolute top-1 right-1 bg-black/60 hover:bg-black p-1.5 rounded-full text-white opacity-0 group-hover:opacity-100 transition-opacity"
                   >
                     <X className="w-3 h-3" />
@@ -327,7 +433,7 @@ export function AddPropertyDialog({
             </div>
             <div className="space-y-2">
               <Label>Suítes</Label>
-              <Select name="suites" required defaultValue="1">
+              <Select name="suites" required value={suites} onValueChange={setSuites}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
@@ -342,17 +448,39 @@ export function AddPropertyDialog({
             </div>
             <div className="space-y-2">
               <Label>Área Útil (m²)</Label>
-              <Input name="tamanho_imovel" type="number" required placeholder="120" />
+              <Input
+                name="tamanho_imovel"
+                type="number"
+                required
+                placeholder="120"
+                value={tamanhoImovel}
+                onChange={(e) => setTamanhoImovel(e.target.value)}
+              />
             </div>
             <div className="space-y-2">
               <Label>Terreno (m²) (Opcional)</Label>
               <Input name="tamanho_terreno" type="number" placeholder="200" />
             </div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="space-y-2">
-              <Label>Nome do Condomínio (Opcional)</Label>
-              <Input name="nome_condominio" placeholder="Ex: Condomínio Península" />
+              <Label>Condomínio (Opcional)</Label>
+              <Input
+                name="nome_condominio"
+                placeholder="Ex: Península"
+                value={nomeCondominio}
+                onChange={(e) => setNomeCondominio(e.target.value)}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Andar (Opcional)</Label>
+              <Input
+                name="andar"
+                placeholder="Ex: 5"
+                value={andar}
+                onChange={(e) => setAndar(e.target.value)}
+              />
             </div>
             <div className="space-y-2">
               <Label>Link do Imóvel (Opcional)</Label>
@@ -365,6 +493,7 @@ export function AddPropertyDialog({
               />
             </div>
           </div>
+
           <div className="space-y-2">
             <Label>Link do Vídeo (Opcional)</Label>
             <Input
@@ -379,6 +508,7 @@ export function AddPropertyDialog({
             <Label>Descrição</Label>
             <Textarea name="description" required placeholder="Diferenciais..." className="h-20" />
           </div>
+
           <div className="flex items-center justify-between rounded-lg border border-border p-3 bg-secondary/30">
             <div>
               <Label className="flex items-center gap-2">
@@ -390,8 +520,60 @@ export function AddPropertyDialog({
             </div>
             <Switch checked={isOffMarket} onCheckedChange={setIsOffMarket} />
           </div>
-          <Button type="submit" className="w-full mt-4" disabled={loading || uploadingPhotos}>
-            {loading ? 'Salvando...' : 'Publicar Imóvel'}
+
+          {showDuplicateWarning && potentialDuplicates.length > 0 && (
+            <Alert className="bg-yellow-500/10 border-yellow-500/50 text-yellow-500 animate-fade-in-up">
+              <AlertCircle className="w-5 h-5 text-yellow-500" />
+              <AlertTitle className="font-semibold ml-2">Atenção: Possível Duplicidade</AlertTitle>
+              <AlertDescription className="ml-2 mt-2">
+                <p className="mb-2 text-sm text-yellow-500/90">
+                  Identificamos imóveis com características similares ou fotos iguais já cadastrados
+                  na rede.
+                </p>
+                <div className="bg-background/40 rounded-md p-2 max-h-[100px] overflow-y-auto border border-yellow-500/20 mb-3">
+                  <ul className="list-disc pl-4 space-y-1 text-xs text-yellow-500/80">
+                    {potentialDuplicates.map((d) => (
+                      <li key={d.id}>
+                        {d.metadata?.tipo_imovel} - {d.metadata?.tamanho_imovel}m²
+                        {d.metadata?.nome_condominio ? ` (${d.metadata.nome_condominio})` : ''}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="flex items-center gap-3 p-3 bg-background/80 rounded-lg border border-yellow-500/30">
+                  <Switch
+                    id="confirm-diff"
+                    checked={confirmedDuplicate}
+                    onCheckedChange={(c) => setConfirmedDuplicate(c)}
+                  />
+                  <label
+                    htmlFor="confirm-diff"
+                    className="text-sm font-medium cursor-pointer text-white"
+                  >
+                    Confirmo que é uma unidade diferente (Selo de Unidade Validada)
+                  </label>
+                </div>
+              </AlertDescription>
+            </Alert>
+          )}
+
+          <Button
+            type="submit"
+            className={cn(
+              'w-full mt-4',
+              potentialDuplicates.length > 0 && !confirmedDuplicate
+                ? 'bg-secondary text-muted-foreground'
+                : '',
+            )}
+            disabled={
+              loading || uploadingPhotos || (potentialDuplicates.length > 0 && !confirmedDuplicate)
+            }
+          >
+            {loading
+              ? 'Salvando...'
+              : potentialDuplicates.length > 0 && !confirmedDuplicate
+                ? 'Confirme a unidade para publicar'
+                : 'Publicar Imóvel'}
           </Button>
         </form>
       </DialogContent>

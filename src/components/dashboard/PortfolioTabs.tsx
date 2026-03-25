@@ -192,6 +192,14 @@ export function PortfolioTabs({ refreshKey }: { refreshKey: number }) {
                             <Lock className="w-3 h-3" /> Off-Market
                           </Badge>
                         )}
+                        {p.metadata.is_verified_unique && (
+                          <Badge
+                            variant="outline"
+                            className="bg-blue-500/10 text-blue-500 border-blue-500/30 text-[10px] uppercase font-bold tracking-wider mt-1"
+                          >
+                            Unidade Validada
+                          </Badge>
+                        )}
                         {p.metadata.status && p.metadata.status !== 'Ativo' && (
                           <Badge
                             variant="outline"

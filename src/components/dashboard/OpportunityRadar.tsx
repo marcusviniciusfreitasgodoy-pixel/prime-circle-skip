@@ -352,9 +352,19 @@ export function OpportunityRadar({
                   )}
 
                   <CardHeader className="pb-3 pt-8">
-                    <CardTitle className="text-lg text-white font-semibold line-clamp-1 pr-12">
-                      {p.metadata?.title || p.metadata?.tipo_imovel || 'Imóvel'}
-                    </CardTitle>
+                    <div className="flex justify-between items-start gap-2 mb-1">
+                      <CardTitle className="text-lg text-white font-semibold line-clamp-1 pr-12">
+                        {p.metadata?.title || p.metadata?.tipo_imovel || 'Imóvel'}
+                      </CardTitle>
+                    </div>
+                    {p.metadata?.is_verified_unique && (
+                      <Badge
+                        variant="outline"
+                        className="bg-blue-500/10 text-blue-500 border-blue-500/30 text-[10px] uppercase font-bold tracking-wider mt-1 w-max"
+                      >
+                        Unidade Validada
+                      </Badge>
+                    )}
                     <CardDescription className="text-primary font-bold text-base mt-1">
                       {p.metadata?.price ||
                         (p.metadata?.valor

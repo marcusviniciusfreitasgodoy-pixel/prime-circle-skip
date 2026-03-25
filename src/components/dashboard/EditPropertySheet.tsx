@@ -133,6 +133,7 @@ export function EditPropertySheet({
       city: city,
       state: stateLocation,
       complemento: String(fd.get('complemento') || property.metadata.complemento || ''),
+      andar: String(fd.get('andar') || property.metadata.andar || ''),
       quartos: String(fd.get('quartos') || property.metadata.quartos || ''),
       suites: String(fd.get('suites') || property.metadata.suites || ''),
       tamanho_imovel: Number(fd.get('tamanho_imovel') || property.metadata.tamanho_imovel || 0),
@@ -153,7 +154,7 @@ export function EditPropertySheet({
       md.price = valor
     }
 
-    const content = `Tipo: ${md.tipo_imovel}\nBairro: ${md.neighborhood}\nEndereço: ${md.street} ${md.complemento ? `- ${md.complemento}` : ''}\nCidade: ${md.city}\nEstado: ${md.state}\nValor: R$ ${md.valor}\nQuartos: ${md.quartos}\nSuítes: ${md.suites}\nDetalhes: ${md.description}`
+    const content = `Tipo: ${md.tipo_imovel}\nBairro: ${md.neighborhood}\nEndereço: ${md.street} ${md.complemento ? `- ${md.complemento}` : ''}\nAndar: ${md.andar}\nCidade: ${md.city}\nEstado: ${md.state}\nValor: R$ ${md.valor}\nQuartos: ${md.quartos}\nSuítes: ${md.suites}\nDetalhes: ${md.description}`
 
     const { error } = await supabase
       .from('documents')
@@ -321,13 +322,23 @@ export function EditPropertySheet({
             />
           </div>
 
-          <div className="space-y-2">
-            <Label>Complemento (Opcional)</Label>
-            <Input
-              name="complemento"
-              defaultValue={property.metadata?.complemento || ''}
-              placeholder="Ex: Apto 101"
-            />
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label>Complemento (Opcional)</Label>
+              <Input
+                name="complemento"
+                defaultValue={property.metadata?.complemento || ''}
+                placeholder="Ex: Apto 101"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Andar (Opcional)</Label>
+              <Input
+                name="andar"
+                defaultValue={property.metadata?.andar || ''}
+                placeholder="Ex: 5"
+              />
+            </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
@@ -385,23 +396,24 @@ export function EditPropertySheet({
             </div>
           </div>
 
-          <div className="space-y-2">
-            <Label>Nome do Condomínio (Opcional)</Label>
-            <Input
-              name="nome_condominio"
-              defaultValue={property.metadata?.nome_condominio || ''}
-              placeholder="Ex: Condomínio Península"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label>Link do Imóvel (Opcional)</Label>
-            <Input
-              name="link_imovel"
-              type="url"
-              defaultValue={property.metadata?.link_imovel || ''}
-              placeholder="https://"
-            />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label>Nome do Condomínio (Opcional)</Label>
+              <Input
+                name="nome_condominio"
+                defaultValue={property.metadata?.nome_condominio || ''}
+                placeholder="Ex: Condomínio Península"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Link do Imóvel (Opcional)</Label>
+              <Input
+                name="link_imovel"
+                type="url"
+                defaultValue={property.metadata?.link_imovel || ''}
+                placeholder="https://"
+              />
+            </div>
           </div>
 
           <div className="space-y-2">
