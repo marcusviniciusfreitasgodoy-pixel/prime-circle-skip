@@ -480,7 +480,16 @@ export default function AdminPage() {
         </TabsContent>
       </Tabs>
 
-      <PartnerDetailsSheet profile={selectedProfile} onClose={() => setSelectedProfile(null)} />
+      <PartnerDetailsSheet
+        profile={selectedProfile}
+        onClose={() => setSelectedProfile(null)}
+        onStatusChange={(id, newStatus) => {
+          setProfiles((prev) => prev.map((p) => (p.id === id ? { ...p, status: newStatus } : p)))
+          if (selectedProfile?.id === id) {
+            setSelectedProfile((prev: any) => (prev ? { ...prev, status: newStatus } : prev))
+          }
+        }}
+      />
     </div>
   )
 }

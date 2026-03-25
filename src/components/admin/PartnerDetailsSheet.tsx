@@ -5,8 +5,17 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { Building, MapPin, User, Phone, Mail, Award, Info, Loader2, Home } from 'lucide-react'
 import { supabase } from '@/lib/supabase/client'
+import { toast } from 'sonner'
+import { cn } from '@/lib/utils'
 
 interface Profile {
   id: string
@@ -33,6 +42,7 @@ interface Document {
 interface PartnerDetailsSheetProps {
   profile: Profile | null
   onClose: () => void
+  onStatusChange?: (id: string, newStatus: string) => void
 }
 
 const formatCurrency = (val: number) => {
@@ -40,13 +50,20 @@ const formatCurrency = (val: number) => {
   return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(val)
 }
 
-export function PartnerDetailsSheet({ profile, onClose }: PartnerDetailsSheetProps) {
+export function PartnerDetailsSheet({
+  profile,
+  onClose,
+  onStatusChange,
+}: PartnerDetailsSheetProps) {
   const [loading, setLoading] = useState(false)
   const [ofertas, setOfertas] = useState<Document[]>([])
   const [demandas, setDemandas] = useState<Document[]>([])
+  const [status, setStatus] = useState<string>('pending_validation')
 
   useEffect(() => {
     if (!profile) return
+
+    setStatus(profile.status || 'pending_validation')
 
     const fetchDocuments = async () => {
       setLoading(true)
@@ -71,6 +88,34 @@ export function PartnerDetailsSheet({ profile, onClose }: PartnerDetailsSheetPro
     fetchDocuments()
   }, [profile])
 
+  const handleStatusChange = async (newStatus: string) => {
+    if (!profile) return
+    const prevStatus = status
+    setStatus(newStatus)
+
+    try {
+      const updates: any = { status: newStatus }
+      if (newStatus === 'active') {
+        const { data: userData } = await supabase.auth.getUser()
+        updates.validated_by = userData?.user?.id
+        updates.validation_date = new Date().toISOString()
+      }
+
+      const { error } = await supabase.from('profiles').update(updates).eq('id', profile.id)
+
+      if (error) throw error
+
+      toast.success('Status do parceiro atualizado com sucesso!')
+      if (onStatusChange) {
+        onStatusChange(profile.id, newStatus)
+      }
+    } catch (error) {
+      console.error('Error updating status:', error)
+      toast.error('Erro ao atualizar o status.')
+      setStatus(prevStatus)
+    }
+  }
+
   if (!profile) return null
 
   return (
@@ -88,7 +133,7 @@ export function PartnerDetailsSheet({ profile, onClose }: PartnerDetailsSheetPro
               <SheetTitle className="text-xl text-white truncate">
                 {profile.full_name || 'Sem Nome'}
               </SheetTitle>
-              <div className="flex items-center gap-2 mt-1">
+              <div className="flex items-center gap-2 mt-2 flex-wrap">
                 <Badge
                   variant="outline"
                   className="bg-primary/10 text-primary border-primary/20 text-[10px]"
@@ -101,6 +146,26 @@ export function PartnerDetailsSheet({ profile, onClose }: PartnerDetailsSheetPro
                 >
                   {profile.role}
                 </Badge>
+
+                <Select value={status} onValueChange={handleStatusChange}>
+                  <SelectTrigger
+                    className={cn(
+                      'h-6 px-2 py-0 min-w-[120px] text-[10px] font-semibold border focus:ring-0 rounded-full',
+                      status === 'active'
+                        ? 'bg-green-500/10 text-green-500 border-green-500/20 hover:bg-green-500/20'
+                        : status === 'pending_validation'
+                          ? 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20 hover:bg-yellow-500/20'
+                          : 'bg-red-500/10 text-red-500 border-red-500/20 hover:bg-red-500/20',
+                    )}
+                  >
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="active">Ativo</SelectItem>
+                    <SelectItem value="pending_validation">Em Verificação</SelectItem>
+                    <SelectItem value="rejected">Inativo</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             </div>
           </div>

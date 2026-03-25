@@ -310,7 +310,16 @@ export function UsersManagementTab({
         </AlertDialogContent>
       </AlertDialog>
 
-      <PartnerDetailsSheet profile={selectedProfile} onClose={() => setSelectedProfile(null)} />
+      <PartnerDetailsSheet
+        profile={selectedProfile}
+        onClose={() => setSelectedProfile(null)}
+        onStatusChange={(id, newStatus) => {
+          refetchProfiles()
+          if (selectedProfile?.id === id) {
+            setSelectedProfile((prev) => (prev ? { ...prev, status: newStatus } : prev))
+          }
+        }}
+      />
     </div>
   )
 }
