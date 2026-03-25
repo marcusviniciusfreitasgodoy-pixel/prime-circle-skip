@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { MapPin, Target, Zap, Lock, PlayCircle, Eye } from 'lucide-react'
+import { MapPin, Target, Zap, Lock, PlayCircle, Eye, TrendingUp } from 'lucide-react'
 import { AddNeedDialog } from './AddNeedDialog'
 import { EditNeedSheet } from './EditNeedSheet'
 import { useAuth } from '@/hooks/use-auth'
@@ -360,15 +360,25 @@ export function OpportunityRadar({
                         {p.metadata?.title || p.metadata?.tipo_imovel || 'Imóvel'}
                       </CardTitle>
                     </div>
-                    {p.metadata?.is_verified_unique && (
-                      <Badge
-                        variant="outline"
-                        className="bg-blue-500/10 text-blue-500 border-blue-500/30 text-[10px] uppercase font-bold tracking-wider mt-1 w-max"
-                      >
-                        Unidade Validada
-                      </Badge>
-                    )}
-                    <CardDescription className="text-primary font-bold text-base mt-1">
+                    <div className="flex flex-wrap gap-2 mt-1">
+                      {p.metadata?.is_verified_unique && (
+                        <Badge
+                          variant="outline"
+                          className="bg-blue-500/10 text-blue-500 border-blue-500/30 text-[10px] uppercase font-bold tracking-wider flex items-center gap-1"
+                        >
+                          Unidade Validada
+                        </Badge>
+                      )}
+                      {p.metadata?.hot_score >= 50 && (
+                        <Badge
+                          variant="outline"
+                          className="bg-red-500/10 text-red-500 border-red-500/30 text-[10px] uppercase font-bold tracking-wider flex items-center gap-1"
+                        >
+                          <TrendingUp className="w-3 h-3" /> Hot Score: {p.metadata.hot_score}
+                        </Badge>
+                      )}
+                    </div>
+                    <CardDescription className="text-primary font-bold text-base mt-2">
                       {p.metadata?.price ||
                         (p.metadata?.valor
                           ? new Intl.NumberFormat('pt-BR', {

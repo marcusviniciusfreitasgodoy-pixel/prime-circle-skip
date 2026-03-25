@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import {
@@ -10,7 +10,9 @@ import {
 } from '@/components/ui/dialog'
 import { BarChart3, AlertCircle, Building2, TrendingUp, Search, Target } from 'lucide-react'
 import { AddPropertyDialog } from './AddPropertyDialog'
+import { supabase } from '@/lib/supabase/client'
 
+// Fallback mock data in case RPC is not yet available or empty
 const mockData = [
   {
     id: '1',
@@ -61,6 +63,34 @@ const mockData = [
 
 export function MarketIntelligenceWidget() {
   const [selectedCondo, setSelectedCondo] = useState<any>(null)
+  const [data, setData] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true)
+      try {
+        const { data: metrics, error } = await supabase.rpc('get_market_intelligence_metrics')
+
+        if (error) {
+          console.warn('RPC get_market_intelligence_metrics failed', error)
+          setData(mockData)
+        } else if (metrics && Array.isArray(metrics) && metrics.length > 0) {
+          const sorted = metrics.sort((a: any, b: any) => b.demandScore - a.demandScore)
+          setData(sorted)
+        } else {
+          setData(mockData)
+        }
+      } catch (err) {
+        console.warn('Exception fetching market intelligence metrics', err)
+        setData(mockData)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchData()
+  }, [])
 
   return (
     <div className="space-y-6 mt-10 animate-fade-in-up">
@@ -77,91 +107,106 @@ export function MarketIntelligenceWidget() {
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {mockData.map((condo) => {
-          const isHighDemand =
-            condo.totalDemands > condo.totalOffers * 1.5 ||
-            (condo.totalDemands > 0 && condo.totalOffers === 0)
-          const total = condo.totalOffers + condo.totalDemands
-          const demandPercent = total > 0 ? (condo.totalDemands / total) * 100 : 0
-          const offerPercent = total > 0 ? (condo.totalOffers / total) * 100 : 0
+        {loading ? (
+          <>
+            {[1, 2, 3].map((i) => (
+              <div
+                key={i}
+                className="h-48 bg-secondary/30 animate-pulse rounded-xl border border-border"
+              ></div>
+            ))}
+          </>
+        ) : data.length === 0 ? (
+          <div className="col-span-full py-8 text-center text-muted-foreground border border-dashed border-border rounded-xl bg-background/50">
+            Nenhum dado de inteligência disponível no momento.
+          </div>
+        ) : (
+          data.map((condo) => {
+            const isHighDemand =
+              condo.totalDemands > condo.totalOffers * 1.5 ||
+              (condo.totalDemands > 0 && condo.totalOffers === 0)
+            const total = condo.totalOffers + condo.totalDemands
+            const demandPercent = total > 0 ? (condo.totalDemands / total) * 100 : 0
+            const offerPercent = total > 0 ? (condo.totalOffers / total) * 100 : 0
 
-          return (
-            <Card
-              key={condo.id}
-              className={`bg-card/80 border-border relative overflow-hidden transition-all group flex flex-col h-full hover:border-primary/50 ${isHighDemand && condo.totalOffers === 0 ? 'ring-1 ring-red-500/50 shadow-[0_0_15px_rgba(239,68,68,0.1)]' : ''}`}
-            >
-              {isHighDemand && (
-                <div className="absolute top-0 right-0 bg-red-500/20 text-red-400 border-b border-l border-red-500/30 text-[9px] sm:text-[10px] uppercase font-bold tracking-wider px-2 py-1 rounded-bl-lg z-10 flex items-center gap-1">
-                  <AlertCircle className="w-3 h-3" /> Alta Demanda
-                </div>
-              )}
+            return (
+              <Card
+                key={condo.id}
+                className={`bg-card/80 border-border relative overflow-hidden transition-all group flex flex-col h-full hover:border-primary/50 ${isHighDemand && condo.totalOffers === 0 ? 'ring-1 ring-red-500/50 shadow-[0_0_15px_rgba(239,68,68,0.1)]' : ''}`}
+              >
+                {isHighDemand && (
+                  <div className="absolute top-0 right-0 bg-red-500/20 text-red-400 border-b border-l border-red-500/30 text-[9px] sm:text-[10px] uppercase font-bold tracking-wider px-2 py-1 rounded-bl-lg z-10 flex items-center gap-1">
+                    <AlertCircle className="w-3 h-3" /> Alta Demanda
+                  </div>
+                )}
 
-              <CardHeader className="pb-3 pt-6">
-                <CardTitle className="text-base sm:text-lg text-white font-semibold line-clamp-1 pr-24 flex items-center gap-2">
-                  <Building2 className="w-4 h-4 text-primary shrink-0" />{' '}
-                  <span className="truncate">{condo.name}</span>
-                </CardTitle>
-                <CardDescription className="flex items-center gap-1 text-xs sm:text-sm">
-                  {condo.neighborhood}
-                </CardDescription>
-              </CardHeader>
+                <CardHeader className="pb-3 pt-6">
+                  <CardTitle className="text-base sm:text-lg text-white font-semibold line-clamp-1 pr-24 flex items-center gap-2">
+                    <Building2 className="w-4 h-4 text-primary shrink-0" />{' '}
+                    <span className="truncate">{condo.name}</span>
+                  </CardTitle>
+                  <CardDescription className="flex items-center gap-1 text-xs sm:text-sm">
+                    {condo.neighborhood}
+                  </CardDescription>
+                </CardHeader>
 
-              <CardContent className="flex flex-col flex-1">
-                <div className="space-y-4 mb-6">
-                  <div>
-                    <div className="flex justify-between text-xs mb-1.5 font-medium">
-                      <span className="text-blue-400 flex items-center gap-1">
-                        <Search className="w-3 h-3" /> Demandas ({condo.totalDemands})
-                      </span>
-                      <span className="text-primary flex items-center gap-1">
-                        <Target className="w-3 h-3" /> Ofertas ({condo.totalOffers})
-                      </span>
+                <CardContent className="flex flex-col flex-1">
+                  <div className="space-y-4 mb-6">
+                    <div>
+                      <div className="flex justify-between text-xs mb-1.5 font-medium">
+                        <span className="text-blue-400 flex items-center gap-1">
+                          <Search className="w-3 h-3" /> Demandas ({condo.totalDemands})
+                        </span>
+                        <span className="text-primary flex items-center gap-1">
+                          <Target className="w-3 h-3" /> Ofertas ({condo.totalOffers})
+                        </span>
+                      </div>
+                      <div className="h-2.5 w-full bg-secondary rounded-full overflow-hidden flex">
+                        <div
+                          style={{ width: `${demandPercent}%` }}
+                          className="h-full bg-blue-500"
+                        ></div>
+                        <div
+                          style={{ width: `${offerPercent}%` }}
+                          className="h-full bg-primary"
+                        ></div>
+                      </div>
                     </div>
-                    <div className="h-2.5 w-full bg-secondary rounded-full overflow-hidden flex">
-                      <div
-                        style={{ width: `${demandPercent}%` }}
-                        className="h-full bg-blue-500"
-                      ></div>
-                      <div
-                        style={{ width: `${offerPercent}%` }}
-                        className="h-full bg-primary"
-                      ></div>
+
+                    <div className="grid grid-cols-2 gap-2 text-sm bg-secondary/30 p-2 sm:p-3 rounded-lg border border-border/50">
+                      <div>
+                        <p className="text-[9px] sm:text-[10px] uppercase tracking-wider text-muted-foreground mb-1">
+                          Ticket Médio
+                        </p>
+                        <p className="font-semibold text-white text-xs sm:text-sm">
+                          R$ {(condo.averageTicket / 1000000).toFixed(1)}M
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-[9px] sm:text-[10px] uppercase tracking-wider text-muted-foreground mb-1">
+                          Hot Score
+                        </p>
+                        <p className="font-semibold text-primary flex items-center gap-1 text-xs sm:text-sm">
+                          <TrendingUp className="w-3 h-3" /> {(condo.demandScore * 100).toFixed(0)}
+                        </p>
+                      </div>
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-2 text-sm bg-secondary/30 p-2 sm:p-3 rounded-lg border border-border/50">
-                    <div>
-                      <p className="text-[9px] sm:text-[10px] uppercase tracking-wider text-muted-foreground mb-1">
-                        Ticket Médio
-                      </p>
-                      <p className="font-semibold text-white text-xs sm:text-sm">
-                        R$ {(condo.averageTicket / 1000000).toFixed(1)}M
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-[9px] sm:text-[10px] uppercase tracking-wider text-muted-foreground mb-1">
-                        Hot Score
-                      </p>
-                      <p className="font-semibold text-primary flex items-center gap-1 text-xs sm:text-sm">
-                        <TrendingUp className="w-3 h-3" /> {(condo.demandScore * 100).toFixed(0)}
-                      </p>
-                    </div>
+                  <div className="mt-auto">
+                    <Button
+                      variant="outline"
+                      className="w-full border-border hover:bg-secondary text-white transition-colors"
+                      onClick={() => setSelectedCondo(condo)}
+                    >
+                      Analisar Oportunidade
+                    </Button>
                   </div>
-                </div>
-
-                <div className="mt-auto">
-                  <Button
-                    variant="outline"
-                    className="w-full border-border hover:bg-secondary text-white transition-colors"
-                    onClick={() => setSelectedCondo(condo)}
-                  >
-                    Analisar Oportunidade
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          )
-        })}
+                </CardContent>
+              </Card>
+            )
+          })
+        )}
       </div>
 
       <Dialog open={!!selectedCondo} onOpenChange={(open) => !open && setSelectedCondo(null)}>
