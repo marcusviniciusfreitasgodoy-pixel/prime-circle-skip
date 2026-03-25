@@ -12,7 +12,7 @@ import { BarChart3, AlertCircle, Building2, TrendingUp, Search, Target } from 'l
 import { AddPropertyDialog } from './AddPropertyDialog'
 import { supabase } from '@/lib/supabase/client'
 
-// Fallback mock data in case RPC is not yet available or empty
+// Fallback mock data in case RPC fails entirely
 const mockData = [
   {
     id: '1',
@@ -75,7 +75,8 @@ export function MarketIntelligenceWidget() {
         if (error) {
           console.warn('RPC get_market_intelligence_metrics failed', error)
           setData(mockData)
-        } else if (metrics && Array.isArray(metrics) && metrics.length > 0) {
+        } else if (metrics && Array.isArray(metrics)) {
+          // Now we accept empty array, and avoid falling back to mockData when there's simply no real data yet
           const sorted = metrics.sort((a: any, b: any) => b.demandScore - a.demandScore)
           setData(sorted)
         } else {
@@ -117,8 +118,13 @@ export function MarketIntelligenceWidget() {
             ))}
           </>
         ) : data.length === 0 ? (
-          <div className="col-span-full py-8 text-center text-muted-foreground border border-dashed border-border rounded-xl bg-background/50">
-            Nenhum dado de inteligência disponível no momento.
+          <div className="col-span-full py-12 text-center border border-dashed border-border rounded-xl bg-card/50 flex flex-col items-center justify-center">
+            <BarChart3 className="w-12 h-12 text-muted-foreground/50 mb-4" />
+            <p className="text-lg font-medium text-white mb-2">Monitoramento Ativo</p>
+            <p className="text-muted-foreground text-sm max-w-md px-4">
+              O motor de inteligência está monitorando a rede. Os condomínios aparecerão aqui
+              automaticamente assim que as primeiras ofertas e demandas forem registradas.
+            </p>
           </div>
         ) : (
           data.map((condo) => {
@@ -288,6 +294,20 @@ export function MarketIntelligenceWidget() {
                         </div>
                       </div>
                     )}
+
+                  {selectedCondo.totalDemands === 0 && selectedCondo.totalOffers > 0 && (
+                    <div className="p-4 bg-yellow-500/10 border border-yellow-500/20 rounded-lg flex items-start gap-3">
+                      <AlertCircle className="w-5 h-5 text-yellow-400 shrink-0 mt-0.5" />
+                      <div>
+                        <p className="text-sm font-bold text-yellow-400 uppercase tracking-wide">
+                          Baixa Demanda Atual
+                        </p>
+                        <p className="text-sm text-yellow-400/80 mt-1 leading-relaxed">
+                          Há imóveis ativos, mas nenhuma demanda direta registrada no momento.
+                        </p>
+                      </div>
+                    </div>
+                  )}
 
                   <div className="p-6 sm:p-8 text-center bg-background/80 border border-dashed border-border rounded-lg mt-4">
                     <p className="text-sm text-muted-foreground mb-4">
