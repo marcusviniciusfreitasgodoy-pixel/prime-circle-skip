@@ -178,7 +178,7 @@ export default function DashboardPage() {
   const activeMatches = matches.filter((m) => m.status !== 'Fechado')
 
   const refCode = profileReferralCode || authUser?.id || user?.id || 'founder-123'
-  const referralLink = `https://www.primecircle.app.br/apply?ref=${refCode}`
+  const referralLink = `https://www.primecircle.app.br/?ref=${refCode}`
 
   const formatPlanName = (plan: string) => {
     if (plan === 'Founder') return 'Fundador'

@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { HeroSection } from '@/components/home/HeroSection'
 import { ProblemSection } from '@/components/home/ProblemSection'
 import { MatchmakingShowcase } from '@/components/home/MatchmakingShowcase'
@@ -15,6 +16,7 @@ import { Loader2 } from 'lucide-react'
 
 export default function Index() {
   const { loading } = useAuth()
+  const [searchParams] = useSearchParams()
 
   useSEO({
     title: 'Prime Circle | O Lado Exclusivo do Mercado Imobiliário',
@@ -23,11 +25,16 @@ export default function Index() {
   })
 
   useEffect(() => {
+    const refCode = searchParams.get('ref')
+    if (refCode) {
+      sessionStorage.setItem('referral_code', refCode)
+    }
+
     document.documentElement.classList.add('scroll-smooth')
     return () => {
       document.documentElement.classList.remove('scroll-smooth')
     }
-  }, [])
+  }, [searchParams])
 
   if (loading) {
     return (

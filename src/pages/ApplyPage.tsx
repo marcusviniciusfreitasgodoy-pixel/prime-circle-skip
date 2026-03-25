@@ -83,7 +83,9 @@ export default function ApplyPage() {
   const [avatarFile, setAvatarFile] = useState<File | null>(null)
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null)
 
-  const refCode = searchParams.get('ref') || ''
+  const urlRef = searchParams.get('ref')
+  const sessionRef = sessionStorage.getItem('referral_code')
+  const refCode = urlRef || sessionRef || ''
 
   useEffect(() => {
     let mounted = true

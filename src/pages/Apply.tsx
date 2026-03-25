@@ -15,7 +15,11 @@ export default function Apply() {
   const { toast } = useToast()
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
-  const refCode = searchParams.get('ref')
+
+  const urlRef = searchParams.get('ref')
+  const sessionRef = sessionStorage.getItem('referral_code')
+  const refCode = urlRef || sessionRef || ''
+
   const { addCandidate, login } = useAppStore()
 
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -76,7 +80,7 @@ export default function Apply() {
     setTimeout(() => {
       if (refCode) {
         addCandidate({ ...formData, referredBy: referrerId || refCode, status: 'approved' })
-        login('approved')
+        login('approved', 'magic_link')
         toast({
           title: 'Aprovado para Acesso Imediato!',
           description: 'Sua indicação foi confirmada. Bem-vindo ao Prime Circle.',
