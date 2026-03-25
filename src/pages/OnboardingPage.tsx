@@ -27,11 +27,38 @@ export default function OnboardingPage() {
 
   useEffect(() => {
     let mounted = true
+
     const fetchProfileData = async () => {
       if (!authUser) {
         setIsFetching(false)
         return
       }
+
+      // Prioridade 1: Buscar dados recém-cadastrados da sessão (user_metadata)
+      const metaWhatsapp = authUser.user_metadata?.whatsapp_number
+      const metaCreci = authUser.user_metadata?.creci
+
+      let foundWhatsapp = false
+      let foundCreci = false
+
+      if (metaWhatsapp) {
+        setWhatsapp(metaWhatsapp)
+        setHasWhatsapp(true)
+        foundWhatsapp = true
+      }
+
+      if (metaCreci) {
+        setCreci(metaCreci)
+        setHasCreci(true)
+        foundCreci = true
+      }
+
+      // Se ambos já foram encontrados na sessão, libera a interface rapidamente
+      if (foundWhatsapp && foundCreci) {
+        if (mounted) setIsFetching(false)
+      }
+
+      // Prioridade 2: Buscar no banco de dados para garantir sincronia caso algo não esteja no metadata
       try {
         const { data, error } = await supabase
           .from('profiles')
@@ -40,11 +67,11 @@ export default function OnboardingPage() {
           .single()
 
         if (!error && data && mounted) {
-          if (data.whatsapp_number) {
+          if (!foundWhatsapp && data.whatsapp_number) {
             setWhatsapp(data.whatsapp_number)
             setHasWhatsapp(true)
           }
-          if (data.creci) {
+          if (!foundCreci && data.creci) {
             setCreci(data.creci)
             setHasCreci(true)
           }
@@ -74,14 +101,18 @@ export default function OnboardingPage() {
     setIsSubmitting(true)
     try {
       if (authUser) {
-        const { error } = await supabase
-          .from('profiles')
-          .update({
-            accepted_terms: true,
-            whatsapp_number: whatsapp,
-            creci: creci,
-          })
-          .eq('id', authUser.id)
+        // Apenas envia a atualização se o usuário preencheu agora.
+        // Se já tinha (veio do cadastro), o trigger do banco já salvou no profile.
+        const updateData: any = { accepted_terms: true }
+
+        if (!hasWhatsapp && whatsapp) {
+          updateData.whatsapp_number = whatsapp
+        }
+        if (!hasCreci && creci) {
+          updateData.creci = creci
+        }
+
+        const { error } = await supabase.from('profiles').update(updateData).eq('id', authUser.id)
 
         if (error) throw error
       }
@@ -121,7 +152,7 @@ export default function OnboardingPage() {
               </div>
               <h1 className="text-2xl font-bold text-white">Bem vindo Corretor</h1>
               <p className="text-muted-foreground text-sm mt-2">
-                Antes de acessar o painel, complete seus dados e confirme sua adesão às regras.
+                Antes de acessar o painel, confirme sua adesão às regras da rede privada.
               </p>
             </div>
 
