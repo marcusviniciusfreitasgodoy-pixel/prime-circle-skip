@@ -111,7 +111,7 @@ export function ReferralTracker({
             setInviteMessage(customMsg)
             setOriginalMessage(customMsg)
           } else if (referralLink) {
-            const defaultMsg = `[Nome], acabei de lançar a *Prime Circle* e selecionei você pessoalmente para ser um dos *Membros Fundadores*.\n\nÉ uma rede privada exclusiva para corretores de alto padrão na *Barra e Recreio*, feita para profissionalizar nossas parcerias e eliminar de vez o caos e a informalidade dos grupos de WhatsApp.\n\nAo entrar, você terá acesso imediato à nossa *Área de Membros*, uma plataforma completa onde você pode:\n\n— *Gerenciar sua carteira:* Publique seus imóveis para que outros membros encontrem compradores qualificados rapidamente.\n— *Radar de Demandas:* Cadastre o que seus clientes buscam e receba alertas automáticos de match na rede.\n— *Acesso Off-Market:* Visualize oportunidades exclusivas que ainda não chegaram aos portais.\n— *Painel de Conexões:* Acompanhe o status das suas parcerias em um ambiente profissional.\n\nDentro da sua área logada, você também encontrará seu *Link de Embaixador*. Como a rede cresce por curadoria, você poderá usá-lo para convidar os corretores da sua total confiança, fortalecendo seu círculo e ganhando benefícios por cada indicação aprovada.\n\n*Isso não é apenas mais um grupo; é a oportunidade de construirmos juntos uma comunidade selecionada, com regras claras e foco total em fechar negócios de alto nível.* É o novo padrão de colaboração para quem opera no topo do mercado.\n\nAs vagas de Fundador são limitadas para garantirmos essa qualidade desde o início.\n\nGaranta seu lugar e acesse as ferramentas aqui:\n${referralLink}`
+            const defaultMsg = `[Nome], acabei de lançar a *Prime Circle* e selecionei você pessoalmente para ser um dos *Membros Fundadores*.\n\nÉ uma rede privada exclusiva para corretores de alto padrão na *Barra e Recreio*, feita para profissionalizar nossas parcerias e eliminar de vez o caos e a informalidade dos grupos de WhatsApp.\n\nAo entrar, você terá acesso imediato à nossa *Área de Membros*, uma plataforma completa onde você pode:\n\n— *Gerenciar sua carteira:* Publique seus imóveis para que outros membros encontrem compradores qualificados rapidamente.\n— *Radar de Demandas:* Cadastre o que seus clientes buscam e receba alertas automáticos de match na rede.\n— *Acesso Off-Market:* Visualize oportunidades exclusivas que ainda não chegaram aos portais.\n— *Painel de Conexões:* Acompanhe o status das suas parcerias em um ambiente profissional.\n\nDentro da sua área logada, você também encontrará seu *Link de Embaixador*. Como a rede cresce por curadoria, você poderá usá-lo para convidar os corretores da sua total confiança, fortalendo seu círculo e ganhando benefícios por cada indicação aprovada.\n\n*Isso não é apenas mais um grupo; é a oportunidade de construirmos juntos uma comunidade selecionada, com regras claras e foco total em fechar negócios de alto nível.* É o novo padrão de colaboração para quem opera no topo do mercado.\n\nAs vagas de Fundador são limitadas para garantirmos essa qualidade desde o início.\n\nGaranta seu lugar e acesse as ferramentas aqui:\n${referralLink}`
 
             setInviteMessage(defaultMsg)
             setOriginalMessage(defaultMsg)
@@ -162,34 +162,35 @@ export function ReferralTracker({
 
   return (
     <div className="space-y-6">
-      <Card className="bg-card border-primary/30 shadow-[0_0_30px_rgba(201,168,76,0.1)] relative overflow-hidden">
+      <Card className="bg-card border-primary/30 shadow-[0_0_30px_rgba(201,168,76,0.1)] relative overflow-hidden h-auto flex flex-col">
         <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-[80px] pointer-events-none" />
-        <CardHeader className="p-5 sm:p-6 pb-3 sm:pb-6">
+        <CardHeader className="p-5 sm:p-6 pb-3 sm:pb-6 relative z-10">
           <CardTitle className="text-xl sm:text-2xl text-primary flex items-center gap-2">
             <Crown className="w-5 h-5 sm:w-6 sm:h-6" /> Indique Parceiros
           </CardTitle>
-          <CardDescription className="text-sm sm:text-base text-muted-foreground max-w-2xl mt-1.5">
+          <CardDescription className="text-sm sm:text-base text-muted-foreground max-w-2xl mt-1.5 leading-relaxed">
             Convide corretores alinhados à política 50/50 e receba meses grátis. Personalize sua
             mensagem abaixo, salve-a como padrão e compartilhe com sua rede.
           </CardDescription>
         </CardHeader>
-        <CardContent className="p-4 sm:p-6 pt-0 sm:pt-0">
-          <div className="space-y-4 relative z-10">
+        <CardContent className="p-4 sm:p-6 pt-0 sm:pt-0 relative z-10 flex-1 flex flex-col">
+          <div className="space-y-4 flex-1 flex flex-col w-full h-auto">
             <Textarea
               value={inviteMessage}
               onChange={(e) => {
                 setInviteMessage(e.target.value)
                 setHasUnsavedChanges(e.target.value !== originalMessage)
               }}
-              className="bg-background/80 border-primary/20 text-muted-foreground text-sm sm:text-base min-h-[200px] sm:min-h-[320px] focus-visible:ring-primary leading-relaxed p-3 sm:p-4 resize-y"
+              rows={12}
+              className="bg-background/80 border-primary/20 text-muted-foreground text-sm sm:text-base min-h-[300px] focus-visible:ring-primary leading-relaxed p-4 resize-y w-full flex-1"
             />
-            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
+            <div className="flex flex-col xl:flex-row gap-3 w-full shrink-0">
               <Button
                 onClick={handleSaveMessage}
                 disabled={!hasUnsavedChanges || isSaving}
                 variant="outline"
                 className={cn(
-                  'flex-1 h-11 sm:h-12 transition-colors text-sm sm:text-base font-medium w-full',
+                  'h-12 transition-colors text-sm sm:text-base font-medium w-full xl:flex-1',
                   hasUnsavedChanges
                     ? 'border-green-500/50 text-green-500 bg-green-500/10 hover:bg-green-500/20'
                     : 'border-border text-muted-foreground',
@@ -201,13 +202,13 @@ export function ReferralTracker({
               <Button
                 onClick={handleCopy}
                 variant="outline"
-                className="flex-1 border-primary/50 text-primary hover:bg-primary/10 h-11 sm:h-12 text-sm sm:text-base font-medium w-full"
+                className="border-primary/50 text-primary hover:bg-primary/10 h-12 text-sm sm:text-base font-medium w-full xl:flex-1"
               >
                 <Copy className="w-4 h-4 mr-2 shrink-0" /> Copiar Mensagem
               </Button>
               <Button
                 onClick={handleShare}
-                className="flex-[1.5] gold-gradient text-black font-bold h-11 sm:h-12 shadow-[0_0_15px_rgba(201,168,76,0.2)] text-sm sm:text-base w-full"
+                className="gold-gradient text-black font-bold h-12 shadow-[0_0_15px_rgba(201,168,76,0.2)] text-sm sm:text-base w-full xl:flex-[1.5]"
               >
                 <Share2 className="w-5 h-5 mr-2 shrink-0" /> Enviar WhatsApp
               </Button>
