@@ -25,6 +25,7 @@ import {
   CheckCircle2,
   AlertCircle,
   Star,
+  Medal,
 } from 'lucide-react'
 import { Skeleton } from '@/components/ui/skeleton'
 
@@ -53,6 +54,7 @@ export default function ProfilePage() {
   const [bio, setBio] = useState('')
   const [selectedSpecialties, setSelectedSpecialties] = useState<string[]>([])
   const [condominiumName, setCondominiumName] = useState('')
+  const [reputationScore, setReputationScore] = useState(0)
 
   const [isSaving, setIsSaving] = useState(false)
   const [validatedBy, setValidatedBy] = useState<{ name: string; date: string } | null>(null)
@@ -75,7 +77,7 @@ export default function ProfilePage() {
         supabase
           .from('profiles')
           .select(
-            'whatsapp_number, full_name, validated_by, validation_date, avatar_url, referral_code, company_name, creci, region, specialties, email, bio',
+            'whatsapp_number, full_name, validated_by, validation_date, avatar_url, referral_code, company_name, creci, region, specialties, email, bio, reputation_score',
           )
           .eq('id', authUser.id)
           .single(),
@@ -105,6 +107,7 @@ export default function ProfilePage() {
             setCreci(d.creci || '')
             setRegion(d.region || '')
             setBio(d.bio || '')
+            setReputationScore(d.reputation_score || 0)
 
             if (d.company_name) {
               if (
@@ -514,6 +517,36 @@ export default function ProfilePage() {
     }
   }
 
+  const getReputationBadge = (score: number) => {
+    if (score >= 100)
+      return {
+        label: 'Elite Ouro',
+        color: 'text-yellow-400',
+        bg: 'bg-yellow-400/10',
+        border: 'border-yellow-400/20',
+      }
+    if (score >= 50)
+      return {
+        label: 'Prata',
+        color: 'text-gray-300',
+        bg: 'bg-gray-300/10',
+        border: 'border-gray-300/20',
+      }
+    if (score >= 20)
+      return {
+        label: 'Bronze',
+        color: 'text-amber-600',
+        bg: 'bg-amber-600/10',
+        border: 'border-amber-600/20',
+      }
+    return {
+      label: 'Iniciante',
+      color: 'text-slate-400',
+      bg: 'bg-slate-400/10',
+      border: 'border-slate-400/20',
+    }
+  }
+
   const whatsappStatus = getWhatsappStatus(whatsapp)
 
   if (isLoading) {
@@ -539,6 +572,7 @@ export default function ProfilePage() {
   const activeTier = user?.tier && user.tier !== 'None' ? user.tier : userTier
   const activeReferrals = user?.referrals || referralsCount
   const activeAvatarUrl = avatarUrl || user?.avatar || authUser?.user_metadata?.avatar_url
+  const badge = getReputationBadge(reputationScore)
 
   return (
     <div className="max-w-4xl mx-auto space-y-8 animate-fade-in-up pb-12">
@@ -576,9 +610,16 @@ export default function ProfilePage() {
                 />
               </div>
               <h3 className="text-xl font-bold text-white">{displayName}</h3>
-              <p className="text-sm text-primary mb-4">
+              <p className="text-sm text-primary mb-3">
                 {profileType === 'autonomo' ? 'Corretor Autônomo' : companyName || 'Imobiliária'}
               </p>
+
+              <div
+                className={`flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-bold mb-4 ${badge.bg} ${badge.border} ${badge.color}`}
+              >
+                <Medal className="w-4 h-4" />
+                Nível {badge.label} • {reputationScore} pts
+              </div>
 
               {validatedBy && (
                 <div className="flex items-center justify-center gap-1.5 bg-green-500/10 text-green-500 border border-green-500/20 px-3 py-1 rounded-full text-xs font-medium mb-4">

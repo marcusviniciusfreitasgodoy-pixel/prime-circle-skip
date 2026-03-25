@@ -1,8 +1,23 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { BookOpen, Scale, Workflow, Lightbulb, ShieldCheck, ArrowLeft, Star } from 'lucide-react'
+import {
+  BookOpen,
+  Scale,
+  Workflow,
+  Lightbulb,
+  ShieldCheck,
+  ArrowLeft,
+  Star,
+  MessageCircleQuestion,
+} from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Link } from 'react-router-dom'
 import { useSEO } from '@/hooks/use-seo'
+import {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
+} from '@/components/ui/accordion'
 
 export default function GuidePage() {
   useSEO({
@@ -194,6 +209,61 @@ export default function GuidePage() {
                 <strong>adicionamos 1 mês de crédito extra na sua assinatura</strong>.
               </li>
             </ul>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-card border-border shadow-sm mt-8">
+          <CardHeader>
+            <CardTitle className="text-xl text-primary flex items-center gap-2">
+              <MessageCircleQuestion className="w-5 h-5" /> 6. Perguntas Frequentes (FAQ)
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Accordion type="single" collapsible className="w-full space-y-2">
+              <AccordionItem value="item-1" className="border-border">
+                <AccordionTrigger className="text-left text-white hover:text-primary">
+                  Como faço para ganhar pontos de reputação?
+                </AccordionTrigger>
+                <AccordionContent className="text-muted-foreground leading-relaxed">
+                  Você ganha pontos sempre que uma negociação (Match) avança no funil (ex: de
+                  Contato para Visita). O uso dos links de atualização rápida recebidos via WhatsApp
+                  garante uma bonificação extra (+5 pts). Negociações canceladas ou rejeitadas não
+                  geram pontos.
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="item-2" className="border-border">
+                <AccordionTrigger className="text-left text-white hover:text-primary">
+                  O que significa um imóvel "Off-Market"?
+                </AccordionTrigger>
+                <AccordionContent className="text-muted-foreground leading-relaxed">
+                  São imóveis que possuem uma condição diferenciada ou que não estão sendo
+                  divulgados nos grandes portais imobiliários abertos. Cadastrá-los na Prime Circle
+                  garante exclusividade e atrai parceiros qualificados.
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="item-3" className="border-border">
+                <AccordionTrigger className="text-left text-white hover:text-primary">
+                  Quais são as regras de divisão de comissão?
+                </AccordionTrigger>
+                <AccordionContent className="text-muted-foreground leading-relaxed">
+                  Nossa regra de ouro é clara: a divisão de toda parceria gerada através da
+                  plataforma deve ser rigorosamente 50/50. Tentar alterar essa proporção após a
+                  geração do match é considerado uma infração grave e pode resultar em banimento da
+                  rede.
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="item-4" className="border-border">
+                <AccordionTrigger className="text-left text-white hover:text-primary">
+                  Como funciona o programa Embaixador?
+                </AccordionTrigger>
+                <AccordionContent className="text-muted-foreground leading-relaxed">
+                  Você pode convidar outros corretores através do seu link exclusivo. À medida que
+                  seus convidados são aprovados pela curadoria, você sobe de nível (Silver, Gold,
+                  Elite) e destrava benefícios como meses gratuitos na assinatura e destaque no
+                  mural público.
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
           </CardContent>
         </Card>
       </div>
