@@ -20,6 +20,7 @@ import { cn } from '@/lib/utils'
 import { useAuth } from '@/hooks/use-auth'
 import { UsersManagementTab } from '@/components/admin/UsersManagementTab'
 import { TemplatesTab } from '@/components/notifications/TemplatesTab'
+import { LogsTab } from '@/components/notifications/LogsTab'
 import { WhatsAppCollectionTab } from '@/components/admin/WhatsAppCollectionTab'
 import { sendWhatsappMessage } from '@/services/whatsapp'
 
@@ -268,14 +269,24 @@ export default function AdminPage() {
             </CardContent>
           </Card>
 
-          <div className="pt-2">
-            <h3 className="text-xl font-bold text-white mb-2">Templates Globais</h3>
-            <p className="text-sm text-muted-foreground mb-6">
-              Como administrador, as edições realizadas nestes templates serão utilizadas como
-              padrão pelo sistema (Ex: Notificações de Match Automático).
-            </p>
-            <div className="bg-card p-6 rounded-lg border border-border">
-              <TemplatesTab />
+          <div className="pt-2 space-y-8">
+            <div>
+              <h3 className="text-xl font-bold text-white mb-2">Templates Globais</h3>
+              <p className="text-sm text-muted-foreground mb-6">
+                Como administrador, as edições realizadas nestes templates serão utilizadas como
+                padrão pelo sistema (Ex: Notificações de Match Automático).
+              </p>
+              <div className="bg-card p-6 rounded-lg border border-border">
+                <TemplatesTab />
+              </div>
+            </div>
+
+            <div className="pt-4 border-t border-border">
+              <h3 className="text-xl font-bold text-white mb-2 pt-4">Histórico de Disparos</h3>
+              <p className="text-sm text-muted-foreground mb-6">
+                Acompanhe o log de todas as mensagens e notificações enviadas pelo sistema.
+              </p>
+              <LogsTab />
             </div>
           </div>
         </TabsContent>

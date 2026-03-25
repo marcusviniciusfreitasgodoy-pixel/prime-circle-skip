@@ -196,9 +196,9 @@ export const sendWelcomeNotifications = async ({
   }
 
   const defaultWaContent =
-    'Olá {{full_name}}! 🚀 Bem-vindo à Prime Circle. Seu cadastro foi recebido com sucesso. Estamos muito felizes em ter você em nossa rede exclusiva de parcerias imobiliárias.'
+    'Olá {{full_name}}! 🚀 Bem-vindo à Prime Circle. Seu cadastro foi recebido com sucesso. Estamos muito felizes em ter você em nossa rede exclusiva de parcerias imobiliárias.\n\n⚠️ *Aviso Importante:* Estamos em nossa fase de lançamento! Caso encontre qualquer problema ou instabilidade, por favor nos avise pelo e-mail contato@primecircle.app.br ou respondendo a este WhatsApp. Seu feedback é fundamental!'
   const defaultEmailContent =
-    'Assunto: Bem-vindo à Prime Circle! 🏠\n\nOlá {{full_name}},\n\nBem-vindo à Prime Circle! Agora que sua conta foi criada, utilize o link abaixo para acessar seu painel exclusivo e começar a gerar parcerias.\n\nAcesse: https://prime-circle-migration-fd549.goskip.app/dashboard\n\nBoas vendas,\nEquipe Prime Circle'
+    'Assunto: Bem-vindo à Prime Circle! 🏠\n\nOlá {{full_name}},\n\nBem-vindo à Prime Circle! Agora que sua conta foi criada, utilize o link abaixo para acessar seu painel exclusivo e começar a gerar parcerias.\n\nAcesse: https://www.primecircle.app.br/dashboard\n\n⚠️ Aviso Importante: Estamos em nossa fase de lançamento! Caso encontre qualquer problema, erro ou instabilidade, é muito importante que você nos informe encaminhando uma mensagem para contato@primecircle.app.br ou pelo nosso WhatsApp de suporte.\n\nBoas vendas,\nEquipe Prime Circle'
 
   const buildMessage = (content: string) => {
     return content.replace(/\{\{full_name\}\}/g, fullName)

@@ -14,6 +14,7 @@ import {
   User as UserIcon,
   Palette,
   BookOpen,
+  MessageSquare,
 } from 'lucide-react'
 import {
   SidebarProvider,
@@ -173,6 +174,7 @@ export function AppLayout() {
   ]
 
   if (storeUser?.status === 'admin' || authUser?.email?.includes('admin')) {
+    navItems.push({ title: 'Comunicações', icon: MessageSquare, url: '/notifications' })
     navItems.push({ title: 'Admin', icon: Settings, url: '/admin' })
   }
 
