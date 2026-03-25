@@ -15,6 +15,7 @@ import {
   Palette,
   BookOpen,
   MessageSquare,
+  CheckCircle2,
 } from 'lucide-react'
 import {
   SidebarProvider,
@@ -34,7 +35,9 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
+  DropdownMenuLabel,
 } from '@/components/ui/dropdown-menu'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import useAppStore from '@/stores/main'
 import { useAuth } from '@/hooks/use-auth'
 import { useToast } from '@/hooks/use-toast'
@@ -58,6 +61,7 @@ export function AppLayout() {
 
   const [profileAvatar, setProfileAvatar] = useState('')
   const [userRole, setUserRole] = useState('user')
+  const [systemNotifications, setSystemNotifications] = useState<any[]>([])
 
   const clearRef = useRef(clearNotifications)
 
@@ -78,9 +82,20 @@ export function AppLayout() {
     }
   }, [notifications, toast])
 
-  // Real-time match notifications
+  // Real-time match notifications and initial fetch of system notifications
   useEffect(() => {
     if (!authUser) return
+
+    // Fetch system notifications (in-app alerts)
+    supabase
+      .from('user_notifications')
+      .select('*')
+      .eq('user_id', authUser.id)
+      .eq('is_read', false)
+      .order('created_at', { ascending: false })
+      .then(({ data }) => {
+        if (data) setSystemNotifications(data)
+      })
 
     const channel = supabase
       .channel('notification_logs_changes')
@@ -110,12 +125,42 @@ export function AppLayout() {
           }
         },
       )
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'user_notifications',
+          filter: `user_id=eq.${authUser.id}`,
+        },
+        (payload) => {
+          const newNotif = payload.new as any
+          setSystemNotifications((prev) => [newNotif, ...prev])
+          toast({
+            title: newNotif.title,
+            description: newNotif.content,
+            className: 'border-primary/50 bg-card text-white',
+          })
+        },
+      )
       .subscribe()
 
     return () => {
       supabase.removeChannel(channel)
     }
   }, [authUser, toast])
+
+  const handleMarkAsRead = async (id: string, link: string) => {
+    await supabase.from('user_notifications').update({ is_read: true }).eq('id', id)
+    setSystemNotifications((prev) => prev.filter((n) => n.id !== id))
+    if (link && link !== '#') {
+      if (link.startsWith('http')) {
+        window.open(link, '_blank')
+      } else {
+        navigate(link)
+      }
+    }
+  }
 
   useEffect(() => {
     if (authUser) {
@@ -190,7 +235,6 @@ export function AppLayout() {
     navItems.push({ title: 'Comunicações', icon: MessageSquare, url: '/notifications' })
   }
 
-  // Acesso à página de Admin restrito ao perfil principal/solicitado
   if (isMarcusOnly) {
     navItems.push({ title: 'Admin', icon: Settings, url: '/admin' })
   }
@@ -200,6 +244,8 @@ export function AppLayout() {
     authUser?.user_metadata?.full_name ||
     authUser?.email?.split('@')[0] ||
     'Usuário'
+
+  const totalUnseen = unseenSuggestionsCount + systemNotifications.length
 
   return (
     <SidebarProvider>
@@ -307,16 +353,55 @@ export function AppLayout() {
               {navItems.find((i) => i.url === location.pathname)?.title || 'Prime Circle'}
             </h1>
             <div className="flex items-center gap-3">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="text-muted-foreground hover:text-primary relative"
-              >
-                <Bell className="w-5 h-5" />
-                {unseenSuggestionsCount > 0 && (
-                  <span className="absolute top-2 right-2 w-2 h-2 bg-destructive rounded-full" />
-                )}
-              </Button>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="text-muted-foreground hover:text-primary relative"
+                  >
+                    <Bell className="w-5 h-5" />
+                    {totalUnseen > 0 && (
+                      <span className="absolute top-2 right-2 w-2 h-2 bg-destructive rounded-full" />
+                    )}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent
+                  align="end"
+                  className="w-80 bg-card border-border p-0 overflow-hidden"
+                >
+                  <div className="bg-secondary/50 p-3 border-b border-border flex items-center justify-between">
+                    <span className="font-medium text-white">Notificações</span>
+                    <Badge variant="secondary" className="bg-background">
+                      {systemNotifications.length} novas
+                    </Badge>
+                  </div>
+                  <div className="max-h-[300px] overflow-y-auto">
+                    {systemNotifications.length === 0 ? (
+                      <div className="p-4 text-center text-sm text-muted-foreground">
+                        Nenhuma nova notificação.
+                      </div>
+                    ) : (
+                      systemNotifications.map((n) => (
+                        <div
+                          key={n.id}
+                          className="p-3 border-b border-border/50 hover:bg-secondary/30 transition-colors cursor-pointer group"
+                          onClick={() => handleMarkAsRead(n.id, n.link)}
+                        >
+                          <p className="text-sm font-semibold text-white mb-1 group-hover:text-primary transition-colors">
+                            {n.title}
+                          </p>
+                          <p className="text-xs text-muted-foreground line-clamp-2">{n.content}</p>
+                          <p className="text-[10px] text-muted-foreground mt-2">
+                            {new Date(n.created_at).toLocaleString('pt-BR')}
+                          </p>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </PopoverContent>
+              </Popover>
+
               <div className="sm:hidden">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>

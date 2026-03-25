@@ -22,6 +22,8 @@ import {
   Calendar as CalendarIcon,
   CheckCircle2,
   Loader2,
+  ThumbsUp,
+  ThumbsDown,
 } from 'lucide-react'
 import { useAuth } from '@/hooks/use-auth'
 import { cn } from '@/lib/utils'
@@ -30,6 +32,9 @@ export function NewsletterManagerTab() {
   const { toast } = useToast()
   const { user } = useAuth()
   const [newsletters, setNewsletters] = useState<any[]>([])
+  const [feedbackStats, setFeedbackStats] = useState<
+    Record<string, { likes: number; dislikes: number }>
+  >({})
   const [loading, setLoading] = useState(true)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
@@ -48,6 +53,22 @@ export function NewsletterManagerTab() {
 
     if (!error && data) {
       setNewsletters(data)
+
+      // Fetch feedback stats
+      const { data: feedbackData } = await supabase
+        .from('newsletter_feedback')
+        .select('newsletter_id, vote')
+      if (feedbackData) {
+        const stats: Record<string, { likes: number; dislikes: number }> = {}
+        data.forEach((nl) => {
+          const nlFeedback = feedbackData.filter((f) => f.newsletter_id === nl.id)
+          stats[nl.id] = {
+            likes: nlFeedback.filter((f) => f.vote === 'like').length,
+            dislikes: nlFeedback.filter((f) => f.vote === 'dislike').length,
+          }
+        })
+        setFeedbackStats(stats)
+      }
     }
     setLoading(false)
   }
@@ -59,7 +80,6 @@ export function NewsletterManagerTab() {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const selectedFile = e.target.files[0]
-      // Validação simples de tamanho e tipo (ex: max 5MB, PDF/Imagens)
       if (selectedFile.size > 5 * 1024 * 1024) {
         toast({
           title: 'Arquivo muito grande',
@@ -110,7 +130,7 @@ export function NewsletterManagerTab() {
         attachmentUrl = publicUrl
       }
 
-      const status = action === 'send' ? 'scheduled' : 'draft' // Marcamos como scheduled antes de invocar p/ bloquear multiplos envios
+      const status = action === 'send' ? 'scheduled' : 'draft'
 
       const { data: newNl, error: insertError } = await supabase
         .from('newsletters')
@@ -129,10 +149,9 @@ export function NewsletterManagerTab() {
       if (action === 'send' && newNl) {
         toast({
           title: 'Processando envio...',
-          description: 'Disparando para todos os usuários ativos.',
+          description: 'Disparando para todos os usuários ativos e enviando notificações.',
         })
 
-        // Dispara Edge Function
         const res = await supabase.functions.invoke('send-newsletter', {
           body: { newsletter_id: newNl.id },
         })
@@ -169,8 +188,8 @@ export function NewsletterManagerTab() {
             Nova Edição (Curadoria Mensal)
           </CardTitle>
           <CardDescription>
-            Crie o conteúdo que será enviado via E-mail e notificado via WhatsApp para toda a sua
-            base de corretores ativos.
+            Crie o conteúdo que será enviado via E-mail e notificado via WhatsApp/App para toda a
+            sua base de corretores ativos. Eles poderão avaliar o conteúdo.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
@@ -256,7 +275,6 @@ export function NewsletterManagerTab() {
               Salvar como Rascunho
             </Button>
 
-            {/* MVP: Disparo imediato. Botão agendar foi simplificado para garantir entrega imediata fluida */}
             <Button
               onClick={() => handlePublish('send')}
               disabled={isSubmitting || !title}
@@ -267,7 +285,7 @@ export function NewsletterManagerTab() {
               ) : (
                 <Send className="w-4 h-4 mr-2" />
               )}
-              {isSubmitting ? 'Processando...' : 'Disparar Agora (E-mail e WhatsApp)'}
+              {isSubmitting ? 'Processando...' : 'Disparar Agora (E-mail, WA, App)'}
             </Button>
           </div>
         </CardContent>
@@ -275,9 +293,9 @@ export function NewsletterManagerTab() {
 
       <Card className="bg-card border-border">
         <CardHeader>
-          <CardTitle className="text-lg text-white">Histórico de Disparos</CardTitle>
+          <CardTitle className="text-lg text-white">Histórico de Disparos & Engajamento</CardTitle>
           <CardDescription>
-            Acompanhe todas as edições já enviadas ou salvas na plataforma.
+            Acompanhe todas as edições já enviadas e o feedback recebido da sua rede.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -286,7 +304,7 @@ export function NewsletterManagerTab() {
               <TableRow className="border-border">
                 <TableHead>Data</TableHead>
                 <TableHead>Assunto</TableHead>
-                <TableHead>Anexo</TableHead>
+                <TableHead className="text-center">Feedback</TableHead>
                 <TableHead className="text-right">Status</TableHead>
               </TableRow>
             </TableHeader>
@@ -298,48 +316,63 @@ export function NewsletterManagerTab() {
                   </TableCell>
                 </TableRow>
               ) : (
-                newsletters.map((nl) => (
-                  <TableRow key={nl.id} className="border-border hover:bg-secondary/20">
-                    <TableCell className="text-muted-foreground whitespace-nowrap">
-                      {new Date(nl.created_at).toLocaleDateString('pt-BR')}
-                    </TableCell>
-                    <TableCell className="font-medium text-white">{nl.title}</TableCell>
-                    <TableCell>
-                      {nl.attachment_url ? (
-                        <a
-                          href={nl.attachment_url}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="text-primary hover:underline text-xs flex items-center gap-1"
-                        >
-                          <FileText className="w-3 h-3" /> Visualizar
-                        </a>
-                      ) : (
-                        <span className="text-muted-foreground text-xs">Sem anexo</span>
-                      )}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <Badge
-                        variant="outline"
-                        className={cn(
-                          'font-medium',
-                          nl.status === 'sent'
-                            ? 'bg-green-500/10 text-green-500 border-green-500/20'
-                            : nl.status === 'draft'
-                              ? 'bg-secondary text-muted-foreground border-border'
-                              : 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20',
+                newsletters.map((nl) => {
+                  const stats = feedbackStats[nl.id] || { likes: 0, dislikes: 0 }
+                  return (
+                    <TableRow key={nl.id} className="border-border hover:bg-secondary/20">
+                      <TableCell className="text-muted-foreground whitespace-nowrap">
+                        {new Date(nl.created_at).toLocaleDateString('pt-BR')}
+                      </TableCell>
+                      <TableCell className="font-medium text-white">
+                        {nl.title}
+                        {nl.attachment_url && (
+                          <a
+                            href={nl.attachment_url}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-primary hover:underline text-[10px] flex items-center gap-1 mt-1"
+                          >
+                            <FileText className="w-3 h-3" /> Acessar anexo
+                          </a>
                         )}
-                      >
-                        {nl.status === 'sent' && <CheckCircle2 className="w-3 h-3 mr-1" />}
-                        {nl.status === 'sent'
-                          ? 'Enviado'
-                          : nl.status === 'draft'
-                            ? 'Rascunho'
-                            : 'Processando'}
-                      </Badge>
-                    </TableCell>
-                  </TableRow>
-                ))
+                      </TableCell>
+                      <TableCell className="text-center">
+                        {nl.status === 'sent' ? (
+                          <div className="flex items-center justify-center gap-3">
+                            <div className="flex items-center gap-1 text-green-500 text-xs font-semibold bg-green-500/10 px-2 py-0.5 rounded">
+                              <ThumbsUp className="w-3 h-3" /> {stats.likes}
+                            </div>
+                            <div className="flex items-center gap-1 text-red-500 text-xs font-semibold bg-red-500/10 px-2 py-0.5 rounded">
+                              <ThumbsDown className="w-3 h-3" /> {stats.dislikes}
+                            </div>
+                          </div>
+                        ) : (
+                          <span className="text-xs text-muted-foreground">-</span>
+                        )}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <Badge
+                          variant="outline"
+                          className={cn(
+                            'font-medium',
+                            nl.status === 'sent'
+                              ? 'bg-green-500/10 text-green-500 border-green-500/20'
+                              : nl.status === 'draft'
+                                ? 'bg-secondary text-muted-foreground border-border'
+                                : 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20',
+                          )}
+                        >
+                          {nl.status === 'sent' && <CheckCircle2 className="w-3 h-3 mr-1" />}
+                          {nl.status === 'sent'
+                            ? 'Enviado'
+                            : nl.status === 'draft'
+                              ? 'Rascunho'
+                              : 'Processando'}
+                        </Badge>
+                      </TableCell>
+                    </TableRow>
+                  )
+                })
               )}
             </TableBody>
           </Table>

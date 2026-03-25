@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 import {
   Table,
   TableBody,
@@ -11,25 +12,48 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { supabase } from '@/lib/supabase/client'
-import { TrendingUp, Users, UserCheck, MousePointerClick, Trophy } from 'lucide-react'
+import {
+  TrendingUp,
+  Users,
+  UserCheck,
+  MousePointerClick,
+  Trophy,
+  Send,
+  Loader2,
+} from 'lucide-react'
 import { Skeleton } from '@/components/ui/skeleton'
+import { toast } from 'sonner'
 
 export function GrowthDashboardTab() {
   const [metrics, setMetrics] = useState<any>(null)
   const [loading, setLoading] = useState(true)
+  const [isProcessingReminders, setIsProcessingReminders] = useState(false)
+
+  const fetchMetrics = async () => {
+    setLoading(true)
+    const { data, error } = await supabase.rpc('get_growth_metrics')
+    if (!error && data) {
+      setMetrics(data)
+    }
+    setLoading(false)
+  }
 
   useEffect(() => {
-    const fetchMetrics = async () => {
-      setLoading(true)
-      const { data, error } = await supabase.rpc('get_growth_metrics')
-      if (!error && data) {
-        setMetrics(data)
-      }
-      setLoading(false)
-    }
-
     fetchMetrics()
   }, [])
+
+  const processReminders = async () => {
+    setIsProcessingReminders(true)
+    try {
+      const res = await supabase.functions.invoke('process-invitation-reminders')
+      if (res.error) throw res.error
+      toast.success(`Foram enviados lembretes para ${res.data?.processed || 0} convites pendentes.`)
+    } catch (e: any) {
+      toast.error('Erro ao processar lembretes: ' + e.message)
+    } finally {
+      setIsProcessingReminders(false)
+    }
+  }
 
   if (loading) {
     return (
@@ -53,14 +77,33 @@ export function GrowthDashboardTab() {
     top_referrers = [],
   } = metrics || {}
 
-  // Calcula % entre as etapas para o visual do funil
   const clickToSignupRate = total_clicks > 0 ? Math.round((total_signups / total_clicks) * 100) : 0
   const signupToActiveRate =
     total_signups > 0 ? Math.round((total_active / total_signups) * 100) : 0
 
   return (
     <div className="space-y-8 animate-fade-in-up">
-      {/* KPIs Cards */}
+      <div className="flex justify-between items-center bg-secondary/30 p-4 rounded-xl border border-border">
+        <div>
+          <h3 className="text-white font-medium">Lembretes de Indicação</h3>
+          <p className="text-sm text-muted-foreground">
+            Dispare lembretes para corretores convidados que ainda não se cadastraram na rede.
+          </p>
+        </div>
+        <Button
+          onClick={processReminders}
+          disabled={isProcessingReminders}
+          className="gold-gradient text-black font-bold"
+        >
+          {isProcessingReminders ? (
+            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+          ) : (
+            <Send className="w-4 h-4 mr-2" />
+          )}
+          Processar Lembretes
+        </Button>
+      </div>
+
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card className="bg-card border-border">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
@@ -116,7 +159,6 @@ export function GrowthDashboardTab() {
         </Card>
       </div>
 
-      {/* Visão de Funil Visual */}
       <Card className="bg-card border-border">
         <CardHeader>
           <CardTitle className="text-lg text-white">Funil de Crescimento</CardTitle>
@@ -165,7 +207,6 @@ export function GrowthDashboardTab() {
         </CardContent>
       </Card>
 
-      {/* Ranking de Embaixadores */}
       <Card className="bg-card border-border">
         <CardHeader>
           <CardTitle className="text-lg text-white flex items-center gap-2">

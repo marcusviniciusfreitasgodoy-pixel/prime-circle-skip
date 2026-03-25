@@ -26,6 +26,7 @@ import NeedsListPage from './pages/NeedsListPage'
 import ListingsListPage from './pages/ListingsListPage'
 import MatchesListPage from './pages/MatchesListPage'
 import GuidePage from './pages/GuidePage'
+import NewsletterFeedbackPage from './pages/NewsletterFeedbackPage'
 import { Toaster } from '@/components/ui/toaster'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import { ProtectedRoute } from '@/components/ProtectedRoute'
@@ -58,6 +59,7 @@ function App() {
               <Route path="/politica-de-privacidade" element={<PrivacyPage />} />
               <Route path="/sugestoes" element={<PublicSuggestionsPage />} />
               <Route path="/quick-update" element={<QuickUpdatePage />} />
+              <Route path="/newsletter-feedback" element={<NewsletterFeedbackPage />} />
 
               <Route element={<ProtectedRoute />}>
                 <Route path="/pending" element={<PendingPage />} />
