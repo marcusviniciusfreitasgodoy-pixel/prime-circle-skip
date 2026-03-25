@@ -11,6 +11,7 @@ import { DashboardGuideCard } from '@/components/dashboard/DashboardGuideCard'
 import { PortfolioTabs } from '@/components/dashboard/PortfolioTabs'
 import { AddPropertyDialog } from '@/components/dashboard/AddPropertyDialog'
 import { OpportunityRadar } from '@/components/dashboard/OpportunityRadar'
+import { MarketIntelligenceWidget } from '@/components/dashboard/MarketIntelligenceWidget'
 import { PendingValidations } from '@/components/dashboard/PendingValidations'
 import { ReputationRanking } from '@/components/dashboard/ReputationRanking'
 import { ReferralTracker } from '@/components/dashboard/ReferralTracker'
@@ -354,6 +355,8 @@ export default function DashboardPage() {
         onAddNeed={triggerRefresh}
         reputationScore={profileScore}
       />
+
+      <MarketIntelligenceWidget />
 
       <div className="grid gap-6 md:grid-cols-3 pt-6 border-t border-border/50">
         <div className="md:col-span-2 space-y-6">
