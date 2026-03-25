@@ -16,7 +16,6 @@ import { PendingValidations } from '@/components/dashboard/PendingValidations'
 import { ReputationRanking } from '@/components/dashboard/ReputationRanking'
 import { ReferralTracker } from '@/components/dashboard/ReferralTracker'
 import { DeliveryStatusWidget } from '@/components/dashboard/DeliveryStatusWidget'
-import { PwaInstallPrompt } from '@/components/dashboard/PwaInstallPrompt'
 import { MatchesChartWidget } from '@/components/dashboard/MatchesChartWidget'
 import { DashboardReferral } from '@/components/dashboard/DashboardReferral'
 import { DashboardCollaboration } from '@/components/dashboard/DashboardCollaboration'
@@ -231,7 +230,6 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-8 animate-fade-in-up">
-      <PwaInstallPrompt />
       <FounderExpiryBanner />
       <DashboardGuideCard />
 

@@ -18,6 +18,7 @@ import {
   AccordionTrigger,
   AccordionContent,
 } from '@/components/ui/accordion'
+import { PwaInstallPrompt } from '@/components/dashboard/PwaInstallPrompt'
 
 export default function GuidePage() {
   useSEO({
@@ -47,6 +48,8 @@ export default function GuidePage() {
           melhores parcerias.
         </p>
       </div>
+
+      <PwaInstallPrompt />
 
       <div className="space-y-6">
         <Card className="bg-card border-border shadow-sm">
