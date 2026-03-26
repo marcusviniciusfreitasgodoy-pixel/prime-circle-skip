@@ -178,6 +178,31 @@ export default function ApplyPage() {
     setIsLoading(true)
 
     try {
+      let finalReferrerId = referrerId
+
+      // Validate typed referral if different from automatically captured refCode
+      if (values.referral && values.referral !== refCode) {
+        try {
+          let query = supabase.from('profiles').select('id')
+          const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+            values.referral,
+          )
+          if (isUuid) {
+            query = query.or(`id.eq.${values.referral},referral_code.eq.${values.referral}`)
+          } else {
+            query = query.eq('referral_code', values.referral)
+          }
+          const { data: profiles } = await query.limit(1)
+          if (profiles && profiles.length > 0) {
+            finalReferrerId = profiles[0].id
+          } else {
+            finalReferrerId = null
+          }
+        } catch (e) {
+          console.error('Error resolving typed referral code:', e)
+        }
+      }
+
       const { data, error } = await signUp(values.email, values.password, {
         full_name: values.name,
         whatsapp_number: values.phone,
@@ -190,7 +215,7 @@ export default function ApplyPage() {
             ? 'Autônomo'
             : values.companyName || 'Imobiliária (Não informada)',
         accepted_terms: values.agreement,
-        referred_by_id: referrerId,
+        referred_by_id: finalReferrerId,
       })
 
       if (error) {
