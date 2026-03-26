@@ -11,6 +11,8 @@ export function ProtectedRoute() {
   const location = useLocation()
 
   const [acceptedTerms, setAcceptedTerms] = useState<boolean | null>(null)
+  const [userRole, setUserRole] = useState<string | null>(null)
+  const [userStatus, setUserStatus] = useState<string | null>(null)
   const [loadingProfile, setLoadingProfile] = useState(true)
 
   useEffect(() => {
@@ -28,7 +30,7 @@ export function ProtectedRoute() {
         try {
           const { data, error } = await supabase
             .from('profiles')
-            .select('accepted_terms')
+            .select('accepted_terms, role, status')
             .eq('id', authUser.id)
             .single()
 
@@ -48,6 +50,8 @@ export function ProtectedRoute() {
             }
           } else if (mounted && data) {
             setAcceptedTerms(data.accepted_terms ?? false)
+            setUserRole(data.role ?? 'user')
+            setUserStatus(data.status ?? 'pending_validation')
             setLoadingProfile(false)
           }
         } catch (error) {
@@ -83,8 +87,18 @@ export function ProtectedRoute() {
     return <Navigate to="/login" replace state={{ from: location }} />
   }
 
-  const isPending = mockUser?.status === 'pending'
-  const isAdmin = mockUser?.status === 'admin'
+  const isPending = userStatus === 'pending_validation' || mockUser?.status === 'pending'
+  const isRealAdmin =
+    userRole === 'admin' ||
+    authUser?.email === 'marcusviniciusfreitasgodoy@gmail.com' ||
+    authUser?.email === 'marcus@godoyprime.com.br'
+  const isMockAdmin = mockUser?.status === 'admin'
+  const isAdmin = isRealAdmin || isMockAdmin
+
+  // Protect Admin Route: Block non-admins from manually accessing /admin
+  if (location.pathname.startsWith('/admin') && !isAdmin) {
+    return <Navigate to="/dashboard" replace />
+  }
 
   // Ensure state synchronization via local storage override to prevent flashes
   const localAccepted = authUser
@@ -95,14 +109,7 @@ export function ProtectedRoute() {
       ? acceptedTerms || localAccepted || mockUser?.onboarded
       : mockUser?.onboarded || localAccepted
 
-  if (isAdmin) {
-    if (!location.pathname.startsWith('/admin') && location.pathname !== '/dashboard') {
-      return <Navigate to="/admin" replace />
-    }
-    return <Outlet />
-  }
-
-  if (isPending) {
+  if (isPending && !isAdmin) {
     if (location.pathname !== '/pending') {
       return <Navigate to="/pending" replace />
     }

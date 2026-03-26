@@ -231,18 +231,14 @@ function AppLayoutInner() {
     { title: 'Ativos da Marca', icon: Palette, url: '/brand' },
   ]
 
-  const isAdminRole =
-    storeUser?.status === 'admin' || authUser?.email?.includes('admin') || userRole === 'admin'
-  const isMarcusOnly =
+  const isSuperUser =
+    userRole === 'admin' ||
     authUser?.email === 'marcusviniciusfreitasgodoy@gmail.com' ||
     authUser?.email === 'marcus@godoyprime.com.br' ||
-    storeUser?.id === 'admin-1'
+    storeUser?.status === 'admin'
 
-  if (isAdminRole || isMarcusOnly) {
+  if (isSuperUser) {
     navItems.push({ title: 'Comunicações', icon: MessageSquare, url: '/notifications' })
-  }
-
-  if (isMarcusOnly) {
     navItems.push({ title: 'Admin', icon: Settings, url: '/admin' })
   }
 
