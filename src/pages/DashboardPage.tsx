@@ -5,6 +5,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { AmbassadorWidget } from '@/components/AmbassadorWidget'
 import { FounderExpiryBanner } from '@/components/FounderExpiryBanner'
 import { DashboardGuideCard } from '@/components/dashboard/DashboardGuideCard'
@@ -29,6 +30,9 @@ import {
   ChevronRight,
   ShieldCheck,
   BellRing,
+  Building,
+  Target,
+  TrendingUp,
 } from 'lucide-react'
 import useAppStore from '@/stores/main'
 import type { Tier, Plan } from '@/stores/main'
@@ -84,7 +88,6 @@ export default function DashboardPage() {
         if (!error && data) {
           setProfileName(data.full_name || authUser.email || 'Usuário')
 
-          // Improved fallback for avatar
           const avatar =
             data.avatar_url ||
             authUser.user_metadata?.avatar_url ||
@@ -196,7 +199,7 @@ export default function DashboardPage() {
     {
       title: 'Meus Imóveis Ativos',
       value: myListings.toString(),
-      icon: Home,
+      icon: Building,
       trend: `Plano: ${formatPlanName(profilePlan)}`,
     },
     {
@@ -229,7 +232,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="space-y-8 animate-fade-in-up">
+    <div className="space-y-6 animate-fade-in-up pb-12">
       <FounderExpiryBanner />
       <DashboardGuideCard />
 
@@ -244,9 +247,8 @@ export default function DashboardPage() {
         </Alert>
       )}
 
-      <PendingValidations />
-
-      <div className="flex flex-col md:flex-row gap-6 md:items-center justify-between">
+      {/* Header Info */}
+      <div className="flex flex-col md:flex-row gap-6 md:items-center justify-between mb-4">
         <div className="flex items-center gap-4">
           <Avatar className="w-14 h-14 sm:w-16 sm:h-16 border-2 border-primary/50 shadow-md">
             {profileAvatar && <AvatarImage src={profileAvatar} />}
@@ -292,80 +294,54 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-3">
-        <div className="md:col-span-2">
-          <PortfolioTabs refreshKey={refreshKey} />
-        </div>
-        <div className="md:col-span-1 flex flex-col gap-6">
-          <Card className="bg-card border-border">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-lg text-white flex items-center gap-2">
-                <BellRing className="w-5 h-5 text-primary" /> Meus Alertas
-              </CardTitle>
-              <CardDescription>Avisos enviados via WhatsApp</CardDescription>
-            </CardHeader>
-            <CardContent>
-              {recentMatchAlerts.length > 0 ? (
-                <div className="space-y-4">
-                  {recentMatchAlerts.map((alert) => {
-                    const matchText = alert.message_body.match(
-                      /match perfeito para sua demanda: (.*?)\. Confira/,
-                    )
-                    const excerpt = matchText ? matchText[1] : 'Nova oportunidade identificada!'
+      <Tabs defaultValue="inicio" className="w-full space-y-6">
+        <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 h-auto p-1.5 bg-card border border-border shadow-sm rounded-lg gap-1.5">
+          <TabsTrigger
+            value="inicio"
+            className="data-[state=active]:bg-primary/15 data-[state=active]:text-primary py-2.5 rounded-md text-xs sm:text-sm flex flex-col sm:flex-row items-center justify-center gap-1.5 transition-all"
+          >
+            <Home className="w-4 h-4" />
+            <span>Início</span>
+          </TabsTrigger>
+          <TabsTrigger
+            value="portfolio"
+            className="data-[state=active]:bg-primary/15 data-[state=active]:text-primary py-2.5 rounded-md text-xs sm:text-sm flex flex-col sm:flex-row items-center justify-center gap-1.5 transition-all"
+          >
+            <Building className="w-4 h-4" />
+            <span>Meu Portfólio</span>
+          </TabsTrigger>
+          <TabsTrigger
+            value="mercado"
+            className="data-[state=active]:bg-primary/15 data-[state=active]:text-primary py-2.5 rounded-md text-xs sm:text-sm flex flex-col sm:flex-row items-center justify-center gap-1.5 transition-all"
+          >
+            <Target className="w-4 h-4" />
+            <span>Mercado</span>
+          </TabsTrigger>
+          <TabsTrigger
+            value="crescimento"
+            className="data-[state=active]:bg-primary/15 data-[state=active]:text-primary py-2.5 rounded-md text-xs sm:text-sm flex flex-col sm:flex-row items-center justify-center gap-1.5 transition-all"
+          >
+            <TrendingUp className="w-4 h-4" />
+            <span className="hidden sm:inline">Rede & Crescimento</span>
+            <span className="sm:hidden">Rede</span>
+          </TabsTrigger>
+        </TabsList>
 
-                    return (
-                      <div
-                        key={alert.id}
-                        className="p-3 bg-secondary/30 rounded-lg border border-border/50 border-l-2 border-l-primary flex flex-col gap-1"
-                      >
-                        <span className="text-sm font-medium text-white line-clamp-2">
-                          {excerpt}
-                        </span>
-                        <span className="text-xs text-muted-foreground">
-                          {new Date(alert.created_at).toLocaleDateString('pt-BR', {
-                            day: '2-digit',
-                            month: 'short',
-                            hour: '2-digit',
-                            minute: '2-digit',
-                          })}
-                        </span>
-                      </div>
-                    )
-                  })}
-                </div>
-              ) : (
-                <div className="flex flex-col items-center justify-center py-8 text-center px-4">
-                  <div className="w-12 h-12 bg-secondary/50 rounded-full flex items-center justify-center mb-3">
-                    <Search className="w-6 h-6 text-muted-foreground" />
-                  </div>
-                  <p className="text-sm text-muted-foreground">
-                    Nenhum alerta recente. Cadastre novas Demandas para ser notificado.
-                  </p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-          <DeliveryStatusWidget />
-        </div>
-      </div>
+        {/* TAB 1: INÍCIO */}
+        <TabsContent
+          value="inicio"
+          className="space-y-6 outline-none animate-in fade-in-50 duration-500"
+        >
+          <PendingValidations />
 
-      <OpportunityRadar
-        refreshKey={refreshKey}
-        onAddNeed={triggerRefresh}
-        reputationScore={profileScore}
-      />
-
-      <MarketIntelligenceWidget />
-
-      <div className="grid gap-6 md:grid-cols-3 pt-6 border-t border-border/50">
-        <div className="md:col-span-2 space-y-6">
-          <ReferralTracker userId={authUser?.id || ''} referralLink={referralLink} />
-
-          <div className="grid gap-4 sm:grid-cols-2 mt-6">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {stats.map((stat, i) => (
-              <Card key={i} className="bg-card border-border">
+              <Card
+                key={i}
+                className="bg-card border-border shadow-sm hover:border-primary/50 transition-colors group"
+              >
                 <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-                  <CardTitle className="text-sm font-medium text-muted-foreground">
+                  <CardTitle className="text-sm font-medium text-muted-foreground group-hover:text-white transition-colors">
                     {stat.title}
                   </CardTitle>
                   <stat.icon className="w-4 h-4 text-primary" />
@@ -378,93 +354,191 @@ export default function DashboardPage() {
             ))}
           </div>
 
-          <div className="mt-6">
-            <MatchesChartWidget />
-          </div>
-        </div>
+          <div className="grid gap-6 md:grid-cols-3">
+            <div className="md:col-span-2 space-y-6">
+              <Card className="bg-card border-border shadow-sm">
+                <CardHeader>
+                  <CardTitle className="text-lg text-white">
+                    Funil de Negócios de Conexões
+                  </CardTitle>
+                  <CardDescription>
+                    Fluxo de validação obrigatório até o fechamento.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-6">
+                    {matches.map((match) => {
+                      const need = needs.find((n) => n.id === match.needId)
+                      const listing = listings.find((l) => l.id === match.listingId)
+                      const currentIdx = MATCH_STAGES.indexOf(match.status as any)
 
-        <div className="md:col-span-1 space-y-6">
-          <AmbassadorWidget tier={userTier} referrals={referralsCount} />
-          <ReputationRanking />
-        </div>
-      </div>
+                      return (
+                        <div
+                          key={match.id}
+                          className="p-4 bg-background rounded-lg border border-border"
+                        >
+                          <div className="flex justify-between items-start mb-6 flex-col sm:flex-row gap-3 sm:gap-0">
+                            <div>
+                              <p className="text-white font-medium text-sm sm:text-base">
+                                {need?.title}{' '}
+                                <span className="text-muted-foreground mx-1 sm:mx-2">↔</span>{' '}
+                                {listing?.title}
+                              </p>
+                              <p className="text-xs text-muted-foreground mt-1">
+                                Conexão ID: {match.id}
+                              </p>
+                            </div>
+                            {match.status !== 'Fechado' ? (
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                className="border-primary/50 text-primary hover:bg-primary/10 w-full sm:w-auto"
+                                onClick={() => advanceMatch(match.id, match.status)}
+                              >
+                                {match.status === 'Proposta'
+                                  ? 'Registrar Fechamento'
+                                  : 'Avançar Status'}{' '}
+                                <ChevronRight className="w-4 h-4 ml-1" />
+                              </Button>
+                            ) : (
+                              <Badge className="bg-green-500/20 text-green-500 border-none hover:bg-green-500/30 self-start sm:self-auto">
+                                Fechamento Validado
+                              </Badge>
+                            )}
+                          </div>
+                          <div className="flex items-center w-full justify-between mt-6 relative overflow-x-auto pb-8 sm:overflow-visible sm:pb-0 scrollbar-hide">
+                            <div className="absolute top-1/2 left-0 w-full h-0.5 bg-secondary -translate-y-1/2 z-0 min-w-[300px]" />
+                            <div
+                              className="absolute top-1/2 left-0 h-0.5 bg-primary -translate-y-1/2 z-0 transition-all duration-500 min-w-[300px]"
+                              style={{
+                                width: `${(currentIdx / (MATCH_STAGES.length - 1)) * 100}%`,
+                              }}
+                            />
 
-      <Card className="bg-card border-border">
-        <CardHeader>
-          <CardTitle className="text-lg text-white">Funil de Negócios de Conexões</CardTitle>
-          <CardDescription>Fluxo de validação obrigatório até o fechamento.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-6">
-            {matches.map((match) => {
-              const need = needs.find((n) => n.id === match.needId)
-              const listing = listings.find((l) => l.id === match.listingId)
-              const currentIdx = MATCH_STAGES.indexOf(match.status as any)
-
-              return (
-                <div key={match.id} className="p-4 bg-background rounded-lg border border-border">
-                  <div className="flex justify-between items-start mb-6 flex-col sm:flex-row gap-3 sm:gap-0">
-                    <div>
-                      <p className="text-white font-medium text-sm sm:text-base">
-                        {need?.title} <span className="text-muted-foreground mx-1 sm:mx-2">↔</span>{' '}
-                        {listing?.title}
+                            {MATCH_STAGES.map((stage, i) => (
+                              <div
+                                key={stage}
+                                className="relative z-10 flex flex-col items-center gap-2 min-w-[60px]"
+                              >
+                                <div
+                                  className={`w-4 h-4 rounded-full border-2 transition-colors ${i <= currentIdx ? 'bg-primary border-primary' : 'bg-background border-border'} ${i === currentIdx ? 'shadow-[0_0_10px_rgba(201,168,76,0.5)] scale-125' : ''}`}
+                                />
+                                <span
+                                  className={`text-[9px] sm:text-[10px] uppercase font-bold tracking-wider absolute top-6 whitespace-nowrap ${i <= currentIdx ? 'text-white' : 'text-muted-foreground'}`}
+                                >
+                                  {stage}
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+                          <div className="h-2 sm:h-6" />
+                        </div>
+                      )
+                    })}
+                    {matches.length === 0 && (
+                      <p className="text-sm text-muted-foreground text-center py-8">
+                        Nenhuma conexão ativa no momento.
                       </p>
-                      <p className="text-xs text-muted-foreground mt-1">Conexão ID: {match.id}</p>
-                    </div>
-                    {match.status !== 'Fechado' ? (
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="border-primary/50 text-primary hover:bg-primary/10 w-full sm:w-auto"
-                        onClick={() => advanceMatch(match.id, match.status)}
-                      >
-                        {match.status === 'Proposta' ? 'Registrar Fechamento' : 'Avançar Status'}{' '}
-                        <ChevronRight className="w-4 h-4 ml-1" />
-                      </Button>
-                    ) : (
-                      <Badge className="bg-green-500/20 text-green-500 border-none hover:bg-green-500/30 self-start sm:self-auto">
-                        Fechamento Validado
-                      </Badge>
                     )}
                   </div>
-                  <div className="flex items-center w-full justify-between mt-6 relative overflow-x-auto pb-8 sm:overflow-visible sm:pb-0 scrollbar-hide">
-                    <div className="absolute top-1/2 left-0 w-full h-0.5 bg-secondary -translate-y-1/2 z-0 min-w-[300px]" />
-                    <div
-                      className="absolute top-1/2 left-0 h-0.5 bg-primary -translate-y-1/2 z-0 transition-all duration-500 min-w-[300px]"
-                      style={{ width: `${(currentIdx / (MATCH_STAGES.length - 1)) * 100}%` }}
-                    />
+                </CardContent>
+              </Card>
 
-                    {MATCH_STAGES.map((stage, i) => (
-                      <div
-                        key={stage}
-                        className="relative z-10 flex flex-col items-center gap-2 min-w-[60px]"
-                      >
-                        <div
-                          className={`w-4 h-4 rounded-full border-2 transition-colors ${i <= currentIdx ? 'bg-primary border-primary' : 'bg-background border-border'} ${i === currentIdx ? 'shadow-[0_0_10px_rgba(201,168,76,0.5)] scale-125' : ''}`}
-                        />
-                        <span
-                          className={`text-[9px] sm:text-[10px] uppercase font-bold tracking-wider absolute top-6 whitespace-nowrap ${i <= currentIdx ? 'text-white' : 'text-muted-foreground'}`}
-                        >
-                          {stage}
-                        </span>
+              <MatchesChartWidget />
+            </div>
+            <div className="md:col-span-1 space-y-6">
+              <Card className="bg-card border-border shadow-sm">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-lg text-white flex items-center gap-2">
+                    <BellRing className="w-5 h-5 text-primary" /> Meus Alertas
+                  </CardTitle>
+                  <CardDescription>Avisos enviados via WhatsApp</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {recentMatchAlerts.length > 0 ? (
+                    <div className="space-y-4">
+                      {recentMatchAlerts.map((alert) => {
+                        const matchText = alert.message_body.match(
+                          /match perfeito para sua demanda: (.*?)\. Confira/,
+                        )
+                        const excerpt = matchText ? matchText[1] : 'Nova oportunidade identificada!'
+
+                        return (
+                          <div
+                            key={alert.id}
+                            className="p-3 bg-secondary/30 rounded-lg border border-border/50 border-l-2 border-l-primary flex flex-col gap-1 hover:bg-secondary/50 transition-colors"
+                          >
+                            <span className="text-sm font-medium text-white line-clamp-2">
+                              {excerpt}
+                            </span>
+                            <span className="text-xs text-muted-foreground">
+                              {new Date(alert.created_at).toLocaleDateString('pt-BR', {
+                                day: '2-digit',
+                                month: 'short',
+                                hour: '2-digit',
+                                minute: '2-digit',
+                              })}
+                            </span>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  ) : (
+                    <div className="flex flex-col items-center justify-center py-8 text-center px-4">
+                      <div className="w-12 h-12 bg-secondary/50 rounded-full flex items-center justify-center mb-3">
+                        <Search className="w-6 h-6 text-muted-foreground" />
                       </div>
-                    ))}
-                  </div>
-                  <div className="h-2 sm:h-6" />
-                </div>
-              )
-            })}
-            {matches.length === 0 && (
-              <p className="text-sm text-muted-foreground text-center py-4">
-                Nenhuma conexão ativa no momento.
-              </p>
-            )}
+                      <p className="text-sm text-muted-foreground">
+                        Nenhum alerta recente. Cadastre novas Demandas para ser notificado.
+                      </p>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
           </div>
-        </CardContent>
-      </Card>
+        </TabsContent>
 
-      <DashboardReferral />
-      <DashboardCollaboration />
+        {/* TAB 2: MEU PORTFÓLIO */}
+        <TabsContent
+          value="portfolio"
+          className="space-y-6 outline-none animate-in fade-in-50 duration-500 pt-2"
+        >
+          <PortfolioTabs refreshKey={refreshKey} />
+        </TabsContent>
+
+        {/* TAB 3: MERCADO */}
+        <TabsContent
+          value="mercado"
+          className="space-y-6 outline-none animate-in fade-in-50 duration-500 pt-2"
+        >
+          <OpportunityRadar
+            refreshKey={refreshKey}
+            onAddNeed={triggerRefresh}
+            reputationScore={profileScore}
+          />
+          <MarketIntelligenceWidget />
+        </TabsContent>
+
+        {/* TAB 4: REDE & CRESCIMENTO */}
+        <TabsContent
+          value="crescimento"
+          className="space-y-6 outline-none animate-in fade-in-50 duration-500 pt-2"
+        >
+          <div className="grid gap-6 md:grid-cols-3">
+            <div className="md:col-span-2 space-y-6">
+              <ReferralTracker userId={authUser?.id || ''} referralLink={referralLink} />
+              <DashboardReferral />
+            </div>
+            <div className="md:col-span-1 space-y-6">
+              <AmbassadorWidget tier={userTier} referrals={referralsCount} />
+              <ReputationRanking />
+              <DeliveryStatusWidget />
+            </div>
+          </div>
+          <DashboardCollaboration />
+        </TabsContent>
+      </Tabs>
     </div>
   )
 }
