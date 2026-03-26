@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
@@ -40,13 +40,14 @@ import { useToast } from '@/hooks/use-toast'
 import { useAuth } from '@/hooks/use-auth'
 import { useSEO } from '@/hooks/use-seo'
 import { supabase } from '@/lib/supabase/client'
+import { cn } from '@/lib/utils'
 
 export default function DashboardPage() {
   useSEO({
     title: 'Painel de Controle | Prime Circle',
   })
 
-  const { user, listings, needs, matches, updateMatchStatus, updateUser } = useAppStore()
+  const { user, updateUser } = useAppStore()
   const { user: authUser } = useAuth()
   const { toast } = useToast()
   const navigate = useNavigate()
@@ -63,7 +64,17 @@ export default function DashboardPage() {
   const [referralsCount, setReferralsCount] = useState<number>(0)
   const [userTier, setUserTier] = useState<Tier>('None')
 
-  const triggerRefresh = () => setRefreshKey((prev) => prev + 1)
+  // New states for real data from Supabase
+  const [dashboardStats, setDashboardStats] = useState({
+    myProperties: 0,
+    networkDemands: 0,
+    activeConnections: 0,
+    closedDeals: 0,
+  })
+  const [activePartnerships, setActivePartnerships] = useState<any[]>([])
+  const [isLoadingStats, setIsLoadingStats] = useState(true)
+
+  const triggerRefresh = useCallback(() => setRefreshKey((prev) => prev + 1), [])
 
   useEffect(() => {
     let mounted = true
@@ -168,17 +179,74 @@ export default function DashboardPage() {
       }
     }
 
+    const fetchDashboardStats = async () => {
+      if (!authUser) return
+      setIsLoadingStats(true)
+
+      try {
+        // 1. My Properties (All active offers for this user)
+        const { count: myPropsCount } = await supabase
+          .from('documents')
+          .select('*', { count: 'exact', head: true })
+          .contains('metadata', { type: 'oferta', user_id: authUser.id })
+
+        // 2. Network Demands (Global demands, acting as fallback/full view)
+        const { count: demandsCount } = await supabase
+          .from('documents')
+          .select('*', { count: 'exact', head: true })
+          .contains('metadata', { type: 'demanda' })
+
+        // 3. Partnerships (Funnel connections and closed deals)
+        const { data: partnerships } = await supabase
+          .from('partnerships')
+          .select(
+            `
+            *,
+            property:documents!partnerships_property_id_fkey(metadata),
+            demand:documents!partnerships_demand_id_fkey(metadata)
+          `,
+          )
+          .or(`broker_property_id.eq.${authUser.id},broker_demand_id.eq.${authUser.id}`)
+          .order('last_interaction_at', { ascending: false })
+
+        let activeConn = 0
+        let closedD = 0
+        const activeList: any[] = []
+
+        if (partnerships) {
+          partnerships.forEach((p) => {
+            if (p.status === 'closed') {
+              closedD++
+            } else if (p.status !== 'cancelled' && p.status !== 'rejeitado') {
+              activeConn++
+              activeList.push(p)
+            }
+          })
+        }
+
+        if (mounted) {
+          setDashboardStats({
+            myProperties: myPropsCount || 0,
+            networkDemands: demandsCount || 0,
+            activeConnections: activeConn,
+            closedDeals: closedD,
+          })
+          setActivePartnerships(activeList)
+        }
+      } catch (err) {
+        console.warn('Error fetching dashboard real stats', err)
+      } finally {
+        if (mounted) setIsLoadingStats(false)
+      }
+    }
+
     fetchProfileData()
+    fetchDashboardStats()
 
     return () => {
       mounted = false
     }
-  }, [authUser])
-
-  const chapterListings = listings.filter((l) => l.chapter === user?.chapter)
-  const chapterNeeds = needs.filter((n) => n.chapter === user?.chapter)
-  const myListings = chapterListings.filter((l) => l.ownerId === user?.id).length
-  const activeMatches = matches.filter((m) => m.status !== 'Fechado')
+  }, [authUser, refreshKey, updateUser])
 
   const refCode = profileReferralCode || authUser?.id || user?.id || 'founder-123'
   const referralLink = `https://www.primecircle.app.br/?ref=${refCode}`
@@ -191,43 +259,76 @@ export default function DashboardPage() {
 
   const stats = [
     {
-      title: 'Demandas do Círculo',
-      value: chapterNeeds.length.toString(),
+      title: 'Demandas da Rede',
+      value: isLoadingStats ? '-' : dashboardStats.networkDemands.toString(),
       icon: Search,
-      trend: 'Acesso Isolado',
+      trend: 'Visão Global',
     },
     {
       title: 'Meus Imóveis Ativos',
-      value: myListings.toString(),
+      value: isLoadingStats ? '-' : dashboardStats.myProperties.toString(),
       icon: Building,
       trend: `Plano: ${formatPlanName(profilePlan)}`,
     },
     {
       title: 'Conexões Abertas',
-      value: activeMatches.length.toString(),
+      value: isLoadingStats ? '-' : dashboardStats.activeConnections.toString(),
       icon: GitMerge,
-      trend: 'Aguardando ação',
+      trend: 'No seu Funil',
     },
     {
       title: 'Fechamentos Validados',
-      value: matches.filter((m) => m.status === 'Fechado').length.toString(),
+      value: isLoadingStats ? '-' : dashboardStats.closedDeals.toString(),
       icon: Activity,
-      trend: 'Este mês',
+      trend: 'Confirmados',
     },
   ]
 
   const MATCH_STAGES = ['Novo', 'Contato', 'Visita', 'Proposta', 'Fechado'] as const
 
-  const advanceMatch = (id: string, currentStatus: string) => {
-    const idx = MATCH_STAGES.indexOf(currentStatus as any)
-    if (idx < MATCH_STAGES.length - 2) {
-      updateMatchStatus(id, MATCH_STAGES[idx + 1])
-      toast({
-        title: 'Status Atualizado',
-        description: `Conexão avançou para ${MATCH_STAGES[idx + 1]}`,
-      })
-    } else if (idx === MATCH_STAGES.length - 2) {
+  const getStageIndex = (status: string) => {
+    if (status === 'match') return 0
+    if (status === 'contact') return 1
+    if (status === 'visit') return 2
+    if (status === 'proposal' || status === 'aguardando_vgv') return 3
+    if (status === 'closed') return 4
+    return 0
+  }
+
+  const handleAdvanceMatch = async (id: string, currentStatus: string) => {
+    let nextStatus = ''
+    if (currentStatus === 'match') nextStatus = 'contact'
+    else if (currentStatus === 'contact') nextStatus = 'visit'
+    else if (currentStatus === 'visit') nextStatus = 'proposal'
+    else if (currentStatus === 'proposal' || currentStatus === 'aguardando_vgv') {
       navigate(`/matches/${id}/close`)
+      return
+    }
+
+    if (nextStatus) {
+      const { error } = await supabase
+        .from('partnerships')
+        .update({
+          status: nextStatus,
+          last_interaction_at: new Date().toISOString(),
+          last_updated_by: authUser?.id,
+        })
+        .eq('id', id)
+
+      if (!error) {
+        toast({
+          title: 'Status Atualizado',
+          description: `A negociação avançou de etapa com sucesso.`,
+          className: 'bg-card border-primary/50 text-white',
+        })
+        triggerRefresh()
+      } else {
+        toast({
+          title: 'Erro',
+          description: 'Não foi possível atualizar o status.',
+          variant: 'destructive',
+        })
+      }
     }
   }
 
@@ -347,8 +448,14 @@ export default function DashboardPage() {
                   <stat.icon className="w-4 h-4 text-primary" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold text-white">{stat.value}</div>
-                  <p className="text-xs text-muted-foreground mt-1">{stat.trend}</p>
+                  {isLoadingStats ? (
+                    <Skeleton className="h-8 w-16 bg-muted/20" />
+                  ) : (
+                    <>
+                      <div className="text-2xl font-bold text-white">{stat.value}</div>
+                      <p className="text-xs text-muted-foreground mt-1">{stat.trend}</p>
+                    </>
+                  )}
                 </CardContent>
               </Card>
             ))}
@@ -362,80 +469,107 @@ export default function DashboardPage() {
                     Funil de Negócios de Conexões
                   </CardTitle>
                   <CardDescription>
-                    Fluxo de validação obrigatório até o fechamento.
+                    Fluxo de validação obrigatório até o fechamento. Acompanhe suas parcerias
+                    ativas.
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-6">
-                    {matches.map((match) => {
-                      const need = needs.find((n) => n.id === match.needId)
-                      const listing = listings.find((l) => l.id === match.listingId)
-                      const currentIdx = MATCH_STAGES.indexOf(match.status as any)
+                    {isLoadingStats ? (
+                      <div className="space-y-4">
+                        {[1, 2].map((i) => (
+                          <Skeleton
+                            key={i}
+                            className="h-32 w-full bg-secondary/30 rounded-lg border border-border"
+                          />
+                        ))}
+                      </div>
+                    ) : activePartnerships.length > 0 ? (
+                      activePartnerships.map((match) => {
+                        const needTitle =
+                          match.demand?.metadata?.title ||
+                          match.demand?.metadata?.tipo_imovel ||
+                          'Demanda'
+                        const listingTitle =
+                          match.property?.metadata?.title ||
+                          match.property?.metadata?.tipo_imovel ||
+                          'Imóvel'
+                        const currentIdx = getStageIndex(match.status)
 
-                      return (
-                        <div
-                          key={match.id}
-                          className="p-4 bg-background rounded-lg border border-border"
-                        >
-                          <div className="flex justify-between items-start mb-6 flex-col sm:flex-row gap-3 sm:gap-0">
-                            <div>
-                              <p className="text-white font-medium text-sm sm:text-base">
-                                {need?.title}{' '}
-                                <span className="text-muted-foreground mx-1 sm:mx-2">↔</span>{' '}
-                                {listing?.title}
-                              </p>
-                              <p className="text-xs text-muted-foreground mt-1">
-                                Conexão ID: {match.id}
-                              </p>
-                            </div>
-                            {match.status !== 'Fechado' ? (
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                className="border-primary/50 text-primary hover:bg-primary/10 w-full sm:w-auto"
-                                onClick={() => advanceMatch(match.id, match.status)}
-                              >
-                                {match.status === 'Proposta'
-                                  ? 'Registrar Fechamento'
-                                  : 'Avançar Status'}{' '}
-                                <ChevronRight className="w-4 h-4 ml-1" />
-                              </Button>
-                            ) : (
-                              <Badge className="bg-green-500/20 text-green-500 border-none hover:bg-green-500/30 self-start sm:self-auto">
-                                Fechamento Validado
-                              </Badge>
-                            )}
-                          </div>
-                          <div className="flex items-center w-full justify-between mt-6 relative overflow-x-auto pb-8 sm:overflow-visible sm:pb-0 scrollbar-hide">
-                            <div className="absolute top-1/2 left-0 w-full h-0.5 bg-secondary -translate-y-1/2 z-0 min-w-[300px]" />
-                            <div
-                              className="absolute top-1/2 left-0 h-0.5 bg-primary -translate-y-1/2 z-0 transition-all duration-500 min-w-[300px]"
-                              style={{
-                                width: `${(currentIdx / (MATCH_STAGES.length - 1)) * 100}%`,
-                              }}
-                            />
-
-                            {MATCH_STAGES.map((stage, i) => (
-                              <div
-                                key={stage}
-                                className="relative z-10 flex flex-col items-center gap-2 min-w-[60px]"
-                              >
-                                <div
-                                  className={`w-4 h-4 rounded-full border-2 transition-colors ${i <= currentIdx ? 'bg-primary border-primary' : 'bg-background border-border'} ${i === currentIdx ? 'shadow-[0_0_10px_rgba(201,168,76,0.5)] scale-125' : ''}`}
-                                />
-                                <span
-                                  className={`text-[9px] sm:text-[10px] uppercase font-bold tracking-wider absolute top-6 whitespace-nowrap ${i <= currentIdx ? 'text-white' : 'text-muted-foreground'}`}
-                                >
-                                  {stage}
-                                </span>
+                        return (
+                          <div
+                            key={match.id}
+                            className="p-4 bg-background rounded-lg border border-border"
+                          >
+                            <div className="flex justify-between items-start mb-6 flex-col sm:flex-row gap-3 sm:gap-0">
+                              <div>
+                                <p className="text-white font-medium text-sm sm:text-base">
+                                  {needTitle}{' '}
+                                  <span className="text-muted-foreground mx-1 sm:mx-2">↔</span>{' '}
+                                  {listingTitle}
+                                </p>
+                                <p className="text-xs text-muted-foreground mt-1">
+                                  Ref: {match.id.substring(0, 8).toUpperCase()}
+                                </p>
                               </div>
-                            ))}
+                              {match.status !== 'closed' ? (
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  className="border-primary/50 text-primary hover:bg-primary/10 w-full sm:w-auto"
+                                  onClick={() => handleAdvanceMatch(match.id, match.status)}
+                                >
+                                  {match.status === 'proposal' || match.status === 'aguardando_vgv'
+                                    ? 'Registrar Fechamento'
+                                    : 'Avançar Status'}{' '}
+                                  <ChevronRight className="w-4 h-4 ml-1" />
+                                </Button>
+                              ) : (
+                                <Badge className="bg-green-500/20 text-green-500 border-none hover:bg-green-500/30 self-start sm:self-auto">
+                                  Fechamento Validado
+                                </Badge>
+                              )}
+                            </div>
+                            <div className="flex items-center w-full justify-between mt-6 relative overflow-x-auto pb-8 sm:overflow-visible sm:pb-0 scrollbar-hide">
+                              <div className="absolute top-1/2 left-0 w-full h-0.5 bg-secondary -translate-y-1/2 z-0 min-w-[300px]" />
+                              <div
+                                className="absolute top-1/2 left-0 h-0.5 bg-primary -translate-y-1/2 z-0 transition-all duration-500 min-w-[300px]"
+                                style={{
+                                  width: `${(currentIdx / (MATCH_STAGES.length - 1)) * 100}%`,
+                                }}
+                              />
+
+                              {MATCH_STAGES.map((stage, i) => (
+                                <div
+                                  key={stage}
+                                  className="relative z-10 flex flex-col items-center gap-2 min-w-[60px]"
+                                >
+                                  <div
+                                    className={cn(
+                                      'w-4 h-4 rounded-full border-2 transition-colors',
+                                      i <= currentIdx
+                                        ? 'bg-primary border-primary'
+                                        : 'bg-background border-border',
+                                      i === currentIdx &&
+                                        'shadow-[0_0_10px_rgba(201,168,76,0.5)] scale-125',
+                                    )}
+                                  />
+                                  <span
+                                    className={cn(
+                                      'text-[9px] sm:text-[10px] uppercase font-bold tracking-wider absolute top-6 whitespace-nowrap',
+                                      i <= currentIdx ? 'text-white' : 'text-muted-foreground',
+                                    )}
+                                  >
+                                    {stage}
+                                  </span>
+                                </div>
+                              ))}
+                            </div>
+                            <div className="h-2 sm:h-6" />
                           </div>
-                          <div className="h-2 sm:h-6" />
-                        </div>
-                      )
-                    })}
-                    {matches.length === 0 && (
+                        )
+                      })
+                    ) : (
                       <p className="text-sm text-muted-foreground text-center py-8">
                         Nenhuma conexão ativa no momento.
                       </p>
