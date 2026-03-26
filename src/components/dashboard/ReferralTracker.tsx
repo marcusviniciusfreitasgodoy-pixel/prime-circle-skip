@@ -134,7 +134,6 @@ export function ReferralTracker({
         if (mounted) {
           const rawCustomMsg = (profile as any)?.custom_referral_message
           if (rawCustomMsg) {
-            // Guarantee that the message displays the updated referral link pointing directly to the landing page
             const updatedMsg = rawCustomMsg.replace(
               /primecircle\.app\.br\/apply\?ref=/g,
               'primecircle.app.br/?ref=',
@@ -248,16 +247,16 @@ export function ReferralTracker({
         </CardHeader>
         <CardContent className="p-4 sm:p-6 pt-0 sm:pt-0 relative z-10 flex-1 flex flex-col">
           <Tabs defaultValue="message" className="w-full">
-            <TabsList className="grid w-full max-w-md grid-cols-2 bg-background border border-border h-12 mb-6">
+            <TabsList className="grid w-full grid-cols-1 sm:grid-cols-2 bg-transparent sm:bg-background border-0 sm:border sm:border-border h-auto sm:h-12 mb-6 gap-2 sm:gap-1 p-0 sm:p-1">
               <TabsTrigger
                 value="message"
-                className="data-[state=active]:bg-card rounded-sm h-10 text-xs sm:text-sm"
+                className="bg-background border border-border sm:border-0 data-[state=active]:border-primary/50 sm:data-[state=active]:border-0 h-10 text-xs sm:text-sm rounded-md sm:rounded-sm w-full data-[state=active]:bg-card"
               >
                 Mensagem Padrão
               </TabsTrigger>
               <TabsTrigger
                 value="system"
-                className="data-[state=active]:bg-card rounded-sm h-10 text-xs sm:text-sm"
+                className="bg-background border border-border sm:border-0 data-[state=active]:border-primary/50 sm:data-[state=active]:border-0 h-10 text-xs sm:text-sm rounded-md sm:rounded-sm w-full data-[state=active]:bg-card"
               >
                 Convite via Sistema
               </TabsTrigger>
@@ -274,13 +273,13 @@ export function ReferralTracker({
                   rows={8}
                   className="bg-background/80 border-primary/20 text-muted-foreground text-sm sm:text-base min-h-[200px] focus-visible:ring-primary leading-relaxed p-4 resize-y w-full flex-1"
                 />
-                <div className="flex flex-col xl:flex-row gap-3 w-full shrink-0">
+                <div className="flex flex-col sm:flex-row gap-3 w-full shrink-0">
                   <Button
                     onClick={handleSaveMessage}
                     disabled={!hasUnsavedChanges || isSaving}
                     variant="outline"
                     className={cn(
-                      'h-12 transition-colors text-sm sm:text-base font-medium w-full xl:flex-1',
+                      'h-12 transition-colors text-sm sm:text-base font-medium w-full sm:flex-1',
                       hasUnsavedChanges
                         ? 'border-green-500/50 text-green-500 bg-green-500/10 hover:bg-green-500/20'
                         : 'border-border text-muted-foreground',
@@ -292,13 +291,13 @@ export function ReferralTracker({
                   <Button
                     onClick={handleCopy}
                     variant="outline"
-                    className="border-primary/50 text-primary hover:bg-primary/10 h-12 text-sm sm:text-base font-medium w-full xl:flex-1"
+                    className="border-primary/50 text-primary hover:bg-primary/10 h-12 text-sm sm:text-base font-medium w-full sm:flex-1"
                   >
                     <Copy className="w-4 h-4 mr-2 shrink-0" /> Copiar Mensagem
                   </Button>
                   <Button
                     onClick={handleShare}
-                    className="gold-gradient text-black font-bold h-12 shadow-[0_0_15px_rgba(201,168,76,0.2)] text-sm sm:text-base w-full xl:flex-[1.5]"
+                    className="gold-gradient text-black font-bold h-12 shadow-[0_0_15px_rgba(201,168,76,0.2)] text-sm sm:text-base w-full sm:flex-[1.5]"
                   >
                     <Share2 className="w-5 h-5 mr-2 shrink-0" /> Enviar WhatsApp
                   </Button>
@@ -399,125 +398,206 @@ export function ReferralTracker({
         </CardHeader>
         <CardContent className="p-0 sm:p-6 sm:pt-0">
           <Tabs defaultValue="cadastros" className="w-full">
-            <TabsList className="bg-transparent border-b border-border w-full justify-start rounded-none p-0 h-auto gap-6 mb-4 px-4 sm:px-0">
-              <TabsTrigger
-                value="cadastros"
-                className="data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-primary border-b-2 border-transparent data-[state=active]:border-primary rounded-none px-0 pb-2"
-              >
-                Cadastrados ({myCircle.length})
-              </TabsTrigger>
-              <TabsTrigger
-                value="pendentes"
-                className="data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-primary border-b-2 border-transparent data-[state=active]:border-primary rounded-none px-0 pb-2"
-              >
-                Convites Pendentes ({invitations.filter((i) => i.status === 'pending').length})
-              </TabsTrigger>
-            </TabsList>
+            <div className="w-full overflow-x-auto scrollbar-hide border-b border-border mb-4">
+              <TabsList className="flex flex-nowrap bg-transparent w-full justify-start rounded-none p-0 h-auto gap-6 px-4 sm:px-0 min-w-max">
+                <TabsTrigger
+                  value="cadastros"
+                  className="data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-primary border-b-2 border-transparent data-[state=active]:border-primary rounded-none px-0 pb-3 whitespace-nowrap"
+                >
+                  Cadastrados ({myCircle.length})
+                </TabsTrigger>
+                <TabsTrigger
+                  value="pendentes"
+                  className="data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-primary border-b-2 border-transparent data-[state=active]:border-primary rounded-none px-0 pb-3 whitespace-nowrap"
+                >
+                  Convites Pendentes ({invitations.filter((i) => i.status === 'pending').length})
+                </TabsTrigger>
+              </TabsList>
+            </div>
 
             <TabsContent value="cadastros" className="m-0">
               {myCircle.length > 0 ? (
-                <div className="overflow-x-auto">
-                  <Table>
-                    <TableHeader>
-                      <TableRow className="border-border/50 hover:bg-transparent">
-                        <TableHead className="w-[50px] pl-4 sm:pl-2"></TableHead>
-                        <TableHead className="text-muted-foreground font-semibold min-w-[120px]">
-                          Nome
-                        </TableHead>
-                        <TableHead className="text-muted-foreground font-semibold">
-                          Status
-                        </TableHead>
-                        <TableHead className="text-muted-foreground font-semibold">
-                          Notificação
-                        </TableHead>
-                        <TableHead className="text-muted-foreground font-semibold text-right pr-4 sm:pr-2">
-                          Data
-                        </TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {myCircle.map((partner) => {
-                        const partnerName = partner.full_name || 'um novo corretor'
-                        const log = notificationLogs.find((l) =>
-                          l.message_body.includes(`*${partnerName}*`),
-                        )
+                <>
+                  <div className="hidden md:block overflow-x-auto px-4 sm:px-0">
+                    <Table>
+                      <TableHeader>
+                        <TableRow className="border-border/50 hover:bg-transparent">
+                          <TableHead className="w-[50px] pl-4 sm:pl-2"></TableHead>
+                          <TableHead className="text-muted-foreground font-semibold min-w-[120px]">
+                            Nome
+                          </TableHead>
+                          <TableHead className="text-muted-foreground font-semibold">
+                            Status
+                          </TableHead>
+                          <TableHead className="text-muted-foreground font-semibold">
+                            Notificação
+                          </TableHead>
+                          <TableHead className="text-muted-foreground font-semibold text-right pr-4 sm:pr-2">
+                            Data
+                          </TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {myCircle.map((partner) => {
+                          const partnerName = partner.full_name || 'um novo corretor'
+                          const log = notificationLogs.find((l) =>
+                            l.message_body.includes(`*${partnerName}*`),
+                          )
 
-                        return (
-                          <TableRow
-                            key={partner.id}
-                            className="border-border/50 hover:bg-secondary/30"
-                          >
-                            <TableCell className="pl-4 sm:pl-2">
-                              <Avatar className="w-8 h-8 border border-border bg-background">
+                          return (
+                            <TableRow
+                              key={partner.id}
+                              className="border-border/50 hover:bg-secondary/30"
+                            >
+                              <TableCell className="pl-4 sm:pl-2">
+                                <Avatar className="w-8 h-8 border border-border bg-background">
+                                  <AvatarImage src={partner.avatar_url} />
+                                  <AvatarFallback className="bg-secondary text-muted-foreground text-xs">
+                                    {partner.full_name?.substring(0, 2).toUpperCase() || 'US'}
+                                  </AvatarFallback>
+                                </Avatar>
+                              </TableCell>
+                              <TableCell className="font-medium text-white">
+                                {partner.full_name || 'Usuário'}
+                              </TableCell>
+                              <TableCell>
+                                <Badge
+                                  variant="outline"
+                                  className={cn(
+                                    partner.status === 'active'
+                                      ? 'bg-green-500/10 text-green-500 border-green-500/20'
+                                      : partner.status === 'pending_validation'
+                                        ? 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20'
+                                        : 'bg-secondary text-muted-foreground',
+                                  )}
+                                >
+                                  {partner.status === 'active'
+                                    ? 'Ativo'
+                                    : partner.status === 'pending_validation'
+                                      ? 'Pendente'
+                                      : partner.status}
+                                </Badge>
+                              </TableCell>
+                              <TableCell>
+                                {log ? (
+                                  <TooltipProvider>
+                                    <Tooltip>
+                                      <TooltipTrigger asChild>
+                                        <div className="flex items-center gap-1.5 cursor-help">
+                                          {log.status === 'success' ? (
+                                            <CheckCircle2 className="w-4 h-4 text-green-500" />
+                                          ) : (
+                                            <XCircle className="w-4 h-4 text-red-500" />
+                                          )}
+                                          <span className="text-xs text-muted-foreground">
+                                            {log.status === 'success' ? 'Enviada' : 'Falha'}
+                                          </span>
+                                        </div>
+                                      </TooltipTrigger>
+                                      <TooltipContent>
+                                        <p className="text-xs">
+                                          Notificação de indicação:{' '}
+                                          {new Date(log.created_at).toLocaleString('pt-BR')}
+                                        </p>
+                                      </TooltipContent>
+                                    </Tooltip>
+                                  </TooltipProvider>
+                                ) : (
+                                  <div className="flex items-center gap-1.5 text-muted-foreground/50">
+                                    <Clock className="w-4 h-4" />
+                                    <span className="text-xs">Aguardando</span>
+                                  </div>
+                                )}
+                              </TableCell>
+                              <TableCell className="text-muted-foreground text-sm text-right pr-4 sm:pr-2">
+                                {new Date(partner.created_at || Date.now()).toLocaleDateString(
+                                  'pt-BR',
+                                )}
+                              </TableCell>
+                            </TableRow>
+                          )
+                        })}
+                      </TableBody>
+                    </Table>
+                  </div>
+
+                  <div className="block md:hidden space-y-3 px-4 pt-1">
+                    {myCircle.map((partner) => {
+                      const partnerName = partner.full_name || 'um novo corretor'
+                      const log = notificationLogs.find((l) =>
+                        l.message_body.includes(`*${partnerName}*`),
+                      )
+
+                      return (
+                        <div
+                          key={partner.id}
+                          className="p-4 bg-secondary/20 rounded-xl border border-border/50 flex flex-col gap-3"
+                        >
+                          <div className="flex items-start justify-between gap-3">
+                            <div className="flex items-center gap-3 min-w-0">
+                              <Avatar className="w-10 h-10 border border-border shrink-0 bg-background">
                                 <AvatarImage src={partner.avatar_url} />
                                 <AvatarFallback className="bg-secondary text-muted-foreground text-xs">
                                   {partner.full_name?.substring(0, 2).toUpperCase() || 'US'}
                                 </AvatarFallback>
                               </Avatar>
-                            </TableCell>
-                            <TableCell className="font-medium text-white">
-                              {partner.full_name || 'Usuário'}
-                            </TableCell>
-                            <TableCell>
-                              <Badge
-                                variant="outline"
-                                className={cn(
-                                  partner.status === 'active'
-                                    ? 'bg-green-500/10 text-green-500 border-green-500/20'
-                                    : partner.status === 'pending_validation'
-                                      ? 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20'
-                                      : 'bg-secondary text-muted-foreground',
-                                )}
-                              >
-                                {partner.status === 'active'
-                                  ? 'Ativo'
+                              <div className="min-w-0 flex-1">
+                                <p className="font-semibold text-white text-sm truncate">
+                                  {partner.full_name || 'Usuário'}
+                                </p>
+                                <p className="text-xs text-muted-foreground mt-0.5">
+                                  {new Date(partner.created_at || Date.now()).toLocaleDateString(
+                                    'pt-BR',
+                                  )}
+                                </p>
+                              </div>
+                            </div>
+                            <Badge
+                              variant="outline"
+                              className={cn(
+                                'shrink-0 text-[10px] uppercase font-bold tracking-wider px-2 h-6',
+                                partner.status === 'active'
+                                  ? 'bg-green-500/10 text-green-500 border-green-500/20'
                                   : partner.status === 'pending_validation'
-                                    ? 'Pendente'
-                                    : partner.status}
-                              </Badge>
-                            </TableCell>
-                            <TableCell>
-                              {log ? (
-                                <TooltipProvider>
-                                  <Tooltip>
-                                    <TooltipTrigger asChild>
-                                      <div className="flex items-center gap-1.5 cursor-help">
-                                        {log.status === 'success' ? (
-                                          <CheckCircle2 className="w-4 h-4 text-green-500" />
-                                        ) : (
-                                          <XCircle className="w-4 h-4 text-red-500" />
-                                        )}
-                                        <span className="text-xs text-muted-foreground">
-                                          {log.status === 'success' ? 'Enviada' : 'Falha'}
-                                        </span>
-                                      </div>
-                                    </TooltipTrigger>
-                                    <TooltipContent>
-                                      <p className="text-xs">
-                                        Notificação de indicação:{' '}
-                                        {new Date(log.created_at).toLocaleString('pt-BR')}
-                                      </p>
-                                    </TooltipContent>
-                                  </Tooltip>
-                                </TooltipProvider>
-                              ) : (
-                                <div className="flex items-center gap-1.5 text-muted-foreground/50">
-                                  <Clock className="w-4 h-4" />
-                                  <span className="text-xs">Aguardando</span>
-                                </div>
+                                    ? 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20'
+                                    : 'bg-secondary text-muted-foreground',
                               )}
-                            </TableCell>
-                            <TableCell className="text-muted-foreground text-sm text-right pr-4 sm:pr-2">
-                              {new Date(partner.created_at || Date.now()).toLocaleDateString(
-                                'pt-BR',
-                              )}
-                            </TableCell>
-                          </TableRow>
-                        )
-                      })}
-                    </TableBody>
-                  </Table>
-                </div>
+                            >
+                              {partner.status === 'active'
+                                ? 'Ativo'
+                                : partner.status === 'pending_validation'
+                                  ? 'Pendente'
+                                  : partner.status}
+                            </Badge>
+                          </div>
+
+                          <div className="flex items-center justify-between pt-3 border-t border-border/50">
+                            <span className="text-xs text-muted-foreground">
+                              Notificação enviada:
+                            </span>
+                            {log ? (
+                              <div className="flex items-center gap-1.5">
+                                {log.status === 'success' ? (
+                                  <CheckCircle2 className="w-4 h-4 text-green-500" />
+                                ) : (
+                                  <XCircle className="w-4 h-4 text-red-500" />
+                                )}
+                                <span className="text-xs font-medium text-white">
+                                  {log.status === 'success' ? 'Sim' : 'Falha'}
+                                </span>
+                              </div>
+                            ) : (
+                              <div className="flex items-center gap-1.5">
+                                <Clock className="w-4 h-4 text-muted-foreground/50" />
+                                <span className="text-xs text-muted-foreground">Aguardando</span>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </>
               ) : (
                 <div className="flex flex-col items-center justify-center py-8 text-center px-4 bg-secondary/20 rounded-lg border border-dashed border-border/50 mx-4 sm:mx-0 mb-4 sm:mb-0">
                   <UserCheck className="w-8 h-8 text-muted-foreground/50 mb-3" />
@@ -530,56 +610,106 @@ export function ReferralTracker({
 
             <TabsContent value="pendentes" className="m-0">
               {invitations.length > 0 ? (
-                <div className="overflow-x-auto">
-                  <Table>
-                    <TableHeader>
-                      <TableRow className="border-border/50 hover:bg-transparent">
-                        <TableHead className="text-muted-foreground font-semibold">Nome</TableHead>
-                        <TableHead className="text-muted-foreground font-semibold">
-                          Contato
-                        </TableHead>
-                        <TableHead className="text-muted-foreground font-semibold">
-                          Status
-                        </TableHead>
-                        <TableHead className="text-muted-foreground font-semibold text-right">
-                          Lembretes Enviados
-                        </TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {invitations.map((inv) => (
-                        <TableRow key={inv.id} className="border-border/50 hover:bg-secondary/30">
-                          <TableCell className="font-medium text-white">
-                            {inv.invitee_name}
-                          </TableCell>
-                          <TableCell className="text-sm text-muted-foreground">
-                            {inv.invitee_phone || inv.invitee_email}
-                          </TableCell>
-                          <TableCell>
-                            <Badge
-                              variant="outline"
-                              className={cn(
-                                inv.status === 'registered'
-                                  ? 'bg-green-500/10 text-green-500 border-green-500/20'
-                                  : 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20',
-                              )}
-                            >
-                              {inv.status === 'registered' ? 'Cadastrado' : 'Aguardando'}
-                            </Badge>
-                          </TableCell>
-                          <TableCell className="text-right text-sm text-muted-foreground">
-                            {inv.reminder_count}x
-                            {inv.last_reminder_at && (
-                              <div className="text-[10px] opacity-70">
-                                Último: {new Date(inv.last_reminder_at).toLocaleDateString('pt-BR')}
-                              </div>
-                            )}
-                          </TableCell>
+                <>
+                  <div className="hidden md:block overflow-x-auto px-4 sm:px-0">
+                    <Table>
+                      <TableHeader>
+                        <TableRow className="border-border/50 hover:bg-transparent">
+                          <TableHead className="text-muted-foreground font-semibold">
+                            Nome
+                          </TableHead>
+                          <TableHead className="text-muted-foreground font-semibold">
+                            Contato
+                          </TableHead>
+                          <TableHead className="text-muted-foreground font-semibold">
+                            Status
+                          </TableHead>
+                          <TableHead className="text-muted-foreground font-semibold text-right">
+                            Lembretes Enviados
+                          </TableHead>
                         </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </div>
+                      </TableHeader>
+                      <TableBody>
+                        {invitations.map((inv) => (
+                          <TableRow key={inv.id} className="border-border/50 hover:bg-secondary/30">
+                            <TableCell className="font-medium text-white">
+                              {inv.invitee_name}
+                            </TableCell>
+                            <TableCell className="text-sm text-muted-foreground">
+                              {inv.invitee_phone || inv.invitee_email}
+                            </TableCell>
+                            <TableCell>
+                              <Badge
+                                variant="outline"
+                                className={cn(
+                                  inv.status === 'registered'
+                                    ? 'bg-green-500/10 text-green-500 border-green-500/20'
+                                    : 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20',
+                                )}
+                              >
+                                {inv.status === 'registered' ? 'Cadastrado' : 'Aguardando'}
+                              </Badge>
+                            </TableCell>
+                            <TableCell className="text-right text-sm text-muted-foreground">
+                              {inv.reminder_count}x
+                              {inv.last_reminder_at && (
+                                <div className="text-[10px] opacity-70">
+                                  Último:{' '}
+                                  {new Date(inv.last_reminder_at).toLocaleDateString('pt-BR')}
+                                </div>
+                              )}
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
+
+                  <div className="block md:hidden space-y-3 px-4 pt-1">
+                    {invitations.map((inv) => (
+                      <div
+                        key={inv.id}
+                        className="p-4 bg-secondary/20 rounded-xl border border-border/50 flex flex-col gap-3"
+                      >
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="min-w-0 flex-1">
+                            <p className="font-semibold text-white text-sm truncate">
+                              {inv.invitee_name}
+                            </p>
+                            <p className="text-xs text-muted-foreground mt-0.5 truncate">
+                              {inv.invitee_phone || inv.invitee_email}
+                            </p>
+                          </div>
+                          <Badge
+                            variant="outline"
+                            className={cn(
+                              'shrink-0 text-[10px] uppercase font-bold tracking-wider px-2 h-6',
+                              inv.status === 'registered'
+                                ? 'bg-green-500/10 text-green-500 border-green-500/20'
+                                : 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20',
+                            )}
+                          >
+                            {inv.status === 'registered' ? 'Cadastrado' : 'Aguardando'}
+                          </Badge>
+                        </div>
+
+                        <div className="flex items-center justify-between pt-3 border-t border-border/50">
+                          <span className="text-xs text-muted-foreground">Lembretes enviados:</span>
+                          <div className="text-right">
+                            <span className="text-sm font-semibold text-white">
+                              {inv.reminder_count}x
+                            </span>
+                            {inv.last_reminder_at && (
+                              <p className="text-[10px] text-muted-foreground mt-0.5">
+                                Último: {new Date(inv.last_reminder_at).toLocaleDateString('pt-BR')}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </>
               ) : (
                 <div className="flex flex-col items-center justify-center py-8 text-center px-4 bg-secondary/20 rounded-lg border border-dashed border-border/50 mx-4 sm:mx-0 mb-4 sm:mb-0">
                   <Clock className="w-8 h-8 text-muted-foreground/50 mb-3" />

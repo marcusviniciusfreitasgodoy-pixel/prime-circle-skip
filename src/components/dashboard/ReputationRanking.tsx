@@ -45,20 +45,20 @@ export function ReputationRanking() {
 
   return (
     <Card className="bg-card border-border h-full flex flex-col shadow-sm">
-      <CardHeader className="pb-3 border-b border-border/50">
+      <CardHeader className="pb-3 border-b border-border/50 p-4 sm:p-6">
         <CardTitle className="text-lg text-white flex items-center gap-2">
           <Star className="w-5 h-5 text-primary" /> Ranking de Reputação
         </CardTitle>
         <CardDescription>Top 10 Corretores da Rede</CardDescription>
       </CardHeader>
-      <CardContent className="pt-4 flex-1">
+      <CardContent className="pt-4 p-3 sm:p-6 flex-1">
         {loading ? (
           <div className="space-y-4">
             {[1, 2, 3, 4, 5].map((i) => (
-              <div key={i} className="flex items-center gap-3">
+              <div key={i} className="flex items-center gap-3 px-1">
                 <Skeleton className="w-5 h-5 rounded-full shrink-0" />
                 <Skeleton className="w-10 h-10 rounded-full shrink-0" />
-                <div className="flex-1 space-y-2">
+                <div className="flex-1 space-y-2 min-w-0">
                   <Skeleton className="h-4 w-32" />
                   <Skeleton className="h-3 w-16" />
                 </div>
@@ -66,14 +66,14 @@ export function ReputationRanking() {
             ))}
           </div>
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-2 sm:space-y-3">
             {topBrokers.map((broker, index) => (
               <div
                 key={broker.id}
-                className="flex items-center gap-3 p-2 rounded-lg hover:bg-secondary/50 transition-colors"
+                className="flex items-center gap-3 p-2 sm:p-2.5 rounded-lg hover:bg-secondary/50 transition-colors"
               >
                 <div className="w-6 flex justify-center shrink-0">{getRankIcon(index)}</div>
-                <Avatar className="w-10 h-10 border border-border bg-background">
+                <Avatar className="w-10 h-10 border border-border bg-background shrink-0">
                   <AvatarImage src={broker.avatar_url} />
                   <AvatarFallback className="bg-secondary text-muted-foreground">
                     {broker.full_name?.substring(0, 2).toUpperCase() || 'CO'}
@@ -83,7 +83,7 @@ export function ReputationRanking() {
                   <p className="text-sm font-semibold text-white truncate">
                     {broker.full_name || 'Corretor'}
                   </p>
-                  <p className="text-xs text-primary font-medium">
+                  <p className="text-xs text-primary font-medium mt-0.5">
                     {broker.reputation_score || 0} pts
                   </p>
                 </div>
