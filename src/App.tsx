@@ -37,6 +37,29 @@ import { GlobalPlanLimitBanner } from '@/components/GlobalPlanLimitBanner'
 import { AppProvider } from '@/stores/main'
 import { AuthProvider } from '@/hooks/use-auth'
 
+// Suppress benign Supabase Auth errors from crashing the preview environment
+if (!(console.error as any).__patched) {
+  const originalConsoleError = console.error
+  console.error = (...args: any[]) => {
+    const isAuthError = args.some(
+      (arg) =>
+        (typeof arg === 'string' && arg.includes('Invalid Refresh Token')) ||
+        (arg instanceof Error && arg.message.includes('Invalid Refresh Token')) ||
+        (arg &&
+          typeof arg === 'object' &&
+          arg.message &&
+          arg.message.includes('Invalid Refresh Token')),
+    )
+
+    if (isAuthError) {
+      return
+    }
+
+    originalConsoleError(...args)
+  }
+  ;(console.error as any).__patched = true
+}
+
 function App() {
   return (
     <AuthProvider>

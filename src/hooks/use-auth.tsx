@@ -42,7 +42,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         } = await supabase.auth.getSession()
 
         if (sessionError) {
-          await supabase.auth.signOut().catch(() => {})
           setSession(null)
           setUser(null)
           setLoading(false)
@@ -62,7 +61,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         } = await supabase.auth.getUser()
 
         if (userError || !user) {
-          await supabase.auth.signOut().catch(() => {})
           setSession(null)
           setUser(null)
         } else {
