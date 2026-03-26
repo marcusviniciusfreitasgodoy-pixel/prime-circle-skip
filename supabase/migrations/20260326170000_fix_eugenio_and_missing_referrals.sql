@@ -1,6 +1,6 @@
 -- Fix: Auditoria de Titularidade (Correção Eugenio Leonetti) & Sincronização do Contador de Corretores
 
-DO $
+DO $$
 DECLARE
   v_admin_id UUID;
 BEGIN
@@ -29,4 +29,4 @@ BEGIN
     SET referrer_id = v_admin_id
     WHERE referrer_id != v_admin_id;
   END IF;
-END $;
+END $$;
