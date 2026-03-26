@@ -132,10 +132,15 @@ export function ReferralTracker({
           .single()
 
         if (mounted) {
-          const customMsg = (profile as any)?.custom_referral_message
-          if (customMsg) {
-            setInviteMessage(customMsg)
-            setOriginalMessage(customMsg)
+          const rawCustomMsg = (profile as any)?.custom_referral_message
+          if (rawCustomMsg) {
+            // Guarantee that the message displays the updated referral link pointing directly to the landing page
+            const updatedMsg = rawCustomMsg.replace(
+              /primecircle\.app\.br\/apply\?ref=/g,
+              'primecircle.app.br/?ref=',
+            )
+            setInviteMessage(updatedMsg)
+            setOriginalMessage(updatedMsg)
           } else if (referralLink) {
             const defaultMsg = `[Nome], estou utilizando a *Prime Circle*, uma rede privada exclusiva para corretores de alto padrão.\n\nEstou te enviando este convite pois valorizo seu trabalho e acredito que podemos fechar excelentes parcerias por lá. A plataforma cruza automaticamente nossos imóveis e demandas, garantindo segurança na regra de 50/50 e acesso a oportunidades Off-Market.\n\nComo o acesso é restrito por curadoria, estou liberando meu link exclusivo de indicação para você entrar:\n\n${referralLink}\n\nFaça seu cadastro para conectarmos nossas carteiras e gerarmos mais negócios juntos!`
 

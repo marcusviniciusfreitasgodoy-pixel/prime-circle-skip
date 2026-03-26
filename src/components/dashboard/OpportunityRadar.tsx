@@ -344,7 +344,7 @@ export function OpportunityRadar({
                 </div>
                 <Button
                   onClick={() => {
-                    const link = `https://www.primecircle.app.br/apply?ref=${user?.id}`
+                    const link = `https://www.primecircle.app.br/?ref=${user?.id}`
                     const text = encodeURIComponent(
                       `Olá! Estou usando a Prime Circle, uma rede privada de corretores de alto padrão. Tenho um cliente buscando um imóvel e lembrei de você. Acesse e cadastre seus imóveis para fecharmos parceria: ${link}`,
                     )
