@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { MapPin, Target, Zap, Lock, PlayCircle, Eye, TrendingUp, Share2 } from 'lucide-react'
+import { MapPin, Target, Zap, Lock, PlayCircle, Eye, TrendingUp } from 'lucide-react'
 import { AddNeedDialog } from './AddNeedDialog'
 import { EditNeedSheet } from './EditNeedSheet'
 import { useAuth } from '@/hooks/use-auth'
@@ -326,35 +326,6 @@ export function OpportunityRadar({
                   </p>
                 </div>
               )}
-
-              {/* Contextual Invite Banner */}
-              <div className="col-span-full mt-4 bg-gradient-to-r from-primary/10 to-transparent border border-primary/20 rounded-xl p-5 sm:p-6 flex flex-col sm:flex-row items-center gap-5 relative overflow-hidden">
-                <div className="absolute right-0 top-0 w-32 h-32 bg-primary/10 rounded-full blur-[40px] pointer-events-none" />
-                <div className="bg-primary/20 p-3 rounded-full shrink-0">
-                  <Share2 className="w-6 h-6 text-primary" />
-                </div>
-                <div className="flex-1 text-center sm:text-left z-10">
-                  <h3 className="text-lg font-bold text-white mb-1">
-                    Não encontrou o imóvel ideal na rede?
-                  </h3>
-                  <p className="text-sm text-muted-foreground max-w-3xl">
-                    Se você conhece um parceiro de confiança que possui o imóvel certo para sua
-                    demanda, convide-o para o Prime Circle e fechem negócio com segurança.
-                  </p>
-                </div>
-                <Button
-                  onClick={() => {
-                    const link = `https://www.primecircle.app.br/?ref=${user?.id}`
-                    const text = encodeURIComponent(
-                      `Olá! Estou usando a Prime Circle, uma rede privada de corretores de alto padrão. Tenho um cliente buscando um imóvel e lembrei de você. Acesse e cadastre seus imóveis para fecharmos parceria: ${link}`,
-                    )
-                    window.open(`https://wa.me/?text=${text}`, '_blank')
-                  }}
-                  className="gold-gradient text-black font-bold h-11 px-6 shadow-[0_0_15px_rgba(201,168,76,0.2)] shrink-0 z-10 w-full sm:w-auto"
-                >
-                  Convidar Parceiro
-                </Button>
-              </div>
             </div>
           )}
         </TabsContent>
