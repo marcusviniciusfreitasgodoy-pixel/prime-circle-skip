@@ -187,14 +187,16 @@ export default function DashboardPage() {
         // 1. My Properties (All active offers for this user)
         const { count: myPropsCount } = await supabase
           .from('documents')
-          .select('*', { count: 'exact', head: true })
+          .select('id', { count: 'exact' })
           .contains('metadata', { type: 'oferta', user_id: authUser.id })
+          .limit(1)
 
         // 2. Network Demands (Global demands, acting as fallback/full view)
         const { count: demandsCount } = await supabase
           .from('documents')
-          .select('*', { count: 'exact', head: true })
+          .select('id', { count: 'exact' })
           .contains('metadata', { type: 'demanda' })
+          .limit(1)
 
         // 3. Partnerships (Funnel connections and closed deals)
         const { data: partnerships } = await supabase
