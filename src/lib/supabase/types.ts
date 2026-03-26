@@ -1,17 +1,11 @@
 // AVOID UPDATING THIS FILE DIRECTLY. It is automatically generated.
-export type Json =
-  | string
-  | number
-  | boolean
-  | null
-  | { [key: string]: Json | undefined }
-  | Json[]
+export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[]
 
 export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "12.2.3 (519615d)"
+    PostgrestVersion: '12.2.3 (519615d)'
   }
   public: {
     Tables: {
@@ -42,18 +36,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "broker_reviews_reviewed_id_fkey"
-            columns: ["reviewed_id"]
+            foreignKeyName: 'broker_reviews_reviewed_id_fkey'
+            columns: ['reviewed_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "broker_reviews_reviewer_id_fkey"
-            columns: ["reviewer_id"]
+            foreignKeyName: 'broker_reviews_reviewer_id_fkey'
+            columns: ['reviewer_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -111,18 +105,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "demanda_condominio_condominium_id_fkey"
-            columns: ["condominium_id"]
+            foreignKeyName: 'demanda_condominio_condominium_id_fkey'
+            columns: ['condominium_id']
             isOneToOne: false
-            referencedRelation: "condominiums"
-            referencedColumns: ["id"]
+            referencedRelation: 'condominiums'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "demanda_condominio_demand_id_fkey"
-            columns: ["demand_id"]
+            foreignKeyName: 'demanda_condominio_demand_id_fkey'
+            columns: ['demand_id']
             isOneToOne: false
-            referencedRelation: "documents"
-            referencedColumns: ["id"]
+            referencedRelation: 'documents'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -150,11 +144,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "documents_condominium_id_fkey"
-            columns: ["condominium_id"]
+            foreignKeyName: 'documents_condominium_id_fkey'
+            columns: ['condominium_id']
             isOneToOne: false
-            referencedRelation: "condominiums"
-            referencedColumns: ["id"]
+            referencedRelation: 'condominiums'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -194,11 +188,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "invitations_referrer_id_fkey"
-            columns: ["referrer_id"]
+            foreignKeyName: 'invitations_referrer_id_fkey'
+            columns: ['referrer_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -226,18 +220,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "match_feedback_document_id_fkey"
-            columns: ["document_id"]
+            foreignKeyName: 'match_feedback_document_id_fkey'
+            columns: ['document_id']
             isOneToOne: false
-            referencedRelation: "documents"
-            referencedColumns: ["id"]
+            referencedRelation: 'documents'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "match_feedback_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: 'match_feedback_user_id_fkey'
+            columns: ['user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -265,18 +259,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "newsletter_feedback_newsletter_id_fkey"
-            columns: ["newsletter_id"]
+            foreignKeyName: 'newsletter_feedback_newsletter_id_fkey'
+            columns: ['newsletter_id']
             isOneToOne: false
-            referencedRelation: "newsletters"
-            referencedColumns: ["id"]
+            referencedRelation: 'newsletters'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "newsletter_feedback_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: 'newsletter_feedback_user_id_fkey'
+            columns: ['user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -313,11 +307,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "newsletters_created_by_fkey"
-            columns: ["created_by"]
+            foreignKeyName: 'newsletters_created_by_fkey'
+            columns: ['created_by']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -354,11 +348,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "notification_logs_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: 'notification_logs_user_id_fkey'
+            columns: ['user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -389,11 +383,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "notification_templates_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: 'notification_templates_user_id_fkey'
+            columns: ['user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -496,46 +490,46 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "partnerships_broker_demand_id_fkey"
-            columns: ["broker_demand_id"]
+            foreignKeyName: 'partnerships_broker_demand_id_fkey'
+            columns: ['broker_demand_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "partnerships_broker_property_id_fkey"
-            columns: ["broker_property_id"]
+            foreignKeyName: 'partnerships_broker_property_id_fkey'
+            columns: ['broker_property_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "partnerships_cancelado_by_fkey"
-            columns: ["cancelado_by"]
+            foreignKeyName: 'partnerships_cancelado_by_fkey'
+            columns: ['cancelado_by']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "partnerships_demand_id_fkey"
-            columns: ["demand_id"]
+            foreignKeyName: 'partnerships_demand_id_fkey'
+            columns: ['demand_id']
             isOneToOne: false
-            referencedRelation: "documents"
-            referencedColumns: ["id"]
+            referencedRelation: 'documents'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "partnerships_last_updated_by_fkey"
-            columns: ["last_updated_by"]
+            foreignKeyName: 'partnerships_last_updated_by_fkey'
+            columns: ['last_updated_by']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "partnerships_property_id_fkey"
-            columns: ["property_id"]
+            foreignKeyName: 'partnerships_property_id_fkey'
+            columns: ['property_id']
             isOneToOne: false
-            referencedRelation: "documents"
-            referencedColumns: ["id"]
+            referencedRelation: 'documents'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -650,18 +644,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "profiles_referred_by_id_fkey"
-            columns: ["referred_by_id"]
+            foreignKeyName: 'profiles_referred_by_id_fkey'
+            columns: ['referred_by_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "profiles_validated_by_fkey"
-            columns: ["validated_by"]
+            foreignKeyName: 'profiles_validated_by_fkey'
+            columns: ['validated_by']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -704,18 +698,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "quick_action_tokens_corretor_id_fkey"
-            columns: ["corretor_id"]
+            foreignKeyName: 'quick_action_tokens_corretor_id_fkey'
+            columns: ['corretor_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "quick_action_tokens_partnership_id_fkey"
-            columns: ["partnership_id"]
+            foreignKeyName: 'quick_action_tokens_partnership_id_fkey'
+            columns: ['partnership_id']
             isOneToOne: false
-            referencedRelation: "partnerships"
-            referencedColumns: ["id"]
+            referencedRelation: 'partnerships'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -737,11 +731,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "referral_clicks_referrer_id_fkey"
-            columns: ["referrer_id"]
+            foreignKeyName: 'referral_clicks_referrer_id_fkey'
+            columns: ['referrer_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -787,11 +781,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "suggestions_author_id_fkey"
-            columns: ["author_id"]
+            foreignKeyName: 'suggestions_author_id_fkey'
+            columns: ['author_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -828,11 +822,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "support_tickets_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: 'support_tickets_user_id_fkey'
+            columns: ['user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -857,11 +851,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "user_actions_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: 'user_actions_user_id_fkey'
+            columns: ['user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -892,11 +886,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "user_matches_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: 'user_matches_user_id_fkey'
+            columns: ['user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -933,11 +927,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "user_notifications_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: 'user_notifications_user_id_fkey'
+            columns: ['user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -974,18 +968,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "user_plans_plan_id_fkey"
-            columns: ["plan_id"]
+            foreignKeyName: 'user_plans_plan_id_fkey'
+            columns: ['plan_id']
             isOneToOne: false
-            referencedRelation: "plans"
-            referencedColumns: ["id"]
+            referencedRelation: 'plans'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "user_plans_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: 'user_plans_user_id_fkey'
+            columns: ['user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -1010,11 +1004,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "user_push_subscriptions_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: 'user_push_subscriptions_user_id_fkey'
+            columns: ['user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -1067,33 +1061,31 @@ export type Database = {
   }
 }
 
-type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
+type DatabaseWithoutInternals = Omit<Database, '__InternalSupabase'>
 
-type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
+type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, 'public'>]
 
 export type Tables<
   DefaultSchemaTableNameOrOptions extends
-    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
+    | keyof (DefaultSchema['Tables'] & DefaultSchema['Views'])
     | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
+    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'] &
+        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Views'])
     : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
-  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'] &
+      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Views'])[TableName] extends {
       Row: infer R
     }
     ? R
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
-        DefaultSchema["Views"])
-    ? (DefaultSchema["Tables"] &
-        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema['Tables'] & DefaultSchema['Views'])
+    ? (DefaultSchema['Tables'] & DefaultSchema['Views'])[DefaultSchemaTableNameOrOptions] extends {
         Row: infer R
       }
       ? R
@@ -1102,23 +1094,23 @@ export type Tables<
 
 export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema["Tables"]
+    | keyof DefaultSchema['Tables']
     | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables']
     : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
-  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'][TableName] extends {
       Insert: infer I
     }
     ? I
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
-    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema['Tables']
+    ? DefaultSchema['Tables'][DefaultSchemaTableNameOrOptions] extends {
         Insert: infer I
       }
       ? I
@@ -1127,23 +1119,23 @@ export type TablesInsert<
 
 export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema["Tables"]
+    | keyof DefaultSchema['Tables']
     | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables']
     : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
-  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'][TableName] extends {
       Update: infer U
     }
     ? U
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
-    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema['Tables']
+    ? DefaultSchema['Tables'][DefaultSchemaTableNameOrOptions] extends {
         Update: infer U
       }
       ? U
@@ -1152,36 +1144,36 @@ export type TablesUpdate<
 
 export type Enums<
   DefaultSchemaEnumNameOrOptions extends
-    | keyof DefaultSchema["Enums"]
+    | keyof DefaultSchema['Enums']
     | { schema: keyof DatabaseWithoutInternals },
   EnumName extends DefaultSchemaEnumNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions['schema']]['Enums']
     : never = never,
 > = DefaultSchemaEnumNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
-  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
-  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
-    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
+  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions['schema']]['Enums'][EnumName]
+  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema['Enums']
+    ? DefaultSchema['Enums'][DefaultSchemaEnumNameOrOptions]
     : never
 
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
-    | keyof DefaultSchema["CompositeTypes"]
+    | keyof DefaultSchema['CompositeTypes']
     | { schema: keyof DatabaseWithoutInternals },
   CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions['schema']]['CompositeTypes']
     : never = never,
 > = PublicCompositeTypeNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
-  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
-  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
-    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions['schema']]['CompositeTypes'][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema['CompositeTypes']
+    ? DefaultSchema['CompositeTypes'][PublicCompositeTypeNameOrOptions]
     : never
 
 export const Constants = {
@@ -1189,7 +1181,6 @@ export const Constants = {
     Enums: {},
   },
 } as const
-
 
 // ====== DATABASE EXTENDED CONTEXT (auto-generated) ======
 // This section contains actual PostgreSQL column types, constraints, RLS policies,
@@ -1671,7 +1662,7 @@ export const Constants = {
 //     BEGIN
 //       -- Se a reputação aumentou
 //       IF NEW.reputation_score > OLD.reputation_score THEN
-//         
+//
 //         -- Check milestones (20, 50, 100)
 //         IF OLD.reputation_score < 20 AND NEW.reputation_score >= 20 THEN
 //           v_message := '🎉 Parabéns! Você atingiu o nível Bronze (20+ pts) de reputação na Prime Circle!';
@@ -1680,7 +1671,7 @@ export const Constants = {
 //         ELSIF OLD.reputation_score < 100 AND NEW.reputation_score >= 100 THEN
 //           v_message := '🥇 Excepcional! Você agora é nível Elite Ouro (100+ pts) de reputação na Prime Circle!';
 //         END IF;
-//   
+//
 //         -- Send Whatsapp notification for milestones
 //         IF v_message IS NOT NULL AND NEW.whatsapp_number IS NOT NULL THEN
 //           v_url := current_setting('app.settings.supabase_url', true);
@@ -1689,25 +1680,25 @@ export const Constants = {
 //           END IF;
 //           v_url := v_url || '/functions/v1/send-whatsapp';
 //           v_body := jsonb_build_object('number', NEW.whatsapp_number, 'text', v_message, 'user_id', NEW.id);
-//           
+//
 //           BEGIN
 //             PERFORM net.http_post(
-//               url := v_url, 
-//               headers := '{"Content-Type": "application/json"}'::jsonb, 
-//               body := v_body, 
+//               url := v_url,
+//               headers := '{"Content-Type": "application/json"}'::jsonb,
+//               body := v_body,
 //               timeout_milliseconds := 2000
 //             );
 //           EXCEPTION WHEN OTHERS THEN
 //             RAISE WARNING 'Error scheduling whatsapp milestone: %', SQLERRM;
 //           END;
 //         END IF;
-//   
+//
 //         -- Check Top 10 entry
 //         -- Pega o score do 10º colocado (se houver menos de 10, pega o menor)
 //         SELECT min(reputation_score) INTO v_10th_score FROM (
 //           SELECT reputation_score FROM public.profiles WHERE status = 'active' ORDER BY reputation_score DESC LIMIT 10
 //         ) t;
-//   
+//
 //         -- Se o user não estava no top 10 (OLD < 10th score) e agora está (NEW >= 10th score)
 //         IF OLD.reputation_score < COALESCE(v_10th_score, 0) AND NEW.reputation_score >= COALESCE(v_10th_score, 0) AND NEW.whatsapp_number IS NOT NULL THEN
 //           v_message := '🏆 Você acaba de entrar no TOP 10 do Ranking de Reputação da Prime Circle! Continue o excelente trabalho.';
@@ -1717,25 +1708,25 @@ export const Constants = {
 //           END IF;
 //           v_url := v_url || '/functions/v1/send-whatsapp';
 //           v_body := jsonb_build_object('number', NEW.whatsapp_number, 'text', v_message, 'user_id', NEW.id);
-//           
+//
 //           BEGIN
 //             PERFORM net.http_post(
-//               url := v_url, 
-//               headers := '{"Content-Type": "application/json"}'::jsonb, 
-//               body := v_body, 
+//               url := v_url,
+//               headers := '{"Content-Type": "application/json"}'::jsonb,
+//               body := v_body,
 //               timeout_milliseconds := 2000
 //             );
 //           EXCEPTION WHEN OTHERS THEN
 //             RAISE WARNING 'Error scheduling whatsapp top10: %', SQLERRM;
 //           END;
 //         END IF;
-//   
+//
 //       END IF;
-//   
+//
 //       RETURN NEW;
 //     END;
 //     $function$
-//   
+//
 // FUNCTION get_growth_metrics()
 //   CREATE OR REPLACE FUNCTION public.get_growth_metrics()
 //    RETURNS jsonb
@@ -1749,11 +1740,11 @@ export const Constants = {
 //       v_top_referrers JSONB;
 //   BEGIN
 //       IF NOT is_admin() THEN RETURN '{"error": "unauthorized"}'::jsonb; END IF;
-//   
+//
 //       SELECT count(*) INTO v_total_clicks FROM public.referral_clicks;
 //       SELECT count(*) INTO v_total_signups FROM public.profiles WHERE referred_by_id IS NOT NULL;
 //       SELECT count(*) INTO v_total_active FROM public.profiles WHERE referred_by_id IS NOT NULL AND status = 'active';
-//   
+//
 //       SELECT COALESCE(jsonb_agg(row_to_json(t)), '[]'::jsonb) INTO v_top_referrers
 //       FROM (
 //           SELECT
@@ -1766,7 +1757,7 @@ export const Constants = {
 //           ORDER BY active_signups DESC, signups DESC
 //           LIMIT 10
 //       ) t;
-//   
+//
 //       RETURN jsonb_build_object(
 //           'total_clicks', COALESCE(v_total_clicks, 0),
 //           'total_signups', COALESCE(v_total_signups, 0),
@@ -1776,7 +1767,7 @@ export const Constants = {
 //       );
 //   END;
 //   $function$
-//   
+//
 // FUNCTION get_market_intelligence_metrics()
 //   CREATE OR REPLACE FUNCTION public.get_market_intelligence_metrics()
 //    RETURNS jsonb
@@ -1787,15 +1778,15 @@ export const Constants = {
 //     v_result jsonb;
 //   BEGIN
 //     WITH condo_stats AS (
-//       SELECT 
+//       SELECT
 //         c.id,
 //         c.name,
 //         c.neighborhood,
-//         (SELECT count(*) FROM public.documents d 
-//          WHERE d.metadata->>'type' = 'oferta' 
+//         (SELECT count(*) FROM public.documents d
+//          WHERE d.metadata->>'type' = 'oferta'
 //          AND (d.condominium_id = c.id OR d.metadata->>'nome_condominio' ILIKE '%' || c.name || '%')) as total_offers,
-//         (SELECT count(*) FROM public.documents d 
-//          WHERE d.metadata->>'type' = 'demanda' 
+//         (SELECT count(*) FROM public.documents d
+//          WHERE d.metadata->>'type' = 'demanda'
 //          AND (
 //            d.id IN (SELECT demand_id FROM public.demanda_condominio dc WHERE dc.condominium_id = c.id)
 //            OR (d.metadata->'condominiums')::text ILIKE '%' || c.name || '%'
@@ -1820,7 +1811,7 @@ export const Constants = {
 //         'totalDemands', total_demands,
 //         'averageTicket', average_ticket,
 //         'demandScore', ROUND(
-//           CASE 
+//           CASE
 //             WHEN total_demands = 0 AND total_offers > 0 THEN 0.10
 //             WHEN total_demands = 0 AND total_offers = 0 THEN 0.00
 //             WHEN total_offers = 0 AND total_demands > 0 THEN 0.99
@@ -1831,11 +1822,11 @@ export const Constants = {
 //     ), '[]'::jsonb) INTO v_result
 //     FROM condo_stats
 //     WHERE total_offers > 0 OR total_demands > 0;
-//   
+//
 //     RETURN v_result;
 //   END;
 //   $function$
-//   
+//
 // FUNCTION get_user_id_by_email(text)
 //   CREATE OR REPLACE FUNCTION public.get_user_id_by_email(p_email text)
 //    RETURNS uuid
@@ -1849,7 +1840,7 @@ export const Constants = {
 //     RETURN v_user_id;
 //   END;
 //   $function$
-//   
+//
 // FUNCTION get_whatsapp_collection_metrics()
 //   CREATE OR REPLACE FUNCTION public.get_whatsapp_collection_metrics()
 //    RETURNS jsonb
@@ -1869,29 +1860,29 @@ export const Constants = {
 //     IF NOT is_admin() THEN
 //       RETURN jsonb_build_object('error', 'Unauthorized');
 //     END IF;
-//   
+//
 //     -- 1. Métricas Base
-//     SELECT COUNT(*) INTO v_checks_enviados 
-//     FROM public.partnerships 
+//     SELECT COUNT(*) INTO v_checks_enviados
+//     FROM public.partnerships
 //     WHERE status_check_count > 0 AND last_status_check_at > now() - interval '30 days';
-//   
+//
 //     SELECT COUNT(*), SUM(CASE WHEN used THEN 1 ELSE 0 END)
 //     INTO v_tokens_criados, v_tokens_usados
 //     FROM public.quick_action_tokens
 //     WHERE created_at > now() - interval '30 days';
-//   
+//
 //     IF v_tokens_criados > 0 THEN
 //       v_taxa_resposta := ROUND(100.0 * v_tokens_usados / v_tokens_criados, 1);
 //     ELSE
 //       v_taxa_resposta := 0;
 //     END IF;
-//   
+//
 //     -- 2. Fila Count e Action Dist
 //     SELECT COUNT(*) INTO v_fila_count
 //     FROM public.partnerships
 //     WHERE (status_check_failed = true OR admin_flagged = true)
 //       AND status NOT IN ('fechado', 'cancelado', 'closed', 'cancelled');
-//   
+//
 //     SELECT jsonb_build_object(
 //       'action_1', COALESCE(SUM(CASE WHEN action = 1 THEN 1 ELSE 0 END), 0),
 //       'action_2', COALESCE(SUM(CASE WHEN action = 2 THEN 1 ELSE 0 END), 0),
@@ -1900,7 +1891,7 @@ export const Constants = {
 //     ) INTO v_action_dist
 //     FROM public.quick_action_tokens
 //     WHERE used = true AND created_at > now() - interval '30 days';
-//   
+//
 //     -- 3. Fila de atenção
 //     SELECT COALESCE(jsonb_agg(
 //       jsonb_build_object(
@@ -1922,7 +1913,7 @@ export const Constants = {
 //     LEFT JOIN public.profiles pp ON p.broker_property_id = pp.id
 //     WHERE (p.status_check_failed = true OR p.admin_flagged = true)
 //       AND p.status NOT IN ('fechado', 'cancelado', 'closed', 'cancelled');
-//   
+//
 //     -- 4. Histórico
 //     SELECT COALESCE(jsonb_agg(
 //       jsonb_build_object(
@@ -1939,7 +1930,7 @@ export const Constants = {
 //     ) qt
 //     JOIN public.profiles pf ON qt.corretor_id = pf.id
 //     JOIN public.partnerships p ON qt.partnership_id = p.id;
-//   
+//
 //     -- 5. Retorno Consolidado
 //     RETURN jsonb_build_object(
 //       'metrics', jsonb_build_object(
@@ -1955,7 +1946,7 @@ export const Constants = {
 //     );
 //   END;
 //   $function$
-//   
+//
 // FUNCTION handle_new_user()
 //   CREATE OR REPLACE FUNCTION public.handle_new_user()
 //    RETURNS trigger
@@ -1971,7 +1962,7 @@ export const Constants = {
 //     v_ref_code TEXT;
 //   BEGIN
 //     SELECT COUNT(*) INTO user_count FROM public.profiles;
-//   
+//
 //     IF user_count = 0 THEN
 //       assigned_role := 'admin';
 //       assigned_plan := 'Founder';
@@ -1980,17 +1971,17 @@ export const Constants = {
 //       assigned_plan := 'Founder';
 //       assigned_status := 'active';
 //     END IF;
-//   
+//
 //     -- Resolve referral
 //     BEGIN
 //       IF NEW.raw_user_meta_data->>'referred_by_id' IS NOT NULL AND NEW.raw_user_meta_data->>'referred_by_id' != '' THEN
 //         ref_by_id := (NEW.raw_user_meta_data->>'referred_by_id')::uuid;
 //       END IF;
-//       
+//
 //       v_ref_code := NEW.raw_user_meta_data->>'referral_code';
 //       IF ref_by_id IS NULL AND v_ref_code IS NOT NULL AND v_ref_code != '' THEN
 //         IF v_ref_code ~ '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}
- THEN
+THEN
 //           SELECT id INTO ref_by_id FROM public.profiles WHERE id = v_ref_code::uuid OR referral_code = v_ref_code LIMIT 1;
 //         ELSE
 //           SELECT id INTO ref_by_id FROM public.profiles WHERE referral_code = v_ref_code LIMIT 1;
@@ -1999,7 +1990,7 @@ export const Constants = {
 //     EXCEPTION WHEN OTHERS THEN
 //       ref_by_id := NULL;
 //     END;
-//   
+//
 //     BEGIN
 //       INSERT INTO public.profiles (
 //         id,
@@ -2040,20 +2031,20 @@ export const Constants = {
 //         plan = EXCLUDED.plan,
 //         status = EXCLUDED.status,
 //         email = EXCLUDED.email;
-//         
+//
 //       UPDATE public.invitations
 //       SET status = 'registered'
 //       WHERE (invitee_email = NEW.email OR invitee_phone = NEW.raw_user_meta_data->>'whatsapp_number')
 //         AND status = 'pending';
-//   
+//
 //     EXCEPTION WHEN OTHERS THEN
 //       RAISE WARNING 'Error in handle_new_user trigger: %', SQLERRM;
 //     END;
-//   
+//
 //     RETURN NEW;
 //   END;
 //   $function$
-//   
+//
 // FUNCTION handle_new_user_templates()
 //   CREATE OR REPLACE FUNCTION public.handle_new_user_templates()
 //    RETURNS trigger
@@ -2062,53 +2053,53 @@ export const Constants = {
 //   AS $function$
 //   BEGIN
 //     INSERT INTO public.notification_templates (user_id, name, channel, content)
-//     VALUES 
+//     VALUES
 //       (NEW.id, 'Notificação de Match - WhatsApp', 'whatsapp', 'Olá {{partner_name}}! 🚀 Acabamos de encontrar um novo match para o imóvel {{property_details}}. Confira agora mesmo no seu painel da Prime Circle!'),
-//       (NEW.id, 'Notificação de Match - Email', 'email', 'Assunto: Novo Match Identificado! 🏠 
-//   
+//       (NEW.id, 'Notificação de Match - Email', 'email', 'Assunto: Novo Match Identificado! 🏠
+//
 //   Olá {{partner_name}},
-//   
+//
 //   Identificamos uma nova oportunidade de negócio! Um novo match foi gerado para o imóvel {{property_details}}.
-//   
+//
 //   Clique no link abaixo para ver os detalhes e entrar em contato:
 //   [Link do Sistema]
-//   
+//
 //   Boas vendas,
 //   Equipe Prime Circle'),
 //       (NEW.id, 'Solicitação de Parceria - WhatsApp', 'whatsapp', 'Olá {{partner_name}}! Você recebeu uma nova solicitação de parceria na Prime Circle. Acesse a plataforma para responder e iniciar essa nova colaboração. 🤝'),
 //       (NEW.id, 'Solicitação de Parceria - Email', 'email', 'Assunto: Você tem uma nova solicitação de parceria 🤝
-//   
+//
 //   Olá {{partner_name}},
-//   
+//
 //   Um colega de profissão enviou uma solicitação de parceria para você através da Prime Circle.
-//   
+//
 //   Parcerias aumentam suas chances de fechamento! Acesse seu dashboard para revisar a solicitação.
-//   
+//
 //   Atenciosamente,
 //   Equipe Prime Circle'),
 //       (NEW.id, 'Boas-vindas - WhatsApp', 'whatsapp', 'Olá {{full_name}}! 🚀 Bem-vindo à Prime Circle. Seu cadastro foi recebido com sucesso. Estamos muito felizes em ter você em nossa rede exclusiva de parcerias imobiliárias.
-//   
+//
 //   ⚠️ *Aviso Importante:* Estamos em nossa fase de lançamento! Caso encontre qualquer problema ou instabilidade, por favor nos avise pelo e-mail contato@primecircle.app.br ou respondendo a este WhatsApp. Seu feedback é fundamental!'),
 //       (NEW.id, 'Boas-vindas - Email', 'email', 'Assunto: Bem-vindo à Prime Circle! 🏠
-//   
+//
 //   Olá {{full_name}},
-//   
+//
 //   Bem-vindo à Prime Circle! Agora que sua conta foi criada, utilize o link abaixo para acessar seu painel exclusivo e começar a gerar parcerias.
-//   
+//
 //   Acesse: https://www.primecircle.app.br/dashboard
-//   
+//
 //   Dica Prime: Para facilitar seu acesso, abra este link no seu celular (Safari no iOS ou Chrome no Android) e use a opção "Adicionar à Tela de Início". Assim, você terá o Prime Circle como um aplicativo sempre à mão e receberá nossas notificações em tempo real!
-//   
+//
 //   ⚠️ Aviso Importante: Estamos em nossa fase de lançamento! Caso encontre qualquer problema, erro ou instabilidade, é muito importante que você nos informe encaminhando uma mensagem para contato@primecircle.app.br ou pelo nosso WhatsApp de suporte.
-//   
+//
 //   Boas vendas,
 //   Equipe Prime Circle'),
 //       (NEW.id, 'Nova Demanda - WhatsApp', 'whatsapp', 'Olá {{partner_name}}! 🚀 Uma nova demanda foi cadastrada na Prime Circle: {{demand_details}}. Acesse a plataforma para conferir e oferecer seus imóveis: https://www.primecircle.app.br/dashboard');
-//       
+//
 //     RETURN NEW;
 //   END;
 //   $function$
-//   
+//
 // FUNCTION handle_partnership_advance_reputation()
 //   CREATE OR REPLACE FUNCTION public.handle_partnership_advance_reputation()
 //    RETURNS trigger
@@ -2117,20 +2108,20 @@ export const Constants = {
 //   AS $function$
 //   BEGIN
 //     -- Se o status avançou e ainda não foi confirmado pelo parceiro (Ação 1 do Quick Update)
-//     IF OLD.status IS DISTINCT FROM NEW.status 
+//     IF OLD.status IS DISTINCT FROM NEW.status
 //        AND NEW.status IN ('contact', 'visit', 'proposal', 'aguardando_vgv', 'closed')
-//        AND NEW.confirmed_by_partner = false 
+//        AND NEW.confirmed_by_partner = false
 //        AND NEW.last_updated_by IS NOT NULL THEN
-//        
-//        UPDATE public.profiles 
+//
+//        UPDATE public.profiles
 //        SET reputation_score = reputation_score + 2
 //        WHERE id = NEW.last_updated_by;
-//        
+//
 //     END IF;
 //     RETURN NEW;
 //   END;
 //   $function$
-//   
+//
 // FUNCTION increment_reputation_on_advance()
 //   CREATE OR REPLACE FUNCTION public.increment_reputation_on_advance()
 //    RETURNS trigger
@@ -2151,7 +2142,7 @@ export const Constants = {
 //     RETURN NEW;
 //   END;
 //   $function$
-//   
+//
 // FUNCTION increment_user_match_count(uuid, integer, integer)
 //   CREATE OR REPLACE FUNCTION public.increment_user_match_count(p_user_id uuid, p_month integer, p_year integer)
 //    RETURNS integer
@@ -2167,11 +2158,11 @@ export const Constants = {
 //     ON CONFLICT (user_id, month, year)
 //     DO UPDATE SET match_count = public.user_matches.match_count + 1
 //     RETURNING match_count INTO v_match_count;
-//     
+//
 //     RETURN v_match_count;
 //   END;
 //   $function$
-//   
+//
 // FUNCTION increment_video_views(bigint)
 //   CREATE OR REPLACE FUNCTION public.increment_video_views(doc_id bigint)
 //    RETURNS void
@@ -2188,7 +2179,7 @@ export const Constants = {
 //     WHERE id = doc_id;
 //   END;
 //   $function$
-//   
+//
 // FUNCTION is_admin()
 //   CREATE OR REPLACE FUNCTION public.is_admin()
 //    RETURNS boolean
@@ -2198,7 +2189,7 @@ export const Constants = {
 //   AS $function$
 //     SELECT COALESCE((SELECT role = 'admin' FROM public.profiles WHERE id = auth.uid()), false);
 //   $function$
-//   
+//
 // FUNCTION log_notification(uuid, text, text, text, text, text)
 //   CREATE OR REPLACE FUNCTION public.log_notification(p_user_id uuid, p_recipient text, p_channel text, p_status text, p_message_body text, p_error_details text DEFAULT NULL::text)
 //    RETURNS void
@@ -2213,7 +2204,7 @@ export const Constants = {
 //     );
 //   END;
 //   $function$
-//   
+//
 // FUNCTION match_documents(vector, integer, jsonb)
 //   CREATE OR REPLACE FUNCTION public.match_documents(query_embedding vector, match_count integer DEFAULT NULL::integer, filter jsonb DEFAULT '{}'::jsonb)
 //    RETURNS TABLE(id bigint, content text, metadata jsonb, similarity double precision)
@@ -2233,7 +2224,7 @@ export const Constants = {
 //     limit match_count;
 //   end;
 //   $function$
-//   
+//
 // FUNCTION quick_update_partnership(uuid, text, uuid)
 //   CREATE OR REPLACE FUNCTION public.quick_update_partnership(p_token uuid, p_status text, p_broker_id uuid)
 //    RETURNS boolean
@@ -2250,46 +2241,46 @@ export const Constants = {
 //     v_body JSONB;
 //   BEGIN
 //     SELECT * INTO v_partnership FROM public.partnerships WHERE update_token = p_token;
-//     
+//
 //     IF NOT FOUND THEN
 //       RETURN FALSE;
 //     END IF;
-//   
+//
 //     IF p_status NOT IN ('match', 'contact', 'visit', 'proposal', 'closed', 'cancelled') THEN
 //       RETURN FALSE;
 //     END IF;
-//   
-//     UPDATE public.partnerships 
-//     SET status = p_status, last_interaction_at = NOW() 
+//
+//     UPDATE public.partnerships
+//     SET status = p_status, last_interaction_at = NOW()
 //     WHERE id = v_partnership.id;
-//   
+//
 //     UPDATE public.profiles
 //     SET reputation_score = reputation_score + 5
 //     WHERE id = p_broker_id;
-//   
+//
 //     IF p_broker_id = v_partnership.broker_demand_id THEN
 //       v_other_broker_id := v_partnership.broker_property_id;
 //     ELSE
 //       v_other_broker_id := v_partnership.broker_demand_id;
 //     END IF;
-//   
+//
 //     SELECT full_name INTO v_broker_name FROM public.profiles WHERE id = p_broker_id;
 //     SELECT whatsapp_number INTO v_other_broker_phone FROM public.profiles WHERE id = v_other_broker_id;
 //     SELECT COALESCE(metadata->>'title', metadata->>'tipo_imovel', 'Imóvel') INTO v_property_title FROM public.documents WHERE id = v_partnership.property_id;
-//   
+//
 //     IF p_status IN ('visit', 'proposal', 'closed') AND v_other_broker_phone IS NOT NULL THEN
 //       v_url := current_setting('app.settings.supabase_url', true);
 //       IF v_url IS NULL OR v_url = '' THEN
 //         v_url := 'https://lortaowlmktdnttoykfl.supabase.co';
 //       END IF;
 //       v_url := v_url || '/functions/v1/send-whatsapp';
-//   
+//
 //       v_body := jsonb_build_object(
 //         'number', v_other_broker_phone,
 //         'text', 'Broker ' || COALESCE(v_broker_name, 'Parceiro') || ' informou que o status da negociação do imóvel ' || COALESCE(v_property_title, '') || ' mudou para: ' || p_status || '. Você confirma? Acesse o painel para validar: https://www.primecircle.app.br/dashboard',
 //         'user_id', v_other_broker_id
 //       );
-//   
+//
 //       BEGIN
 //         PERFORM net.http_post(
 //             url := v_url,
@@ -2301,11 +2292,11 @@ export const Constants = {
 //         RAISE WARNING 'Error scheduling double verification whatsapp: %', SQLERRM;
 //       END;
 //     END IF;
-//   
+//
 //     RETURN TRUE;
 //   END;
 //   $function$
-//   
+//
 // FUNCTION trigger_demand_push_webhook()
 //   CREATE OR REPLACE FUNCTION public.trigger_demand_push_webhook()
 //    RETURNS trigger
@@ -2320,9 +2311,9 @@ export const Constants = {
 //     IF v_url IS NULL OR v_url = '' THEN
 //       v_url := 'https://lortaowlmktdnttoykfl.supabase.co';
 //     END IF;
-//     
+//
 //     v_url := v_url || '/functions/v1/demand-push-webhook';
-//   
+//
 //     IF NEW.metadata->>'type' = 'demanda' THEN
 //       v_body := jsonb_build_object(
 //         'type', 'INSERT',
@@ -2330,7 +2321,7 @@ export const Constants = {
 //         'schema', 'public',
 //         'record', row_to_json(NEW)
 //       );
-//       
+//
 //       BEGIN
 //         PERFORM net.http_post(
 //             url := v_url,
@@ -2342,11 +2333,11 @@ export const Constants = {
 //         RAISE WARNING 'Error scheduling demand push webhook pg_net request: %', SQLERRM;
 //       END;
 //     END IF;
-//     
+//
 //     RETURN NEW;
 //   END;
 //   $function$
-//   
+//
 // FUNCTION trigger_discount_tier_whatsapp()
 //   CREATE OR REPLACE FUNCTION public.trigger_discount_tier_whatsapp()
 //    RETURNS trigger
@@ -2364,13 +2355,13 @@ export const Constants = {
 //           v_url := 'https://lortaowlmktdnttoykfl.supabase.co';
 //         END IF;
 //         v_url := v_url || '/functions/v1/send-whatsapp';
-//         
+//
 //         v_body := jsonb_build_object(
 //           'number', NEW.whatsapp_number,
 //           'text', 'Parabéns ' || COALESCE(NEW.full_name, 'Corretor') || '! 🎉 Você alcançou um novo nível de desconto na Prime Circle: ' || NEW.discount_tier || '. Aproveite seus benefícios!',
 //           'user_id', NEW.id
 //         );
-//         
+//
 //         BEGIN
 //           PERFORM net.http_post(
 //               url := v_url,
@@ -2386,7 +2377,7 @@ export const Constants = {
 //     RETURN NEW;
 //   END;
 //   $function$
-//   
+//
 // FUNCTION trigger_match_property_webhook()
 //   CREATE OR REPLACE FUNCTION public.trigger_match_property_webhook()
 //    RETURNS trigger
@@ -2401,9 +2392,9 @@ export const Constants = {
 //     IF v_url IS NULL OR v_url = '' THEN
 //       v_url := 'https://lortaowlmktdnttoykfl.supabase.co';
 //     END IF;
-//     
+//
 //     v_url := v_url || '/functions/v1/match-property-webhook';
-//   
+//
 //     -- Only trigger matching logic if a new 'oferta' (property) is inserted
 //     IF NEW.metadata->>'type' = 'oferta' THEN
 //       v_body := jsonb_build_object(
@@ -2412,7 +2403,7 @@ export const Constants = {
 //         'schema', 'public',
 //         'record', row_to_json(NEW)
 //       );
-//       
+//
 //       BEGIN
 //         PERFORM net.http_post(
 //             url := v_url,
@@ -2424,11 +2415,11 @@ export const Constants = {
 //         RAISE WARNING 'Error scheduling match webhook pg_net request: %', SQLERRM;
 //       END;
 //     END IF;
-//     
+//
 //     RETURN NEW;
 //   END;
 //   $function$
-//   
+//
 // FUNCTION trigger_process_market_intelligence()
 //   CREATE OR REPLACE FUNCTION public.trigger_process_market_intelligence()
 //    RETURNS trigger
@@ -2450,12 +2441,12 @@ export const Constants = {
 //         RETURN NEW;
 //       END IF;
 //     END IF;
-//   
+//
 //     v_url := current_setting('app.settings.supabase_url', true);
 //     IF v_url IS NULL OR v_url = '' THEN
 //       v_url := 'https://lortaowlmktdnttoykfl.supabase.co';
 //     END IF;
-//     
+//
 //     v_url := v_url || '/functions/v1/process-market-intelligence';
 //     v_body := jsonb_build_object(
 //       'type', TG_OP,
@@ -2463,7 +2454,7 @@ export const Constants = {
 //       'schema', TG_TABLE_SCHEMA,
 //       'record', row_to_json(NEW)
 //     );
-//   
+//
 //     BEGIN
 //       PERFORM net.http_post(
 //           url := v_url,
@@ -2474,11 +2465,11 @@ export const Constants = {
 //     EXCEPTION WHEN OTHERS THEN
 //       RAISE WARNING 'Error scheduling process-market-intelligence webhook pg_net request: %', SQLERRM;
 //     END;
-//     
+//
 //     RETURN NEW;
 //   END;
 //   $function$
-//   
+//
 // FUNCTION trigger_referral_prompt_on_closed()
 //   CREATE OR REPLACE FUNCTION public.trigger_referral_prompt_on_closed()
 //    RETURNS trigger
@@ -2497,12 +2488,12 @@ export const Constants = {
 //     IF OLD.status IS DISTINCT FROM NEW.status AND NEW.status IN ('closed', 'aguardando_vgv') THEN
 //       SELECT * INTO v_user1 FROM public.profiles WHERE id = NEW.broker_property_id;
 //       SELECT * INTO v_user2 FROM public.profiles WHERE id = NEW.broker_demand_id;
-//       
+//
 //       v_url := current_setting('app.settings.supabase_url', true);
 //       IF v_url IS NULL OR v_url = '' THEN
 //         v_url := 'https://lortaowlmktdnttoykfl.supabase.co';
 //       END IF;
-//       
+//
 //       -- Process for Broker Property
 //       IF v_user1.whatsapp_number IS NOT NULL THEN
 //         v_message := 'Parabéns pelo fechamento, ' || split_part(COALESCE(v_user1.full_name, 'Parceiro'), ' ', 1) || '! 🎉 ' ||
@@ -2515,23 +2506,23 @@ export const Constants = {
 //         EXCEPTION WHEN OTHERS THEN
 //           RAISE WARNING 'Error scheduling referral prompt on closed (user1 WA): %', SQLERRM;
 //         END;
-//         
+//
 //         IF v_user1.email IS NOT NULL THEN
 //           v_email_subject := 'Parabéns pelo fechamento! Multiplique seus resultados 🚀';
 //           v_email_body := 'Olá ' || split_part(COALESCE(v_user1.full_name, 'Parceiro'), ' ', 1) || ',
-//   
+//
 //   Parabéns pelo fechamento de negócio através do Prime Circle! 🎉
-//   
+//
 //   Você acaba de comprovar o poder da nossa rede exclusiva. Para que você continue fechando parcerias de alto nível com segurança e rapidez, precisamos da sua ajuda para crescer o nosso ecossistema.
-//   
+//
 //   Quanto mais corretores de confiança na rede, mais rápido ocorrem os matches.
-//   
+//
 //   Convide seus parceiros utilizando seu link exclusivo:
 //   https://www.primecircle.app.br/?ref=' || v_user1.id || '
-//   
+//
 //   Boas vendas,
 //   Equipe Prime Circle';
-//   
+//
 //           v_body := jsonb_build_object('to', v_user1.email, 'subject', v_email_subject, 'text', v_email_body, 'user_id', v_user1.id);
 //           BEGIN
 //             PERFORM net.http_post(url := v_url || '/functions/v1/send-email', headers := '{"Content-Type": "application/json"}'::jsonb, body := v_body, timeout_milliseconds := 2000);
@@ -2540,7 +2531,7 @@ export const Constants = {
 //           END;
 //         END IF;
 //       END IF;
-//   
+//
 //       -- Process for Broker Demand
 //       IF v_user2.whatsapp_number IS NOT NULL THEN
 //         v_message := 'Parabéns pelo fechamento, ' || split_part(COALESCE(v_user2.full_name, 'Parceiro'), ' ', 1) || '! 🎉 ' ||
@@ -2553,23 +2544,23 @@ export const Constants = {
 //         EXCEPTION WHEN OTHERS THEN
 //           RAISE WARNING 'Error scheduling referral prompt on closed (user2 WA): %', SQLERRM;
 //         END;
-//         
+//
 //         IF v_user2.email IS NOT NULL THEN
 //           v_email_subject := 'Parabéns pelo fechamento! Multiplique seus resultados 🚀';
 //           v_email_body := 'Olá ' || split_part(COALESCE(v_user2.full_name, 'Parceiro'), ' ', 1) || ',
-//   
+//
 //   Parabéns pelo fechamento de negócio através do Prime Circle! 🎉
-//   
+//
 //   Você acaba de comprovar o poder da nossa rede exclusiva. Para que você continue fechando parcerias de alto nível com segurança e rapidez, precisamos da sua ajuda para crescer o nosso ecossistema.
-//   
+//
 //   Quanto mais corretores de confiança na rede, mais rápido ocorrem os matches.
-//   
+//
 //   Convide seus parceiros utilizando seu link exclusivo:
 //   https://www.primecircle.app.br/?ref=' || v_user2.id || '
-//   
+//
 //   Boas vendas,
 //   Equipe Prime Circle';
-//   
+//
 //           v_body := jsonb_build_object('to', v_user2.email, 'subject', v_email_subject, 'text', v_email_body, 'user_id', v_user2.id);
 //           BEGIN
 //             PERFORM net.http_post(url := v_url || '/functions/v1/send-email', headers := '{"Content-Type": "application/json"}'::jsonb, body := v_body, timeout_milliseconds := 2000);
@@ -2582,7 +2573,7 @@ export const Constants = {
 //     RETURN NEW;
 //   END;
 //   $function$
-//   
+//
 // FUNCTION trigger_referral_prompt_on_demand()
 //   CREATE OR REPLACE FUNCTION public.trigger_referral_prompt_on_demand()
 //    RETURNS trigger
@@ -2600,23 +2591,23 @@ export const Constants = {
 //   BEGIN
 //     IF NEW.metadata->>'type' = 'demanda' THEN
 //       -- Check how many demands the user has created
-//       SELECT count(*) INTO v_demand_count FROM public.documents 
+//       SELECT count(*) INTO v_demand_count FROM public.documents
 //       WHERE metadata->>'user_id' = NEW.metadata->>'user_id' AND metadata->>'type' = 'demanda';
-//       
+//
 //       -- Only send on the 1st and 3rd demand to avoid spam
 //       IF v_demand_count IN (1, 3) THEN
 //         SELECT * INTO v_user FROM public.profiles WHERE id = (NEW.metadata->>'user_id')::uuid;
-//         
+//
 //         IF v_user.whatsapp_number IS NOT NULL THEN
 //           v_message := 'Olá ' || split_part(COALESCE(v_user.full_name, 'Parceiro'), ' ', 1) || '! Notamos que você acabou de cadastrar uma demanda na rede. 🎯 ' ||
 //                        'Ainda não encontrou o imóvel ideal? Convide um corretor de confiança que atua nessa região! ' ||
 //                        'Quanto maior nossa rede, mais negócios fechamos juntos. Envie seu link exclusivo: https://www.primecircle.app.br/?ref=' || v_user.id;
-//                        
+//
 //           v_url := current_setting('app.settings.supabase_url', true);
 //           IF v_url IS NULL OR v_url = '' THEN
 //             v_url := 'https://lortaowlmktdnttoykfl.supabase.co';
 //           END IF;
-//           
+//
 //           -- Send WhatsApp
 //           v_body := jsonb_build_object('number', v_user.whatsapp_number, 'text', v_message, 'user_id', v_user.id);
 //           BEGIN
@@ -2629,24 +2620,24 @@ export const Constants = {
 //           EXCEPTION WHEN OTHERS THEN
 //             RAISE WARNING 'Error scheduling referral prompt on demand WA: %', SQLERRM;
 //           END;
-//           
+//
 //           -- Send Email
 //           IF v_user.email IS NOT NULL THEN
 //             v_email_subject := 'Não encontrou o imóvel ideal?';
 //             v_email_body := 'Olá ' || split_part(COALESCE(v_user.full_name, 'Parceiro'), ' ', 1) || ',
-//   
+//
 //   Notamos que você acabou de cadastrar uma nova demanda no Prime Circle. 🎯
-//   
+//
 //   Ainda não encontrou o imóvel perfeito para o seu cliente na nossa rede? Nossa dica de ouro: convide o corretor que você sabe que tem esse imóvel para se juntar ao Prime Circle!
-//   
+//
 //   Ao trazê-lo para a rede, vocês fecham a parceria com segurança (50/50) e você nos ajuda a expandir as oportunidades para todos.
-//   
+//
 //   Envie seu link exclusivo para ele:
 //   https://www.primecircle.app.br/?ref=' || v_user.id || '
-//   
+//
 //   Boas vendas,
 //   Equipe Prime Circle';
-//   
+//
 //             v_body := jsonb_build_object('to', v_user.email, 'subject', v_email_subject, 'text', v_email_body, 'user_id', v_user.id);
 //             BEGIN
 //               PERFORM net.http_post(
@@ -2665,7 +2656,7 @@ export const Constants = {
 //     RETURN NEW;
 //   END;
 //   $function$
-//   
+//
 // FUNCTION trigger_support_ticket_webhook()
 //   CREATE OR REPLACE FUNCTION public.trigger_support_ticket_webhook()
 //    RETURNS trigger
@@ -2677,19 +2668,19 @@ export const Constants = {
 //     v_body jsonb;
 //   BEGIN
 //     v_url := current_setting('app.settings.supabase_url', true);
-//     
+//
 //     IF v_url IS NULL OR v_url = '' THEN
 //       v_url := 'https://lortaowlmktdnttoykfl.supabase.co';
 //     END IF;
-//     
+//
 //     v_url := v_url || '/functions/v1/support-ticket-webhook';
 //     v_body := jsonb_build_object(
-//       'type', 'INSERT', 
-//       'table', 'support_tickets', 
-//       'schema', 'public', 
+//       'type', 'INSERT',
+//       'table', 'support_tickets',
+//       'schema', 'public',
 //       'record', row_to_json(NEW)
 //     );
-//   
+//
 //     BEGIN
 //       -- net.http_post puts the request in an async queue handled by the pg_net background worker
 //       -- This guarantees the transaction commits quickly regardless of the edge function's response time
@@ -2703,11 +2694,11 @@ export const Constants = {
 //       -- Completely swallow any pg_net scheduling errors to avoid aborting insert
 //       RAISE WARNING 'Error scheduling support ticket webhook pg_net request: %', SQLERRM;
 //     END;
-//     
+//
 //     RETURN NEW;
 //   END;
 //   $function$
-//   
+//
 // FUNCTION trigger_validation_whatsapp()
 //   CREATE OR REPLACE FUNCTION public.trigger_validation_whatsapp()
 //    RETURNS trigger
@@ -2721,29 +2712,29 @@ export const Constants = {
 //   BEGIN
 //     -- Only trigger when status changes from pending_validation to active and validated_by is populated
 //     IF OLD.status = 'pending_validation' AND NEW.status = 'active' AND NEW.validated_by IS NOT NULL THEN
-//       
+//
 //       -- Make sure the user has a whatsapp number
 //       IF NEW.whatsapp_number IS NULL OR NEW.whatsapp_number = '' THEN
 //         RETURN NEW;
 //       END IF;
-//   
+//
 //       v_url := current_setting('app.settings.supabase_url', true);
 //       IF v_url IS NULL OR v_url = '' THEN
 //         v_url := 'https://lortaowlmktdnttoykfl.supabase.co';
 //       END IF;
-//       
+//
 //       v_url := v_url || '/functions/v1/send-whatsapp';
-//       
+//
 //       -- Construct the exact message requested in Acceptance Criteria
 //       v_message := 'Olá ' || COALESCE(NEW.full_name, 'Parceiro(a)') || '! Sua conta no Prime Circle foi validada com sucesso por um de nossos membros sêniores. 🚀 Acesse agora para conferir as oportunidades exclusivas: https://www.primecircle.app.br/dashboard';
-//   
+//
 //       -- Build the payload for the edge function. Including user_id ensures it gets logged in notification_logs.
 //       v_body := jsonb_build_object(
 //         'number', NEW.whatsapp_number,
 //         'text', v_message,
 //         'user_id', NEW.id
 //       );
-//       
+//
 //       BEGIN
 //         PERFORM net.http_post(
 //             url := v_url,
@@ -2755,11 +2746,11 @@ export const Constants = {
 //         RAISE WARNING 'Error scheduling validation whatsapp pg_net request: %', SQLERRM;
 //       END;
 //     END IF;
-//     
+//
 //     RETURN NEW;
 //   END;
 //   $function$
-//   
+//
 // FUNCTION trigger_welcome_webhook()
 //   CREATE OR REPLACE FUNCTION public.trigger_welcome_webhook()
 //    RETURNS trigger
@@ -2771,19 +2762,19 @@ export const Constants = {
 //     v_body jsonb;
 //   BEGIN
 //     v_url := current_setting('app.settings.supabase_url', true);
-//     
+//
 //     IF v_url IS NULL OR v_url = '' THEN
 //       v_url := 'https://lortaowlmktdnttoykfl.supabase.co';
 //     END IF;
-//     
+//
 //     v_url := v_url || '/functions/v1/welcome-webhook';
 //     v_body := jsonb_build_object(
-//       'type', 'INSERT', 
-//       'table', 'profiles', 
-//       'schema', 'public', 
+//       'type', 'INSERT',
+//       'table', 'profiles',
+//       'schema', 'public',
 //       'record', row_to_json(NEW)
 //     );
-//   
+//
 //     BEGIN
 //       -- net.http_post puts the request in an async queue handled by the pg_net background worker
 //       -- This guarantees the transaction commits quickly regardless of the edge function's response time
@@ -2797,11 +2788,11 @@ export const Constants = {
 //       -- Completely swallow any pg_net scheduling errors to avoid aborting auth.users insert
 //       RAISE WARNING 'Error scheduling welcome webhook pg_net request: %', SQLERRM;
 //     END;
-//     
+//
 //     RETURN NEW;
 //   END;
 //   $function$
-//   
+//
 // FUNCTION update_quick_action_tokens_updated_at()
 //   CREATE OR REPLACE FUNCTION public.update_quick_action_tokens_updated_at()
 //    RETURNS trigger
@@ -2812,7 +2803,7 @@ export const Constants = {
 //     RETURN NEW;
 //   END;
 //   $function$
-//   
+//
 
 // --- TRIGGERS ---
 // Table: documents
@@ -2855,4 +2846,3 @@ export const Constants = {
 //   CREATE UNIQUE INDEX quick_action_tokens_token_key ON public.quick_action_tokens USING btree (token)
 // Table: user_matches
 //   CREATE UNIQUE INDEX user_matches_user_id_month_year_key ON public.user_matches USING btree (user_id, month, year)
-

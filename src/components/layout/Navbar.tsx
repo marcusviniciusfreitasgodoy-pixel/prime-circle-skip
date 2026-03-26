@@ -47,12 +47,20 @@ export function Navbar() {
   useEffect(() => {
     if (!authUser) return
     const fetchCount = async () => {
-      const { count } = await supabase
-        .from('partnerships')
-        .select('id', { count: 'exact', head: true })
-        .eq('status', 'match')
-        .or(`broker_property_id.eq.${authUser.id},broker_demand_id.eq.${authUser.id}`)
-      setNewMatchesCount(count || 0)
+      try {
+        const { count, error } = await supabase
+          .from('partnerships')
+          .select('id', { count: 'exact' })
+          .eq('status', 'match')
+          .or(`broker_property_id.eq.${authUser.id},broker_demand_id.eq.${authUser.id}`)
+          .limit(0)
+
+        if (!error) {
+          setNewMatchesCount(count || 0)
+        }
+      } catch (err) {
+        console.error('Failed to fetch match count:', err)
+      }
     }
     fetchCount()
 
