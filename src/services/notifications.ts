@@ -118,7 +118,10 @@ export const processNotification = async ({
   if (recipientPhone) {
     notificationPromises.push(
       sendWhatsappMessage(recipientPhone, waMessage, userId).then((res) => {
-        if (res?.error) throw new Error(res.error)
+        if (res?.error || res?.data?.success === false) {
+          const errDetail = res?.error || res?.data?.error || 'WhatsApp error'
+          throw new Error(typeof errDetail === 'string' ? errDetail : JSON.stringify(errDetail))
+        }
       }),
     )
   }
@@ -130,7 +133,10 @@ export const processNotification = async ({
         body: emailMessage,
         userId,
       }).then((res) => {
-        if (res?.error || res?.success === false) throw new Error(res?.error || 'Email error')
+        if (res?.error || res?.data?.success === false || res?.success === false) {
+          const errDetail = res?.error || res?.data?.error || 'Email error'
+          throw new Error(typeof errDetail === 'string' ? errDetail : JSON.stringify(errDetail))
+        }
       }),
     )
   }

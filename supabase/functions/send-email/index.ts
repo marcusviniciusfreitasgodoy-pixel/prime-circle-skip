@@ -4,7 +4,8 @@ import { createClient } from 'npm:@supabase/supabase-js@2'
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, x-supabase-client-platform, apikey, content-type',
+  'Access-Control-Allow-Headers':
+    'authorization, x-client-info, x-supabase-client-platform, apikey, content-type',
 }
 
 Deno.serve(async (req: Request) => {
@@ -17,14 +18,17 @@ Deno.serve(async (req: Request) => {
     const { to, subject, text, user_id } = body
 
     if (!to || !subject || !text) {
-      return new Response(JSON.stringify({ error: 'Missing required fields: to, subject, text' }), {
-        status: 400,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      })
+      return new Response(
+        JSON.stringify({ success: false, error: 'Missing required fields: to, subject, text' }),
+        {
+          status: 200,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        },
+      )
     }
 
     const resendApiKey = Deno.env.get('RESEND_API_KEY')
-    
+
     // Replace newlines with <br/> for HTML email if text is plain
     const htmlBody = text.replace(/\n/g, '<br/>')
 
@@ -36,17 +40,22 @@ Deno.serve(async (req: Request) => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${resendApiKey}`
+          Authorization: `Bearer ${resendApiKey}`,
         },
         body: JSON.stringify({
           from: 'Prime Circle <contato@primecircle.app.br>',
           to: to,
           subject: subject,
-          html: `<div style="font-family: sans-serif; line-height: 1.6; color: #333;">${htmlBody}</div>`
-        })
+          html: `<div style="font-family: sans-serif; line-height: 1.6; color: #333;">${htmlBody}</div>`,
+        }),
       })
-      
-      responseData = await res.json()
+
+      const responseText = await res.text()
+      try {
+        responseData = JSON.parse(responseText)
+      } catch (e) {
+        responseData = { message: responseText }
+      }
       success = res.ok
     } else {
       // Mock success if no Resend key is available
@@ -60,21 +69,23 @@ Deno.serve(async (req: Request) => {
       const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
       if (supabaseUrl && supabaseKey) {
         const supabase = createClient(supabaseUrl, supabaseKey)
-        await supabase.rpc('log_notification', {
-          p_user_id: user_id,
-          p_recipient: to,
-          p_channel: 'email',
-          p_status: success ? 'success' : 'failed',
-          p_message_body: subject + '\n' + text,
-          p_error_details: success ? null : JSON.stringify(responseData),
-        }).catch(err => console.error('Failed to log notification', err))
+        await supabase
+          .rpc('log_notification', {
+            p_user_id: user_id,
+            p_recipient: to,
+            p_channel: 'email',
+            p_status: success ? 'success' : 'failed',
+            p_message_body: subject + '\n' + text,
+            p_error_details: success ? null : JSON.stringify(responseData),
+          })
+          .catch((err) => console.error('Failed to log notification', err))
       }
     }
 
     if (!success) {
-      return new Response(JSON.stringify({ error: responseData }), {
+      return new Response(JSON.stringify({ success: false, error: responseData }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        status: 400,
+        status: 200,
       })
     }
 
@@ -82,11 +93,10 @@ Deno.serve(async (req: Request) => {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       status: 200,
     })
-
   } catch (error: any) {
-    return new Response(JSON.stringify({ error: error.message }), {
+    return new Response(JSON.stringify({ success: false, error: error.message }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      status: 500,
+      status: 200,
     })
   }
 })

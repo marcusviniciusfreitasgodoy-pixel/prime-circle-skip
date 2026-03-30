@@ -91,7 +91,14 @@ export function LogsTab() {
       }
 
       if (res?.error) throw res.error
-      if (res?.data?.error) throw new Error(res.data.error)
+      if (res?.data?.error) {
+        const errMsg =
+          typeof res.data.error === 'string' ? res.data.error : JSON.stringify(res.data.error)
+        throw new Error(errMsg)
+      }
+      if (res?.data?.success === false) {
+        throw new Error('Falha no envio da notificação')
+      }
 
       toast({ title: 'Notificação reenviada com sucesso' })
       await loadLogs()
