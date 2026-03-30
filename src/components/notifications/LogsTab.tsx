@@ -17,24 +17,27 @@ import {
   DialogTitle,
   DialogDescription,
 } from '@/components/ui/dialog'
-import { Eye, Mail, MessageSquare, AlertCircle, RefreshCw } from 'lucide-react'
-import { fetchLogs, NotificationLog } from '@/services/notifications'
+import { Eye, Mail, MessageSquare, AlertCircle, RefreshCw, Activity } from 'lucide-react'
+import { NotificationLog } from '@/services/notifications'
 import { useAuth } from '@/hooks/use-auth'
 import { useToast } from '@/hooks/use-toast'
 import { supabase } from '@/lib/supabase/client'
 import { cn } from '@/lib/utils'
 
+type LogType = 'notifications' | 'actions'
+
 export function LogsTab() {
   const { user } = useAuth()
   const { toast } = useToast()
-  const [logs, setLogs] = useState<NotificationLog[]>([])
+  const [logs, setLogs] = useState<any[]>([])
+  const [logType, setLogType] = useState<LogType>('notifications')
   const [isLoading, setIsLoading] = useState(true)
-  const [selectedLog, setSelectedLog] = useState<NotificationLog | null>(null)
+  const [selectedLog, setSelectedLog] = useState<any | null>(null)
   const [isResending, setIsResending] = useState<string | null>(null)
 
   useEffect(() => {
     if (user) loadLogs()
-  }, [user])
+  }, [user, logType])
 
   const loadLogs = async () => {
     setIsLoading(true)
@@ -47,18 +50,33 @@ export function LogsTab() {
 
       const isAdmin = profile?.role === 'admin'
 
-      let query = supabase
-        .from('notification_logs')
-        .select('*, profiles(full_name)')
-        .order('created_at', { ascending: false })
-        .limit(200)
+      if (logType === 'notifications') {
+        let query = supabase
+          .from('notification_logs')
+          .select('*, profiles(full_name)')
+          .order('created_at', { ascending: false })
+          .limit(200)
 
-      if (!isAdmin) {
-        query = query.eq('user_id', user!.id)
+        if (!isAdmin) {
+          query = query.eq('user_id', user!.id)
+        }
+
+        const { data } = await query
+        if (data) setLogs(data)
+      } else {
+        let query = supabase
+          .from('user_actions')
+          .select('*, profiles(full_name, email)')
+          .order('created_at', { ascending: false })
+          .limit(200)
+
+        if (!isAdmin) {
+          query = query.eq('user_id', user!.id)
+        }
+
+        const { data } = await query
+        if (data) setLogs(data)
       }
-
-      const { data } = await query
-      if (data) setLogs(data as any[])
     } catch (error) {
       console.error('Error loading logs:', error)
     } finally {
@@ -100,7 +118,6 @@ export function LogsTab() {
         throw new Error('Falha no envio da notificação')
       }
 
-      // Atualiza o log atual para sucesso para remover o status de falha visual
       await supabase
         .from('notification_logs')
         .update({ status: 'success', error_details: null })
@@ -126,17 +143,38 @@ export function LogsTab() {
     }
   }
 
-  if (isLoading)
-    return <div className="text-muted-foreground py-8 text-center">Carregando histórico...</div>
-
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4">
         <div>
-          <h3 className="text-xl font-bold text-white">Histórico de Envios</h3>
+          <h3 className="text-xl font-bold text-white">Trilha de Auditoria e Logs</h3>
           <p className="text-muted-foreground text-sm">
-            Monitore os status de entrega das suas notificações e fallbacks.
+            Monitore o histórico de disparos (WhatsApp/E-mail) e ações do sistema.
           </p>
+        </div>
+        <div className="flex bg-secondary/50 p-1 rounded-lg border border-border shrink-0">
+          <Button
+            variant={logType === 'notifications' ? 'secondary' : 'ghost'}
+            size="sm"
+            className={cn(
+              'text-sm px-3',
+              logType === 'notifications' && 'bg-background shadow-sm text-primary',
+            )}
+            onClick={() => setLogType('notifications')}
+          >
+            <Mail className="w-4 h-4 mr-2" /> Comunicações
+          </Button>
+          <Button
+            variant={logType === 'actions' ? 'secondary' : 'ghost'}
+            size="sm"
+            className={cn(
+              'text-sm px-3',
+              logType === 'actions' && 'bg-background shadow-sm text-primary',
+            )}
+            onClick={() => setLogType('actions')}
+          >
+            <Activity className="w-4 h-4 mr-2" /> Ações do Sistema
+          </Button>
         </div>
       </div>
 
@@ -146,80 +184,104 @@ export function LogsTab() {
             <TableHeader className="bg-secondary/50">
               <TableRow className="border-border">
                 <TableHead className="text-muted-foreground">Data/Hora</TableHead>
-                <TableHead className="text-muted-foreground">Destinatário / Usuário</TableHead>
-                <TableHead className="text-muted-foreground">Canal</TableHead>
+                <TableHead className="text-muted-foreground">Usuário / Destinatário</TableHead>
+                <TableHead className="text-muted-foreground">
+                  {logType === 'notifications' ? 'Canal' : 'Tipo de Ação'}
+                </TableHead>
                 <TableHead className="text-muted-foreground">Status</TableHead>
                 <TableHead className="text-right text-muted-foreground">Detalhes</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {logs.map((log) => (
-                <TableRow key={log.id} className="border-border hover:bg-secondary/30">
-                  <TableCell className="text-sm text-white">
-                    {new Date(log.created_at).toLocaleString('pt-BR')}
-                  </TableCell>
-                  <TableCell className="text-sm text-white font-medium">
-                    {log.recipient}
-                    {(log as any).profiles?.full_name && (
-                      <div className="text-xs text-muted-foreground font-normal mt-0.5">
-                        {(log as any).profiles.full_name}
-                      </div>
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      {log.channel === 'whatsapp' ? (
-                        <MessageSquare className="w-4 h-4 text-green-500" />
-                      ) : (
-                        <Mail className="w-4 h-4 text-blue-500" />
-                      )}
-                      <span className="capitalize">{log.channel}</span>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <Badge
-                      variant="outline"
-                      className={
-                        log.status === 'success'
-                          ? 'bg-green-500/10 text-green-500 border-green-500/20'
-                          : 'bg-red-500/10 text-red-500 border-red-500/20'
-                      }
-                    >
-                      {log.status === 'success' ? 'Enviado' : 'Falha'}
-                    </Badge>
-                  </TableCell>
-                  <TableCell className="text-right whitespace-nowrap">
-                    {log.status === 'failed' && (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="mr-2 border-primary/50 text-primary hover:bg-primary/10 h-8"
-                        onClick={() => handleResend(log)}
-                        disabled={isResending === log.id}
-                      >
-                        <RefreshCw
-                          className={cn('w-3 h-3 mr-1', isResending === log.id && 'animate-spin')}
-                        />
-                        Reenviar
-                      </Button>
-                    )}
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="text-muted-foreground hover:text-white h-8"
-                      onClick={() => setSelectedLog(log)}
-                    >
-                      <Eye className="w-4 h-4 mr-1" /> Ver
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-              {logs.length === 0 && (
+              {isLoading ? (
                 <TableRow>
                   <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
-                    Nenhum registro de notificação encontrado.
+                    Carregando registros...
                   </TableCell>
                 </TableRow>
+              ) : logs.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
+                    Nenhum registro encontrado para esta categoria.
+                  </TableCell>
+                </TableRow>
+              ) : (
+                logs.map((log) => (
+                  <TableRow key={log.id} className="border-border hover:bg-secondary/30">
+                    <TableCell className="text-sm text-white whitespace-nowrap">
+                      {new Date(log.created_at).toLocaleString('pt-BR')}
+                    </TableCell>
+                    <TableCell className="text-sm text-white font-medium">
+                      {logType === 'notifications' ? log.recipient : log.profiles?.email}
+                      {log.profiles?.full_name && (
+                        <div className="text-xs text-muted-foreground font-normal mt-0.5">
+                          {log.profiles.full_name}
+                        </div>
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      {logType === 'notifications' ? (
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                          {log.channel === 'whatsapp' ? (
+                            <MessageSquare className="w-4 h-4 text-green-500" />
+                          ) : log.channel === 'push' ? (
+                            <Activity className="w-4 h-4 text-purple-500" />
+                          ) : (
+                            <Mail className="w-4 h-4 text-blue-500" />
+                          )}
+                          <span className="capitalize">{log.channel}</span>
+                        </div>
+                      ) : (
+                        <span className="text-sm text-muted-foreground">{log.action_type}</span>
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      {logType === 'notifications' ? (
+                        <Badge
+                          variant="outline"
+                          className={
+                            log.status === 'success'
+                              ? 'bg-green-500/10 text-green-500 border-green-500/20'
+                              : 'bg-red-500/10 text-red-500 border-red-500/20'
+                          }
+                        >
+                          {log.status === 'success' ? 'Enviado' : 'Falha'}
+                        </Badge>
+                      ) : (
+                        <Badge
+                          variant="outline"
+                          className="bg-primary/10 text-primary border-primary/20"
+                        >
+                          Registrado
+                        </Badge>
+                      )}
+                    </TableCell>
+                    <TableCell className="text-right whitespace-nowrap">
+                      {logType === 'notifications' && log.status === 'failed' && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="mr-2 border-primary/50 text-primary hover:bg-primary/10 h-8"
+                          onClick={() => handleResend(log)}
+                          disabled={isResending === log.id}
+                        >
+                          <RefreshCw
+                            className={cn('w-3 h-3 mr-1', isResending === log.id && 'animate-spin')}
+                          />
+                          Reenviar
+                        </Button>
+                      )}
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="text-muted-foreground hover:text-white h-8"
+                        onClick={() => setSelectedLog(log)}
+                      >
+                        <Eye className="w-4 h-4 mr-1" /> Ver
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))
               )}
             </TableBody>
           </Table>
@@ -230,25 +292,33 @@ export function LogsTab() {
         <DialogContent className="bg-card border-border sm:max-w-[500px]">
           <DialogHeader>
             <DialogTitle className="text-white flex items-center gap-2">
-              Detalhes da Notificação
-              <Badge
-                variant="outline"
-                className={
-                  selectedLog?.status === 'success'
-                    ? 'text-green-500 border-green-500/20'
-                    : 'text-red-500 border-red-500/20'
-                }
-              >
-                {selectedLog?.status}
-              </Badge>
+              Detalhes do Registro
+              {selectedLog?.status && (
+                <Badge
+                  variant="outline"
+                  className={
+                    selectedLog?.status === 'success'
+                      ? 'text-green-500 border-green-500/20'
+                      : 'text-red-500 border-red-500/20'
+                  }
+                >
+                  {selectedLog?.status}
+                </Badge>
+              )}
             </DialogTitle>
             <DialogDescription>
-              Enviado via {selectedLog?.channel} para {selectedLog?.recipient}
+              {logType === 'notifications'
+                ? `Enviado via ${selectedLog?.channel} para ${selectedLog?.recipient}`
+                : `Ação do sistema: ${selectedLog?.action_type}`}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="p-4 bg-background rounded-lg border border-border">
-              <p className="text-sm text-white whitespace-pre-wrap">{selectedLog?.message_body}</p>
+              <p className="text-sm text-white whitespace-pre-wrap">
+                {logType === 'notifications'
+                  ? selectedLog?.message_body
+                  : JSON.stringify(selectedLog, null, 2)}
+              </p>
             </div>
 
             {selectedLog?.error_details && (

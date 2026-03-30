@@ -68,9 +68,9 @@ export function UsersManagementTab({
   const [searchQuery, setSearchQuery] = useState('')
   const [statusFilter, setStatusFilter] = useState('all')
   const [selectedUsers, setSelectedUsers] = useState<string[]>([])
-  const [bulkAction, setBulkAction] = useState<'activate' | 'suspend' | 'reset_password' | null>(
-    null,
-  )
+  const [bulkAction, setBulkAction] = useState<
+    'activate' | 'suspend' | 'reset_password' | 'force_activation' | null
+  >(null)
   const [isProcessing, setIsProcessing] = useState(false)
   const [isTriggeringActivation, setIsTriggeringActivation] = useState(false)
   const [selectedProfile, setSelectedProfile] = useState<Profile | null>(null)
@@ -103,7 +103,7 @@ export function UsersManagementTab({
     if (isTriggeringActivation) return
     setIsTriggeringActivation(true)
     const toastId = toast.loading(
-      'Processando notificações de ativação... Isso pode levar alguns segundos.',
+      'Analisando usuários e disparando notificações... Por favor, aguarde.',
     )
 
     try {
@@ -111,17 +111,23 @@ export function UsersManagementTab({
       if (error) throw error
 
       if (data?.processed === 0) {
-        toast.success('Nenhum usuário pendente de ativação no momento.', { id: toastId })
+        toast.info('Nenhum usuário elegível para notificação no momento.', {
+          id: toastId,
+          description: 'Todos os usuários inativos já foram notificados nos últimos 7 dias.',
+        })
       } else {
-        toast.success(
-          `Automação concluída! ${data?.processed || 0} usuários processados. Enviados: ${data?.whatsappSent || 0} WhatsApps e ${data?.emailSent || 0} e-mails.`,
-          { id: toastId, duration: 5000 },
-        )
+        toast.success(`Ativação forçada concluída com sucesso!`, {
+          id: toastId,
+          description: `${data?.processed || 0} usuários processados. Enviados: ${data?.whatsappSent || 0} WhatsApps e ${data?.emailSent || 0} e-mails.`,
+          duration: 8000,
+        })
       }
       refetchProfiles()
     } catch (err: any) {
-      toast.error(`Erro ao disparar automação: ${err.message || 'Falha no servidor'}`, {
+      toast.error(`Falha ao disparar automação`, {
         id: toastId,
+        description: err.message || 'Ocorreu um erro no servidor.',
+        duration: 8000,
       })
     } finally {
       setIsTriggeringActivation(false)
@@ -169,6 +175,15 @@ export function UsersManagementTab({
           if (error) console.error(`Error resetting password for ${u.email}:`, error)
         }
         toast.success(`E-mail de redefinição enviado para ${usersToReset.length} usuários.`)
+      } else if (bulkAction === 'force_activation') {
+        const { data, error } = await supabase.functions.invoke('process-activation-reminders', {
+          body: { userIds: selectedUsers },
+        })
+        if (error) throw error
+        toast.success(`Notificações de ativação enviadas com sucesso!`, {
+          description: `${data?.processed || 0} usuários notificados (${data?.whatsappSent || 0} WA, ${data?.emailSent || 0} E-mail).`,
+          duration: 8000,
+        })
       }
 
       refetchProfiles()
@@ -535,6 +550,14 @@ export function UsersManagementTab({
           <Button
             size="sm"
             variant="ghost"
+            className="text-blue-500 hover:bg-blue-500/10 hover:text-blue-500"
+            onClick={() => setBulkAction('force_activation')}
+          >
+            <BellRing className="w-4 h-4 mr-2" /> Notificar
+          </Button>
+          <Button
+            size="sm"
+            variant="ghost"
             className="text-foreground hover:bg-foreground/10"
             onClick={() => setBulkAction('reset_password')}
           >
@@ -554,6 +577,8 @@ export function UsersManagementTab({
                 `Tem certeza que deseja SUSPENDER ${selectedUsers.length} usuários? Eles perderão o acesso à plataforma.`}
               {bulkAction === 'reset_password' &&
                 `Tem certeza que deseja enviar o link de REDEFINIÇÃO DE SENHA para ${selectedUsers.length} usuários?`}
+              {bulkAction === 'force_activation' &&
+                `Tem certeza que deseja enviar um ALERTA DE ATIVAÇÃO (via WhatsApp e E-mail) para os ${selectedUsers.length} usuários selecionados?`}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

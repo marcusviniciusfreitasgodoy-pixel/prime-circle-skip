@@ -7,10 +7,10 @@ export default function NotificationsPage() {
   return (
     <div className="max-w-5xl mx-auto space-y-8 animate-fade-in-up">
       <div>
-        <h2 className="text-3xl font-bold tracking-tight text-white">Comunicações</h2>
+        <h2 className="text-3xl font-bold tracking-tight text-white">Comunicações & Auditoria</h2>
         <p className="text-muted-foreground mt-2 text-lg">
-          Gerencie seus templates de notificação e acompanhe o histórico de envios automáticos para
-          seus parceiros.
+          Gerencie seus templates de notificação e acompanhe a trilha de auditoria (histórico de
+          envios e logs de sistema).
         </p>
       </div>
 
@@ -26,7 +26,7 @@ export default function NotificationsPage() {
             value="history"
             className="data-[state=active]:bg-background data-[state=active]:text-primary"
           >
-            <History className="w-4 h-4 mr-2" /> Histórico
+            <History className="w-4 h-4 mr-2" /> Trilha de Auditoria
           </TabsTrigger>
         </TabsList>
 
