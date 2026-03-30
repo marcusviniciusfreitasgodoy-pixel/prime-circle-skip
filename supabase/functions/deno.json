@@ -1,12 +1,12 @@
 {
   "_versions": {
     "send-whatsapp": 25,
-    "send-email": 20,
-    "welcome-webhook": 23,
-    "support-ticket-webhook": 7,
-    "match-property-webhook": 11,
+    "send-email": 21,
+    "welcome-webhook": 24,
+    "support-ticket-webhook": 8,
+    "match-property-webhook": 12,
     "functions": 8,
-    "demand-push-webhook": 7,
+    "demand-push-webhook": 8,
     "monitor-partnerships": 6,
     "calculate-plan-price": 1,
     "record-match": 1,
@@ -15,9 +15,9 @@
     "process-quick-action": 3,
     "send-reminder-24h": 1,
     "process-market-intelligence": 1,
-    "send-newsletter": 2,
+    "send-newsletter": 3,
     "register-newsletter-feedback": 1,
-    "process-invitation-reminders": 2,
-    "process-activation-reminders": 1
+    "process-invitation-reminders": 3,
+    "process-activation-reminders": 2
   }
 }
