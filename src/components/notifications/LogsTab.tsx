@@ -100,6 +100,18 @@ export function LogsTab() {
         throw new Error('Falha no envio da notificação')
       }
 
+      // Atualiza o log atual para sucesso para remover o status de falha visual
+      await supabase
+        .from('notification_logs')
+        .update({ status: 'success', error_details: null })
+        .eq('id', log.id)
+
+      setLogs((currentLogs) =>
+        currentLogs.map((l) =>
+          l.id === log.id ? { ...l, status: 'success', error_details: null } : l,
+        ),
+      )
+
       toast({ title: 'Notificação reenviada com sucesso' })
       await loadLogs()
     } catch (error: any) {
