@@ -100,14 +100,29 @@ export function UsersManagementTab({
   }
 
   const handleTriggerActivation = async () => {
+    if (isTriggeringActivation) return
     setIsTriggeringActivation(true)
+    const toastId = toast.loading(
+      'Processando notificações de ativação... Isso pode levar alguns segundos.',
+    )
+
     try {
       const { data, error } = await supabase.functions.invoke('process-activation-reminders')
       if (error) throw error
-      toast.success(`Automação concluída! ${data?.processed || 0} usuários notificados.`)
+
+      if (data?.processed === 0) {
+        toast.success('Nenhum usuário pendente de ativação no momento.', { id: toastId })
+      } else {
+        toast.success(
+          `Automação concluída! ${data?.processed || 0} usuários processados. Enviados: ${data?.whatsappSent || 0} WhatsApps e ${data?.emailSent || 0} e-mails.`,
+          { id: toastId, duration: 5000 },
+        )
+      }
       refetchProfiles()
-    } catch (err) {
-      toast.error('Erro ao disparar automação.')
+    } catch (err: any) {
+      toast.error(`Erro ao disparar automação: ${err.message || 'Falha no servidor'}`, {
+        id: toastId,
+      })
     } finally {
       setIsTriggeringActivation(false)
     }
@@ -178,11 +193,13 @@ export function UsersManagementTab({
             <Button
               variant="outline"
               size="sm"
-              className="bg-primary/10 text-primary border-primary/30 hover:bg-primary/20 h-8 text-xs flex shrink-0"
+              className="bg-primary/10 text-primary border-primary/30 hover:bg-primary/20 h-8 text-xs flex shrink-0 transition-all"
               onClick={handleTriggerActivation}
               disabled={isTriggeringActivation}
             >
-              <Bot className="w-3.5 h-3.5 mr-1.5" />
+              <Bot
+                className={cn('w-3.5 h-3.5 mr-1.5', isTriggeringActivation && 'animate-pulse')}
+              />
               {isTriggeringActivation ? 'Processando...' : 'Forçar Ativação'}
             </Button>
           </div>
