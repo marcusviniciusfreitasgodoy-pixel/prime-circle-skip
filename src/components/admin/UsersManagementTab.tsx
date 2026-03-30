@@ -30,7 +30,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
-import { Check, X, Key, Search } from 'lucide-react'
+import { Check, X, Key, Search, Bot, MessageSquarePlus, BellRing } from 'lucide-react'
 import { toast } from 'sonner'
 import { supabase } from '@/lib/supabase/client'
 import { cn } from '@/lib/utils'
@@ -50,6 +50,10 @@ interface Profile {
   specialties?: string
   bio?: string
   reputation_score?: number
+  properties_count?: number
+  demands_count?: number
+  referrals_count?: number
+  last_activation_reminder_at?: string
 }
 
 export function UsersManagementTab({
@@ -68,6 +72,7 @@ export function UsersManagementTab({
     null,
   )
   const [isProcessing, setIsProcessing] = useState(false)
+  const [isTriggeringActivation, setIsTriggeringActivation] = useState(false)
   const [selectedProfile, setSelectedProfile] = useState<Profile | null>(null)
 
   const filteredProfiles = useMemo(() => {
@@ -76,10 +81,37 @@ export function UsersManagementTab({
       const matchesSearch =
         p.full_name?.toLowerCase().includes(searchLower) ||
         p.email?.toLowerCase().includes(searchLower)
-      const matchesStatus = statusFilter === 'all' || p.status === statusFilter
+
+      let matchesStatus = false
+      if (statusFilter === 'all') matchesStatus = true
+      else if (statusFilter === 'inactive')
+        matchesStatus = p.properties_count === 0 && p.demands_count === 0
+      else matchesStatus = p.status === statusFilter
+
       return matchesSearch && matchesStatus
     })
   }, [profiles, searchQuery, statusFilter])
+
+  const handleQuickActivate = (profile: Profile) => {
+    const text = `Olá, *${profile.full_name?.split(' ')[0] || 'Parceiro'}*! 🚀 Notamos que você ainda não ativou sua conta na Prime Circle. Nossa rede é movida pela colaboração e os matches só acontecem quando você participa!\n\nO cadastro de um imóvel ou de uma demanda é *extremamente simples e leva menos de 2 minutos*. Que tal começar agora e abrir novas portas para seus negócios?\n\n🌟 Dica: Convide seus colegas de confiança! Quanto maior a rede, mais matches você recebe. Use seu link: https://www.primecircle.app.br/?ref=${profile.id}\n\nAcesse aqui: https://www.primecircle.app.br/dashboard`
+    const encodedText = encodeURIComponent(text)
+    const phone = profile.whatsapp_number?.replace(/\D/g, '')
+    window.open(`https://wa.me/${phone}?text=${encodedText}`, '_blank')
+  }
+
+  const handleTriggerActivation = async () => {
+    setIsTriggeringActivation(true)
+    try {
+      const { data, error } = await supabase.functions.invoke('process-activation-reminders')
+      if (error) throw error
+      toast.success(`Automação concluída! ${data?.processed || 0} usuários notificados.`)
+      refetchProfiles()
+    } catch (err) {
+      toast.error('Erro ao disparar automação.')
+    } finally {
+      setIsTriggeringActivation(false)
+    }
+  }
 
   const handleSelectAll = (checked: boolean) =>
     setSelectedUsers(checked ? filteredProfiles.map((p) => p.id) : [])
@@ -141,7 +173,19 @@ export function UsersManagementTab({
     <div className="space-y-4">
       <Card className="bg-card border-border">
         <CardHeader className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <CardTitle className="text-lg text-white">Todos os Usuários</CardTitle>
+          <div className="flex items-center gap-3">
+            <CardTitle className="text-lg text-white">Todos os Usuários</CardTitle>
+            <Button
+              variant="outline"
+              size="sm"
+              className="bg-primary/10 text-primary border-primary/30 hover:bg-primary/20 h-8 text-xs hidden sm:flex"
+              onClick={handleTriggerActivation}
+              disabled={isTriggeringActivation}
+            >
+              <Bot className="w-3.5 h-3.5 mr-1.5" />
+              {isTriggeringActivation ? 'Processando...' : 'Forçar Ativação'}
+            </Button>
+          </div>
           <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
             <div className="relative w-full sm:w-[280px]">
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -160,6 +204,7 @@ export function UsersManagementTab({
                 <SelectItem value="all">Todos</SelectItem>
                 <SelectItem value="active">Ativos</SelectItem>
                 <SelectItem value="pending_validation">Pendentes</SelectItem>
+                <SelectItem value="inactive">Sem Cadastro</SelectItem>
                 <SelectItem value="rejected">Rejeitados</SelectItem>
               </SelectContent>
             </Select>
@@ -177,8 +222,10 @@ export function UsersManagementTab({
                 </TableHead>
                 <TableHead className="w-[80px]">Avatar</TableHead>
                 <TableHead>Nome</TableHead>
-                <TableHead>Role</TableHead>
+                <TableHead>Atividade</TableHead>
+                <TableHead>Indicações</TableHead>
                 <TableHead>Status</TableHead>
+                <TableHead className="text-right">Ações</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -211,7 +258,40 @@ export function UsersManagementTab({
                       {profile.email || profile.whatsapp_number || 'Sem contato'}
                     </div>
                   </TableCell>
-                  <TableCell className="capitalize text-muted-foreground">{profile.role}</TableCell>
+                  <TableCell>
+                    <div className="flex flex-col gap-1">
+                      <div className="flex gap-2">
+                        <Badge
+                          variant="outline"
+                          className="text-[10px] bg-background border-border"
+                        >
+                          {profile.properties_count || 0} Imóveis
+                        </Badge>
+                        <Badge
+                          variant="outline"
+                          className="text-[10px] bg-background border-border"
+                        >
+                          {profile.demands_count || 0} Demandas
+                        </Badge>
+                      </div>
+                      {profile.last_activation_reminder_at && (
+                        <span
+                          className="text-[10px] text-muted-foreground flex items-center gap-1"
+                          title={`Último aviso: ${new Date(profile.last_activation_reminder_at).toLocaleDateString()}`}
+                        >
+                          <BellRing className="w-3 h-3 text-primary/70" /> Avisado
+                        </span>
+                      )}
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <Badge
+                      variant="outline"
+                      className="text-[10px] bg-primary/10 text-primary border-primary/30"
+                    >
+                      {profile.referrals_count || 0} Parceiros
+                    </Badge>
+                  </TableCell>
                   <TableCell>
                     <Badge
                       variant={
@@ -235,11 +315,29 @@ export function UsersManagementTab({
                           : 'Rejeitado'}
                     </Badge>
                   </TableCell>
+                  <TableCell className="text-right">
+                    {profile.properties_count === 0 &&
+                      profile.demands_count === 0 &&
+                      profile.whatsapp_number && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 text-green-500 hover:text-green-400 hover:bg-green-500/10 px-2"
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            handleQuickActivate(profile)
+                          }}
+                          title="Ativar via WhatsApp"
+                        >
+                          <MessageSquarePlus className="w-4 h-4" />
+                        </Button>
+                      )}
+                  </TableCell>
                 </TableRow>
               ))}
               {filteredProfiles.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center text-muted-foreground py-8">
+                  <TableCell colSpan={7} className="text-center text-muted-foreground py-8">
                     Nenhum usuário encontrado.
                   </TableCell>
                 </TableRow>

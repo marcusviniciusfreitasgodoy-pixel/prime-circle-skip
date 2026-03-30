@@ -33,6 +33,7 @@ import {
   Building,
   Target,
   TrendingUp,
+  UserPlus,
 } from 'lucide-react'
 import useAppStore from '@/stores/main'
 import type { Tier, Plan } from '@/stores/main'
@@ -436,6 +437,20 @@ export default function DashboardPage() {
           className="space-y-6 outline-none animate-in fade-in-50 duration-500"
         >
           <PendingValidations />
+
+          <Alert className="bg-primary/5 border-primary/30 shadow-sm relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 blur-[40px] rounded-full pointer-events-none" />
+            <UserPlus className="h-5 w-5 text-primary" />
+            <AlertTitle className="font-bold text-white ml-2">
+              Aumente seus Matches: Convide um Parceiro!
+            </AlertTitle>
+            <AlertDescription className="mt-2 ml-2 text-sm text-muted-foreground max-w-3xl">
+              Nossa rede é movida pela colaboração. Quanto mais corretores de confiança na
+              plataforma, <strong>mais imóveis e demandas compatíveis</strong> são gerados para
+              você. Compartilhe seu link exclusivo e ganhe benefícios. Acesse a aba{' '}
+              <strong>Rede & Crescimento</strong> para começar.
+            </AlertDescription>
+          </Alert>
 
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {stats.map((stat, i) => (

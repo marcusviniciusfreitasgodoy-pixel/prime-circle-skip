@@ -52,13 +52,19 @@ export default function AdminPage() {
   const pendingProfiles = profiles.filter((p) => p.status === 'pending_validation')
 
   const fetchProfiles = async () => {
-    const { data, error } = await supabase
-      .from('profiles')
-      .select('*')
-      .order('updated_at', { ascending: false, nullsFirst: false })
+    const { data, error } = await supabase.rpc('get_admin_users_stats')
 
-    if (!error && data) {
+    if (!error && data && !data.error) {
       setProfiles(data)
+    } else {
+      const { data: fallbackData } = await supabase
+        .from('profiles')
+        .select('*')
+        .order('updated_at', { ascending: false, nullsFirst: false })
+
+      if (fallbackData) {
+        setProfiles(fallbackData)
+      }
     }
   }
 

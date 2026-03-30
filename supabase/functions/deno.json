@@ -17,6 +17,7 @@
     "process-market-intelligence": 1,
     "send-newsletter": 2,
     "register-newsletter-feedback": 1,
-    "process-invitation-reminders": 2
+    "process-invitation-reminders": 2,
+    "process-activation-reminders": 1
   }
 }
