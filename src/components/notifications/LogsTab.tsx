@@ -38,9 +38,32 @@ export function LogsTab() {
 
   const loadLogs = async () => {
     setIsLoading(true)
-    const { data } = await fetchLogs(user!.id)
-    if (data) setLogs(data)
-    setIsLoading(false)
+    try {
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user!.id)
+        .single()
+
+      const isAdmin = profile?.role === 'admin'
+
+      let query = supabase
+        .from('notification_logs')
+        .select('*, profiles(full_name)')
+        .order('created_at', { ascending: false })
+        .limit(200)
+
+      if (!isAdmin) {
+        query = query.eq('user_id', user!.id)
+      }
+
+      const { data } = await query
+      if (data) setLogs(data as any[])
+    } catch (error) {
+      console.error('Error loading logs:', error)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const handleResend = async (log: NotificationLog) => {
@@ -104,7 +127,7 @@ export function LogsTab() {
             <TableHeader className="bg-secondary/50">
               <TableRow className="border-border">
                 <TableHead className="text-muted-foreground">Data/Hora</TableHead>
-                <TableHead className="text-muted-foreground">Destinatário</TableHead>
+                <TableHead className="text-muted-foreground">Destinatário / Usuário</TableHead>
                 <TableHead className="text-muted-foreground">Canal</TableHead>
                 <TableHead className="text-muted-foreground">Status</TableHead>
                 <TableHead className="text-right text-muted-foreground">Detalhes</TableHead>
@@ -116,7 +139,14 @@ export function LogsTab() {
                   <TableCell className="text-sm text-white">
                     {new Date(log.created_at).toLocaleString('pt-BR')}
                   </TableCell>
-                  <TableCell className="text-sm text-white font-medium">{log.recipient}</TableCell>
+                  <TableCell className="text-sm text-white font-medium">
+                    {log.recipient}
+                    {(log as any).profiles?.full_name && (
+                      <div className="text-xs text-muted-foreground font-normal mt-0.5">
+                        {(log as any).profiles.full_name}
+                      </div>
+                    )}
+                  </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
                       {log.channel === 'whatsapp' ? (
