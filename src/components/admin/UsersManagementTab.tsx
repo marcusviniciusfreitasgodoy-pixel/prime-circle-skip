@@ -228,7 +228,146 @@ export function UsersManagementTab({
           </div>
         </CardHeader>
         <CardContent className="px-0 sm:px-6">
-          <div className="w-full px-4 sm:px-0">
+          {/* Mobile View */}
+          <div className="block md:hidden space-y-3 px-4 pt-2 pb-4">
+            {filteredProfiles.length > 0 && (
+              <div className="flex items-center gap-2 mb-4 pb-2 border-b border-border">
+                <Checkbox
+                  id="select-all-mobile"
+                  checked={isAllSelected}
+                  onCheckedChange={(c) => handleSelectAll(c as boolean)}
+                />
+                <label htmlFor="select-all-mobile" className="text-sm font-medium text-white">
+                  Selecionar todos
+                </label>
+              </div>
+            )}
+
+            {filteredProfiles.map((profile) => (
+              <Card
+                key={profile.id}
+                className={cn(
+                  'bg-secondary/50 border-border overflow-hidden transition-colors cursor-pointer',
+                  selectedUsers.includes(profile.id) && 'border-primary/50 bg-primary/10',
+                )}
+                onClick={() => setSelectedProfile(profile)}
+              >
+                <CardContent className="p-4 flex flex-col gap-4">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex items-start gap-3">
+                      <div onClick={(e) => e.stopPropagation()} className="mt-1">
+                        <Checkbox
+                          checked={selectedUsers.includes(profile.id)}
+                          onCheckedChange={(c) => handleSelectUser(profile.id, c as boolean)}
+                        />
+                      </div>
+                      <Avatar className="w-10 h-10 border border-border">
+                        <AvatarImage src={profile.avatar_url} />
+                        <AvatarFallback className="bg-secondary text-xs text-white">
+                          {profile.full_name?.substring(0, 2).toUpperCase() || 'US'}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex flex-col">
+                        <span className="font-semibold text-white text-sm line-clamp-1">
+                          {profile.full_name || 'Sem Nome'}
+                        </span>
+                        <span className="text-xs text-muted-foreground line-clamp-1">
+                          {profile.email || profile.whatsapp_number || 'Sem contato'}
+                        </span>
+                      </div>
+                    </div>
+                    <div>
+                      <Badge
+                        variant="outline"
+                        className={cn(
+                          'text-[10px] border-border bg-background',
+                          profile.status === 'active' &&
+                            'bg-green-500/20 text-green-500 border-green-500/30',
+                          profile.status === 'pending_validation' &&
+                            'bg-yellow-500/20 text-yellow-500 border-yellow-500/30',
+                          profile.status === 'rejected' &&
+                            'bg-red-500/20 text-red-500 border-red-500/30',
+                        )}
+                      >
+                        {profile.status === 'pending_validation'
+                          ? 'Pendente'
+                          : profile.status === 'active'
+                            ? 'Ativo'
+                            : 'Rejeitado'}
+                      </Badge>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-2 bg-background/50 p-2 rounded-md border border-border/50">
+                    <div className="flex flex-col items-center justify-center p-1">
+                      <span className="text-sm font-bold text-white">
+                        {profile.properties_count || 0}
+                      </span>
+                      <span className="text-[10px] text-muted-foreground uppercase text-center leading-tight">
+                        Imóveis
+                      </span>
+                    </div>
+                    <div className="flex flex-col items-center justify-center p-1 border-x border-border/50">
+                      <span className="text-sm font-bold text-white">
+                        {profile.demands_count || 0}
+                      </span>
+                      <span className="text-[10px] text-muted-foreground uppercase text-center leading-tight">
+                        Demandas
+                      </span>
+                    </div>
+                    <div className="flex flex-col items-center justify-center p-1">
+                      <span className="text-sm font-bold text-primary">
+                        {profile.referrals_count || 0}
+                      </span>
+                      <span className="text-[10px] text-primary/70 uppercase text-center leading-tight">
+                        Parceiros
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    {profile.last_activation_reminder_at ? (
+                      <span
+                        className="text-[10px] text-muted-foreground flex items-center gap-1"
+                        title={`Último aviso: ${new Date(profile.last_activation_reminder_at).toLocaleDateString()}`}
+                      >
+                        <BellRing className="w-3 h-3 text-primary/70" /> Avisado
+                      </span>
+                    ) : (
+                      <span />
+                    )}
+
+                    {profile.properties_count === 0 &&
+                      profile.demands_count === 0 &&
+                      profile.whatsapp_number && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 text-green-500 hover:text-green-400 hover:bg-green-500/10 px-2 ml-auto"
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            handleQuickActivate(profile)
+                          }}
+                          title="Ativar via WhatsApp"
+                        >
+                          <MessageSquarePlus className="w-4 h-4 mr-1.5" />
+                          Ativar
+                        </Button>
+                      )}
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+
+            {filteredProfiles.length === 0 && (
+              <div className="text-center text-muted-foreground py-8 bg-secondary/30 rounded-lg border border-border border-dashed">
+                Nenhum usuário encontrado.
+              </div>
+            )}
+          </div>
+
+          {/* Desktop View */}
+          <div className="hidden md:block w-full px-0 sm:px-0">
             <Table className="min-w-[600px] w-full">
               <TableHeader>
                 <TableRow className="border-border">
