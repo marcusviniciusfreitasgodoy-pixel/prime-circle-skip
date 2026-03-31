@@ -92,11 +92,32 @@ export function UsersManagementTab({
     })
   }, [profiles, searchQuery, statusFilter])
 
-  const handleQuickActivate = (profile: Profile) => {
-    const text = `Olá, *${profile.full_name?.split(' ')[0] || 'Parceiro'}*! 🚀 Notamos que você ainda não ativou sua conta na Prime Circle. Nossa rede é movida pela colaboração e os matches só acontecem quando você participa!\n\nO cadastro de um imóvel ou de uma demanda é *extremamente simples e leva menos de 2 minutos*. Que tal começar agora e abrir novas portas para seus negócios?\n\n🌟 Dica: Convide seus colegas de confiança! Quanto maior a rede, mais matches você recebe. Use seu link: https://www.primecircle.app.br/?ref=${profile.id}\n\nAcesse aqui: https://www.primecircle.app.br/dashboard`
-    const encodedText = encodeURIComponent(text)
-    const phone = profile.whatsapp_number?.replace(/\D/g, '')
-    window.open(`https://wa.me/${phone}?text=${encodedText}`, '_blank')
+  const handleQuickActivate = async (e: React.MouseEvent, profile: Profile) => {
+    e.stopPropagation()
+    const toastId = toast.loading('Enviando notificação de ativação...')
+    try {
+      const { data, error } = await supabase.functions.invoke('process-activation-reminders', {
+        body: { userIds: [profile.id] },
+      })
+      if (error) throw error
+
+      toast.success('Ativação enviada com sucesso!', {
+        id: toastId,
+        description: 'A notificação foi enviada e registrada na Trilha de Auditoria.',
+      })
+      refetchProfiles()
+    } catch (err: any) {
+      toast.error('Erro ao enviar ativação', {
+        id: toastId,
+        description: err.message || 'Ocorreu um erro no servidor.',
+      })
+    }
+  }
+
+  const getAvatarUrl = (url?: string) => {
+    if (!url) return undefined
+    if (url.startsWith('http') || url.startsWith('data:')) return url
+    return supabase.storage.from('avatars').getPublicUrl(url).data.publicUrl
   }
 
   const handleTriggerActivation = async () => {
@@ -277,7 +298,7 @@ export function UsersManagementTab({
                         />
                       </div>
                       <Avatar className="w-10 h-10 border border-border">
-                        <AvatarImage src={profile.avatar_url} />
+                        <AvatarImage src={getAvatarUrl(profile.avatar_url)} />
                         <AvatarFallback className="bg-secondary text-xs text-white">
                           {profile.full_name?.substring(0, 2).toUpperCase() || 'US'}
                         </AvatarFallback>
@@ -359,11 +380,8 @@ export function UsersManagementTab({
                           variant="ghost"
                           size="sm"
                           className="h-8 text-green-500 hover:text-green-400 hover:bg-green-500/10 px-2 ml-auto"
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            handleQuickActivate(profile)
-                          }}
-                          title="Ativar via WhatsApp"
+                          onClick={(e) => handleQuickActivate(e, profile)}
+                          title="Forçar Ativação"
                         >
                           <MessageSquarePlus className="w-4 h-4 mr-1.5" />
                           Ativar
@@ -418,7 +436,7 @@ export function UsersManagementTab({
                       onClick={() => setSelectedProfile(profile)}
                     >
                       <Avatar className="w-8 h-8">
-                        <AvatarImage src={profile.avatar_url} />
+                        <AvatarImage src={getAvatarUrl(profile.avatar_url)} />
                         <AvatarFallback className="bg-secondary text-xs">
                           {profile.full_name?.substring(0, 2).toUpperCase() || 'US'}
                         </AvatarFallback>
@@ -500,11 +518,8 @@ export function UsersManagementTab({
                             variant="ghost"
                             size="sm"
                             className="h-8 text-green-500 hover:text-green-400 hover:bg-green-500/10 px-2"
-                            onClick={(e) => {
-                              e.stopPropagation()
-                              handleQuickActivate(profile)
-                            }}
-                            title="Ativar via WhatsApp"
+                            onClick={(e) => handleQuickActivate(e, profile)}
+                            title="Forçar Ativação"
                           >
                             <MessageSquarePlus className="w-4 h-4" />
                           </Button>
