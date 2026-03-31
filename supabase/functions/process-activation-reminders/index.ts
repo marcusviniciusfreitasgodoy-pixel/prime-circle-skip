@@ -4,7 +4,8 @@ import { createClient } from 'npm:@supabase/supabase-js@2'
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, x-supabase-client-platform, apikey, content-type',
+  'Access-Control-Allow-Headers':
+    'authorization, x-client-info, x-supabase-client-platform, apikey, content-type',
 }
 
 Deno.serve(async (req: Request) => {
@@ -27,7 +28,7 @@ Deno.serve(async (req: Request) => {
         .select('id, full_name, email, whatsapp_number')
         .in('id', userIds)
         .eq('status', 'active')
-      
+
       if (error) throw error
       usersToProcess = data || []
     } else {
@@ -51,7 +52,7 @@ Deno.serve(async (req: Request) => {
 
       if (user.whatsapp_number) {
         const { error: waErr } = await supabase.functions.invoke('send-whatsapp', {
-          body: { number: user.whatsapp_number, text: waMsg, user_id: user.id }
+          body: { number: user.whatsapp_number, text: waMsg, user_id: user.id },
         })
         if (waErr) console.error(waErr)
         else whatsappSent++
@@ -59,19 +60,27 @@ Deno.serve(async (req: Request) => {
 
       if (user.email) {
         const { error: emailErr } = await supabase.functions.invoke('send-email', {
-          body: { to: user.email, subject: emailSubject, text: emailBody, user_id: user.id }
+          body: { to: user.email, subject: emailSubject, text: emailBody, user_id: user.id },
         })
         if (emailErr) console.error(emailErr)
         else emailSent++
       }
 
-      await supabase.from('profiles').update({ last_activation_reminder_at: new Date().toISOString() }).eq('id', user.id)
-      
+      await supabase
+        .from('profiles')
+        .update({ last_activation_reminder_at: new Date().toISOString() })
+        .eq('id', user.id)
+
       processed++
     }
 
-    return new Response(JSON.stringify({ success: true, processed, whatsappSent, emailSent }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } })
+    return new Response(JSON.stringify({ success: true, processed, whatsappSent, emailSent }), {
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    })
   } catch (error: any) {
-    return new Response(JSON.stringify({ error: error.message }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } })
+    return new Response(JSON.stringify({ error: error.message }), {
+      status: 400,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    })
   }
 })

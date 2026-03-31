@@ -51,6 +51,13 @@ export default function AdminPage() {
 
   const pendingProfiles = profiles.filter((p) => p.status === 'pending_validation')
 
+  const getAvatarUrl = (url?: string) => {
+    if (!url) return undefined
+    if (url.startsWith('http') || url.startsWith('data:')) return url
+    const cleanUrl = url.startsWith('avatars/') ? url.replace('avatars/', '') : url
+    return supabase.storage.from('avatars').getPublicUrl(cleanUrl).data.publicUrl
+  }
+
   const fetchProfiles = async () => {
     const { data, error } = await supabase.rpc('get_admin_users_stats')
 
@@ -215,7 +222,7 @@ export default function AdminPage() {
               <CardContent className="p-4 flex flex-col md:flex-row items-center justify-between gap-4">
                 <div className="flex items-center gap-4 w-full">
                   <Avatar>
-                    <AvatarImage src={req.avatar_url} />
+                    <AvatarImage src={getAvatarUrl(req.avatar_url)} />
                     <AvatarFallback>
                       {req.full_name ? req.full_name[0].toUpperCase() : 'U'}
                     </AvatarFallback>

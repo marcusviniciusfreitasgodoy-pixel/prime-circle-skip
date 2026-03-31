@@ -117,7 +117,8 @@ export function UsersManagementTab({
   const getAvatarUrl = (url?: string) => {
     if (!url) return undefined
     if (url.startsWith('http') || url.startsWith('data:')) return url
-    return supabase.storage.from('avatars').getPublicUrl(url).data.publicUrl
+    const cleanUrl = url.startsWith('avatars/') ? url.replace('avatars/', '') : url
+    return supabase.storage.from('avatars').getPublicUrl(cleanUrl).data.publicUrl
   }
 
   const handleTriggerActivation = async () => {

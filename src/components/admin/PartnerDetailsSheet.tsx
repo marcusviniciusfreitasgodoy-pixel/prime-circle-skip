@@ -57,6 +57,13 @@ export function PartnerDetailsSheet({
 }: PartnerDetailsSheetProps) {
   const [loading, setLoading] = useState(false)
   const [ofertas, setOfertas] = useState<Document[]>([])
+
+  const getAvatarUrl = (url?: string) => {
+    if (!url) return undefined
+    if (url.startsWith('http') || url.startsWith('data:')) return url
+    const cleanUrl = url.startsWith('avatars/') ? url.replace('avatars/', '') : url
+    return supabase.storage.from('avatars').getPublicUrl(cleanUrl).data.publicUrl
+  }
   const [demandas, setDemandas] = useState<Document[]>([])
   const [status, setStatus] = useState<string>('pending_validation')
 
@@ -124,7 +131,7 @@ export function PartnerDetailsSheet({
         <SheetHeader className="p-6 border-b border-border/50 bg-secondary/30">
           <div className="flex items-center gap-4">
             <Avatar className="w-16 h-16 ring-2 ring-primary/20">
-              <AvatarImage src={profile.avatar_url} />
+              <AvatarImage src={getAvatarUrl(profile.avatar_url)} />
               <AvatarFallback className="bg-secondary text-lg">
                 {profile.full_name?.substring(0, 2).toUpperCase() || 'US'}
               </AvatarFallback>
