@@ -4,7 +4,8 @@ import { createClient } from 'npm:@supabase/supabase-js@2'
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, x-supabase-client-platform, apikey, content-type',
+  'Access-Control-Allow-Headers':
+    'authorization, x-client-info, x-supabase-client-platform, apikey, content-type',
 }
 
 Deno.serve(async (req: Request) => {
@@ -22,9 +23,11 @@ Deno.serve(async (req: Request) => {
       })
     }
 
-    const apiUrl = Deno.env.get('EVOLUTION_API_URL') || 'https://evo2.godoyprime.shop'
-    const apiKey = Deno.env.get('EVOLUTION_API_KEY')
-    const instanceName = Deno.env.get('EVOLUTION_INSTANCE_NAME') || 'GodoyPrimeImoveis'
+    const rawApiUrl = (Deno.env.get('EVOLUTION_API_URL') || 'https://evo2.godoyprime.shop').trim()
+    const apiUrl = rawApiUrl.replace(/\/+$/, '')
+    const apiKey = (Deno.env.get('EVOLUTION_API_KEY') || '').trim()
+    const rawInstanceName = (Deno.env.get('EVOLUTION_INSTANCE_NAME') || 'GodoyPrimeImoveis').trim()
+    const instanceName = encodeURIComponent(rawInstanceName)
 
     if (!apiKey) {
       console.error('Server configuration error: Missing EVOLUTION_API_KEY')
@@ -40,30 +43,36 @@ Deno.serve(async (req: Request) => {
       formattedNumber = '55' + formattedNumber
     }
 
-    const endpoint = `${apiUrl}/message/sendText/${instanceName}`
-    
+    // Defensively check if the user provided the full endpoint path in the env var
+    let endpoint = ''
+    if (apiUrl.includes('/message/sendText')) {
+      endpoint = apiUrl
+    } else {
+      endpoint = `${apiUrl}/message/sendText/${instanceName}`
+    }
+
     // Support robust text structure for Evolution API compatibility
     const payload = {
       number: formattedNumber,
       text: text,
       textMessage: {
-        text: text
+        text: text,
       },
       options: {
         delay: 1200,
-        presence: "composing",
-        linkPreview: false
-      }
+        presence: 'composing',
+        linkPreview: false,
+      },
     }
-    
+
     const response = await fetch(endpoint, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'apikey': apiKey,
-        'Authorization': `Bearer ${apiKey}`
+        apikey: apiKey,
+        Authorization: `Bearer ${apiKey}`,
       },
-      body: JSON.stringify(payload)
+      body: JSON.stringify(payload),
     })
 
     const responseText = await response.text()
@@ -88,18 +97,20 @@ Deno.serve(async (req: Request) => {
           p_channel: 'whatsapp',
           p_status: success ? 'success' : 'failed',
           p_message_body: text,
-          p_error_details: success ? null : JSON.stringify({
-            status: response.status,
-            statusText: response.statusText,
-            apiResponse: data
-          }),
+          p_error_details: success
+            ? null
+            : JSON.stringify({
+                status: response.status,
+                statusText: response.statusText,
+                apiResponse: data,
+              }),
         })
       }
     }
 
     return new Response(JSON.stringify({ success, data }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      status: 200
+      status: 200,
     })
   } catch (error: any) {
     return new Response(JSON.stringify({ success: false, error: error.message }), {

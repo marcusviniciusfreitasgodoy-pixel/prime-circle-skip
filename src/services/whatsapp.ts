@@ -10,7 +10,8 @@ export const sendWhatsappMessage = async (number: string, text: string, userId?:
   }
 
   if (data?.error) {
-    throw new Error(data.error)
+    const errMsg = typeof data.error === 'string' ? data.error : JSON.stringify(data.error)
+    throw new Error(errMsg)
   }
 
   return data
