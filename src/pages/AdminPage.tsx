@@ -14,7 +14,6 @@ import {
 import { Check, X, MessageSquarePlus, Loader2, Settings } from 'lucide-react'
 import { toast } from 'sonner'
 import useAppStore, { SuggestionStatus } from '@/stores/main'
-import { simulateBiWeeklyReview } from '@/lib/email'
 import { supabase } from '@/lib/supabase/client'
 import { cn } from '@/lib/utils'
 import { useAuth } from '@/hooks/use-auth'
@@ -47,6 +46,7 @@ export default function AdminPage() {
   const [tickets, setTickets] = useState<SupportTicket[]>([])
   const [profiles, setProfiles] = useState<any[]>([])
   const [isTestingWa, setIsTestingWa] = useState(false)
+  const [isExecutingCron, setIsExecutingCron] = useState(false)
   const [selectedProfile, setSelectedProfile] = useState<any | null>(null)
 
   const pendingProfiles = profiles.filter((p) => p.status === 'pending_validation')
@@ -200,17 +200,46 @@ export default function AdminPage() {
         <TabsContent value="requests" className="mt-6 space-y-4">
           <div className="flex justify-between items-center p-4 bg-card rounded-lg border border-border mb-4">
             <span className="text-muted-foreground text-sm">
-              Validação automática quinzenal ativada (20 dias pendentes).
+              Processamento manual das rotinas de Cron (Lembretes, Ativação, Transição, 24h).
             </span>
             <Button
               variant="outline"
               size="sm"
-              onClick={() => {
-                simulateBiWeeklyReview()
-                toast.success('Cron processado.')
+              disabled={isExecutingCron}
+              onClick={async () => {
+                setIsExecutingCron(true)
+                try {
+                  toast.info('Iniciando rotinas do Cron...')
+
+                  const promises = [
+                    supabase.functions.invoke('process-activation-reminders', {
+                      body: { bypass_time_check: true },
+                    }),
+                    supabase.functions.invoke('process-invitation-reminders', {
+                      body: { bypass_time_check: true },
+                    }),
+                    supabase.functions.invoke('send-reminder-24h', {
+                      body: { bypass_time_check: true },
+                    }),
+                    supabase.functions.invoke('send-founder-transition-email', {
+                      body: { bypass_time_check: true },
+                    }),
+                  ]
+
+                  const results = await Promise.allSettled(promises)
+                  console.log('Cron execution results:', results)
+
+                  toast.success('Todas as rotinas do Cron foram processadas.')
+                } catch (e) {
+                  console.error(e)
+                  toast.error('Ocorreu um erro ao processar o Cron.')
+                } finally {
+                  setIsExecutingCron(false)
+                }
               }}
             >
-              Executar Cron
+              {isExecutingCron ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
+              {isExecutingCron ? 'Executando...' : 'Executar Cron'}
             </Button>
           </div>
           {pendingProfiles.map((req) => (
