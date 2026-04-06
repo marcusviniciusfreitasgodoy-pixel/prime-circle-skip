@@ -4,7 +4,8 @@ import { createClient } from 'npm:@supabase/supabase-js@2'
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, x-supabase-client-platform, apikey, content-type',
+  'Access-Control-Allow-Headers':
+    'authorization, x-client-info, x-supabase-client-platform, apikey, content-type',
 }
 
 Deno.serve(async (req: Request) => {
@@ -42,47 +43,73 @@ Deno.serve(async (req: Request) => {
       formattedNumber = '55' + formattedNumber
     }
 
-    // Defensively check if the user provided the full endpoint path in the env var
-    let endpoint = ''
-    if (apiUrl.includes('/message/sendText')) {
-      endpoint = apiUrl
-    } else {
-      endpoint = `${apiUrl}/message/sendText/${instanceName}`
-    }
-    
     // Support robust text structure for Evolution API compatibility
     const payload = {
       number: formattedNumber,
       text: text,
       textMessage: {
-        text: text
+        text: text,
       },
       options: {
         delay: 1200,
-        presence: "composing",
-        linkPreview: false
+        presence: 'composing',
+        linkPreview: false,
+      },
+    }
+
+    const endpointsToTry = []
+    if (apiUrl.includes('/message/sendText')) {
+      endpointsToTry.push(apiUrl)
+    } else {
+      endpointsToTry.push(`${apiUrl}/message/sendText/${instanceName}`)
+      if (apiUrl.includes('evo2.godoyprime.shop')) {
+        // Fallback for known subdomain migrations
+        endpointsToTry.push(`https://evo.godoyprime.shop/message/sendText/${instanceName}`)
+        endpointsToTry.push(`https://api.godoyprime.shop/message/sendText/${instanceName}`)
       }
     }
-    
-    const response = await fetch(endpoint, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'apikey': apiKey,
-        'Authorization': `Bearer ${apiKey}`
-      },
-      body: JSON.stringify(payload)
-    })
 
-    const responseText = await response.text()
-    let data: any = { raw: responseText }
-    try {
-      data = JSON.parse(responseText)
-    } catch (e) {
-      // Ignored if not JSON
+    let success = false
+    let responseText = ''
+    let data: any = null
+    let response: any = null
+    let finalEndpoint = ''
+
+    for (const endpoint of endpointsToTry) {
+      finalEndpoint = endpoint
+      try {
+        response = await fetch(endpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            apikey: apiKey,
+            Authorization: `Bearer ${apiKey}`,
+          },
+          body: JSON.stringify(payload),
+        })
+
+        responseText = await response.text()
+        data = { raw: responseText }
+        try {
+          data = JSON.parse(responseText)
+        } catch (e) {
+          // Ignored if not JSON
+        }
+
+        success = response.ok && !data.error && data.status !== 'ERROR'
+
+        // If it succeeded, or if it failed with something OTHER than a 404/502 proxy error, we stop trying.
+        // A generic 404 HTML/text page means the Evolution API router didn't catch it on this URL.
+        if (
+          success ||
+          (response.status !== 404 && response.status !== 502 && response.status !== 503)
+        ) {
+          break
+        }
+      } catch (e) {
+        // Network error, try next
+      }
     }
-
-    const success = response.ok && !data.error && data.status !== 'ERROR'
 
     // Log the notification with robust data logging
     if (user_id) {
@@ -96,30 +123,36 @@ Deno.serve(async (req: Request) => {
           p_channel: 'whatsapp',
           p_status: success ? 'success' : 'failed',
           p_message_body: text,
-          p_error_details: success ? null : JSON.stringify({
-            status: response.status,
-            statusText: response.statusText,
-            apiResponse: data
-          }),
+          p_error_details: success
+            ? null
+            : JSON.stringify({
+                status: response?.status,
+                endpoint: finalEndpoint,
+                apiResponse: data,
+              }),
         })
       }
     }
 
     if (!success) {
-      const errorMsg = data.error || data.message || (data.raw ? data.raw.trim() : JSON.stringify(data))
-      return new Response(JSON.stringify({ 
-        success: false, 
-        error: `Evolution API Erro: ${response.status} - ${errorMsg}`,
-        data 
-      }), {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        status: 200
-      })
+      const errorMsg =
+        data?.error || data?.message || (data?.raw ? data.raw.trim() : JSON.stringify(data))
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: `Evolution API Erro: ${response?.status || 'Network Error'} - ${errorMsg} (Endpoint: ${finalEndpoint})`,
+          data,
+        }),
+        {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          status: 200,
+        },
+      )
     }
 
     return new Response(JSON.stringify({ success, data }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      status: 200
+      status: 200,
     })
   } catch (error: any) {
     return new Response(JSON.stringify({ success: false, error: error.message }), {

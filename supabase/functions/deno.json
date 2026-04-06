@@ -1,6 +1,6 @@
 {
   "_versions": {
-    "send-whatsapp": 27,
+    "send-whatsapp": 28,
     "send-email": 21,
     "welcome-webhook": 24,
     "support-ticket-webhook": 8,
@@ -15,7 +15,7 @@
     "process-quick-action": 3,
     "send-reminder-24h": 2,
     "process-market-intelligence": 1,
-    "send-newsletter": 3,
+    "send-newsletter": 4,
     "register-newsletter-feedback": 1,
     "process-invitation-reminders": 4,
     "process-activation-reminders": 5
