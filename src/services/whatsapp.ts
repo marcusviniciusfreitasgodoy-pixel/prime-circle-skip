@@ -14,5 +14,9 @@ export const sendWhatsappMessage = async (number: string, text: string, userId?:
     throw new Error(errMsg)
   }
 
+  if (data?.success === false) {
+    throw new Error('Falha no envio da notificação via WhatsApp')
+  }
+
   return data
 }

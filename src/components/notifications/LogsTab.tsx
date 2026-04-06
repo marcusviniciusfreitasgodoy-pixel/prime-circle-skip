@@ -1,5 +1,13 @@
 import { useState, useEffect } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { sendWhatsappMessage } from '@/services/whatsapp'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import {
@@ -34,10 +42,11 @@ export function LogsTab() {
   const [isLoading, setIsLoading] = useState(true)
   const [selectedLog, setSelectedLog] = useState<any | null>(null)
   const [isResending, setIsResending] = useState<string | null>(null)
+  const [statusFilter, setStatusFilter] = useState<'all' | 'success' | 'failed'>('all')
 
   useEffect(() => {
     if (user) loadLogs()
-  }, [user, logType])
+  }, [user, logType, statusFilter])
 
   const loadLogs = async () => {
     setIsLoading(true)
@@ -59,6 +68,9 @@ export function LogsTab() {
 
         if (!isAdmin) {
           query = query.eq('user_id', user!.id)
+        }
+        if (statusFilter !== 'all') {
+          query = query.eq('status', statusFilter)
         }
 
         const { data } = await query
@@ -87,12 +99,8 @@ export function LogsTab() {
   const handleResend = async (log: NotificationLog) => {
     setIsResending(log.id)
     try {
-      let res
-
       if (log.channel === 'whatsapp') {
-        res = await supabase.functions.invoke('send-whatsapp', {
-          body: { number: log.recipient, text: log.message_body, user_id: log.user_id },
-        })
+        await sendWhatsappMessage(log.recipient, log.message_body, log.user_id)
       } else if (log.channel === 'email') {
         let subject = 'Notificação Prime Circle'
         let bodyText = log.message_body
@@ -103,19 +111,19 @@ export function LogsTab() {
           bodyText = match[2].trim()
         }
 
-        res = await supabase.functions.invoke('send-email', {
+        const res = await supabase.functions.invoke('send-email', {
           body: { to: log.recipient, subject, text: bodyText, user_id: log.user_id },
         })
-      }
 
-      if (res?.error) throw res.error
-      if (res?.data?.error) {
-        const errMsg =
-          typeof res.data.error === 'string' ? res.data.error : JSON.stringify(res.data.error)
-        throw new Error(errMsg)
-      }
-      if (res?.data?.success === false) {
-        throw new Error('Falha no envio da notificação')
+        if (res?.error) throw res.error
+        if (res?.data?.error) {
+          const errMsg =
+            typeof res.data.error === 'string' ? res.data.error : JSON.stringify(res.data.error)
+          throw new Error(errMsg)
+        }
+        if (res?.data?.success === false) {
+          throw new Error('Falha no envio do e-mail')
+        }
       }
 
       await supabase
@@ -152,29 +160,43 @@ export function LogsTab() {
             Monitore o histórico de disparos (WhatsApp/E-mail) e ações do sistema.
           </p>
         </div>
-        <div className="flex bg-secondary/50 p-1 rounded-lg border border-border shrink-0">
-          <Button
-            variant={logType === 'notifications' ? 'secondary' : 'ghost'}
-            size="sm"
-            className={cn(
-              'text-sm px-3',
-              logType === 'notifications' && 'bg-background shadow-sm text-primary',
-            )}
-            onClick={() => setLogType('notifications')}
-          >
-            <Mail className="w-4 h-4 mr-2" /> Comunicações
-          </Button>
-          <Button
-            variant={logType === 'actions' ? 'secondary' : 'ghost'}
-            size="sm"
-            className={cn(
-              'text-sm px-3',
-              logType === 'actions' && 'bg-background shadow-sm text-primary',
-            )}
-            onClick={() => setLogType('actions')}
-          >
-            <Activity className="w-4 h-4 mr-2" /> Ações do Sistema
-          </Button>
+        <div className="flex flex-col sm:flex-row items-center gap-3 shrink-0">
+          {logType === 'notifications' && (
+            <Select value={statusFilter} onValueChange={(v: any) => setStatusFilter(v)}>
+              <SelectTrigger className="w-[140px] bg-secondary border-border h-9">
+                <SelectValue placeholder="Status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todos os Status</SelectItem>
+                <SelectItem value="success">Sucesso</SelectItem>
+                <SelectItem value="failed">Falha</SelectItem>
+              </SelectContent>
+            </Select>
+          )}
+          <div className="flex bg-secondary/50 p-1 rounded-lg border border-border shrink-0">
+            <Button
+              variant={logType === 'notifications' ? 'secondary' : 'ghost'}
+              size="sm"
+              className={cn(
+                'text-sm px-3',
+                logType === 'notifications' && 'bg-background shadow-sm text-primary',
+              )}
+              onClick={() => setLogType('notifications')}
+            >
+              <Mail className="w-4 h-4 mr-2" /> Comunicações
+            </Button>
+            <Button
+              variant={logType === 'actions' ? 'secondary' : 'ghost'}
+              size="sm"
+              className={cn(
+                'text-sm px-3',
+                logType === 'actions' && 'bg-background shadow-sm text-primary',
+              )}
+              onClick={() => setLogType('actions')}
+            >
+              <Activity className="w-4 h-4 mr-2" /> Ações do Sistema
+            </Button>
+          </div>
         </div>
       </div>
 
