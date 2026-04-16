@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import {
   Select,
@@ -7,6 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { Input } from '@/components/ui/input'
 import { sendWhatsappMessage } from '@/services/whatsapp'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -25,7 +26,17 @@ import {
   DialogTitle,
   DialogDescription,
 } from '@/components/ui/dialog'
-import { Eye, Mail, MessageSquare, AlertCircle, RefreshCw, Activity } from 'lucide-react'
+import {
+  Eye,
+  Mail,
+  MessageSquare,
+  AlertCircle,
+  RefreshCw,
+  Activity,
+  Search,
+  CheckCircle2,
+  XCircle,
+} from 'lucide-react'
 import { NotificationLog } from '@/services/notifications'
 import { useAuth } from '@/hooks/use-auth'
 import { useToast } from '@/hooks/use-toast'
@@ -42,15 +53,65 @@ export function LogsTab() {
   const [isLoading, setIsLoading] = useState(true)
   const [selectedLog, setSelectedLog] = useState<any | null>(null)
   const [isResending, setIsResending] = useState<string | null>(null)
+
   const [statusFilter, setStatusFilter] = useState<'all' | 'success' | 'failed' | 'test_sent'>(
     'all',
   )
+  const [channelFilter, setChannelFilter] = useState<'all' | 'whatsapp' | 'email' | 'push'>('all')
+  const [searchQuery, setSearchQuery] = useState('')
+  const [debouncedSearch, setDebouncedSearch] = useState('')
+
+  const [page, setPage] = useState(0)
+  const [hasMore, setHasMore] = useState(true)
+  const ITEMS_PER_PAGE = 50
+
+  const [stats, setStats] = useState({ total: 0, success: 0, failed: 0, successRate: 0 })
 
   useEffect(() => {
-    if (user) loadLogs()
-  }, [user, logType, statusFilter])
+    const timer = setTimeout(() => setDebouncedSearch(searchQuery), 500)
+    return () => clearTimeout(timer)
+  }, [searchQuery])
 
-  const loadLogs = async () => {
+  const loadStats = useCallback(async () => {
+    try {
+      const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
+      let query = supabase.from('notification_logs').select('status').gte('created_at', yesterday)
+
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user!.id)
+        .single()
+      if (profile?.role !== 'admin') {
+        query = query.eq('user_id', user!.id)
+      }
+
+      const { data, error } = await query
+      if (error) throw error
+
+      if (data) {
+        const total = data.length
+        const success = data.filter((d) => d.status === 'success').length
+        const failed = data.filter((d) => d.status === 'failed').length
+        const successRate = total > 0 ? Math.round((success / total) * 100) : 0
+        setStats({ total, success, failed, successRate })
+      }
+    } catch (err) {
+      console.error('Error loading stats', err)
+    }
+  }, [user])
+
+  useEffect(() => {
+    if (user) {
+      setPage(0)
+      loadLogs(0, true)
+      if (logType === 'notifications') {
+        loadStats()
+      }
+    }
+  }, [user, logType, statusFilter, channelFilter, debouncedSearch, loadStats])
+
+  const loadLogs = async (pageNum: number, reset: boolean = false) => {
     setIsLoading(true)
     try {
       const { data: profile } = await supabase
@@ -64,9 +125,9 @@ export function LogsTab() {
       if (logType === 'notifications') {
         let query = supabase
           .from('notification_logs')
-          .select('*, profiles(full_name)')
+          .select('*, profiles(full_name)', { count: 'exact' })
           .order('created_at', { ascending: false })
-          .limit(200)
+          .range(pageNum * ITEMS_PER_PAGE, (pageNum + 1) * ITEMS_PER_PAGE - 1)
 
         if (!isAdmin) {
           query = query.eq('user_id', user!.id)
@@ -74,28 +135,51 @@ export function LogsTab() {
         if (statusFilter !== 'all') {
           query = query.eq('status', statusFilter)
         }
+        if (channelFilter !== 'all') {
+          query = query.eq('channel', channelFilter)
+        }
+        if (debouncedSearch) {
+          query = query.or(
+            `recipient.ilike.%${debouncedSearch}%,message_body.ilike.%${debouncedSearch}%`,
+          )
+        }
 
-        const { data } = await query
-        if (data) setLogs(data)
+        const { data, count } = await query
+        if (data) {
+          setLogs((prev) => (reset ? data : [...prev, ...data]))
+          setHasMore(count ? (pageNum + 1) * ITEMS_PER_PAGE < count : false)
+        }
       } else {
         let query = supabase
           .from('user_actions')
-          .select('*, profiles(full_name, email)')
+          .select('*, profiles(full_name, email)', { count: 'exact' })
           .order('created_at', { ascending: false })
-          .limit(200)
+          .range(pageNum * ITEMS_PER_PAGE, (pageNum + 1) * ITEMS_PER_PAGE - 1)
 
         if (!isAdmin) {
           query = query.eq('user_id', user!.id)
         }
+        if (debouncedSearch) {
+          query = query.ilike('action_type', `%${debouncedSearch}%`)
+        }
 
-        const { data } = await query
-        if (data) setLogs(data)
+        const { data, count } = await query
+        if (data) {
+          setLogs((prev) => (reset ? data : [...prev, ...data]))
+          setHasMore(count ? (pageNum + 1) * ITEMS_PER_PAGE < count : false)
+        }
       }
     } catch (error) {
       console.error('Error loading logs:', error)
     } finally {
       setIsLoading(false)
     }
+  }
+
+  const handleLoadMore = () => {
+    const nextPage = page + 1
+    setPage(nextPage)
+    loadLogs(nextPage)
   }
 
   const handleResend = async (log: NotificationLog) => {
@@ -140,7 +224,7 @@ export function LogsTab() {
       )
 
       toast({ title: 'Notificação reenviada com sucesso' })
-      await loadLogs()
+      loadStats()
     } catch (error: any) {
       console.error('Error resending:', error)
       toast({
@@ -170,7 +254,6 @@ export function LogsTab() {
           result += ` (Falhou após ${parsed.attempts} tentativas de reenvio automático)`
         }
 
-        // Detecção de erros comuns para facilitar o diagnóstico do usuário
         if (
           result.toLowerCase().includes('disconnected') ||
           result.toLowerCase().includes('not connected') ||
@@ -205,26 +288,82 @@ export function LogsTab() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4">
-        <div>
-          <h3 className="text-xl font-bold text-white">Trilha de Auditoria e Logs</h3>
-          <p className="text-muted-foreground text-sm">
-            Monitore o histórico de disparos (WhatsApp/E-mail) e erros detalhados de envio.
-          </p>
+      {logType === 'notifications' && (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <Card className="bg-card border-border">
+            <CardContent className="p-6 flex items-center gap-4">
+              <div className="p-3 bg-primary/10 rounded-full text-primary shrink-0">
+                <Activity className="w-6 h-6" />
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">Disparos (24h)</p>
+                <h4 className="text-2xl font-bold text-white">{stats.total}</h4>
+              </div>
+            </CardContent>
+          </Card>
+          <Card className="bg-card border-border">
+            <CardContent className="p-6 flex items-center gap-4">
+              <div className="p-3 bg-green-500/10 rounded-full text-green-500 shrink-0">
+                <CheckCircle2 className="w-6 h-6" />
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">Taxa de Sucesso (24h)</p>
+                <h4 className="text-2xl font-bold text-white">{stats.successRate}%</h4>
+              </div>
+            </CardContent>
+          </Card>
+          <Card className="bg-card border-border">
+            <CardContent className="p-6 flex items-center gap-4">
+              <div className="p-3 bg-red-500/10 rounded-full text-red-500 shrink-0">
+                <XCircle className="w-6 h-6" />
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">Falhas (24h)</p>
+                <h4 className="text-2xl font-bold text-white">{stats.failed}</h4>
+              </div>
+            </CardContent>
+          </Card>
         </div>
-        <div className="flex flex-col sm:flex-row items-center gap-3 shrink-0">
+      )}
+
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4">
+        <div className="flex items-center gap-3 w-full sm:w-auto">
+          <div className="relative w-full sm:w-[300px]">
+            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Buscar destinatário ou mensagem..."
+              className="pl-9 bg-secondary/50 border-border"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+        </div>
+        <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
           {logType === 'notifications' && (
-            <Select value={statusFilter} onValueChange={(v: any) => setStatusFilter(v)}>
-              <SelectTrigger className="w-[140px] bg-secondary border-border h-9">
-                <SelectValue placeholder="Status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Todos os Status</SelectItem>
-                <SelectItem value="success">Sucesso</SelectItem>
-                <SelectItem value="failed">Falha</SelectItem>
-                <SelectItem value="test_sent">Teste Enviado</SelectItem>
-              </SelectContent>
-            </Select>
+            <>
+              <Select value={channelFilter} onValueChange={(v: any) => setChannelFilter(v)}>
+                <SelectTrigger className="w-[140px] bg-secondary border-border h-9">
+                  <SelectValue placeholder="Canal" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todos os Canais</SelectItem>
+                  <SelectItem value="whatsapp">WhatsApp</SelectItem>
+                  <SelectItem value="email">E-mail</SelectItem>
+                  <SelectItem value="push">Push</SelectItem>
+                </SelectContent>
+              </Select>
+              <Select value={statusFilter} onValueChange={(v: any) => setStatusFilter(v)}>
+                <SelectTrigger className="w-[140px] bg-secondary border-border h-9">
+                  <SelectValue placeholder="Status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todos os Status</SelectItem>
+                  <SelectItem value="success">Sucesso</SelectItem>
+                  <SelectItem value="failed">Falha</SelectItem>
+                  <SelectItem value="test_sent">Teste Enviado</SelectItem>
+                </SelectContent>
+              </Select>
+            </>
           )}
           <div className="flex bg-secondary/50 p-1 rounded-lg border border-border shrink-0">
             <Button
@@ -255,122 +394,152 @@ export function LogsTab() {
 
       <Card className="bg-card border-border overflow-hidden">
         <CardContent className="p-0">
-          <Table>
-            <TableHeader className="bg-secondary/50">
-              <TableRow className="border-border">
-                <TableHead className="text-muted-foreground">Data/Hora</TableHead>
-                <TableHead className="text-muted-foreground">Usuário / Destinatário</TableHead>
-                <TableHead className="text-muted-foreground">
-                  {logType === 'notifications' ? 'Canal' : 'Tipo de Ação'}
-                </TableHead>
-                <TableHead className="text-muted-foreground">Status</TableHead>
-                <TableHead className="text-right text-muted-foreground">Detalhes</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {isLoading ? (
-                <TableRow>
-                  <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
-                    Carregando registros...
-                  </TableCell>
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader className="bg-secondary/50">
+                <TableRow className="border-border">
+                  <TableHead className="text-muted-foreground whitespace-nowrap">
+                    Data/Hora
+                  </TableHead>
+                  <TableHead className="text-muted-foreground whitespace-nowrap">
+                    Usuário / Destinatário
+                  </TableHead>
+                  <TableHead className="text-muted-foreground whitespace-nowrap">
+                    {logType === 'notifications' ? 'Canal' : 'Tipo de Ação'}
+                  </TableHead>
+                  <TableHead className="text-muted-foreground whitespace-nowrap">Status</TableHead>
+                  <TableHead className="text-right text-muted-foreground whitespace-nowrap">
+                    Detalhes
+                  </TableHead>
                 </TableRow>
-              ) : logs.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
-                    Nenhum registro encontrado para esta categoria.
-                  </TableCell>
-                </TableRow>
-              ) : (
-                logs.map((log) => (
-                  <TableRow key={log.id} className="border-border hover:bg-secondary/30">
-                    <TableCell className="text-sm text-white whitespace-nowrap">
-                      {new Date(log.created_at).toLocaleString('pt-BR')}
-                    </TableCell>
-                    <TableCell className="text-sm text-white font-medium">
-                      {logType === 'notifications' ? log.recipient : log.profiles?.email}
-                      {log.profiles?.full_name && (
-                        <div className="text-xs text-muted-foreground font-normal mt-0.5">
-                          {log.profiles.full_name}
-                        </div>
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      {logType === 'notifications' ? (
-                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                          {log.channel === 'whatsapp' ? (
-                            <MessageSquare className="w-4 h-4 text-green-500" />
-                          ) : log.channel === 'push' ? (
-                            <Activity className="w-4 h-4 text-purple-500" />
-                          ) : (
-                            <Mail className="w-4 h-4 text-blue-500" />
-                          )}
-                          <span className="capitalize">{log.channel}</span>
-                        </div>
-                      ) : (
-                        <span className="text-sm text-muted-foreground">{log.action_type}</span>
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      {logType === 'notifications' ? (
-                        <Badge
-                          variant="outline"
-                          className={
-                            log.status === 'success'
-                              ? 'bg-green-500/10 text-green-500 border-green-500/20'
-                              : log.status === 'test_sent'
-                                ? 'bg-blue-500/10 text-blue-500 border-blue-500/20'
-                                : 'bg-red-500/10 text-red-500 border-red-500/20'
-                          }
-                        >
-                          {log.status === 'success'
-                            ? 'Enviado'
-                            : log.status === 'test_sent'
-                              ? 'Teste Enviado'
-                              : 'Falha'}
-                        </Badge>
-                      ) : (
-                        <Badge
-                          variant="outline"
-                          className="bg-primary/10 text-primary border-primary/20"
-                        >
-                          Registrado
-                        </Badge>
-                      )}
-                    </TableCell>
-                    <TableCell className="text-right whitespace-nowrap">
-                      {logType === 'notifications' && log.status === 'failed' && (
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="mr-2 border-primary/50 text-primary hover:bg-primary/10 h-8"
-                          onClick={() => handleResend(log)}
-                          disabled={isResending === log.id}
-                        >
-                          <RefreshCw
-                            className={cn('w-3 h-3 mr-1', isResending === log.id && 'animate-spin')}
-                          />
-                          Reenviar
-                        </Button>
-                      )}
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="text-muted-foreground hover:text-white h-8"
-                        onClick={() => setSelectedLog(log)}
-                      >
-                        <Eye className="w-4 h-4 mr-1" /> Ver
-                      </Button>
+              </TableHeader>
+              <TableBody>
+                {isLoading && page === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
+                      Carregando registros...
                     </TableCell>
                   </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
+                ) : logs.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
+                      Nenhum registro encontrado com os filtros atuais.
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  logs.map((log) => (
+                    <TableRow key={log.id} className="border-border hover:bg-secondary/30">
+                      <TableCell className="text-sm text-white whitespace-nowrap">
+                        {new Date(log.created_at).toLocaleString('pt-BR')}
+                      </TableCell>
+                      <TableCell className="text-sm text-white font-medium max-w-[200px] truncate">
+                        {logType === 'notifications' ? log.recipient : log.profiles?.email}
+                        {log.profiles?.full_name && (
+                          <div className="text-xs text-muted-foreground font-normal mt-0.5 truncate">
+                            {log.profiles.full_name}
+                          </div>
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        {logType === 'notifications' ? (
+                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                            {log.channel === 'whatsapp' ? (
+                              <MessageSquare className="w-4 h-4 text-green-500" />
+                            ) : log.channel === 'push' ? (
+                              <Activity className="w-4 h-4 text-purple-500" />
+                            ) : (
+                              <Mail className="w-4 h-4 text-blue-500" />
+                            )}
+                            <span className="capitalize">{log.channel}</span>
+                          </div>
+                        ) : (
+                          <span className="text-sm text-muted-foreground truncate block max-w-[200px]">
+                            {log.action_type}
+                          </span>
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        {logType === 'notifications' ? (
+                          <Badge
+                            variant="outline"
+                            className={
+                              log.status === 'success'
+                                ? 'bg-green-500/10 text-green-500 border-green-500/20'
+                                : log.status === 'test_sent'
+                                  ? 'bg-blue-500/10 text-blue-500 border-blue-500/20'
+                                  : 'bg-red-500/10 text-red-500 border-red-500/20'
+                            }
+                          >
+                            {log.status === 'success'
+                              ? 'Enviado'
+                              : log.status === 'test_sent'
+                                ? 'Teste Enviado'
+                                : 'Falha'}
+                          </Badge>
+                        ) : (
+                          <Badge
+                            variant="outline"
+                            className="bg-primary/10 text-primary border-primary/20"
+                          >
+                            Registrado
+                          </Badge>
+                        )}
+                      </TableCell>
+                      <TableCell className="text-right whitespace-nowrap">
+                        {logType === 'notifications' && log.status === 'failed' && (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="mr-2 border-primary/50 text-primary hover:bg-primary/10 h-8"
+                            onClick={() => handleResend(log)}
+                            disabled={isResending === log.id}
+                          >
+                            <RefreshCw
+                              className={cn(
+                                'w-3 h-3 mr-1',
+                                isResending === log.id && 'animate-spin',
+                              )}
+                            />
+                            Reenviar
+                          </Button>
+                        )}
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="text-muted-foreground hover:text-white h-8"
+                          onClick={() => setSelectedLog(log)}
+                        >
+                          <Eye className="w-4 h-4 mr-1" /> Ver
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </div>
+
+          {hasMore && !isLoading && logs.length > 0 && (
+            <div className="flex justify-center p-4 border-t border-border">
+              <Button
+                variant="outline"
+                onClick={handleLoadMore}
+                className="bg-secondary/50 border-border hover:bg-secondary"
+              >
+                Carregar Mais Registros
+              </Button>
+            </div>
+          )}
+          {isLoading && page > 0 && (
+            <div className="flex justify-center p-4 border-t border-border text-muted-foreground text-sm">
+              Carregando mais registros...
+            </div>
+          )}
         </CardContent>
       </Card>
 
       <Dialog open={!!selectedLog} onOpenChange={(open) => !open && setSelectedLog(null)}>
-        <DialogContent className="bg-card border-border sm:max-w-[600px]">
+        <DialogContent className="bg-card border-border sm:max-w-[600px] max-h-[80vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="text-white flex items-center gap-2">
               Detalhes do Registro
