@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
+import { Badge } from '@/components/ui/badge'
 import {
   Select,
   SelectContent,
@@ -77,7 +78,31 @@ export function TemplatesTab() {
       'Notificação de Match - Email',
       'Solicitação de Parceria - WhatsApp',
       'Solicitação de Parceria - Email',
+      'Boas-vindas - WhatsApp',
+      'Boas-vindas - Email',
+      'Nova Demanda - WhatsApp',
     ].includes(name)
+  }
+
+  const getAvailableVariables = () => {
+    const name = editingTemplate?.name || ''
+    if (name.includes('Boas-vindas')) {
+      return ['{{full_name}}']
+    }
+    if (name.includes('Match')) {
+      return ['{{partner_name}}', '{{property_details}}']
+    }
+    if (name.includes('Demanda')) {
+      return ['{{partner_name}}', '{{demand_details}}']
+    }
+    return ['{{partner_name}}', '{{property_details}}', '{{full_name}}', '{{demand_details}}']
+  }
+
+  const insertVariable = (variable: string) => {
+    setEditingTemplate((prev) => ({
+      ...prev,
+      content: prev?.content ? prev.content + ' ' + variable : variable,
+    }))
   }
 
   if (isLoading)
@@ -87,9 +112,10 @@ export function TemplatesTab() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h3 className="text-xl font-bold text-white">Templates de Notificação</h3>
-          <p className="text-muted-foreground text-sm">
-            Gerencie as mensagens automáticas enviadas aos seus parceiros.
+          <h3 className="text-xl font-bold text-white">Templates de Mensagem Dinâmicos</h3>
+          <p className="text-muted-foreground text-sm mt-1">
+            Personalize os textos enviados para seus parceiros. Use as variáveis para inserir dados
+            dinamicamente.
           </p>
         </div>
         <Button
@@ -113,9 +139,9 @@ export function TemplatesTab() {
                 ) : (
                   <Mail className="w-4 h-4 text-blue-500" />
                 )}
-                {tpl.name}
+                <span className="line-clamp-1">{tpl.name}</span>
               </CardTitle>
-              <div className="flex gap-2">
+              <div className="flex gap-2 shrink-0">
                 <Button
                   variant="ghost"
                   size="icon"
@@ -151,7 +177,7 @@ export function TemplatesTab() {
       </div>
 
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="bg-card border-border sm:max-w-[500px]">
+        <DialogContent className="bg-card border-border sm:max-w-[600px]">
           <DialogHeader>
             <DialogTitle className="text-white">
               {editingTemplate?.id ? 'Editar Template' : 'Novo Template'}
@@ -187,22 +213,32 @@ export function TemplatesTab() {
               </Select>
             </div>
             <div className="space-y-2">
-              <label className="text-sm font-medium text-white">Conteúdo da Mensagem</label>
+              <div className="flex justify-between items-center mb-1">
+                <label className="text-sm font-medium text-white">Conteúdo da Mensagem</label>
+                <div className="flex gap-1 flex-wrap justify-end">
+                  {getAvailableVariables().map((v) => (
+                    <Badge
+                      key={v}
+                      variant="outline"
+                      className="cursor-pointer border-primary/30 text-primary hover:bg-primary hover:text-black text-[10px] h-5 px-1.5 transition-colors"
+                      onClick={() => insertVariable(v)}
+                    >
+                      {v}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
               <Textarea
                 value={editingTemplate?.content || ''}
                 onChange={(e) =>
                   setEditingTemplate((prev) => ({ ...prev, content: e.target.value }))
                 }
-                className="bg-background text-white min-h-[150px]"
+                className="bg-background text-white min-h-[200px]"
                 placeholder={`Olá {{partner_name}}, tenho interesse na sua demanda: {{property_details}}...`}
               />
               <p className="text-xs text-muted-foreground mt-1">
-                Variáveis dinâmicas:{' '}
-                <code className="bg-secondary text-primary px-1 rounded">{'{{partner_name}}'}</code>{' '}
-                e{' '}
-                <code className="bg-secondary text-primary px-1 rounded">
-                  {'{{property_details}}'}
-                </code>
+                Dica: Clique nas variáveis (botões amarelos acima) para inseri-las rapidamente no
+                final do seu texto. Elas serão substituídas por dados reais no momento do envio.
               </p>
             </div>
           </div>

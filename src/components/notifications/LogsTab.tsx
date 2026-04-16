@@ -145,11 +145,61 @@ export function LogsTab() {
       console.error('Error resending:', error)
       toast({
         title: 'Erro ao reenviar',
-        description: error.message || 'Falha no envio',
+        description: error.message || 'Falha no envio, tente novamente.',
         variant: 'destructive',
       })
     } finally {
       setIsResending(null)
+    }
+  }
+
+  const parseErrorDetails = (details: string | null) => {
+    if (!details) return ''
+    try {
+      const parsed = JSON.parse(details)
+      if (parsed.apiResponse) {
+        const apiError =
+          parsed.apiResponse.error ||
+          parsed.apiResponse.message ||
+          parsed.apiResponse.error_description
+        let result = apiError || details
+        if (parsed.status) {
+          result = `Status HTTP ${parsed.status}: ${result}`
+        }
+        if (parsed.attempts > 1) {
+          result += ` (Falhou após ${parsed.attempts} tentativas de reenvio automático)`
+        }
+
+        // Detecção de erros comuns para facilitar o diagnóstico do usuário
+        if (
+          result.toLowerCase().includes('disconnected') ||
+          result.toLowerCase().includes('not connected') ||
+          result.toLowerCase().includes('sem sessão')
+        ) {
+          result =
+            '⚠️ WhatsApp desconectado. Verifique a conexão do seu aparelho no painel da Z-api.\n\nDetalhes técnicos: ' +
+            result
+        } else if (
+          result.toLowerCase().includes('invalid format') ||
+          result.toLowerCase().includes('invalid phone') ||
+          result.toLowerCase().includes('not valid')
+        ) {
+          result =
+            '❌ Número inválido. Verifique o formato do telefone do destinatário (ex: 5511999999999).\n\nDetalhes técnicos: ' +
+            result
+        }
+        return result
+      }
+      if (parsed.message) return parsed.message
+      return details
+    } catch {
+      if (
+        details.toLowerCase().includes('disconnected') ||
+        details.toLowerCase().includes('not connected')
+      ) {
+        return '⚠️ WhatsApp desconectado.\n\nDetalhes: ' + details
+      }
+      return details
     }
   }
 
@@ -159,7 +209,7 @@ export function LogsTab() {
         <div>
           <h3 className="text-xl font-bold text-white">Trilha de Auditoria e Logs</h3>
           <p className="text-muted-foreground text-sm">
-            Monitore o histórico de disparos (WhatsApp/E-mail) e ações do sistema.
+            Monitore o histórico de disparos (WhatsApp/E-mail) e erros detalhados de envio.
           </p>
         </div>
         <div className="flex flex-col sm:flex-row items-center gap-3 shrink-0">
@@ -320,7 +370,7 @@ export function LogsTab() {
       </Card>
 
       <Dialog open={!!selectedLog} onOpenChange={(open) => !open && setSelectedLog(null)}>
-        <DialogContent className="bg-card border-border sm:max-w-[500px]">
+        <DialogContent className="bg-card border-border sm:max-w-[600px]">
           <DialogHeader>
             <DialogTitle className="text-white flex items-center gap-2">
               Detalhes do Registro
@@ -347,7 +397,7 @@ export function LogsTab() {
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="p-4 bg-background rounded-lg border border-border">
-              <p className="text-sm text-white whitespace-pre-wrap">
+              <p className="text-sm text-white whitespace-pre-wrap font-mono text-xs">
                 {logType === 'notifications'
                   ? selectedLog?.message_body
                   : JSON.stringify(selectedLog, null, 2)}
@@ -357,9 +407,11 @@ export function LogsTab() {
             {selectedLog?.error_details && (
               <div className="p-4 bg-red-500/10 rounded-lg border border-red-500/20 flex gap-3 items-start">
                 <AlertCircle className="w-5 h-5 text-red-500 shrink-0 mt-0.5" />
-                <div>
-                  <h4 className="text-sm font-semibold text-red-500">Erro Reportado</h4>
-                  <p className="text-xs text-red-400 mt-1">{selectedLog.error_details}</p>
+                <div className="flex-1 overflow-hidden">
+                  <h4 className="text-sm font-semibold text-red-500 mb-1">Motivo da Falha</h4>
+                  <div className="text-sm text-red-400 whitespace-pre-wrap break-words">
+                    {parseErrorDetails(selectedLog.error_details)}
+                  </div>
                 </div>
               </div>
             )}
