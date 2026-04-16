@@ -64,6 +64,7 @@ export default function DashboardPage() {
   const [recentMatchAlerts, setRecentMatchAlerts] = useState<any[]>([])
   const [referralsCount, setReferralsCount] = useState<number>(0)
   const [userTier, setUserTier] = useState<Tier>('None')
+  const [activeTab, setActiveTab] = useState('inicio')
 
   // New states for real data from Supabase
   const [dashboardStats, setDashboardStats] = useState({
@@ -398,7 +399,7 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      <Tabs defaultValue="inicio" className="w-full space-y-6">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full space-y-6">
         <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 h-auto p-1.5 bg-card border border-border shadow-sm rounded-lg gap-1.5">
           <TabsTrigger
             value="inicio"
@@ -438,18 +439,27 @@ export default function DashboardPage() {
         >
           <PendingValidations />
 
-          <Alert className="bg-primary/5 border-primary/30 shadow-sm relative overflow-hidden">
+          <Alert className="bg-primary/5 border-primary/30 shadow-sm relative overflow-hidden flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 sm:p-6">
             <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 blur-[40px] rounded-full pointer-events-none" />
-            <UserPlus className="h-5 w-5 text-primary" />
-            <AlertTitle className="font-bold text-white ml-2">
-              Aumente seus Matches: Convide um Parceiro!
-            </AlertTitle>
-            <AlertDescription className="mt-2 ml-2 text-sm text-muted-foreground max-w-3xl">
-              Nossa rede é movida pela colaboração. Quanto mais corretores de confiança na
-              plataforma, <strong>mais imóveis e demandas compatíveis</strong> são gerados para
-              você. Compartilhe seu link exclusivo e ganhe benefícios. Acesse a aba{' '}
-              <strong>Rede & Crescimento</strong> para começar.
-            </AlertDescription>
+            <div className="flex-1 relative z-10">
+              <div className="flex items-center gap-2">
+                <UserPlus className="h-5 w-5 text-primary" />
+                <AlertTitle className="font-bold text-white m-0">
+                  Aumente seus Matches: Convide um Parceiro!
+                </AlertTitle>
+              </div>
+              <AlertDescription className="mt-2 text-sm text-muted-foreground max-w-3xl">
+                Nossa rede é movida pela colaboração. Quanto mais corretores de confiança na
+                plataforma, <strong>mais imóveis e demandas compatíveis</strong> são gerados para
+                você. Compartilhe seu link exclusivo e ganhe benefícios.
+              </AlertDescription>
+            </div>
+            <Button
+              onClick={() => setActiveTab('crescimento')}
+              className="shrink-0 relative z-10 w-full sm:w-auto bg-primary hover:bg-primary/90 text-primary-foreground font-semibold"
+            >
+              Indicar Parceiro
+            </Button>
           </Alert>
 
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -674,11 +684,15 @@ export default function DashboardPage() {
         {/* TAB 4: REDE & CRESCIMENTO */}
         <TabsContent
           value="crescimento"
-          className="space-y-6 outline-none animate-in fade-in-50 duration-500 pt-2"
+          className="space-y-6 outline-none animate-in fade-in-50 duration-500 pt-2 w-full"
         >
-          <div className="grid gap-6 md:grid-cols-3">
-            <div className="md:col-span-2 space-y-6">
-              <ReferralTracker userId={authUser?.id || ''} referralLink={referralLink} />
+          <div className="grid gap-6 md:grid-cols-3 w-full">
+            <div className="md:col-span-2 space-y-6 max-w-full overflow-hidden">
+              <div className="w-full overflow-x-auto pb-2 scrollbar-hide">
+                <div className="min-w-[100%] w-fit">
+                  <ReferralTracker userId={authUser?.id || ''} referralLink={referralLink} />
+                </div>
+              </div>
               <DashboardReferral />
             </div>
             <div className="md:col-span-1 space-y-6">
