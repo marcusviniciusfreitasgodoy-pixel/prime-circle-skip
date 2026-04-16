@@ -20,6 +20,7 @@ import { DeliveryStatusWidget } from '@/components/dashboard/DeliveryStatusWidge
 import { MatchesChartWidget } from '@/components/dashboard/MatchesChartWidget'
 import { DashboardReferral } from '@/components/dashboard/DashboardReferral'
 import { DashboardCollaboration } from '@/components/dashboard/DashboardCollaboration'
+import { ReferralRanking } from '@/components/dashboard/ReferralRanking'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import {
   Activity,
@@ -698,6 +699,7 @@ export default function DashboardPage() {
             <div className="md:col-span-1 space-y-6">
               <AmbassadorWidget tier={userTier} referrals={referralsCount} />
               <ReputationRanking />
+              <ReferralRanking />
               <DeliveryStatusWidget />
             </div>
           </div>

@@ -611,6 +611,26 @@ export function ReferralTracker({
             <TabsContent value="pendentes" className="m-0">
               {invitations.length > 0 ? (
                 <>
+                  <div className="mb-6 p-4 sm:p-5 bg-primary/5 border border-primary/20 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-sm">
+                    <div className="flex-1">
+                      <h4 className="text-sm font-bold text-primary flex items-center gap-2">
+                        <Activity className="w-4 h-4" /> Automação de Lembretes Ativa
+                      </h4>
+                      <p className="text-xs text-muted-foreground mt-1.5 leading-relaxed max-w-xl">
+                        O sistema envia cobranças semanais automáticas no WhatsApp e E-mail dos seus
+                        convidados pendentes. Acompanhe abaixo o status de cada um.
+                      </p>
+                    </div>
+                    <div className="text-left sm:text-right bg-background/50 p-3 rounded-lg border border-border/50 min-w-[140px]">
+                      <div className="text-2xl font-black text-primary">
+                        {invitations.reduce((acc, inv) => acc + (inv.reminder_count || 0), 0)}
+                      </div>
+                      <div className="text-[10px] text-muted-foreground uppercase tracking-wider font-semibold mt-0.5">
+                        Lembretes Disparados
+                      </div>
+                    </div>
+                  </div>
+
                   <div className="hidden md:block overflow-x-auto px-4 sm:px-0">
                     <Table>
                       <TableHeader>
