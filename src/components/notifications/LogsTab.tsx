@@ -42,7 +42,9 @@ export function LogsTab() {
   const [isLoading, setIsLoading] = useState(true)
   const [selectedLog, setSelectedLog] = useState<any | null>(null)
   const [isResending, setIsResending] = useState<string | null>(null)
-  const [statusFilter, setStatusFilter] = useState<'all' | 'success' | 'failed'>('all')
+  const [statusFilter, setStatusFilter] = useState<'all' | 'success' | 'failed' | 'test_sent'>(
+    'all',
+  )
 
   useEffect(() => {
     if (user) loadLogs()
@@ -170,6 +172,7 @@ export function LogsTab() {
                 <SelectItem value="all">Todos os Status</SelectItem>
                 <SelectItem value="success">Sucesso</SelectItem>
                 <SelectItem value="failed">Falha</SelectItem>
+                <SelectItem value="test_sent">Teste Enviado</SelectItem>
               </SelectContent>
             </Select>
           )}
@@ -264,10 +267,16 @@ export function LogsTab() {
                           className={
                             log.status === 'success'
                               ? 'bg-green-500/10 text-green-500 border-green-500/20'
-                              : 'bg-red-500/10 text-red-500 border-red-500/20'
+                              : log.status === 'test_sent'
+                                ? 'bg-blue-500/10 text-blue-500 border-blue-500/20'
+                                : 'bg-red-500/10 text-red-500 border-red-500/20'
                           }
                         >
-                          {log.status === 'success' ? 'Enviado' : 'Falha'}
+                          {log.status === 'success'
+                            ? 'Enviado'
+                            : log.status === 'test_sent'
+                              ? 'Teste Enviado'
+                              : 'Falha'}
                         </Badge>
                       ) : (
                         <Badge
@@ -321,10 +330,12 @@ export function LogsTab() {
                   className={
                     selectedLog?.status === 'success'
                       ? 'text-green-500 border-green-500/20'
-                      : 'text-red-500 border-red-500/20'
+                      : selectedLog?.status === 'test_sent'
+                        ? 'text-blue-500 border-blue-500/20'
+                        : 'text-red-500 border-red-500/20'
                   }
                 >
-                  {selectedLog?.status}
+                  {selectedLog?.status === 'test_sent' ? 'Teste Enviado' : selectedLog?.status}
                 </Badge>
               )}
             </DialogTitle>
