@@ -4,8 +4,7 @@ import { createClient } from 'npm:@supabase/supabase-js@2'
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-  'Access-Control-Allow-Headers':
-    'authorization, x-client-info, x-supabase-client-platform, apikey, content-type',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, x-supabase-client-platform, apikey, content-type',
 }
 
 Deno.serve(async (req: Request) => {
@@ -23,27 +22,19 @@ Deno.serve(async (req: Request) => {
       })
     }
 
-    const instanceId = (
-      Deno.env.get('ZAPI_INSTANCE_ID') || '3F172E6464E6822C9BFA9E648AE68DF9'
-    ).trim()
+    const instanceId = (Deno.env.get('ZAPI_INSTANCE_ID') || '3F172E6464E6822C9BFA9E648AE68DF9').trim()
     const token = (Deno.env.get('ZAPI_TOKEN') || '2489C64D3BF41EBEA82BBA81').trim()
-    const clientToken = (
-      Deno.env.get('ZAPI_CLIENT_TOKEN') || 'Fd2d9a2263d6f4461ae75a57ea4c5fd05S'
-    ).trim()
+    const clientToken = (Deno.env.get('ZAPI_CLIENT_TOKEN') || 'Fd2d9a2263d6f4461ae75a57ea4c5fd05S').trim()
 
     if (!instanceId || !token) {
       console.error('Server configuration error: Missing ZAPI_INSTANCE_ID or ZAPI_TOKEN')
-      return new Response(
-        JSON.stringify({
-          success: false,
-          error:
-            'Configuração pendente: Adicione as variáveis ZAPI_INSTANCE_ID e ZAPI_TOKEN nos Secrets do Supabase.',
-        }),
-        {
-          status: 200,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        },
-      )
+      return new Response(JSON.stringify({ 
+        success: false, 
+        error: 'Configuração pendente: Adicione as variáveis ZAPI_INSTANCE_ID e ZAPI_TOKEN nos Secrets do Supabase.' 
+      }), {
+        status: 200,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      })
     }
 
     let formattedNumber = number.replace(/\D/g, '')
@@ -53,11 +44,11 @@ Deno.serve(async (req: Request) => {
     }
 
     const zapiUrl = `https://api.z-api.io/instances/${instanceId}/token/${token}/send-text`
-
+    
     // Support robust text structure for Z-api compatibility
     const payload = {
       phone: formattedNumber,
-      message: text,
+      message: text
     }
 
     let success = false
@@ -67,9 +58,9 @@ Deno.serve(async (req: Request) => {
 
     try {
       const headers: Record<string, string> = {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json'
       }
-
+      
       if (clientToken) {
         headers['Client-Token'] = clientToken
       }
@@ -77,7 +68,7 @@ Deno.serve(async (req: Request) => {
       response = await fetch(zapiUrl, {
         method: 'POST',
         headers,
-        body: JSON.stringify(payload),
+        body: JSON.stringify(payload)
       })
 
       responseText = await response.text()
@@ -106,41 +97,30 @@ Deno.serve(async (req: Request) => {
           p_channel: 'whatsapp',
           p_status: success ? 'success' : 'failed',
           p_message_body: text,
-          p_error_details: success
-            ? null
-            : JSON.stringify({
-                status: response?.status,
-                endpoint: zapiUrl
-                  .replace(token, 'HIDDEN_TOKEN')
-                  .replace(instanceId, 'HIDDEN_INSTANCE'),
-                apiResponse: data,
-              }),
+          p_error_details: success ? null : JSON.stringify({
+            status: response?.status,
+            endpoint: zapiUrl.replace(token, 'HIDDEN_TOKEN').replace(instanceId, 'HIDDEN_INSTANCE'),
+            apiResponse: data
+          }),
         })
       }
     }
 
     if (!success) {
-      const errorMsg =
-        data?.error ||
-        data?.message ||
-        data?.error_description ||
-        (data?.raw ? data.raw.trim() : JSON.stringify(data))
-      return new Response(
-        JSON.stringify({
-          success: false,
-          error: `Z-api Erro: ${response?.status || 'Network Error'} - ${errorMsg}`,
-          data,
-        }),
-        {
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-          status: 200,
-        },
-      )
+      const errorMsg = data?.error || data?.message || data?.error_description || (data?.raw ? data.raw.trim() : JSON.stringify(data))
+      return new Response(JSON.stringify({ 
+        success: false, 
+        error: `Z-api Erro: ${response?.status || 'Network Error'} - ${errorMsg}`,
+        data 
+      }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        status: 200
+      })
     }
 
     return new Response(JSON.stringify({ success, data }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      status: 200,
+      status: 200
     })
   } catch (error: any) {
     return new Response(JSON.stringify({ success: false, error: error.message }), {
