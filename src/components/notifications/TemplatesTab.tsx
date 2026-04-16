@@ -81,13 +81,19 @@ export function TemplatesTab() {
       'Boas-vindas - WhatsApp',
       'Boas-vindas - Email',
       'Nova Demanda - WhatsApp',
+      'Duo de Ouro - Falta Demanda',
+      'Duo de Ouro - Falta Oferta',
+      'Busca Inteligente - Sem Resultados',
     ].includes(name)
   }
 
   const getAvailableVariables = () => {
     const name = editingTemplate?.name || ''
-    if (name.includes('Boas-vindas')) {
+    if (name.includes('Boas-vindas') || name.includes('Duo de Ouro')) {
       return ['{{full_name}}']
+    }
+    if (name.includes('Busca Inteligente')) {
+      return ['{{full_name}}', '{{demand_details}}', '{{user_id}}']
     }
     if (name.includes('Match')) {
       return ['{{partner_name}}', '{{property_details}}']
@@ -95,7 +101,13 @@ export function TemplatesTab() {
     if (name.includes('Demanda')) {
       return ['{{partner_name}}', '{{demand_details}}']
     }
-    return ['{{partner_name}}', '{{property_details}}', '{{full_name}}', '{{demand_details}}']
+    return [
+      '{{partner_name}}',
+      '{{property_details}}',
+      '{{full_name}}',
+      '{{demand_details}}',
+      '{{user_id}}',
+    ]
   }
 
   const insertVariable = (variable: string) => {

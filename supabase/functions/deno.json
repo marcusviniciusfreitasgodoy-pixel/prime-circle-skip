@@ -18,6 +18,8 @@
     "send-newsletter": 4,
     "register-newsletter-feedback": 1,
     "process-invitation-reminders": 4,
-    "process-activation-reminders": 5
+    "process-activation-reminders": 5,
+    "smart-search-webhook": 1,
+    "process-golden-duo-reminders": 1
   }
 }
