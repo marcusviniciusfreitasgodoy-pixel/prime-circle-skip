@@ -20,6 +20,17 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog'
+import {
   Dialog,
   DialogContent,
   DialogHeader,
@@ -36,6 +47,8 @@ import {
   Search,
   CheckCircle2,
   XCircle,
+  Trash,
+  Trash2,
 } from 'lucide-react'
 import { NotificationLog } from '@/services/notifications'
 import { useAuth } from '@/hooks/use-auth'
@@ -66,6 +79,22 @@ export function LogsTab() {
   const ITEMS_PER_PAGE = 50
 
   const [stats, setStats] = useState({ total: 0, success: 0, failed: 0, successRate: 0 })
+  const [isDeleting, setIsDeleting] = useState<string | null>(null)
+  const [isClearingAll, setIsClearingAll] = useState(false)
+  const [isAdmin, setIsAdmin] = useState(false)
+
+  useEffect(() => {
+    if (user) {
+      supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single()
+        .then(({ data }) => {
+          setIsAdmin(data?.role === 'admin')
+        })
+    }
+  }, [user])
 
   useEffect(() => {
     const timer = setTimeout(() => setDebouncedSearch(searchQuery), 500)
@@ -237,6 +266,58 @@ export function LogsTab() {
     }
   }
 
+  const handleDeleteLog = async (logId: string) => {
+    setIsDeleting(logId)
+    try {
+      const table = logType === 'notifications' ? 'notification_logs' : 'user_actions'
+      const { error } = await supabase.from(table).delete().eq('id', logId)
+      if (error) throw error
+
+      setLogs((prev) => prev.filter((l) => l.id !== logId))
+      toast({ title: 'Registro excluído com sucesso' })
+      if (logType === 'notifications') loadStats()
+    } catch (error: any) {
+      console.error('Error deleting log:', error)
+      toast({
+        title: 'Erro ao excluir',
+        description: error.message || 'Ocorreu um erro ao excluir o registro.',
+        variant: 'destructive',
+      })
+    } finally {
+      setIsDeleting(null)
+    }
+  }
+
+  const handleClearAll = async () => {
+    setIsClearingAll(true)
+    try {
+      const table = logType === 'notifications' ? 'notification_logs' : 'user_actions'
+      let query = supabase.from(table).delete()
+
+      if (!isAdmin) {
+        query = query.eq('user_id', user!.id)
+      } else {
+        query = query.not('id', 'is', null)
+      }
+
+      const { error } = await query
+      if (error) throw error
+
+      setLogs([])
+      toast({ title: 'Todos os registros foram excluídos' })
+      if (logType === 'notifications') loadStats()
+    } catch (error: any) {
+      console.error('Error clearing logs:', error)
+      toast({
+        title: 'Erro ao limpar registros',
+        description: error.message || 'Ocorreu um erro ao limpar os registros.',
+        variant: 'destructive',
+      })
+    } finally {
+      setIsClearingAll(false)
+    }
+  }
+
   const parseErrorDetails = (details: string | null) => {
     if (!details) return ''
     try {
@@ -389,6 +470,38 @@ export function LogsTab() {
               <Activity className="w-4 h-4 mr-2" /> Ações do Sistema
             </Button>
           </div>
+
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant="destructive" size="sm" className="h-9 shrink-0">
+                <Trash className="w-4 h-4 mr-2" />
+                Limpar Tudo
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent className="bg-card border-border">
+              <AlertDialogHeader>
+                <AlertDialogTitle className="text-white">
+                  Limpar todos os registros?
+                </AlertDialogTitle>
+                <AlertDialogDescription>
+                  Tem certeza que deseja excluir todos os registros de{' '}
+                  {logType === 'notifications' ? 'comunicações' : 'ações do sistema'}? Esta ação não
+                  pode ser desfeita.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel className="bg-secondary text-white border-border hover:bg-secondary/80">
+                  Cancelar
+                </AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={handleClearAll}
+                  className="bg-red-600 text-white hover:bg-red-700"
+                >
+                  {isClearingAll ? 'Limpando...' : 'Sim, excluir tudo'}
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
       </div>
 
@@ -510,6 +623,20 @@ export function LogsTab() {
                           onClick={() => setSelectedLog(log)}
                         >
                           <Eye className="w-4 h-4 mr-1" /> Ver
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="text-red-400 hover:text-red-300 hover:bg-red-500/10 h-8 ml-1 px-2"
+                          onClick={() => handleDeleteLog(log.id)}
+                          disabled={isDeleting === log.id}
+                          title="Excluir registro"
+                        >
+                          {isDeleting === log.id ? (
+                            <RefreshCw className="w-4 h-4 animate-spin" />
+                          ) : (
+                            <Trash2 className="w-4 h-4" />
+                          )}
                         </Button>
                       </TableCell>
                     </TableRow>

@@ -4,7 +4,8 @@ import { createClient } from 'npm:@supabase/supabase-js@2'
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, x-supabase-client-platform, apikey, content-type',
+  'Access-Control-Allow-Headers':
+    'authorization, x-client-info, x-supabase-client-platform, apikey, content-type',
 }
 
 Deno.serve(async (req: Request) => {
@@ -15,21 +16,27 @@ Deno.serve(async (req: Request) => {
 
   try {
     const payload = await req.json().catch(() => ({}))
-    
+
     // Security lock: do not send before 09:00 AM BRT
     const now = new Date()
     const brtHour = (now.getUTCHours() - 3 + 24) % 24
     if (brtHour < 9 && !payload?.bypass_time_check) {
-      return new Response(JSON.stringify({ success: false, message: 'Time restriction: Cannot send before 09:00 AM BRT' }), { 
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        status: 200
-      })
+      return new Response(
+        JSON.stringify({
+          success: false,
+          message: 'Time restriction: Cannot send before 09:00 AM BRT',
+        }),
+        {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          status: 200,
+        },
+      )
     }
 
     const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? ''
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     const supabase = createClient(supabaseUrl, supabaseKey)
-    
+
     // We want expires_at to be exactly 60 days from now.
     const today = new Date()
     const targetDateStart = new Date(today)
@@ -68,7 +75,7 @@ Deno.serve(async (req: Request) => {
 
       if (!email) continue
 
-      const subject = "Seu período grátis expira em 60 dias"
+      const subject = 'Seu período grátis expira em 60 dias'
       const htmlBody = `
         <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; line-height: 1.6; color: #333;">
           <h2 style="color: #111;">Olá ${fullName},</h2>
@@ -106,16 +113,16 @@ Deno.serve(async (req: Request) => {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-              'Authorization': `Bearer ${resendApiKey}`
+              Authorization: `Bearer ${resendApiKey}`,
             },
             body: JSON.stringify({
               from: 'Prime Circle <contato@primecircle.app.br>',
               to: email,
               subject: subject,
-              html: htmlBody
-            })
+              html: htmlBody,
+            }),
           })
-          
+
           const data = await res.json()
           success = res.ok
           if (!success) errorDetails = data
@@ -133,8 +140,8 @@ Deno.serve(async (req: Request) => {
             to: email,
             subject: subject,
             text: textBody,
-            user_id: plan.user_id
-          }
+            user_id: plan.user_id,
+          },
         })
         success = !res.error && res.data?.success !== false
         if (!success) errorDetails = res.error || res.data?.error
@@ -148,7 +155,7 @@ Deno.serve(async (req: Request) => {
         p_channel: 'email',
         p_status: success ? 'success' : 'failed',
         p_message_body: subject,
-        p_error_details: errorDetails ? JSON.stringify(errorDetails) : null
+        p_error_details: errorDetails ? JSON.stringify(errorDetails) : null,
       })
     }
 
