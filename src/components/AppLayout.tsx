@@ -227,7 +227,6 @@ function AppLayoutInner() {
     { title: 'Conexões', icon: GitMerge, url: '/matches' },
     { title: 'Sugestões', icon: Lightbulb, url: '/suggestions' },
     { title: 'Cronograma de Evolução', icon: Map, url: '/roadmap' },
-    { title: 'Planos', icon: Crown, url: '/plans' },
     { title: 'Ativos da Marca', icon: Palette, url: '/brand' },
   ]
 

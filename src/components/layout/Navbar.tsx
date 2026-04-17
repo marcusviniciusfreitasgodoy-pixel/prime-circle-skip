@@ -87,7 +87,6 @@ export function Navbar() {
     ? [
         { title: 'Dashboard', url: '/dashboard' },
         { title: 'Conexões', url: '/matches' },
-        { title: 'Planos', url: '/plans' },
       ]
     : [
         { title: 'Início', url: '/' },

@@ -7,7 +7,6 @@ import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { AmbassadorWidget } from '@/components/AmbassadorWidget'
-import { FounderExpiryBanner } from '@/components/FounderExpiryBanner'
 import { DashboardGuideCard } from '@/components/dashboard/DashboardGuideCard'
 import { PortfolioTabs } from '@/components/dashboard/PortfolioTabs'
 import { AddPropertyDialog } from '@/components/dashboard/AddPropertyDialog'
@@ -273,7 +272,7 @@ export default function DashboardPage() {
       title: 'Meus Imóveis Ativos',
       value: isLoadingStats ? '-' : dashboardStats.myProperties.toString(),
       icon: Building,
-      trend: `Plano: ${formatPlanName(profilePlan)}`,
+      trend: 'Ativos na rede',
     },
     {
       title: 'Conexões Abertas',
@@ -339,7 +338,6 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-6 animate-fade-in-up pb-12">
-      <FounderExpiryBanner />
       <DashboardGuideCard />
 
       {profileStatus === 'pending_validation' && (
@@ -373,17 +371,6 @@ export default function DashboardPage() {
               )}
             </h2>
             <div className="text-muted-foreground mt-2 flex items-center flex-wrap gap-2 sm:gap-3 text-sm">
-              <span className="flex items-center gap-2">
-                Plano atual:{' '}
-                <Badge variant="outline" className="border-primary/50 text-primary font-semibold">
-                  {isLoadingName ? (
-                    <Skeleton className="h-4 w-16 bg-muted/20 inline-block" />
-                  ) : (
-                    formatPlanName(profilePlan)
-                  )}
-                </Badge>
-              </span>
-              <span className="hidden sm:inline border-l border-border h-4" />
               <span className="flex items-center gap-1">
                 Pontuação:{' '}
                 <strong

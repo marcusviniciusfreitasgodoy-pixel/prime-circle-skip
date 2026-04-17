@@ -40,14 +40,6 @@ export function Footer() {
                   Acesso Exclusivo
                 </Link>
               </li>
-              <li>
-                <Link
-                  to="/plans"
-                  className="text-muted-foreground hover:text-primary transition-colors"
-                >
-                  Planos e Preços
-                </Link>
-              </li>
             </ul>
           </div>
 
