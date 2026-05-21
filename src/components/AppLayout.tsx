@@ -44,6 +44,7 @@ import { useToast } from '@/hooks/use-toast'
 import { cn } from '@/lib/utils'
 import { PlanLimitModal } from '@/components/PlanLimitModal'
 import { supabase } from '@/lib/supabase/client'
+import logoUrl from '@/assets/logo-horizontal-fundo-escuro-78525.png'
 
 function AppLayoutInner() {
   const {
@@ -253,13 +254,10 @@ function AppLayoutInner() {
     <div className="flex min-h-screen w-full bg-background selection:bg-primary/30">
       <Sidebar className="border-r border-border bg-card">
         <SidebarContent>
-          <div className="p-6 flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center shadow-[0_0_15px_rgba(201,168,76,0.3)] shrink-0">
-              <div className="w-3.5 h-3.5 rounded-full bg-card" />
-            </div>
-            <span className="font-bold text-xl tracking-widest text-white">
-              PRIME<span className="text-primary">CIRCLE</span>
-            </span>
+          <div className="p-6 flex items-center">
+            <Link to="/dashboard" onClick={handleLinkClick}>
+              <img src={logoUrl} alt="Prime Circle" className="h-8 w-auto" />
+            </Link>
           </div>
           <SidebarGroup>
             <SidebarMenu>

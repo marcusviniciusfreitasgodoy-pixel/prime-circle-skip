@@ -32,6 +32,7 @@ import { useSEO } from '@/hooks/use-seo'
 import { cn } from '@/lib/utils'
 import useAppStore from '@/stores/main'
 import { supabase } from '@/lib/supabase/client'
+import logoUrl from '@/assets/logo-horizontal-fundo-escuro-78525.png'
 
 const REGIONS = [
   'Barra da Tijuca',
@@ -336,9 +337,13 @@ export default function ApplyPage() {
         </Button>
 
         <div className="flex flex-col items-center mb-6 mt-6">
-          <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center shadow-[0_0_15px_rgba(201,168,76,0.3)] mb-4 shrink-0">
-            <div className="w-5 h-5 rounded-full bg-card" />
-          </div>
+          <Link to="/" className="mb-6">
+            <img
+              src={logoUrl}
+              alt="Prime Circle"
+              className="h-10 w-auto hover:scale-105 transition-transform"
+            />
+          </Link>
           <h1 className="text-2xl font-bold text-white text-center">Solicitar Acesso</h1>
           <p className="text-muted-foreground text-center text-sm mt-2">
             Junte-se ao círculo exclusivo.

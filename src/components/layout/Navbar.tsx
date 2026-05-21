@@ -14,6 +14,7 @@ import {
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet'
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase/client'
+import logoUrl from '@/assets/logo-horizontal-fundo-escuro-78525.png'
 
 export function Navbar() {
   const { user: authUser, signOut } = useAuth()
@@ -102,13 +103,12 @@ export function Navbar() {
   return (
     <header className="fixed top-0 w-full z-50 glass-header border-b border-border/50">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-        <Link to={authUser ? '/dashboard' : '/'} className="flex items-center gap-2 group">
-          <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center shadow-[0_0_10px_rgba(201,168,76,0.3)] group-hover:scale-105 transition-transform">
-            <div className="w-2.5 h-2.5 rounded-full bg-background" />
-          </div>
-          <span className="text-lg font-bold tracking-widest text-white hidden sm:block">
-            PRIME<span className="text-primary">CIRCLE</span>
-          </span>
+        <Link to={authUser ? '/dashboard' : '/'} className="flex items-center group">
+          <img
+            src={logoUrl}
+            alt="Prime Circle"
+            className="h-6 sm:h-8 w-auto group-hover:scale-105 transition-transform"
+          />
         </Link>
 
         <nav className="hidden md:flex items-center gap-6">

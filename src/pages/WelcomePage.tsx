@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button'
 import { PartyPopper, CheckCircle2, Loader2 } from 'lucide-react'
 import { useAuth } from '@/hooks/use-auth'
 import useAppStore from '@/stores/main'
+import logoUrl from '@/assets/logo-horizontal-fundo-escuro-78525.png'
 
 export default function WelcomePage() {
   const { user, loading } = useAuth()
@@ -40,6 +41,10 @@ export default function WelcomePage() {
       <div className="max-w-md w-full bg-card p-8 rounded-2xl border border-primary/30 shadow-elevation relative overflow-hidden animate-in fade-in zoom-in duration-500">
         <div className="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
           <PartyPopper className="w-32 h-32 text-primary" />
+        </div>
+
+        <div className="flex justify-center mb-8 relative z-10">
+          <img src={logoUrl} alt="Prime Circle" className="h-10 w-auto" />
         </div>
 
         <div className="w-20 h-20 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-6 relative z-10 ring-4 ring-primary/10">

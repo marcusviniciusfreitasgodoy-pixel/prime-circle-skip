@@ -10,6 +10,7 @@ import { useAuth } from '@/hooks/use-auth'
 import { useSEO } from '@/hooks/use-seo'
 import { supabase } from '@/lib/supabase/client'
 import { toast } from 'sonner'
+import logoUrl from '@/assets/logo-horizontal-fundo-escuro-78525.png'
 
 export default function LoginPage() {
   useSEO({
@@ -174,9 +175,13 @@ export default function LoginPage() {
     <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4">
       <div className="w-full max-w-md bg-card p-8 rounded-2xl border border-border shadow-elevation animate-fade-in-up">
         <div className="flex flex-col items-center mb-8">
-          <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center shadow-[0_0_15px_rgba(201,168,76,0.3)] mb-4 shrink-0">
-            <div className="w-5 h-5 rounded-full bg-card" />
-          </div>
+          <Link to="/" className="mb-6">
+            <img
+              src={logoUrl}
+              alt="Prime Circle"
+              className="h-10 w-auto hover:scale-105 transition-transform"
+            />
+          </Link>
           <h1 className="text-2xl font-bold text-white text-center">Acesso Exclusivo</h1>
           <p className="text-muted-foreground text-center text-sm mt-2">
             Autentique-se para entrar no seu círculo.
