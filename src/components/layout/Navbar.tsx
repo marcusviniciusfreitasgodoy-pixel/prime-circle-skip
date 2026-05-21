@@ -102,12 +102,15 @@ export function Navbar() {
 
   return (
     <header className="fixed top-0 w-full z-50 glass-header border-b border-border/50">
-      <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-        <Link to={authUser ? '/dashboard' : '/'} className="flex items-center group">
+      <div className="container mx-auto px-4 min-h-[4.5rem] sm:min-h-[5rem] lg:min-h-[6rem] py-3 flex items-center justify-between">
+        <Link
+          to={authUser ? '/dashboard' : '/'}
+          className="flex items-center group shrink-0 mr-4 z-10"
+        >
           <img
             src={logoUrl}
             alt="Prime Circle - Real Estate Network"
-            className="h-6 sm:h-8 w-auto group-hover:scale-105 transition-transform"
+            className="h-10 sm:h-12 md:h-14 lg:h-16 w-auto object-contain group-hover:scale-105 transition-transform"
           />
         </Link>
 

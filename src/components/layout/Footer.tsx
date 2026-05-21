@@ -8,8 +8,12 @@ export function Footer() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-8 mb-12">
           <div className="md:col-span-2">
-            <Link to="/" className="flex items-center mb-6">
-              <img src={logoUrl} alt="Prime Circle - Real Estate Network" className="h-8 w-auto" />
+            <Link to="/" className="inline-flex items-center mb-6">
+              <img
+                src={logoUrl}
+                alt="Prime Circle - Real Estate Network"
+                className="h-12 md:h-16 lg:h-20 w-auto object-contain"
+              />
             </Link>
             <p className="text-muted-foreground max-w-sm mb-6">
               A infraestrutura privada definitiva para corretores de alto padrão. Focado em liquidez
