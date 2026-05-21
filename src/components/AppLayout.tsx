@@ -254,9 +254,13 @@ function AppLayoutInner() {
     <div className="flex min-h-screen w-full bg-background selection:bg-primary/30">
       <Sidebar className="border-r border-border bg-card">
         <SidebarContent>
-          <div className="p-6 flex items-center">
-            <Link to="/dashboard" onClick={handleLinkClick}>
-              <img src={logoUrl} alt="Prime Circle - Real Estate Network" className="h-8 w-auto" />
+          <div className="p-6 sm:py-8 flex items-center">
+            <Link to="/dashboard" onClick={handleLinkClick} className="block w-full">
+              <img
+                src={logoUrl}
+                alt="Prime Circle - Real Estate Network"
+                className="h-10 sm:h-12 w-auto max-w-[200px] object-contain transition-transform hover:scale-[1.02]"
+              />
             </Link>
           </div>
           <SidebarGroup>
@@ -350,17 +354,28 @@ function AppLayoutInner() {
       </Sidebar>
 
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden pb-safe sm:pb-0">
-        <header className="h-16 glass-header flex items-center justify-between px-4 sm:px-6 sticky top-0 z-40">
+        <header className="h-16 sm:h-20 glass-header flex items-center justify-between px-4 sm:px-6 sticky top-0 z-40 transition-all">
           <div className="flex items-center gap-2 sm:gap-3">
             <Button
               variant="ghost"
               size="icon"
               onClick={toggleSidebar}
-              className="sm:hidden text-muted-foreground hover:text-white relative -ml-2"
+              className="sm:hidden text-muted-foreground hover:text-white relative -ml-2 shrink-0"
             >
               <Menu className="w-5 h-5" />
             </Button>
-            <h1 className="text-lg font-medium text-white drop-shadow-sm line-clamp-1 max-w-[160px] sm:max-w-none">
+            <Link
+              to="/dashboard"
+              className="sm:hidden shrink-0 flex items-center"
+              onClick={handleLinkClick}
+            >
+              <img
+                src={logoUrl}
+                alt="Prime Circle"
+                className="h-8 w-auto max-w-[120px] object-contain drop-shadow-sm"
+              />
+            </Link>
+            <h1 className="text-sm sm:text-xl font-medium text-white drop-shadow-sm line-clamp-1 max-w-[110px] sm:max-w-none border-l border-border/50 pl-3 ml-1 sm:border-0 sm:pl-0 sm:ml-0">
               {navItems.find((i) => i.url === location.pathname)?.title || 'Prime Circle'}
             </h1>
           </div>
