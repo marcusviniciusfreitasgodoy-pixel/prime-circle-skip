@@ -4,8 +4,7 @@ import { createClient } from 'npm:@supabase/supabase-js@2'
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-  'Access-Control-Allow-Headers':
-    'authorization, x-client-info, x-supabase-client-platform, apikey, content-type',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, x-supabase-client-platform, apikey, content-type',
 }
 
 Deno.serve(async (req: Request) => {
@@ -18,17 +17,14 @@ Deno.serve(async (req: Request) => {
     const { to, subject, text, user_id } = body
 
     if (!to || !subject || !text) {
-      return new Response(
-        JSON.stringify({ success: false, error: 'Missing required fields: to, subject, text' }),
-        {
-          status: 200,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        },
-      )
+      return new Response(JSON.stringify({ success: false, error: 'Missing required fields: to, subject, text' }), {
+        status: 200,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      })
     }
 
     const resendApiKey = Deno.env.get('RESEND_API_KEY')
-
+    
     // Replace newlines with <br/> for HTML email if text is plain
     const htmlBody = text.replace(/\n/g, '<br/>')
 
@@ -40,16 +36,16 @@ Deno.serve(async (req: Request) => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${resendApiKey}`,
+          'Authorization': `Bearer ${resendApiKey}`
         },
         body: JSON.stringify({
           from: 'Prime Circle <contato@primecircle.app.br>',
           to: to,
           subject: subject,
-          html: `<div style="font-family: sans-serif; line-height: 1.6; color: #333;">${htmlBody}</div>`,
-        }),
+          html: `<div style="font-family: sans-serif; line-height: 1.6; color: #333;">${htmlBody}</div>`
+        })
       })
-
+      
       const responseText = await res.text()
       try {
         responseData = JSON.parse(responseText)
@@ -92,6 +88,7 @@ Deno.serve(async (req: Request) => {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       status: 200,
     })
+
   } catch (error: any) {
     return new Response(JSON.stringify({ success: false, error: error.message }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
