@@ -10,7 +10,7 @@ import { useAuth } from '@/hooks/use-auth'
 import { useSEO } from '@/hooks/use-seo'
 import { supabase } from '@/lib/supabase/client'
 import { toast } from 'sonner'
-import logoUrl from '@/assets/logo-horizontal-fundo-escuro-78525.png'
+import logoUrl from '@/assets/logo-horizontal-texto-claro-transparente2x-ceb50.png'
 
 export default function LoginPage() {
   useSEO({
@@ -178,7 +178,7 @@ export default function LoginPage() {
           <Link to="/" className="mb-6">
             <img
               src={logoUrl}
-              alt="Prime Circle"
+              alt="Prime Circle - Real Estate Network"
               className="h-10 w-auto hover:scale-105 transition-transform"
             />
           </Link>

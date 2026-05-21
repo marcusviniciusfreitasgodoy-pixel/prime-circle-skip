@@ -44,7 +44,7 @@ import { useToast } from '@/hooks/use-toast'
 import { cn } from '@/lib/utils'
 import { PlanLimitModal } from '@/components/PlanLimitModal'
 import { supabase } from '@/lib/supabase/client'
-import logoUrl from '@/assets/logo-horizontal-fundo-escuro-78525.png'
+import logoUrl from '@/assets/logo-horizontal-texto-claro-transparente2x-ceb50.png'
 
 function AppLayoutInner() {
   const {
@@ -256,7 +256,7 @@ function AppLayoutInner() {
         <SidebarContent>
           <div className="p-6 flex items-center">
             <Link to="/dashboard" onClick={handleLinkClick}>
-              <img src={logoUrl} alt="Prime Circle" className="h-8 w-auto" />
+              <img src={logoUrl} alt="Prime Circle - Real Estate Network" className="h-8 w-auto" />
             </Link>
           </div>
           <SidebarGroup>

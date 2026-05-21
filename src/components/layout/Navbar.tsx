@@ -14,7 +14,7 @@ import {
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet'
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase/client'
-import logoUrl from '@/assets/logo-horizontal-fundo-escuro-78525.png'
+import logoUrl from '@/assets/logo-horizontal-texto-claro-transparente2x-ceb50.png'
 
 export function Navbar() {
   const { user: authUser, signOut } = useAuth()
@@ -106,7 +106,7 @@ export function Navbar() {
         <Link to={authUser ? '/dashboard' : '/'} className="flex items-center group">
           <img
             src={logoUrl}
-            alt="Prime Circle"
+            alt="Prime Circle - Real Estate Network"
             className="h-6 sm:h-8 w-auto group-hover:scale-105 transition-transform"
           />
         </Link>

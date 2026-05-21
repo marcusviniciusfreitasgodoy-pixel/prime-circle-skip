@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { ContactDialog } from '@/components/ContactDialog'
-import logoUrl from '@/assets/logo-horizontal-fundo-escuro-78525.png'
+import logoUrl from '@/assets/logo-horizontal-texto-claro-transparente2x-ceb50.png'
 
 export function Footer() {
   return (
@@ -9,7 +9,7 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-8 mb-12">
           <div className="md:col-span-2">
             <Link to="/" className="flex items-center mb-6">
-              <img src={logoUrl} alt="Prime Circle" className="h-8 w-auto" />
+              <img src={logoUrl} alt="Prime Circle - Real Estate Network" className="h-8 w-auto" />
             </Link>
             <p className="text-muted-foreground max-w-sm mb-6">
               A infraestrutura privada definitiva para corretores de alto padrão. Focado em liquidez

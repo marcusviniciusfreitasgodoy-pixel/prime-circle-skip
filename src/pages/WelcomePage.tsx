@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 import { PartyPopper, CheckCircle2, Loader2 } from 'lucide-react'
 import { useAuth } from '@/hooks/use-auth'
 import useAppStore from '@/stores/main'
-import logoUrl from '@/assets/logo-horizontal-fundo-escuro-78525.png'
+import logoUrl from '@/assets/logo-horizontal-texto-claro-transparente2x-ceb50.png'
 
 export default function WelcomePage() {
   const { user, loading } = useAuth()
@@ -44,7 +44,7 @@ export default function WelcomePage() {
         </div>
 
         <div className="flex justify-center mb-8 relative z-10">
-          <img src={logoUrl} alt="Prime Circle" className="h-10 w-auto" />
+          <img src={logoUrl} alt="Prime Circle - Real Estate Network" className="h-10 w-auto" />
         </div>
 
         <div className="w-20 h-20 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-6 relative z-10 ring-4 ring-primary/10">
