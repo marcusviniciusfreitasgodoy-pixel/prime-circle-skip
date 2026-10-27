@@ -45,16 +45,12 @@ export function PendingValidations() {
   const handleValidate = async (targetId: string) => {
     if (!user) return
 
-    const { error: updateError } = await supabase
-      .from('profiles')
-      .update({
-        status: 'active',
-        validated_by: user.id,
-        validation_date: new Date().toISOString(),
-      })
-      .eq('id', targetId)
+    // Validation and the +5 reputation bonus happen server-side, in one checked call.
+    const { data: newScore, error: validateError } = await supabase.rpc('validate_member', {
+      p_target_id: targetId,
+    })
 
-    if (updateError) {
+    if (validateError) {
       toast({
         title: 'Erro de Permissão',
         description: 'Não foi possível validar o membro. Verifique sua reputação.',
@@ -63,10 +59,7 @@ export function PendingValidations() {
       return
     }
 
-    if (myProfileData) {
-      const newScore = (myProfileData.reputation_score || 0) + 5
-      await supabase.from('profiles').update({ reputation_score: newScore }).eq('id', user.id)
-
+    if (myProfileData && typeof newScore === 'number') {
       setMyProfileData({ ...myProfileData, reputation_score: newScore })
     }
 

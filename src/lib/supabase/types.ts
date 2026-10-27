@@ -1044,6 +1044,7 @@ export type Database = {
       }
       increment_video_views: { Args: { doc_id: number }; Returns: undefined }
       is_admin: { Args: never; Returns: boolean }
+      validate_member: { Args: { p_target_id: string }; Returns: number }
       log_notification: {
         Args: {
           p_channel: string
