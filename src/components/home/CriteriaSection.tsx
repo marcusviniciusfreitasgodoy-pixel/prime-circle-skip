@@ -13,8 +13,8 @@ export function CriteriaSection() {
             Critérios de <span className="text-primary">Admissão</span>
           </h2>
           <p className="text-base sm:text-lg text-zinc-400">
-            O Prime Circle é um clube de negócios e networking restrito. Nossa curadoria rigorosa
-            garante que apenas profissionais qualificados integrem a rede.
+            O Prime Circle é um clube de negócios e networking restrito a assinantes e convidados
+            qualificados. Nossa curadoria garante o alto nível e a segurança das conexões na rede.
           </p>
         </div>
 
@@ -28,8 +28,9 @@ export function CriteriaSection() {
                     Validação Profissional
                   </h3>
                   <p className="text-zinc-400 mt-2 text-xs sm:text-sm leading-relaxed">
-                    Exigência obrigatória de CRECI ativo e análise criteriosa do histórico ilibado
-                    no mercado imobiliário, privilegiando os indicados por membros da comunidade.
+                    Exigência obrigatória de CRECI ativo e análise criteriosa do histórico no
+                    mercado imobiliário, aplicável tanto aos assinantes do app quanto aos corretores
+                    convidados.
                   </p>
                 </div>
               </div>
