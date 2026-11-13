@@ -1,15 +1,4 @@
 -- 1. Delete fictitious demands from documents table
-DELETE FROM public.documents 
-WHERE 
-  (metadata->>'type' = 'demanda' OR metadata->>'type' IS NULL) AND
-  (
-    content ILIKE '%Executivo Expatriado%' OR metadata->>'title' ILIKE '%Executivo Expatriado%' OR
-    content ILIKE '%Casal aposentado%' OR metadata->>'title' ILIKE '%Casal aposentado%' OR
-    content ILIKE '%Investidor%' OR metadata->>'title' ILIKE '%Investidor%' OR
-    content ILIKE '%familia grande%' OR metadata->>'title' ILIKE '%familia grande%' OR
-    content ILIKE '%cliente corporativo%' OR metadata->>'title' ILIKE '%cliente corporativo%'
-  );
-
 -- 2. Update default notification template trigger function to include Dashboard & Magic Link URLs
 CREATE OR REPLACE FUNCTION public.handle_new_user_templates()
 RETURNS trigger

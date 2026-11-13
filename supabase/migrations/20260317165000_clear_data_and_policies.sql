@@ -1,5 +1,4 @@
 -- Clear test data to allow fresh testing and solve registration loops
-TRUNCATE auth.users CASCADE;
 
 -- Ensure profiles can be updated by their owners during onboarding
 DO $$

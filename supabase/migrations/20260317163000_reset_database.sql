@@ -1,5 +1,4 @@
 -- Reset user database to prepare for clean validation
-TRUNCATE auth.users CASCADE;
 
 -- Add fields to track roles and plans natively on profiles
 ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS role TEXT NOT NULL DEFAULT 'user';

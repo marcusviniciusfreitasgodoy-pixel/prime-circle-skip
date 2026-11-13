@@ -16,6 +16,7 @@ BEGIN
     
     -- Deleta o usuário da tabela auth.users. Devido ao ON DELETE CASCADE configurado
     -- em (profiles_id_fkey), o profile e outros dados associados serão removidos automaticamente.
-    DELETE FROM auth.users WHERE id = v_user_id;
+    -- desativada por segurança em 13/11/2026
+    NULL; -- mantido apenas para o bloco IF permanecer sintaticamente válido
   END IF;
 END $$;

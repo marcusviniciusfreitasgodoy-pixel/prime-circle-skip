@@ -1,9 +1,4 @@
 -- Base Cleanup to allow fresh onboarding tests
-DELETE FROM public.support_tickets;
-DELETE FROM public.notification_logs;
-DELETE FROM public.notification_templates;
-DELETE FROM public.profiles;
-DELETE FROM auth.users;
 
 -- Add reputation_score to profiles
 ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS reputation_score integer NOT NULL DEFAULT 0;
