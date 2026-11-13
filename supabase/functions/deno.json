@@ -23,6 +23,6 @@
     "process-golden-duo-reminders": 7,
     "clean-old-logs": 7,
     "ga4-daily-sync": 5,
-    "provision-user": 3
+    "provision-user": 4
   }
 }
