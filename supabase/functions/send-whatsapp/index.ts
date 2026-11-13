@@ -23,13 +23,9 @@ Deno.serve(async (req: Request) => {
       })
     }
 
-    const instanceId = (
-      Deno.env.get('ZAPI_INSTANCE_ID') || '3F172E6464E6822C9BFA9E648AE68DF9'
-    ).trim()
-    const token = (Deno.env.get('ZAPI_TOKEN') || '2489C64D3BF41EBEA82BBA81').trim()
-    const clientToken = (
-      Deno.env.get('ZAPI_CLIENT_TOKEN') || 'Fd2d9a2263d6f4461ae75a57ea4c5fd05S'
-    ).trim()
+    const instanceId = (Deno.env.get('ZAPI_INSTANCE_ID') || '').trim()
+    const token = (Deno.env.get('ZAPI_TOKEN') || '').trim()
+    const clientToken = (Deno.env.get('ZAPI_CLIENT_TOKEN') || '').trim()
 
     if (!instanceId || !token) {
       console.error('Server configuration error: Missing ZAPI_INSTANCE_ID or ZAPI_TOKEN')

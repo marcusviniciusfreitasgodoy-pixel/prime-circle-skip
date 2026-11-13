@@ -42,7 +42,12 @@ function safeEqual(a: string, b: string) {
   return diff === 0
 }
 
-async function validSignature(secret: string, timestamp: string, rawBody: string, signature: string) {
+async function validSignature(
+  secret: string,
+  timestamp: string,
+  rawBody: string,
+  signature: string,
+) {
   const key = await crypto.subtle.importKey(
     'raw',
     new TextEncoder().encode(secret),
@@ -50,7 +55,11 @@ async function validSignature(secret: string, timestamp: string, rawBody: string
     false,
     ['sign'],
   )
-  const mac = await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(`${timestamp}.${rawBody}`))
+  const mac = await crypto.subtle.sign(
+    'HMAC',
+    key,
+    new TextEncoder().encode(`${timestamp}.${rawBody}`),
+  )
   return safeEqual(toHex(mac), signature.toLowerCase())
 }
 
@@ -88,9 +97,11 @@ Deno.serve(async (req: Request) => {
   const externalId = clean(body.external_id, 100)
   const email = clean(body.email, 254)?.toLowerCase()
   if (!externalId) return json(400, { error: 'external_id_required' })
-  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return json(400, { error: 'invalid_email' })
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+    return json(400, { error: 'invalid_email' })
   // Cliente da plataforma entra ativo; a validação manual só acontece se pedida
-  const initialStatus = body.initial_status === 'pending_validation' ? 'pending_validation' : 'active'
+  const initialStatus =
+    body.initial_status === 'pending_validation' ? 'pending_validation' : 'active'
 
   const supabase = createClient(
     Deno.env.get('SUPABASE_URL') ?? '',
@@ -112,7 +123,9 @@ Deno.serve(async (req: Request) => {
 
     if (!userId) {
       // 2. Já tem conta na rede com esse e-mail? Só vincula, não mexe em plano nem status.
-      const { data: existingId, error: e2 } = await supabase.rpc('get_user_id_by_email', { p_email: email })
+      const { data: existingId, error: e2 } = await supabase.rpc('get_user_id_by_email', {
+        p_email: email,
+      })
       if (e2) throw e2
 
       if (existingId) {
@@ -133,7 +146,11 @@ Deno.serve(async (req: Request) => {
         const { data: created, error: e4 } = await supabase.auth.admin.createUser({
           email,
           email_confirm: true,
-          app_metadata: { provisioned_by: SOURCE, external_id: externalId, initial_status: initialStatus },
+          app_metadata: {
+            provisioned_by: SOURCE,
+            external_id: externalId,
+            initial_status: initialStatus,
+          },
           user_metadata: {
             full_name: clean(body.full_name),
             whatsapp_number: clean(body.whatsapp_number, 30),
@@ -171,7 +188,11 @@ Deno.serve(async (req: Request) => {
       loginLink = link.properties?.action_link
     }
 
-    return json(result === 'created' ? 201 : 200, { result, user_id: userId, login_link: loginLink })
+    return json(result === 'created' ? 201 : 200, {
+      result,
+      user_id: userId,
+      login_link: loginLink,
+    })
   } catch (err) {
     console.error('provision-user error:', (err as Error)?.message ?? err)
     return json(500, { error: 'internal_error' })
