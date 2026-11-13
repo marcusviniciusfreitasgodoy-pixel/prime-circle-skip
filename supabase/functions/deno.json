@@ -22,6 +22,7 @@
     "smart-search-webhook": 5,
     "process-golden-duo-reminders": 5,
     "clean-old-logs": 5,
-    "ga4-daily-sync": 3
+    "ga4-daily-sync": 3,
+    "provision-user": 1
   }
 }
